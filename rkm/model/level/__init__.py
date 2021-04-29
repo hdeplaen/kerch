@@ -8,10 +8,6 @@ Abstract RKM level class.
 """
 
 import rkm
-import rkm.model as mdl
-import rkm.model.level.PrimalLinear as PrimalLinear
-import rkm.model.level.DualLinear as DualLinear
-
 import torch
 from abc import ABCMeta, abstractmethod
 import random
@@ -46,15 +42,15 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
     def __str__(self):
         pass
 
-    def __generate_representation(self, **kwargs):
-        # MODEL
-        switcher = {"primal": lambda: PrimalLinear.PrimalLinear(**kwargs),
-                    "dual": lambda: DualLinear.DualLinear(**kwargs)}
-
-        self.__model = torch.nn.ModuleDict({
-            "kernel": mdl.kernel.Kernel.create(**kwargs),
-            "linear": switcher.get(kwargs["representation"], mdl.RepresentationError)()
-        })
+    # def __generate_representation(self, **kwargs):
+    #     # MODEL
+    #     switcher = {"primal": lambda: PrimalLinear.PrimalLinear(**kwargs),
+    #                 "dual": lambda: DualLinear.DualLinear(**kwargs)}
+    #
+    #     self.__model = torch.nn.ModuleDict({
+    #         "kernel": mdl.kernel.Kernel.create(**kwargs),
+    #         "linear": switcher.get(kwargs["representation"], mdl.RepresentationError)()
+    #     })
 
     def forward(self, x, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self.__all_kernels

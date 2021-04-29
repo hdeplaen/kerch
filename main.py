@@ -14,6 +14,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Runs RKM models.')
     parser.add_argument('--experiment',
                         default=1,
+                        type=int,
                         help='Experiment number (1: lssvm, 2: kpca)')
 
     args = parser.parse_args()

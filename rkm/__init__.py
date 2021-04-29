@@ -1,6 +1,4 @@
 from functools import wraps
-import rkm.model as model
-
 
 def kwargs_decorator(dict_kwargs):
     def wrapper(f):

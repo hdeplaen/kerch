@@ -3,10 +3,10 @@ import torch
 from torch.optim.optimizer import Optimizer, required
 import numpy as np
 
-from cayley.cayley_gutils import unit
-from cayley.cayley_gutils import Cayley_loop
-from cayley.cayley_gutils import qr_retraction
-from cayley.cayley_utils import matrix_norm_one
+from .cayley_gutils import unit
+from .cayley_gutils import Cayley_loop
+from .cayley_gutils import qr_retraction
+from .cayley_utils import matrix_norm_one
 import random
 
 episilon = 1e-8

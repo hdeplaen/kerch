@@ -13,12 +13,6 @@ from abc import ABCMeta, abstractmethod
 
 import rkm
 import rkm.model as mdl
-import rkm.model.kernel.ExplicitKernel as ExplicitKernel
-import rkm.model.kernel.ImplicitKernel as ImplicitKernel
-import rkm.model.kernel.LinearKernel as LinearKernel
-import rkm.model.kernel.PolynomialKernel as PolynomialKernel
-import rkm.model.kernel.RBFKernel as RBFKernel
-import rkm.model.kernel.SigmoidKernel as SigmoidKernel
 
 class Kernel(nn.Module, metaclass=ABCMeta):
     """
@@ -117,16 +111,3 @@ class Kernel(nn.Module, metaclass=ABCMeta):
     @property
     def all_kernels(self):
         return range(self.kernels.size(0))
-
-    @staticmethod
-    @rkm.kwargs_decorator(
-        {"kernel_type": 'linear"'})
-    def create(**kwargs):
-        switcher = {"linear": lambda: LinearKernel.LinearKernel(**kwargs),
-                    "rbf": lambda: RBFKernel.RBFKernel(**kwargs),
-                    "explicit": lambda: ExplicitKernel.ExplicitKernel(**kwargs),
-                    "implicit": lambda: ImplicitKernel.ImplicitKernel(**kwargs),
-                    "polynomial": lambda: PolynomialKernel.PolynomialKernel(**kwargs),
-                    "sigmoid": lambda: SigmoidKernel.SigmoidKernel(**kwargs)}
-        func = switcher.get(kwargs["kernel_type"], "Invalid kernel type.")
-        return func()

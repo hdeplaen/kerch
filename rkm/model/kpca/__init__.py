@@ -8,15 +8,13 @@ KPCA level
 """
 
 import rkm
-import rkm.model as mdl
-import rkm.model.kpca.HardKPCA as HardKPCA
-import rkm.model.kpca.SoftKPCA as SoftKPCA
-
+from rkm.model.level import Level
+from rkm.model import RepresentationError
 import torch
 from abc import ABCMeta
 
 
-class KPCA(rkm.model.level.Level, metaclass=ABCMeta):
+class KPCA(Level, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
         {"centering": False})
     def __init__(self, **kwargs):
@@ -47,7 +45,7 @@ class KPCA(rkm.model.level.Level, metaclass=ABCMeta):
 
         switcher_var = {"primal": lambda idx_kernels: primal_var(idx_kernels),
                         "dual": lambda idx_kernels: dual_var(idx_kernels)}
-        self.__var = switcher_var.get(kwargs["representation"], mdl.RepresentationError)
+        self.__var = switcher_var.get(kwargs["representation"], RepresentationError)
 
     def loss(self, x=None, y=None, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self.all_kernels
@@ -57,7 +55,7 @@ class KPCA(rkm.model.level.Level, metaclass=ABCMeta):
         switcher = {'primal': lambda: self.primal(x),
                     'dual': lambda: self.dual(x)}
 
-        return switcher.get(self.representation, mdl.RepresentationError)()
+        return switcher.get(self.representation, RepresentationError)()
 
     def primal(self, x, y=None):
         C = self.__model["kernel"].cov()
@@ -78,11 +76,11 @@ class KPCA(rkm.model.level.Level, metaclass=ABCMeta):
         stiefel = self.__model['linear'].parameters()
         return euclidean, stiefel
 
-    @staticmethod
-    def create(**kwargs):
-        switcher = {"hard": lambda: HardKPCA.HardKPCA(**kwargs),
-                    "soft": lambda: SoftKPCA.SoftKPCA(**kwargs)}
-        func = switcher.get(kwargs["type"], "Invalid KPCA type (must be hard or soft).")
-        return func()
+    # @staticmethod
+    # def create(**kwargs):
+    #     switcher = {"hard": lambda: HardKPCA.HardKPCA(**kwargs),
+    #                 "soft": lambda: SoftKPCA.SoftKPCA(**kwargs)}
+    #     func = switcher.get(kwargs["type"], "Invalid KPCA type (must be hard or soft).")
+    #     return func()
 
 

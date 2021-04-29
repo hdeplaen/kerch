@@ -7,9 +7,9 @@ Hard LS-SVM abstract level
 @date: March 2021
 """
 
-import rkm.model.lssvm as lssvm
+from rkm.model.lssvm import LSSVM
 
-class HardLSSVM(lssvm.LSSVM):
+class HardLSSVM(LSSVM):
     def __init__(self, **kwargs):
         super(HardLSSVM, self).__init__(**kwargs)
         self.__eta = 0.
