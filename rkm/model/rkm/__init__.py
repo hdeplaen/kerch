@@ -110,7 +110,13 @@ class RKM(torch.nn.Module):
         return self.forward(x).detach().cpu()
 
     @rkm.kwargs_decorator({"size_in": 1})
-    def add_level(self, type, constraint="soft", **kwargs):
+    def append_level(self, type, constraint="soft", **kwargs):
+        """
+
+        :param type: 'lssvm' or 'kpca'
+        :param constraint: 'hard' or 'soft'
+        :param kwargs: layer parameters
+        """
         current = len(self.__model)
         size_in_new = kwargs["size_in"]
         size_out_old = self.__model[current].size_out

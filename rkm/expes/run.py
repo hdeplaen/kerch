@@ -17,12 +17,20 @@ import rkm.model.rkm as rkm
 def lssvm():
     params = load_params('lssvm')
     n_samples = params['n_samples']
-    input, target, range = data.two_moons(n_samples)
+    input, target, range = data.get("two_moons", n_samples)
 
-    params = {'range': range}
+    mdl = rkm.RKM(2, n_samples, 1, cuda=True)
 
-    mdl = rkm.RKM(2, n_samples, 1, **params)
-    mdl.custom_train(input, target, max_iter=int(2e+4), sz_sv=n_samples)
+    rkm.append_level(type="lssvm",
+                  constraint="soft",
+                  gamma=1.,
+                  size_in=input.size(1),
+                  init_kernels=input.size(0),
+                  requires_bias=True,
+                  kernel_type="rbf",
+                  sigma=1.)
+
+    mdl.learn(input, target)
 
 
 def kpca():

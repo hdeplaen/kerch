@@ -42,6 +42,8 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self.__representation = kwargs["representation"]
         self.__model = torch.nn.ModuleDict({})
 
+        self.__generate_representation(**kwargs)
+
     @abstractmethod
     def __str__(self):
         pass

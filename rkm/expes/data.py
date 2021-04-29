@@ -11,10 +11,23 @@ import numpy as np
 import math
 from sklearn import datasets
 
+
 class data():
     @staticmethod
-    def gaussians():
-        size = 100
+    def get(name, n_samples=None):
+        datasets = {"gaussians": gaussians,
+                    "spiral": spiral,
+                    "two_moons": two_moons,
+                    "usps": usps}
+        func = datasets.get(name, "Invalid dataset")
+        if n_samples is None:
+            return func()
+        else:
+            return func(n_samples)
+
+    @staticmethod
+    def gaussians(n_samples=100):
+        size = n_samples / 2
         s1, m1 = .7, (2, 1)
         s2, m2 = 1.2, (-2, -3)
 
@@ -31,7 +44,9 @@ class data():
         return input, target
 
     @staticmethod
-    def spiral():
+    def spiral(n_samples=194):
+        size = n_samples / 2
+
         def spiral_xy(i, spiral_num):
             """
             Create the data for a spiral.
@@ -47,7 +62,7 @@ class data():
             return (x, y)
 
         def spiral(spiral_num):
-            return [spiral_xy(i, spiral_num) for i in range(97)]
+            return [spiral_xy(i, spiral_num) for i in range(size)]
 
         s1 = spiral(1)
         s2 = spiral(-1)
@@ -59,17 +74,17 @@ class data():
         return input, target, r
 
     @staticmethod
-    def two_moons(n_samples=350):
+    def two_moons(n_samples=100):
         input, output = datasets.make_moons(n_samples, noise=.1)
         output = np.where(output == 0, -1, 1)
         range = (-4, 7, -4, 4)
         return 2.5 * input, output, range
 
     @staticmethod
-    def usps():
+    def usps(n_samples=100):
         digits = datasets.load_digits(2)
         x = digits['data']
         y = digits['target']
         y = np.where(y == 0, -1, 1)
         r = (0, 1, 0, 1)
-        return x, y, r
+        return x[:n_samples, :, :], y[:n_samples], r
