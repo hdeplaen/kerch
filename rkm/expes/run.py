@@ -11,7 +11,7 @@ import os
 import sys
 import yaml
 
-import rkm.expes.data as data
+from rkm.expes.data import data
 import rkm.model.rkm as rkm
 
 def lssvm():

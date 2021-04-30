@@ -13,13 +13,10 @@ import numpy as np
 from abc import ABCMeta, abstractmethod
 
 import rkm
-import rkm.model as mdl
-import rkm.model.level as level
-import rkm.model.lssvm.HardLSSVM as HardLSSVM
-import rkm.model.lssvm.SoftLSSVM as SoftLSSVM
+from rkm.model.level import Level
+from rkm.model import RepresentationError
 
-
-class LSSVM(level.Level, metaclass=ABCMeta):
+class LSSVM(Level, metaclass=ABCMeta):
     """
     Abstract LSSVM class.
     """
@@ -57,7 +54,7 @@ class LSSVM(level.Level, metaclass=ABCMeta):
 
         switcher_reg = {"primal": lambda idx_kernels: primal_reg(idx_kernels),
                         "dual": lambda idx_kernels: dual_reg(idx_kernels)}
-        self.__reg = switcher_reg.get(kwargs["representation"], mdl.RepresentationError)
+        self.__reg = switcher_reg.get(kwargs["representation"], RepresentationError)
 
     def recon(self, x, y, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self.all_kernels
@@ -79,7 +76,7 @@ class LSSVM(level.Level, metaclass=ABCMeta):
         switcher = {'primal': lambda: self.primal(x, y),
                     'dual': lambda: self.dual(x, y)}
 
-        return switcher.get(self.representation, mdl.RepresentationError)()
+        return switcher.get(self.representation, RepresentationError)()
 
     def primal(self, x, y):
         assert y.size(1) == 1, "Not implemented for multi-dimensional output (as for now)."
@@ -123,9 +120,9 @@ class LSSVM(level.Level, metaclass=ABCMeta):
         stiefel = torch.nn.ParameterList()
         return euclidean, stiefel
 
-    @staticmethod
-    def create(**kwargs):
-        switcher = {"hard": lambda: HardLSSVM.HardLSSVM(**kwargs),
-                    "soft": lambda: SoftLSSVM.SoftLSSVM(**kwargs)}
-        func = switcher.get(kwargs["type"], "Invalid LSSVM type (must be hard or soft).")
-        return func()
+    # @staticmethod
+    # def create(**kwargs):
+    #     switcher = {"hard": lambda: HardLSSVM.HardLSSVM(**kwargs),
+    #                 "soft": lambda: SoftLSSVM.SoftLSSVM(**kwargs)}
+    #     func = switcher.get(kwargs["type"], "Invalid LSSVM type (must be hard or soft).")
+    #     return func()
