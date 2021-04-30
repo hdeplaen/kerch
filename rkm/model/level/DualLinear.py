@@ -14,35 +14,35 @@ import rkm.model.level.Linear as Linear
 class DualLinear(Linear.Linear):
     def __init__(self, **kwargs):
         super(DualLinear, self).__init__(**kwargs)
-        self.__alpha = torch.nn.Parameter(
-            torch.nn.init.orthogonal_(torch.Tensor(kwargs["num_kernels"], kwargs["size_out"])),
-            requires_grad=self.__soft)
-        self.__bias = torch.nn.Parameter(torch.tensor(0.), requires_grad=self.__soft and self.__requires_bias)
+        self._alpha = torch.nn.Parameter(
+            torch.nn.init.orthogonal_(torch.Tensor(kwargs["init_kernels"], kwargs["size_out"])),
+            requires_grad=self._soft)
+        self._bias = torch.nn.Parameter(torch.tensor(0.), requires_grad=self._soft and self._requires_bias)
 
     @property
     def alpha(self):
-        return self.__alpha
+        return self._alpha
 
     @property
     def bias(self):
-        return self.__bias
+        return self._bias
 
     def set(self, a, b=None):
-        self.__alpha.data = a.data
-        if b is not None: self.__bias.data = b.data
+        self._alpha.data = a.data
+        if b is not None: self._bias.data = b.data
 
     def forward(self, x, idx_sv):
-        return x @ self.__alpha[idx_sv] + self.__bias.expand(x.shape[0])
+        return x @ self._alpha[idx_sv] + self._bias.expand(x.shape[0])
 
     def project(self):
-        self.__alpha.data -= torch.mean(self.__alpha.data)
+        self._alpha.data -= torch.mean(self._alpha.data)
 
     def merge(self, idxs):
-        self.__alpha[idxs[:, 0]] += self.__alpha[idxs[:, 1]]
-        self.__alpha.gather(dim=0, index=idxs[:, 1], out=self.__alpha)
+        self._alpha[idxs[:, 0]] += self._alpha[idxs[:, 1]]
+        self._alpha.gather(dim=0, index=idxs[:, 1], out=self._alpha)
 
     def reduce(self, idxs):
-        self.__alpha.gather(dim=0, index=idxs, out=self.__alpha)
+        self._alpha.gather(dim=0, index=idxs, out=self._alpha)
 
     def reduce_idxs(self, **kwargs):
-        return torch.nonzero(torch.abs(self.__alpha) < kwargs["rtol"], as_tuple=True)
+        return torch.nonzero(torch.abs(self._alpha) < kwargs["rtol"], as_tuple=True)

@@ -13,6 +13,8 @@ from abc import ABCMeta, abstractmethod
 import random
 import numpy as np
 
+from .DualLinear import DualLinear
+from .PrimalLinear import PrimalLinear
 
 class Level(torch.nn.Module, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
@@ -28,37 +30,43 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         """
         super(Level, self).__init__()
 
-        self.__size_in = kwargs["size_in"]
-        self.__size_out = kwargs["size_out"]
-        self.__eta = kwargs["eta"]
+        self._size_in = kwargs["size_in"]
+        self._size_out = kwargs["size_out"]
+        self._eta = kwargs["eta"]
 
-        self.__init_kernels = kwargs["init_kernels"]
-        self.__num_kernels = kwargs["init_kernels"]
-        self.__live_update = kwargs["live_update"]
-        self.__representation = kwargs["representation"]
-        self.__model = torch.nn.ModuleDict({})
+        self._init_kernels = kwargs["init_kernels"]
+        self._num_kernels = kwargs["init_kernels"]
+        self._live_update = kwargs["live_update"]
+        self._representation = kwargs["representation"]
+        self._model = torch.nn.ModuleDict({})
 
-        self.__generate_representation(**kwargs)
+        self._generate_model(**kwargs)
 
     @abstractmethod
     def __str__(self):
         pass
 
-    # def __generate_representation(self, **kwargs):
-    #     # MODEL
-    #     switcher = {"primal": lambda: PrimalLinear.PrimalLinear(**kwargs),
-    #                 "dual": lambda: DualLinear.DualLinear(**kwargs)}
-    #
-    #     self.__model = torch.nn.ModuleDict({
-    #         "kernel": mdl.kernel.Kernel.create(**kwargs),
-    #         "linear": switcher.get(kwargs["representation"], mdl.RepresentationError)()
-    #     })
+    def __repr__(self):
+        return self._str__()
+
+    def _generate_model(self, **kwargs):
+        # MODEL
+        switcher = {"primal": PrimalLinear,
+                    "dual": DualLinear}
+
+        if kwargs["representation"] not in switcher:
+            raise rkm.model.RepresentationError
+        linear = switcher[kwargs["representation"]](**kwargs)
+
+        self._model = torch.nn.ModuleDict({
+            "kernel": rkm.model.kernel.KernelFactory.KernelFactory.create(**kwargs["kernel"]),
+            "linear": linear})
 
     def forward(self, x, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self.__all_kernels
-        if self.__live_update: self.__model["kernel"].update(x)
-        x = self.__model["kernel"](x, self.__representation, idx_kernels)
-        x = self.__model["linear"](x, idx_kernels)
+        if idx_kernels is None: idx_kernels = self._all_kernels
+        if self._live_update: self._model["kernel"].update(x)
+        x = self._model["kernel"](x, self._representation, idx_kernels)
+        x = self._model["linear"](x, idx_kernels)
         return x
 
     @abstractmethod
@@ -67,23 +75,23 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
 
     @property
     def eta(self):
-        return self.__eta
+        return self._eta
 
     @property
     def num_kernels(self):
-        return self.__num_kernels
+        return self._num_kernels
 
     @property
     def representation(self) -> str:
-        return self.__representation
+        return self._representation
 
     @property
     def linear(self):
-        return self.__model["linear"]
+        return self._model["linear"]
 
     @property
     def kernel(self):
-        return self.__model["kernel"]
+        return self._model["kernel"]
 
     @abstractmethod
     def before_step(self, x=None, y=None):
@@ -110,18 +118,18 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         pass
 
     def kernels_init(self, x=None):
-        self.__model["kernel"].kernels_init(x)
+        self._model["kernel"].kernels_init(x)
         self.kernels_initialized = True
 
     @property
     def __all_kernels(self):
-        return range(self.__num_kernels)
+        return range(self._num_kernels)
 
     @property
     def __stoch_kernels(self):
-        if self.__stochastic < 1.:
+        if self._stochastic < 1.:
             idx = random.choices(self.all_kernels, k=np.maximum(
-                torch.round(self.__stochastic * self.init_kernels), self.num_kernels))
+                torch.round(self._stochastic * self.init_kernels), self.num_kernels))
         else:
             idx = self.all_kernels
         return idx
@@ -134,21 +142,21 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         :param mtol: Merges the kernel if the value is not 0.
         :param rtol: Reduces the kernel if the value is not 0.
         """
-        assert self.__size_out == 1, NotImplementedError
+        assert self._size_out == 1, NotImplementedError
 
         def __merge(idxs):
-            self.__model["kernel"].merge(idxs)
-            self.__model["linear"].merge(idxs)
-            self.__num_kernels -= idxs.size(0)
+            self._model["kernel"].merge(idxs)
+            self._model["linear"].merge(idxs)
+            self._num_kernels -= idxs.size(0)
 
         def __reduce(idxs):
-            self.__model["kernel"].reduce(idxs)
-            self.__model["linear"].reduce(idxs)
-            self.__num_kernels -= idxs.size(0)
+            self._model["kernel"].reduce(idxs)
+            self._model["linear"].reduce(idxs)
+            self._num_kernels -= idxs.size(0)
 
         if kwargs["mtol"] is not None:
-            idxs_merge = self.__model["kernel"].merge_idxs(**kwargs)
+            idxs_merge = self._model["kernel"].merge_idxs(**kwargs)
             __merge(idxs_merge)
         if kwargs["rtol"] is not None:
-            idxs_reduce = self.__model["linear"].reduce_idxs(**kwargs)
+            idxs_reduce = self._model["linear"].reduce_idxs(**kwargs)
             __reduce(idxs_reduce)

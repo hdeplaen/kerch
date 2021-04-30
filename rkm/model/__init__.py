@@ -21,3 +21,5 @@ class PrimalError(Exception):
 class RepresentationError(Exception):
     def __init__(self):
         self.message = "Unrecognized or unspecified representation (must be primal or dual)."
+
+from .kernel import KernelFactory

@@ -22,16 +22,15 @@ class KPCA(Level, metaclass=ABCMeta):
 
         :param centering: True if input and kernel are centered (False by default).
         """
-        new_kwargs = {"requires_bias": False}
-        super(KPCA, self).__init__({**kwargs, **new_kwargs})
+        add_kwargs = {"requires_bias": False}
+        new_kwargs = {**kwargs, **add_kwargs}
+        super(KPCA, self).__init__(**new_kwargs)
         self.__centering = kwargs["centering"]
         self.__generate_representation(**kwargs)
 
         assert not self.__centering, NotImplementedError  # True is not implemented.
 
     def __generate_representation(self, **kwargs):
-        super().__generate_representation(**kwargs)
-
         # REGULARIZATION
         def primal_var(idx_kernels):
             C = self.__model["kernel"].cov()

@@ -28,7 +28,7 @@ class RBFKernel(mdl.kernel.Kernel):
         super(RBFKernel, self).__init__(**kwargs)
 
         self.sigma_trainable = kwargs["sigma_trainable"]
-        self.sigma = torch.nn.Parameter(torch.tensor(kwargs["sigma"].unsqueeze(0)), requires_grad=self.sigma_trainable)
+        self.sigma = torch.nn.Parameter(torch.tensor(kwargs["sigma"]), requires_grad=self.sigma_trainable)
 
     def __str__(self):
         return "RBF kernel"

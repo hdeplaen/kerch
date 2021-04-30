@@ -16,22 +16,16 @@ import rkm.model.rkm as rkm
 
 def lssvm():
     params = load_params('lssvm')
-    n_samples = params['n_samples']
-    input, target, range = data.get("two_moons", n_samples)
+    data_params = params['data']
+    input, target, range = data.factory(data_params["dataset"],
+                                        data_params["n_samples"])
 
-    mdl = rkm.RKM(2, n_samples, 1, cuda=True)
+    mdl = rkm.RKM(cuda=params["cuda"])
 
-    rkm.append_level(type="lssvm",
-                  constraint="soft",
-                  gamma=1.,
-                  size_in=input.size(1),
-                  init_kernels=input.size(0),
-                  requires_bias=True,
-                  kernel_type="rbf",
-                  sigma=1.)
+    level_params = params["level"]
+    mdl.append_level(**level_params)
 
     mdl.learn(input, target)
-
 
 def kpca():
     pass
@@ -46,5 +40,5 @@ def load_params(expe: str):
     :return: dictionnary of parameters.
     """
     with open(os.path.join(sys.path[0], "expes.yaml"), "r") as file:
-        content = yaml.load(file)
+        content = yaml.safe_load(file)
     return content.get(expe, 'Experiment not recognized in yaml file.')

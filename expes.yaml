@@ -1,12 +1,17 @@
 lssvm:
-  n_samples: 50
-  kernel_type: "exp_kernel"
-  sigma: 1.
   cuda: False
-  range: range
-  plot: True
-  gamma: gamma
-  aggregate: False
-  sigma_trainable: False
-  points_trainable: False
-  tanh: False
+  data:
+    dataset: "two_moons"
+    n_samples: 50
+  level:
+    plot: True
+    type: "lssvm"
+    gamma: .5
+    constraint: "soft"
+    representation: "dual"
+    points_trainable: False
+    aggregate: False
+    kernel:
+      kernel_type: "rbf"
+      sigma: 1.
+      sigma_trainable: False

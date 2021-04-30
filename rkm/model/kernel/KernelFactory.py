@@ -7,7 +7,8 @@ import rkm.model.kernel.SigmoidKernel as SigmoidKernel
 
 class KernelFactory:
     @staticmethod
-    def create_kernel(kernel_type, **kwargs):
+    def create(**kwargs):
+        kernel_type = kwargs["kernel_type"]
         switcher = {"linear": LinearKernel.LinearKernel,
                     "rbf": RBFKernel.RBFKernel,
                     "explicit": ExplicitKernel.ExplicitKernel,

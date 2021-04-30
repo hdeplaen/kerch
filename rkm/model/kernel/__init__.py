@@ -25,6 +25,10 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         if idx_kernels is None: idx_kernels = self.all_kernels
         return self.__kernels.gather(dim=1, index=idx_kernels)
 
+    @property
+    def num_kernels(self):
+        return self.__kernels.size(1)
+
     @kernels.setter
     def kernels(self, val):
         self.__kernels = val
@@ -110,4 +114,4 @@ class Kernel(nn.Module, metaclass=ABCMeta):
 
     @property
     def all_kernels(self):
-        return range(self.kernels.size(0))
+        return range(self.num_kernels)

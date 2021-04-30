@@ -14,18 +14,6 @@ from sklearn import datasets
 
 class data():
     @staticmethod
-    def get(name, n_samples=None):
-        datasets = {"gaussians": gaussians,
-                    "spiral": spiral,
-                    "two_moons": two_moons,
-                    "usps": usps}
-        func = datasets.get(name, "Invalid dataset")
-        if n_samples is None:
-            return func()
-        else:
-            return func(n_samples)
-
-    @staticmethod
     def gaussians(n_samples=100):
         size = n_samples / 2
         s1, m1 = .7, (2, 1)
@@ -88,3 +76,15 @@ class data():
         y = np.where(y == 0, -1, 1)
         r = (0, 1, 0, 1)
         return x[:n_samples, :, :], y[:n_samples], r
+
+    @staticmethod
+    def factory(name, n_samples=None):
+        datasets = {"gaussians": data.gaussians,
+                    "spiral": data.spiral,
+                    "two_moons": data.two_moons,
+                    "usps": data.usps}
+        func = datasets.get(name, "Invalid dataset")
+        if n_samples is None:
+            return func()
+        else:
+            return func(n_samples)

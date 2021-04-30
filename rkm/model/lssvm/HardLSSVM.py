@@ -12,10 +12,10 @@ from rkm.model.lssvm import LSSVM
 class HardLSSVM(LSSVM):
     def __init__(self, **kwargs):
         super(HardLSSVM, self).__init__(**kwargs)
-        self.__eta = 0.
+        self._eta = 0.
 
     def __str__(self):
-        return f"Hard LS-SVM level with {self.__model['kernel'].__str__()}."
+        return f"Hard LS-SVM level with {self._model['kernel'].__str__()}."
 
     def loss(self, x=None, y=None, idx_kernels=None):
         return super().loss(x, y)

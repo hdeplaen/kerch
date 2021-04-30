@@ -13,8 +13,14 @@ from abc import ABCMeta, abstractmethod
 class Linear(torch.nn.Module, metaclass=ABCMeta):
     def __init__(self, **kwargs):
         super(Linear, self).__init__()
-        self.__soft = {"soft": True, "hard": False}.get(kwargs["type"], "Invalid LSSVM type (must be hard or soft).")
-        self.__requires_bias = kwargs["requires_bias"]
+
+        switcher = {"soft": True, "hard": False}
+        type = kwargs["type"]
+        if type not in switcher:
+            raise NameError("Invalid constraint (must be hard or soft).")
+
+        self._soft = switcher[type]
+        self._requires_bias = kwargs["requires_bias"]
 
     @abstractmethod
     def set(self, a, b):
