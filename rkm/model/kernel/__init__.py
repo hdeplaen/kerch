@@ -64,7 +64,7 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         return switcher.get(representation, mdl.RepresentationError)()
 
     @abstractmethod
-    def implicit(self, x, idx_kernels=None):
+    def implicit(self, x, idx_kernels=None) -> object:
         pass
 
     @abstractmethod
@@ -92,18 +92,23 @@ class Kernel(nn.Module, metaclass=ABCMeta):
     def reduce(self, idxs):
         self.kernels.gather(dim=0, index=idxs, out=self.kernels)
 
-    def corr(self, idx_kernels=None):
+    def dmatrix(self, idx_kernels=None):
         """
-        Computes the correlation matrix, also known as the kernel matrix.
+        Computes the dual matrix, also known as the kernel matrix.
+        Its size is len(idx_kernels) * len(idx_kernels).
 
         :param idx_kernels: Index of the support vectors used to compute the kernel matrix. If nothing is provided, the kernel uses all of them.
         :return: Kernel matrix.
         """
-        self.K = self.implicit(self.kernels(idx_kernels), idx_kernels)
+        self.K = self.implicit(self.kernels[idx_kernels,:], idx_kernels)
         return self.K
 
-    def cov(self, x=None, idx_kernels=None):
-        k = self.kernels(idx_kernels)
+    def pmatrix(self, x=None, idx_kernels=None):
+        """
+        Computes the primal matrix, i.e. correlation between the different outputs.
+        Its size is output * output.
+        """
+        k = self.kernels[idx_kernels,:]
         k = self.explicit(k)
 
         if x is None: phi = k

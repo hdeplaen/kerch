@@ -34,7 +34,7 @@ class RKM(torch.nn.Module):
             self.device = torch.device("cpu")
             self.cuda = False
 
-        self._model = []
+        self._model = torch.nn.ModuleList()
         self._euclidean = torch.nn.ParameterList()
         self._stiefel = torch.nn.ParameterList()
 
@@ -50,16 +50,23 @@ class RKM(torch.nn.Module):
         assert num <= len(self._model), "Model has less levels than requested."
         return self._model[num + 1]
 
-    def _optstep(self, opt, closure):
+    def _optstep(self, opt, closure, solve):
         """
         One optimization step
         :param closure: closure function as in a torch optim step call.
         """
+        loss = solve()
+
+        for level in self._model:
+            level.before_step()
+
         # opt steps
-        opt.step()
+        opt.step(closure)
 
         for level in self._model:
             level.after_step()
+
+        return loss
 
     def forward(self, x):
         for level in self._model:
@@ -70,13 +77,17 @@ class RKM(torch.nn.Module):
         tot_loss = 0.
 
         for level in self._model:
-            if level.eta == 0.:
-                tot_loss += level.loss(x, y)
-                x = level(x)
+            if level.eta != 0.:
+                l, _ = level.loss(x, y)
+                tot_loss += l
+
+            level.layerin = x
+            level.layerout = y
+            x = level(x)
 
         return tot_loss
 
-    def learn(self, x, y, maxiter=int(1e+3), **kwargs):
+    def learn(self, x, y, maxiter=int(5e+4), tol=1e-9, **kwargs):
         """
 
         :param x: input
@@ -85,22 +96,34 @@ class RKM(torch.nn.Module):
         :param kwargs: optimizer parameters (default SGD with learning rate of 0.001)
         """
 
-        x = torch.tensor(x).to(self.device)
-        y = torch.tensor(y).to(self.device)
+        x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
+        y = torch.tensor(y, dtype=rkm.ftype).to(self.device)
         self.to(self.device)
         opt = Optimizer.Optimizer(self._euclidean,
-                            self._stiefel,
-                            **kwargs)
+                                  self._stiefel,
+                                  **kwargs)
+
+        def solve():
+            loss = self.loss(x, y)
+            for level in self._model: level.before_step(x, y)
+            return loss
 
         def closure():
             opt.zero_grad()
-            l = self.loss(x, y)
-            l.backward(create_graph=True)
-            return l
+            loss = self.loss(x, y)
+            loss.backward(create_graph=True)
+            return loss
 
-        t = trange(maxiter, desc='Training model')
-        for iter in range(maxiter):
-            self._optstep(opt, closure)
+        min_loss = float("Inf")
+        tr = trange(maxiter, desc='Training model')
+        for iter in tr:
+            current_loss = self._optstep(opt, closure, solve).data
+
+            if (iter % 10) == 0:
+                tr.set_description(f'Loss: {current_loss}')
+                if abs(current_loss - min_loss) < tol: break
+
+            if current_loss < min_loss: min_loss = current_loss
 
         print('Learning model completed.')
 
@@ -109,8 +132,8 @@ class RKM(torch.nn.Module):
         self.to(self.device)
         return self.forward(x).detach().cpu()
 
-    @rkm.kwargs_decorator({"size_in": 1})
-    def append_level(self, type, constraint="soft", **kwargs):
+    @rkm.kwargs_decorator({"size_in": 1, "constraint": "soft"})
+    def append_level(self, type, **kwargs):
         """
 
         :param type: 'lssvm' or 'kpca'
@@ -126,13 +149,13 @@ class RKM(torch.nn.Module):
                 "Layer " + str(current + 1) + " (size_in=" + str(kwargs["size_in"]) + \
                 ") not compatible with layer " + str(current) + " (size_out=" + str() + ")."
 
-        #TO DO: make switchers cleaner with proper NameError
+        # TO DO: make switchers cleaner with proper NameError
         switcher1 = {"lssvm": SoftLSSVM.SoftLSSVM, "kpca": SoftKPCA.SoftKPCA}
         switcher2 = {"lssvm": HardLSSVM.HardLSSVM, "kpca": HardKPCA.HardKPCA}
         switcher3 = {"soft": switcher1, "hard": switcher2}
 
-        level = switcher3.get(constraint, "Invalid level constraint (soft/hard)"). \
-            get(type, "Invalid level type (kpca/lssvm)")(**kwargs)
+        level = switcher3.get(kwargs["constraint"], "Invalid level constraint (soft/hard)"). \
+            get(type, "Invalid level type (kpca/lssvm)")(device=self.device, **kwargs)
 
         euclidean, stiefel = level.get_params()
         self._euclidean.extend(euclidean)

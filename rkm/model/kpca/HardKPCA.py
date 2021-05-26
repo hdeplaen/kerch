@@ -9,6 +9,7 @@ Hard KPCA level
 
 import rkm.model as mdl
 
+
 class HardKPCA(mdl.kpca.KPCA):
     def __init__(self, **kwargs):
         super(HardKPCA, self).__init__(**kwargs)
@@ -21,8 +22,7 @@ class HardKPCA(mdl.kpca.KPCA):
         return super().loss(x, y)
 
     def before_step(self, x=None, y=None):
-        assert x is not None, \
-            "Tensors x must be specified before each step in a hard KPCA."
+        if x is None: x = self.layerin
         a, b = self.solve(x)
         self.model["linear"].set(a, b)
 

@@ -1,4 +1,8 @@
 from functools import wraps
+import torch
+
+ftype = torch.float32
+itype = torch.uint8
 
 def kwargs_decorator(dict_kwargs):
     def wrapper(f):

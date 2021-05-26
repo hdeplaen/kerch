@@ -9,15 +9,19 @@ Dual linear class for a RKM level.
 
 import torch
 
+import rkm
 import rkm.model.level.Linear as Linear
+
 
 class DualLinear(Linear.Linear):
     def __init__(self, **kwargs):
         super(DualLinear, self).__init__(**kwargs)
         self._alpha = torch.nn.Parameter(
-            torch.nn.init.orthogonal_(torch.Tensor(kwargs["init_kernels"], kwargs["size_out"])),
+            torch.nn.init.orthogonal_(torch.empty((kwargs["init_kernels"], kwargs["size_out"]),
+                                                  dtype=rkm.ftype)),
             requires_grad=self._soft)
-        self._bias = torch.nn.Parameter(torch.tensor(0.), requires_grad=self._soft and self._requires_bias)
+        self._bias = torch.nn.Parameter(torch.tensor(0., dtype=rkm.ftype),
+                                        requires_grad=self._soft and self._requires_bias)
 
     @property
     def alpha(self):
@@ -32,7 +36,8 @@ class DualLinear(Linear.Linear):
         if b is not None: self._bias.data = b.data
 
     def forward(self, x, idx_sv):
-        return x @ self._alpha[idx_sv] + self._bias.expand(x.shape[0])
+        x_tilde = x @ self._alpha[idx_sv] + self._bias.expand([x.shape[0], 1])
+        return x_tilde.squeeze()
 
     def project(self):
         self._alpha.data -= torch.mean(self._alpha.data)

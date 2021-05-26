@@ -9,10 +9,11 @@ Hard LS-SVM abstract level
 
 from rkm.model.lssvm import LSSVM
 
+
 class HardLSSVM(LSSVM):
     def __init__(self, **kwargs):
         super(HardLSSVM, self).__init__(**kwargs)
-        self._eta = 0.
+        # self._eta = 0.
 
     def __str__(self):
         return f"Hard LS-SVM level with {self._model['kernel'].__str__()}."
@@ -21,10 +22,10 @@ class HardLSSVM(LSSVM):
         return super().loss(x, y)
 
     def before_step(self, x=None, y=None):
-        assert (x is not None) and (y is not None), \
-            "Tensors x and y must be specified before each step in a hard LSSVM."
+        if x is None: x = self.layerin
+        if y is None: y = self.layerout
         a, b = self.solve(x, y)
-        self.model["linear"].set(a, b)
+        self._model["linear"].set(a, b)
 
     def after_step(self, x=None, y=None):
         pass

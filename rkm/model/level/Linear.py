@@ -15,7 +15,7 @@ class Linear(torch.nn.Module, metaclass=ABCMeta):
         super(Linear, self).__init__()
 
         switcher = {"soft": True, "hard": False}
-        type = kwargs["type"]
+        type = kwargs["constraint"]
         if type not in switcher:
             raise NameError("Invalid constraint (must be hard or soft).")
 

@@ -14,7 +14,7 @@ import rkm
 
 class Optimizer():
     @rkm.kwargs_decorator({"lr": 1e-3})
-    def __init__(self, euclidean_params, stiefel_params, type="sgd", **kwargs):
+    def __init__(self, euclidean_params, stiefel_params, type="adam", **kwargs):
         self._kwargs = kwargs
         self._type = type
 
@@ -23,7 +23,7 @@ class Optimizer():
 
         if len(euclidean_params) > 0:
             euclidean_switcher = {"sgd": lambda: torch.optim.SGD(euclidean_params, **self._kwargs),
-                                "adam": lambda: torch.optim.Adam(stiefel_params, **self._kwargs)}
+                                "adam": lambda: torch.optim.Adam(euclidean_params, **self._kwargs)}
             self._euclidean = euclidean_switcher.get(type, "Incorrect optimizer type.")()
 
         if len(stiefel_params) > 0:

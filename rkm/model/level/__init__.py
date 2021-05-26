@@ -19,8 +19,8 @@ from .PrimalLinear import PrimalLinear
 class Level(torch.nn.Module, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
         {"size_in": 1, "size_out": 1, "eta": 1, "representation": "dual", "init_kernels": 1,
-         "type": "hard", "live_update": True})
-    def __init__(self, **kwargs):
+         "constraint": "hard", "live_update": True})
+    def __init__(self, device='cpu', **kwargs):
         """
 
         :param representation: "primal" or "dual" representation (default "dual").
@@ -29,6 +29,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         :param live_update: Live update of the value of the kernel (default True).
         """
         super(Level, self).__init__()
+        self.device = device
 
         self._size_in = kwargs["size_in"]
         self._size_out = kwargs["size_out"]
@@ -40,7 +41,28 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self._representation = kwargs["representation"]
         self._model = torch.nn.ModuleDict({})
 
+        self._input = None
+        self._output = None
+
         self._generate_model(**kwargs)
+
+    @property
+    def layerin(self):
+        return self._input
+
+    @property
+    def layerout(self):
+        return self._output
+
+    @layerin.setter
+    def layerin(self, value):
+        assert value.size(1) == self._size_in
+        self._input = value
+
+    @layerout.setter
+    def layerout(self, value):
+        # assert value.size(1) == self._size_out
+        self._output = value
 
     @abstractmethod
     def __str__(self):
@@ -58,15 +80,17 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
             raise rkm.model.RepresentationError
         linear = switcher[kwargs["representation"]](**kwargs)
 
+        kernel_kwargs = {**kwargs["kernel"], **{"init_kernels": self._init_kernels}}
+
         self._model = torch.nn.ModuleDict({
-            "kernel": rkm.model.kernel.KernelFactory.KernelFactory.create(**kwargs["kernel"]),
+            "kernel": rkm.model.kernel.KernelFactory.KernelFactory.create(**kernel_kwargs),
             "linear": linear})
 
     def forward(self, x, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self._all_kernels
-        if self._live_update: self._model["kernel"].update(x)
-        x = self._model["kernel"](x, self._representation, idx_kernels)
-        x = self._model["linear"](x, idx_kernels)
+        if self._live_update: self.kernel.update(x)
+        x = self.kernel(x, self._representation, idx_kernels)
+        x = self.linear(x, idx_kernels)
         return x
 
     @abstractmethod
@@ -118,20 +142,19 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         pass
 
     def kernels_init(self, x=None):
-        self._model["kernel"].kernels_init(x)
+        self.kernel.kernels_init(x)
         self.kernels_initialized = True
 
     @property
-    def __all_kernels(self):
+    def _all_kernels(self):
         return range(self._num_kernels)
 
-    @property
-    def __stoch_kernels(self):
+    def _stoch_kernels(self):
         if self._stochastic < 1.:
-            idx = random.choices(self.all_kernels, k=np.maximum(
-                torch.round(self._stochastic * self.init_kernels), self.num_kernels))
+            idx = random.sample(self._all_kernels, k=np.maximum(
+                int(self._stochastic * self._init_kernels), self.num_kernels))
         else:
-            idx = self.all_kernels
+            idx = self._all_kernels
         return idx
 
     @rkm.kwargs_decorator({"mtol": 1.0e-2, "rtol": 1.0e-4})
@@ -144,19 +167,19 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         """
         assert self._size_out == 1, NotImplementedError
 
-        def __merge(idxs):
-            self._model["kernel"].merge(idxs)
-            self._model["linear"].merge(idxs)
+        def merge(idxs):
+            self.kernel.merge(idxs)
+            self.linear.merge(idxs)
             self._num_kernels -= idxs.size(0)
 
-        def __reduce(idxs):
-            self._model["kernel"].reduce(idxs)
-            self._model["linear"].reduce(idxs)
+        def reduce(idxs):
+            self.kernel.reduce(idxs)
+            self.linear.reduce(idxs)
             self._num_kernels -= idxs.size(0)
 
         if kwargs["mtol"] is not None:
-            idxs_merge = self._model["kernel"].merge_idxs(**kwargs)
-            __merge(idxs_merge)
+            idxs_merge = self.kernel.merge_idxs(**kwargs)
+            merge(idxs_merge)
         if kwargs["rtol"] is not None:
-            idxs_reduce = self._model["linear"].reduce_idxs(**kwargs)
-            __reduce(idxs_reduce)
+            idxs_reduce = self.linear.reduce_idxs(**kwargs)
+            reduce(idxs_reduce)

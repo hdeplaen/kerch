@@ -35,7 +35,7 @@ class RBFKernel(mdl.kernel.Kernel):
 
     def implicit(self, x, idx_kernels=None):
         xs = x[:, None, :].expand(-1, len(idx_kernels), -1)
-        params = self.kernels(idx_kernels).expand(x.size(0), -1, -1)
+        params = self.kernels[idx_kernels,:].expand(x.size(0), -1, -1)
 
         diff = xs - params
         norm2 = torch.sum(diff * diff, dim=2)

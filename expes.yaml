@@ -2,15 +2,36 @@ lssvm:
   cuda: False
   data:
     dataset: "two_moons"
-    n_samples: 50
+    n_samples: 15
   level:
+    stochastic: .5
+    size_in: 2
     plot: True
     type: "lssvm"
     gamma: .5
-    constraint: "soft"
     representation: "dual"
     points_trainable: False
     aggregate: False
+    init_kernels: 15
+    kernel:
+      kernel_type: "rbf"
+      sigma: 1.
+      sigma_trainable: False
+
+kpca:
+  cuda: False
+  data:
+    dataset: "two_moons"
+    n_samples: 5
+  level:
+    size_in: 2
+    plot: True
+    type: "kpca"
+    gamma: .5
+    representation: "dual"
+    points_trainable: False
+    aggregate: False
+    init_kernels: 5
     kernel:
       kernel_type: "rbf"
       sigma: 1.

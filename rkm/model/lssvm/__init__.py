@@ -46,30 +46,32 @@ class LSSVM(Level, metaclass=ABCMeta):
         def primal_reg(idx_kernels):
             weight = self._model['linear'].weight
             return (1 / len(idx_kernels)) * weight.t() @ weight
+            # return weight.t() @ weight
 
         def dual_reg(idx_kernels):
             alpha = self._model["linear"].alpha[idx_kernels]
-            K = self._model["kernel"].matrix(idx_kernels)
+            K = self._model["kernel"].dmatrix(idx_kernels)
             return (1 / len(idx_kernels)) * alpha.t() @ K @ alpha
+            # return alpha.t() @ K @ alpha
 
         switcher_reg = {"primal": lambda idx_kernels: primal_reg(idx_kernels),
                         "dual": lambda idx_kernels: dual_reg(idx_kernels)}
         self._reg = switcher_reg.get(kwargs["representation"], RepresentationError)
 
     def recon(self, x, y, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self.all_kernels
+        if idx_kernels is None: idx_kernels = self._all_kernels
         x_tilde = self.forward(x, idx_kernels)
-        return self._criterion(x_tilde, y)
+        return self._criterion(x_tilde, y), x_tilde
 
     def reg(self, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self.all_kernels
+        if idx_kernels is None: idx_kernels = self._all_kernels
         return torch.trace(self._reg(idx_kernels))
 
     def loss(self, x=None, y=None, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self.all_kernels
-        recon = self.recon(idx_kernels, x, y)
+        if idx_kernels is None: idx_kernels = self._all_kernels
+        recon, x_tilde = self.recon(x, y, idx_kernels)
         reg = self.reg(idx_kernels)
-        return .5 * reg + .5 * self._gamma * recon
+        return .5 * reg + .5 * self._gamma * recon, x_tilde
 
     def solve(self, x, y=None):
         assert y is not None, "Tensor y is unspecified. This is not allowed for a LSSVM level."
@@ -99,23 +101,28 @@ class LSSVM(Level, metaclass=ABCMeta):
         return weight, bias
 
     def dual(self, x, y):
-        assert y.size(1) == 1, "Not implemented for multi-dimensional output (as for now)."
+        assert y.dim() == 1, "Not implemented for multi-dimensional output (as for now)."
         n = x.size(0)
 
-        K = self._model["kernel"].matrix()
-        I = torch.eye(n)
-        N = torch.ones((n, 1))
+        K = self._model["kernel"].dmatrix(self._all_kernels)
+        I = torch.eye(n, device=self.device)
+        N = torch.ones((n, 1), device=self.device)
         A = torch.cat((torch.cat((K + (1 / self._gamma) * I, N), dim=1),
-                       torch.cat((N.t(), torch.tensor(0.)), dim=1)), dim=0)
-        B = torch.cat((y, torch.tensor(0.)), dim=0)
+                       torch.cat((N.t(), torch.tensor([[0.]], device=self.device)), dim=1)), dim=0)
+        B = torch.cat((y, torch.tensor([0.], device=self.device)), dim=0)
 
-        sol = torch.solve(A, B)
+        sol, _ = torch.solve(B[:, None], A)
         alpha = sol[0:-1].data
         beta = sol[-1].data
+
+        reg = (1 / len(y)) * alpha.t() @ K @ alpha
+        yhat = (K @ alpha + beta.expand([n, 1])).squeeze()
+        recon = (1 / len(y)) * torch.sum((yhat - y) ** 2)
 
         return alpha, beta
 
     def get_params(self):
-        euclidean = torch.nn.ParameterList(self._model.parameters())
+        euclidean = torch.nn.ParameterList(
+            [p for p in self._model.parameters() if p.requires_grad])
         stiefel = torch.nn.ParameterList()
         return euclidean, stiefel
