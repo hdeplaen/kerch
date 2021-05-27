@@ -33,22 +33,22 @@ class KPCA(Level, metaclass=ABCMeta):
     def _generate_representation(self, **kwargs):
         # REGULARIZATION
         def primal_var(idx_kernels):
-            C = self._model["kernel"].cov()
+            C = self._model["kernel"].pmatrix(idx_kernels)
             V = self._model["linear"].weight
             return torch.trace(C) - torch.trace(V.t() @ C @ V)
 
         def dual_var(idx_kernels):
-            K = self._model["kernel"].corr(idx_kernels)
-            H = self._model["linear"].alpha[idx_kernels]
-            return torch.trace(K) - torch.trace(H.t() @ K @ H)
+            K = self._model["kernel"].dmatrix(idx_kernels)
+            H = self._model["linear"].alpha[idx_kernels,:]
+            return torch.trace(K) - torch.trace(H @ H.t() @ K)
 
         switcher_var = {"primal": lambda idx_kernels: primal_var(idx_kernels),
                         "dual": lambda idx_kernels: dual_var(idx_kernels)}
         self._var = switcher_var.get(kwargs["representation"], RepresentationError)
 
     def loss(self, x=None, y=None, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self.all_kernels
-        self._var(idx_kernels)
+        if idx_kernels is None: idx_kernels = self._all_kernels
+        return self._var(idx_kernels), None
 
     def solve(self, x, y=None):
         switcher = {'primal': lambda: self.primal(x),
@@ -65,8 +65,10 @@ class KPCA(Level, metaclass=ABCMeta):
 
     def dual(self, x, y=None):
         K = self.kernel.dmatrix()
-        s, v = torch.lobpcg(K, k=self._size_out)
-        h = v @ torch.diag(s)
+        _, v = torch.lobpcg(K, k=self._size_out)
+        h = v
+        # U, s, _ = torch.svd(K)
+        # h = U[:, self._size_out]
 
         return h.data, None
 

@@ -21,10 +21,11 @@ class HardKPCA(mdl.kpca.KPCA):
     def loss(self, x=None, y=None, idx_kernels=None):
         return super().loss(x, y)
 
-    def before_step(self, x=None, y=None):
+    def before_step(self, x=None, y=None, idx_kernels=None):
+        if idx_kernels is None: idx_kernels = self._all_kernels
         if x is None: x = self.layerin
         a, b = self.solve(x)
-        self.model["linear"].set(a, b)
+        self._model["linear"].set(a, b)
 
     def after_step(self, x=None, y=None):
         pass

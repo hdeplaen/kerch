@@ -13,23 +13,40 @@ from .cayley import cayley_stiefel_optimizer
 import rkm
 
 class Optimizer():
-    @rkm.kwargs_decorator({"lr": 1e-3})
+    @staticmethod
+    def param_state(params):
+        out = torch.nn.ParameterList([])
+        for p in params:
+            if p.requires_grad is True:
+                out.append(p)
+        return out
+
+
+    @rkm.kwargs_decorator({"lr": 5e-3})
     def __init__(self, euclidean_params, stiefel_params, type="adam", **kwargs):
         self._kwargs = kwargs
         self._type = type
 
-        self._euclidean = None
-        self._stiefel = None
+        euclidean_params = Optimizer.param_state(euclidean_params)
+        stiefel_params = Optimizer.param_state(stiefel_params)
+
+        self._dict = []
+        self._opt = None
 
         if len(euclidean_params) > 0:
-            euclidean_switcher = {"sgd": lambda: torch.optim.SGD(euclidean_params, **self._kwargs),
-                                "adam": lambda: torch.optim.Adam(euclidean_params, **self._kwargs)}
-            self._euclidean = euclidean_switcher.get(type, "Incorrect optimizer type.")()
+            dict_euclidean = {'params': euclidean_params, 'stiefel': False}
+            dict_euclidean = {**dict_euclidean, **kwargs}
+            self._dict.append(dict_euclidean)
 
         if len(stiefel_params) > 0:
-            stiefel_switcher = {"sgd": lambda: cayley_stiefel_optimizer.SGDG(stiefel_params, **self._kwargs),
-                                "adam": lambda: cayley_stiefel_optimizer.AdamG(stiefel_params, **self._kwargs)}
-            self._stiefel = stiefel_switcher.get(type, "Incorrect optimizer type.")()
+            dict_stiefel = {'params': stiefel_params, 'stiefel': True}
+            dict_stiefel = {**dict_stiefel, **kwargs}
+            self._dict.append(dict_stiefel)
+
+        if self._dict:
+            opt_switcher = {"sgd": cayley_stiefel_optimizer.SGDG,
+                            "adam": cayley_stiefel_optimizer.AdamG}
+            self._opt = opt_switcher.get(type, "Incorrect optimizer type.")(self._dict)
 
     @property
     def type(self):
@@ -40,9 +57,7 @@ class Optimizer():
         return self._kwargs
 
     def step(self, closure=None):
-        if self._euclidean is not None: self._euclidean.step(closure)
-        if self._stiefel is not None: self._stiefel.step(closure)
+        if self._opt is not None: self._opt.step(closure)
 
     def zero_grad(self):
-        if self._euclidean is not None: self._euclidean.zero_grad()
-        if self._stiefel is not None: self._stiefel.zero_grad()
+        if self._opt is not None: self._opt.zero_grad()

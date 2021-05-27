@@ -87,7 +87,7 @@ class RKM(torch.nn.Module):
 
         return tot_loss
 
-    def learn(self, x, y, maxiter=int(5e+4), tol=1e-9, **kwargs):
+    def learn(self, x, y, maxiter=int(1e+3), tol=1e-8, **kwargs):
         """
 
         :param x: input
@@ -115,17 +115,21 @@ class RKM(torch.nn.Module):
             return loss
 
         min_loss = float("Inf")
-        tr = trange(maxiter, desc='Training model')
+        tr = trange(int(maxiter), desc='Training model')
         for iter in tr:
             current_loss = self._optstep(opt, closure, solve).data
 
             if (iter % 10) == 0:
-                tr.set_description(f'Loss: {current_loss}')
+                tr.set_description(f"Loss: {current_loss:6.4e}")
                 if abs(current_loss - min_loss) < tol: break
 
             if current_loss < min_loss: min_loss = current_loss
 
-        print('Learning model completed.')
+        # print(self._model[0]._model['linear'].alpha.data)
+        # print(self._model[0]._model['kernel'].K.data)
+        # print('Learning model completed.')
+
+        return self._model[0]._model['linear'].alpha.data
 
     def evaluate(self, x):
         x.to(self.device)

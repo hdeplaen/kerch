@@ -25,14 +25,14 @@ def lssvm():
     level_params_soft["constraint"] = "soft"
     mdl_soft = rkm.RKM(cuda=params["cuda"])
     mdl_soft.append_level(**level_params_soft)
-    mdl_soft.learn(input, target)
+    mdl_soft.learn(input, target, maxiter=1e+4, tol=1e-7)
 
     # HARD RKM
     level_params_hard = params["level"]
     level_params_hard["constraint"] = "hard"
     mdl_hard = rkm.RKM(cuda=params["cuda"])
     mdl_hard.append_level(**level_params_hard)
-    mdl_hard.learn(input, target)
+    mdl_hard.learn(input, target, maxiter=1e+4, tol=1e-7)
 
     print('LS-SVM test finished')
 
@@ -47,16 +47,16 @@ def kpca():
     level_params_soft["constraint"] = "soft"
     mdl_soft = rkm.RKM(cuda=params["cuda"])
     mdl_soft.append_level(**level_params_soft)
-    mdl_soft.learn(input, target)
+    mdl_soft.learn(input, target, maxiter=1e+4, tol=1e-5)
+    print('Soft KPCA tested')
 
     # HARD RKM
     level_params_hard = params["level"]
     level_params_hard["constraint"] = "hard"
     mdl_hard = rkm.RKM(cuda=params["cuda"])
     mdl_hard.append_level(**level_params_hard)
-    mdl_hard.learn(input, target)
-
-    print('KPCA test finished')
+    mdl_hard.learn(input, target, maxiter=1e+2, tol=1e-4)
+    print('Hard KPCA finished')
 
 
 #######################################################################################################################

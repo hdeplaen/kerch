@@ -22,7 +22,7 @@ kpca:
   cuda: False
   data:
     dataset: "two_moons"
-    n_samples: 5
+    n_samples: 50
   level:
     size_in: 2
     plot: True
@@ -31,7 +31,7 @@ kpca:
     representation: "dual"
     points_trainable: False
     aggregate: False
-    init_kernels: 5
+    init_kernels: 50
     kernel:
       kernel_type: "rbf"
       sigma: 1.

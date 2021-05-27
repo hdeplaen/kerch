@@ -20,18 +20,17 @@ class Kernel(nn.Module, metaclass=ABCMeta):
     k(x,y) = f(x,y)
     """
 
-    @property
-    def kernels(self, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self.all_kernels
-        return self.__kernels.gather(dim=1, index=idx_kernels)
+    # @property
+    # def kernels(self, idx_kernels=None):
+    #     if idx_kernels is None: idx_kernels = self.all_kernels
+    #     return self.kernels.gather(dim=1, index=idx_kernels)
 
-    @property
     def num_kernels(self):
-        return self.__kernels.size(1)
+        return self.kernels.size(0)
 
-    @kernels.setter
-    def kernels(self, val):
-        self.__kernels = val
+    # @kernels.setter
+    # def kernels(self, val):
+    #     self.kernels.data = val.data
 
     @abstractmethod
     @rkm.kwargs_decorator({"size_in": 1, "init_kernels": 1, "kernels_trainable": False})
@@ -100,6 +99,7 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         :param idx_kernels: Index of the support vectors used to compute the kernel matrix. If nothing is provided, the kernel uses all of them.
         :return: Kernel matrix.
         """
+        if idx_kernels is None: idx_kernels = self.all_kernels()
         self.K = self.implicit(self.kernels[idx_kernels,:], idx_kernels)
         return self.K
 
@@ -117,6 +117,5 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         self.C = phi.t() @ k
         return self.C, phi
 
-    @property
     def all_kernels(self):
-        return range(self.num_kernels)
+        return range(self.num_kernels())

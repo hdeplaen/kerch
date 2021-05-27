@@ -80,7 +80,8 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
             raise rkm.model.RepresentationError
         linear = switcher[kwargs["representation"]](**kwargs)
 
-        kernel_kwargs = {**kwargs["kernel"], **{"init_kernels": self._init_kernels}}
+        kernel_kwargs = {**kwargs["kernel"], **{"init_kernels": self._init_kernels,
+                                                "size_in": kwargs["size_in"]}}
 
         self._model = torch.nn.ModuleDict({
             "kernel": rkm.model.kernel.KernelFactory.KernelFactory.create(**kernel_kwargs),
