@@ -15,7 +15,7 @@ from rkm.expes.data import data
 import rkm.model.rkm as rkm
 
 def lssvm():
-    params = load_params('lssvm')
+    params = load_params('tests', 'lssvm')
     data_params = params['data']
     input, target, range = data.factory(data_params["dataset"],
                                         data_params["n_samples"])
@@ -37,7 +37,7 @@ def lssvm():
     print('LS-SVM test finished')
 
 def kpca():
-    params = load_params('kpca')
+    params = load_params('tests', 'kpca')
     data_params = params['data']
     input, target, range = data.factory(data_params["dataset"],
                                         data_params["n_samples"])
@@ -58,15 +58,20 @@ def kpca():
     mdl_hard.learn(input, target, maxiter=1e+2, tol=1e-4)
     print('Hard KPCA finished')
 
+def pima_indians():
+    params = load_params('two_levels', 'pima_indians')
+    data_params = params['data']
+    input, target, range = data.factory(data_params["dataset"],
+                                        data_params["n_samples"])
 
 #######################################################################################################################
 
-def load_params(expe: str):
+def load_params(file: str, expe: str):
     """
     Loads the parameters from the expe.yaml file.
     :param expe: string representing parameters.
     :return: dictionnary of parameters.
     """
-    with open(os.path.join(sys.path[0], "expes.yaml"), "r") as file:
+    with open(os.path.join(sys.path[0], "rkm/expes/expes/" + file + ".yaml"), "r") as file:
         content = yaml.safe_load(file)
     return content.get(expe, 'Experiment not recognized in yaml file.')

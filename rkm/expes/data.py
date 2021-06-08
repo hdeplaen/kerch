@@ -7,6 +7,7 @@ Various datasets for experiments
 @date: March 2021
 """
 
+import pandas as pd
 import numpy as np
 import math
 from sklearn import datasets
@@ -78,11 +79,19 @@ class data():
         return x[:n_samples, :, :], y[:n_samples], r
 
     @staticmethod
+    def pima_indians(n_samples=100):
+        with open('rkm/expes/datasets/pima-indians-diabetes.csv') as csvfile:
+            data = pd.read_csv(csvfile, delimiter=',',lineterminator='@')
+            # data = data.to_numpy()
+        return data[n_samples,:]
+
+    @staticmethod
     def factory(name, n_samples=None):
         datasets = {"gaussians": data.gaussians,
                     "spiral": data.spiral,
                     "two_moons": data.two_moons,
-                    "usps": data.usps}
+                    "usps": data.usps,
+                    "pima_indians": data.pima_indians}
         func = datasets.get(name, "Invalid dataset")
         if n_samples is None:
             return func()

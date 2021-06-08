@@ -16,11 +16,12 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Runs RKM models.')
     parser.add_argument('--experiment',
-                        default=2,
+                        default=3,
                         type=int,
                         help='Experiment number (1: lssvm, 2: kpca)')
 
     args = parser.parse_args()
-    experiment = {1: lambda: run.lssvm(),
-                  2: lambda: run.kpca()}
+    experiment = {1: run.lssvm,
+                  2: run.kpca,
+                  3: run.pima_indians}
     experiment.get(args.experiment, "Invalid experiment number.")()
