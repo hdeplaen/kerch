@@ -47,6 +47,14 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self._generate_model(**kwargs)
 
     @property
+    def size_out(self):
+        return self._size_out
+
+    @property
+    def size_in(self):
+        return self._size_in
+
+    @property
     def layerin(self):
         return self._input
 
@@ -56,7 +64,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
 
     @layerin.setter
     def layerin(self, value):
-        assert value.size(1) == self._size_in
+        assert value.size(1) == self.size_in
         self._input = value
 
     @layerout.setter

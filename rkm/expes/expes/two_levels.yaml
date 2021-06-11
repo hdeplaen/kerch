@@ -1,18 +1,47 @@
 pima_indians:
-  cuda: True
+  cuda: False
   data:
     dataset: "pima_indians"
-    n_samples: 15
-  level:
-    stochastic: .5
-    size_in: 2
+    n_samples: 100
+  level1:
+    stochastic: 1.
+    size_in: 8
+    size_out: 5
+    plot: True
+    type: "kpca"
+    representation: "dual"
+    points_trainable: False
+    aggregate: False
+    init_kernels: 100
+    kernel:
+      kernel_type: "rbf"
+      sigma: 1.
+      sigma_trainable: False
+  level2:
+    stochastic: 1
+    size_in: 5
+    size_out: 3
+    plot: True
+    type: "kpca"
+    representation: "dual"
+    points_trainable: False
+    aggregate: False
+    init_kernels: 100
+    kernel:
+      kernel_type: "rbf"
+      sigma: 1.
+      sigma_trainable: False
+  level3:
+    stochastic: 1
+    size_in: 3
+    size_out: 1
     plot: True
     type: "lssvm"
     gamma: .5
     representation: "dual"
     points_trainable: False
     aggregate: False
-    init_kernels: 2500
+    init_kernels: 100
     kernel:
       kernel_type: "rbf"
       sigma: 1.

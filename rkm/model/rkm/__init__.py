@@ -132,9 +132,9 @@ class RKM(torch.nn.Module):
         return self._model[0]._model['linear'].alpha.data
 
     def evaluate(self, x):
-        x.to(self.device)
+        x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
         self.to(self.device)
-        return self.forward(x).detach().cpu()
+        return self.forward(x).detach().cpu().numpy().astype('float64')
 
     @rkm.kwargs_decorator({"size_in": 1, "constraint": "soft"})
     def append_level(self, type, **kwargs):
@@ -148,7 +148,7 @@ class RKM(torch.nn.Module):
         size_in_new = kwargs["size_in"]
 
         if current > 0:
-            size_out_old = self._model[current].size_out
+            size_out_old = self._model[current-1].size_out
             assert size_in_new == size_out_old, \
                 "Layer " + str(current + 1) + " (size_in=" + str(kwargs["size_in"]) + \
                 ") not compatible with layer " + str(current) + " (size_out=" + str() + ")."

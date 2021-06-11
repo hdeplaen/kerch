@@ -15,7 +15,7 @@ from sklearn import datasets
 
 class data():
     @staticmethod
-    def gaussians(n_samples=100):
+    def gaussians(n_samples=100, shift=0):
         size = n_samples / 2
         s1, m1 = .7, (2, 1)
         s2, m2 = 1.2, (-2, -3)
@@ -33,7 +33,7 @@ class data():
         return input, target
 
     @staticmethod
-    def spiral(n_samples=194):
+    def spiral(n_samples=194, shift=0):
         size = n_samples / 2
 
         def spiral_xy(i, spiral_num):
@@ -63,14 +63,14 @@ class data():
         return input, target, r
 
     @staticmethod
-    def two_moons(n_samples=100):
+    def two_moons(n_samples=100, shift=0):
         input, output = datasets.make_moons(n_samples, noise=.1)
         output = np.where(output == 0, -1, 1)
         range = (-4, 7, -4, 4)
         return 2.5 * input, output, range
 
     @staticmethod
-    def usps(n_samples=100):
+    def usps(n_samples=100, shift=0):
         digits = datasets.load_digits(2)
         x = digits['data']
         y = digits['target']
@@ -79,14 +79,16 @@ class data():
         return x[:n_samples, :, :], y[:n_samples], r
 
     @staticmethod
-    def pima_indians(n_samples=100):
+    def pima_indians(n_samples=100, shift=0):
         with open('rkm/expes/datasets/pima-indians-diabetes.csv') as csvfile:
-            data = pd.read_csv(csvfile, delimiter=',',lineterminator='@')
+            data = pd.read_csv(csvfile, delimiter=',',lineterminator='\n')
             # data = data.to_numpy()
-        return data[n_samples,:]
+        print('Pima Indians Diabetes dataset loaded. ')
+        data = data.to_numpy()[range(shift,n_samples+shift),:]
+        return data[:,0:8], data[:,8], None
 
     @staticmethod
-    def factory(name, n_samples=None):
+    def factory(name, n_samples=0, shift=0):
         datasets = {"gaussians": data.gaussians,
                     "spiral": data.spiral,
                     "two_moons": data.two_moons,
@@ -96,4 +98,4 @@ class data():
         if n_samples is None:
             return func()
         else:
-            return func(n_samples)
+            return func(n_samples, shift)

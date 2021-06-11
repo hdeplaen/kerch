@@ -36,7 +36,7 @@ class DualLinear(Linear.Linear):
         if b is not None: self.bias.data = b.data
 
     def forward(self, x, idx_sv):
-        x_tilde = x @ self.alpha[idx_sv] + self.bias.expand([x.shape[0], 1])
+        x_tilde = x @ self.alpha[idx_sv] + self.bias.expand([x.shape[0],self.bias.shape[0]])
         return x_tilde.squeeze()
 
     def project(self):

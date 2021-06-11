@@ -33,7 +33,7 @@ class KPCA(Level, metaclass=ABCMeta):
     def _generate_representation(self, **kwargs):
         # REGULARIZATION
         def primal_var(idx_kernels):
-            C = self._model["kernel"].pmatrix(idx_kernels)
+            C, _ = self._model["kernel"].pmatrix(None, idx_kernels)
             V = self._model["linear"].weight
             return torch.trace(C) - torch.trace(V.t() @ C @ V)
 

@@ -18,8 +18,8 @@ class PrimalLinear(Linear.Linear):
         super(PrimalLinear, self).__init__(**kwargs)
         self.__weight = torch.nn.Parameter(
             torch.nn.init.orthogonal_(torch.Tensor(kwargs["size_in"], kwargs["size_out"])),
-            requires_grad=self.__soft)
-        self.__bias = torch.nn.Parameter(torch.tensor(0.), requires_grad=self.__soft and self.__requires_bias)
+            requires_grad=self._soft)
+        self.__bias = torch.nn.Parameter(torch.tensor(0.), requires_grad=self._soft and self._requires_bias)
 
     @property
     def weight(self):

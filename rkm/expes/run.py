@@ -10,6 +10,7 @@ Various experiments
 import os
 import sys
 import yaml
+import numpy as np
 
 from rkm.expes.data import data
 import rkm.model.rkm as rkm
@@ -61,8 +62,20 @@ def kpca():
 def pima_indians():
     params = load_params('two_levels', 'pima_indians')
     data_params = params['data']
-    input, target, range = data.factory(data_params["dataset"],
+    input, target, _ = data.factory(data_params["dataset"],
                                         data_params["n_samples"])
+    input_test, target_test, _ = data.factory(data_params["dataset"],
+                                              100,
+                                              data_params["n_samples"])
+
+    mdl = rkm.RKM(cuda=params["cuda"])
+    mdl.append_level(**params["level1"])
+    mdl.append_level(**params["level2"])
+    mdl.append_level(**params["level3"])
+    mdl.learn(input, target, maxiter=5e+3, tol=1e-6)
+    y_hat = mdl.evaluate(input_test)
+    MSE = np.mean((y_hat-target_test)**2)
+    print(MSE)
 
 #######################################################################################################################
 
