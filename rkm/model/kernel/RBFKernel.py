@@ -28,10 +28,10 @@ class RBFKernel(mdl.kernel.Kernel):
         super(RBFKernel, self).__init__(**kwargs)
 
         self.sigma_trainable = kwargs["sigma_trainable"]
-        self.sigma = torch.nn.Parameter(torch.tensor(kwargs["sigma"]), requires_grad=self.sigma_trainable)
+        self.sigma = torch.nn.Parameter(torch.tensor([kwargs["sigma"]], dtype=rkm.ftype), requires_grad=self.sigma_trainable)
 
     def __str__(self):
-        return "RBF kernel"
+        return f"RBF kernel (sigma: {str(self.sigma.data.cpu().numpy()[0])})"
 
     def implicit(self, x, idx_kernels=None):
         xs = x[:, None, :].expand(-1, len(idx_kernels), -1)

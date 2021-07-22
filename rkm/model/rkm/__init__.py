@@ -36,12 +36,15 @@ class RKM(torch.nn.Module):
 
         self._model = torch.nn.ModuleList()
         self._euclidean = torch.nn.ParameterList()
+        self._slow = torch.nn.ParameterList()
         self._stiefel = torch.nn.ParameterList()
 
     def __str__(self):
-        text = f"This RKM has {len(self._model)} levels:\n"
+        text = f"\nThis RKM has {len(self._model)} levels:\n"
+        num = 1
         for level in self._model:
-            text += (level.__str__() + "\n")
+            text += ("LEVEL" + str(num) + ": " + level.__str__() + "\n")
+            num += 1
         return text
 
     def level(self, num=None):
@@ -87,7 +90,10 @@ class RKM(torch.nn.Module):
 
         return tot_loss
 
-    def learn(self, x, y, maxiter=int(1e+3), tol=1e-8, **kwargs):
+    @rkm.kwargs_decorator(
+        {"maxiter": 1e+3,
+         "tol": 1e-5})
+    def learn(self, x, y, verbose=True, test_x=None, test_y=None, **kwargs):
         """
 
         :param x: input
@@ -95,11 +101,19 @@ class RKM(torch.nn.Module):
         :param maxiter: maximum number of iteration (default 1000)
         :param kwargs: optimizer parameters (default SGD with learning rate of 0.001)
         """
+        maxiter = int(kwargs["maxiter"])
+        tol = kwargs["tol"]
+        test = test_x is not None and test_y is not None
+        if test:
+            test_x = torch.tensor(test_x, dtype=rkm.ftype).to(self.device)
+            test_y = torch.tensor(test_y, dtype=rkm.ftype).to(self.device)
+        test_val = "empty"
 
         x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
         y = torch.tensor(y, dtype=rkm.ftype).to(self.device)
         self.to(self.device)
         opt = Optimizer.Optimizer(self._euclidean,
+                                  self._slow,
                                   self._stiefel,
                                   **kwargs)
 
@@ -115,13 +129,23 @@ class RKM(torch.nn.Module):
             return loss
 
         min_loss = float("Inf")
-        tr = trange(int(maxiter), desc='Training model')
+
+        if verbose:
+            tr = trange(int(maxiter), desc='Training model')
+        else:
+            tr = range(int(maxiter))
+
         for iter in tr:
             current_loss = self._optstep(opt, closure, solve).data
 
-            if (iter % 10) == 0:
-                tr.set_description(f"Loss: {current_loss:6.4e}")
+            if (iter % 10)== 0 and verbose:
+                tr.set_description(f"Loss: {current_loss:6.4e}, test: {test_val}")
                 if abs(current_loss - min_loss) < tol: break
+
+            if (iter % 250) == 0 and test and verbose:
+                test_mse = torch.mean((self.evaluate(test_x, numpy=False) - test_y)**2)*100
+                test_val = f"{test_mse:4.2f}%"
+                print(self)
 
             if current_loss < min_loss: min_loss = current_loss
 
@@ -131,10 +155,13 @@ class RKM(torch.nn.Module):
 
         return self._model[0]._model['linear'].alpha.data
 
-    def evaluate(self, x):
-        x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
+    def evaluate(self, x, numpy=True):
+        if numpy: x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
         self.to(self.device)
-        return self.forward(x).detach().cpu().numpy().astype('float64')
+        for level in self._model:
+            x = level.evaluate(x)
+        if numpy: x = x.detach().cpu().numpy()
+        return x
 
     @rkm.kwargs_decorator({"size_in": 1, "constraint": "soft"})
     def append_level(self, type, **kwargs):
@@ -161,7 +188,8 @@ class RKM(torch.nn.Module):
         level = switcher3.get(kwargs["constraint"], "Invalid level constraint (soft/hard)"). \
             get(type, "Invalid level type (kpca/lssvm)")(device=self.device, **kwargs)
 
-        euclidean, stiefel = level.get_params()
+        euclidean, slow, stiefel = level.get_params(slow_names='sigma')
         self._euclidean.extend(euclidean)
+        self._slow.extend(slow)
         self._stiefel.extend(stiefel)
         self._model.append(level)

@@ -113,6 +113,10 @@ class SGDG(Optimizer):
                     V.copy_(V_new)               
 
                 else:
+                    momentum = group['momentum']
+                    weight_decay = group['weight_decay']
+                    dampening = group['dampening']
+                    nesterov = group['nesterov']
                     d_p = p.grad.data
                     if weight_decay != 0:
                         d_p.add_(weight_decay, p.data)
@@ -271,6 +275,7 @@ class AdamG(Optimizer):
                         else:
                             d_p = buf
 
-                    p.data.add_(-group['lr'], d_p)
+                    # p.data.add_(-group['lr'], d_p)
+                    p.data.add_(d_p, alpha=-group['lr'])
 
         return loss       

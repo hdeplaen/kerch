@@ -18,11 +18,14 @@ class SoftLSSVM(lssvm.LSSVM):
         self._stochastic = kwargs["stochastic"]
 
     def __str__(self):
-        return f"Soft LS-SVM level with {self._model['kernel'].__str__()}."
+        return f"Soft LS-SVM level with {self._model['kernel'].__str__()} {super(SoftLSSVM, self).__str__()}."
 
     def forward(self, x, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self._stoch_kernels()
         return super().forward(x, idx_kernels=idx_kernels)
+
+    def evaluate(self, x):
+        return super(SoftLSSVM, self).evaluate(x)
 
     def loss(self, x=None, y=None, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self._stoch_kernels()

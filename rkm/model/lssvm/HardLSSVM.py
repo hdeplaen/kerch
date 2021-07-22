@@ -16,7 +16,7 @@ class HardLSSVM(LSSVM):
         # self._eta = 0.
 
     def __str__(self):
-        return f"Hard LS-SVM level with {self._model['kernel'].__str__()}."
+        return f"Hard LS-SVM level with {self._model['kernel'].__str__()} {super(HardLSSVM, self).__str__()}."
 
     def loss(self, x=None, y=None, idx_kernels=None):
         return super().loss(x, y)

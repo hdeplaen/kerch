@@ -21,9 +21,8 @@ class Optimizer():
                 out.append(p)
         return out
 
-
     @rkm.kwargs_decorator({"lr": 5e-3})
-    def __init__(self, euclidean_params, stiefel_params, type="adam", **kwargs):
+    def __init__(self, euclidean_params, slow_params, stiefel_params, type="sgd", **kwargs):
         self._kwargs = kwargs
         self._type = type
 
@@ -35,13 +34,17 @@ class Optimizer():
 
         if len(euclidean_params) > 0:
             dict_euclidean = {'params': euclidean_params, 'stiefel': False}
-            dict_euclidean = {**dict_euclidean, **kwargs}
-            self._dict.append(dict_euclidean)
+            self._dict.append({**dict_euclidean, **kwargs})
+
+        if len(slow_params) > 0:
+            dict_slow = {'params': slow_params, 'stiefel': False, 'lr': kwargs['lr'] / 1}
+            dict_slow = {**dict_slow, **kwargs}
+            dict_slow['lr'] = dict_slow['lr'] / .1
+            self._dict.append(dict_slow)
 
         if len(stiefel_params) > 0:
             dict_stiefel = {'params': stiefel_params, 'stiefel': True}
-            dict_stiefel = {**dict_stiefel, **kwargs}
-            self._dict.append(dict_stiefel)
+            self._dict.append({**dict_stiefel, **kwargs})
 
         if self._dict:
             opt_switcher = {"sgd": cayley_stiefel_optimizer.SGDG,

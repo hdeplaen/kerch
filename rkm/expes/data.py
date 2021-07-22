@@ -10,7 +10,7 @@ Various datasets for experiments
 import pandas as pd
 import numpy as np
 import math
-from sklearn import datasets
+from sklearn import datasets, preprocessing
 
 
 class data():
@@ -96,6 +96,10 @@ class data():
                     "pima_indians": data.pima_indians}
         func = datasets.get(name, "Invalid dataset")
         if n_samples is None:
-            return func()
+            input, output, range = func()
         else:
-            return func(n_samples, shift)
+            input, output, range = func(n_samples, shift)
+
+        return input, output, range
+
+

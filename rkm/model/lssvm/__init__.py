@@ -121,8 +121,10 @@ class LSSVM(Level, metaclass=ABCMeta):
 
         return alpha, beta
 
-    def get_params(self):
+    def get_params(self, slow_names=None):
         euclidean = torch.nn.ParameterList(
-            [p for p in self._model.parameters() if p.requires_grad])
+            [p for n, p in self._model.named_parameters() if p.requires_grad and n not in slow_names])
+        slow = torch.nn.ParameterList(
+            [p for n, p in self._model.named_parameters() if p.requires_grad and n in slow_names])
         stiefel = torch.nn.ParameterList()
-        return euclidean, stiefel
+        return euclidean, slow, stiefel

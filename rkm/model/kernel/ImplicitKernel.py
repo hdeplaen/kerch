@@ -27,7 +27,7 @@ class ImplicitKernel(mdl.kernel.Kernel):
         assert self.__network is not None, "Network module must be specified."
 
     def __str__(self):
-        return "explicit kernel"
+        return "implicit kernel"
 
     def implicit(self, x, idx_kernels=None):
         return self.__network(x, self.kernels(idx_kernels))

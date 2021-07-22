@@ -74,7 +74,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
 
     @abstractmethod
     def __str__(self):
-        pass
+        return f"[{str(self.size_in)}, {str(self.size_out)}]"
 
     def __repr__(self):
         return self._str__()
@@ -98,6 +98,12 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
     def forward(self, x, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self._all_kernels
         if self._live_update: self.kernel.update(x)
+        x = self.kernel(x, self._representation, idx_kernels)
+        x = self.linear(x, idx_kernels)
+        return x
+
+    def evaluate(self, x):
+        idx_kernels = self._all_kernels
         x = self.kernel(x, self._representation, idx_kernels)
         x = self.linear(x, idx_kernels)
         return x

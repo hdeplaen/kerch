@@ -40,7 +40,8 @@ class KPCA(Level, metaclass=ABCMeta):
         def dual_var(idx_kernels):
             K = self._model["kernel"].dmatrix(idx_kernels)
             H = self._model["linear"].alpha[idx_kernels,:]
-            return torch.trace(K) - torch.trace(H @ H.t() @ K)
+            # return torch.trace(K) - torch.trace(H @ H.t() @ K)
+            return (torch.trace(K) - torch.trace(H @ H.t() @ K)) / torch.sum(K, (0,1))
 
         switcher_var = {"primal": lambda idx_kernels: primal_var(idx_kernels),
                         "dual": lambda idx_kernels: dual_var(idx_kernels)}
@@ -72,10 +73,13 @@ class KPCA(Level, metaclass=ABCMeta):
 
         return h.data, None
 
-    def get_params(self):
-        euclidean = self._model['kernel'].parameters()
+    def get_params(self, slow_names=None):
+        euclidean = torch.nn.ParameterList(
+            [p for n, p in  self._model['kernel'].named_parameters() if p.requires_grad and n not in slow_names])
+        slow = torch.nn.ParameterList(
+            [p for n, p in  self._model['kernel'].named_parameters() if p.requires_grad and n in slow_names])
         stiefel = self._model['linear'].parameters()
-        return euclidean, stiefel
+        return euclidean, slow, stiefel
 
     # @staticmethod
     # def create(**kwargs):

@@ -11,6 +11,7 @@ import os
 import sys
 import yaml
 import numpy as np
+from sklearn import preprocessing
 
 from rkm.expes.data import data
 import rkm.model.rkm as rkm
@@ -26,14 +27,14 @@ def lssvm():
     level_params_soft["constraint"] = "soft"
     mdl_soft = rkm.RKM(cuda=params["cuda"])
     mdl_soft.append_level(**level_params_soft)
-    mdl_soft.learn(input, target, maxiter=1e+4, tol=1e-7)
+    mdl_soft.learn(input, target, **params["opt"])
 
     # HARD RKM
     level_params_hard = params["level"]
     level_params_hard["constraint"] = "hard"
     mdl_hard = rkm.RKM(cuda=params["cuda"])
     mdl_hard.append_level(**level_params_hard)
-    mdl_hard.learn(input, target, maxiter=1e+4, tol=1e-7)
+    mdl_hard.learn(input, target, **params["opt"])
 
     print('LS-SVM test finished')
 
@@ -48,7 +49,7 @@ def kpca():
     level_params_soft["constraint"] = "soft"
     mdl_soft = rkm.RKM(cuda=params["cuda"])
     mdl_soft.append_level(**level_params_soft)
-    mdl_soft.learn(input, target, maxiter=1e+4, tol=1e-5)
+    mdl_soft.learn(input, target, **params["opt"])
     print('Soft KPCA tested')
 
     # HARD RKM
@@ -56,26 +57,35 @@ def kpca():
     level_params_hard["constraint"] = "hard"
     mdl_hard = rkm.RKM(cuda=params["cuda"])
     mdl_hard.append_level(**level_params_hard)
-    mdl_hard.learn(input, target, maxiter=1e+2, tol=1e-4)
+    mdl_hard.learn(input, target, **params["opt"])
     print('Hard KPCA finished')
 
 def pima_indians():
-    params = load_params('two_levels', 'pima_indians')
+    params = load_params('multi', 'pima_indians')
     data_params = params['data']
     input, target, _ = data.factory(data_params["dataset"],
                                         data_params["n_samples"])
+
     input_test, target_test, _ = data.factory(data_params["dataset"],
-                                              100,
-                                              data_params["n_samples"])
+                                              512,
+                                              255)
+
+    scaler = preprocessing.StandardScaler().fit(input)
+    input = scaler.transform(input)
+    input_test = scaler.transform(input_test)
 
     mdl = rkm.RKM(cuda=params["cuda"])
     mdl.append_level(**params["level1"])
     mdl.append_level(**params["level2"])
     mdl.append_level(**params["level3"])
-    mdl.learn(input, target, maxiter=5e+3, tol=1e-6)
+    print(mdl)
+
+    mdl.learn(input, target, verbose=True, test_x=input_test, test_y=target_test, **params["opt"])
+    print(mdl)
+
     y_hat = mdl.evaluate(input_test)
-    MSE = np.mean((y_hat-target_test)**2)
-    print(MSE)
+    MSE = (1-np.mean((y_hat-target_test)**2))*100
+    print(f"MSE: {str(MSE)}%")
 
 #######################################################################################################################
 

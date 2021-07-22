@@ -16,7 +16,7 @@ class HardKPCA(mdl.kpca.KPCA):
         self.__eta = 0.
 
     def __str__(self):
-        return f"Hard KPCA level with {self.__model['kernel'].__str__()}."
+        return f"Hard KPCA level with {self._model['kernel'].__str__()} {super(HardKPCA, self).__str__()}."
 
     def loss(self, x=None, y=None, idx_kernels=None):
         return super().loss(x, y)
