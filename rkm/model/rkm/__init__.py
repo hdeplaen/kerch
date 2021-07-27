@@ -16,6 +16,7 @@ import rkm.model.lssvm.SoftLSSVM as SoftLSSVM
 import rkm.model.lssvm.HardLSSVM as HardLSSVM
 import rkm.model.kpca.SoftKPCA as SoftKPCA
 import rkm.model.kpca.HardKPCA as HardKPCA
+import rkm.plot as rkmplot
 
 
 class RKM(torch.nn.Module):
@@ -54,9 +55,9 @@ class RKM(torch.nn.Module):
 
     def level(self, num=None):
         assert num is not None, "Layer number must be specified."
-        assert num > 0, "Levels start at number 1."
-        assert num <= len(self._model), "Model has less levels than requested."
-        return self._model[num + 1]
+        assert num >= 0, "Levels start at number 0."
+        assert num < len(self._model), "Model has less levels than requested."
+        return self._model[num]
 
     def _optstep(self, opt, closure, solve):
         """
@@ -98,7 +99,7 @@ class RKM(torch.nn.Module):
     @rkm.kwargs_decorator(
         {"maxiter": 1e+3,
          "tol": 1e-5})
-    def learn(self, x, y, verbose=True, plot=False, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
+    def learn(self, x, y, verbose=True, plot=True, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
         """
 
         :param x: input
@@ -118,7 +119,7 @@ class RKM(torch.nn.Module):
         val_text = "empy"
         test_text = "empty"
 
-        if plot: plotenv = rkm.plot.plotenv(rkm=self)
+        if plot: plotenv = rkmplot.plotenv(model=self)
 
         x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
         y = torch.tensor(y, dtype=rkm.ftype).to(self.device)
@@ -156,7 +157,7 @@ class RKM(torch.nn.Module):
                 tr.set_description(f"Loss: {current_loss:6.4e}, V{val_text}, T{test_text}")
                 if abs(current_loss - min_loss) < tol: break
 
-            if (iter % 250) == 0 and test and val and verbose:
+            if (iter % 50) == 0 and test and val and verbose:
                 tr_mse = torch.mean((self.evaluate(x, numpy=False) - y) ** 2) * 100
                 tr_text = f"{tr_mse:4.2f}%"
 

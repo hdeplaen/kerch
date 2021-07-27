@@ -55,6 +55,10 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         return self._size_in
 
     @property
+    def init_kernels(self):
+        return self._init_kernels
+
+    @property
     def layerin(self):
         return self._input
 
