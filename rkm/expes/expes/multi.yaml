@@ -17,7 +17,7 @@ pima_indians:
     init_kernels: 400
     kernel:
       kernel_type: "rbf"
-      sigma: 1.
+      sigma: .1
       sigma_trainable: True
   level2:
     eta: 1.
@@ -48,10 +48,10 @@ pima_indians:
     init_kernels: 400
     kernel:
       kernel_type: "rbf"
-      sigma: 1.
+      sigma: 5.
       sigma_trainable: True
   opt:
     type: sgd
     maxiter: 5.e+4
     tol: 1.e-9
-    lr: 3.e-3
+    lr: 5.e-2

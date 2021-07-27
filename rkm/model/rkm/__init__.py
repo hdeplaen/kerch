@@ -33,6 +33,7 @@ class RKM(torch.nn.Module):
         else:
             self.device = torch.device("cpu")
             self.cuda = False
+            print("Using CPU")
 
         self._model = torch.nn.ModuleList()
         self._euclidean = torch.nn.ParameterList()
@@ -46,6 +47,10 @@ class RKM(torch.nn.Module):
             text += ("LEVEL" + str(num) + ": " + level.__str__() + "\n")
             num += 1
         return text
+
+    @property
+    def num_levels(self):
+        return len(self._model)
 
     def level(self, num=None):
         assert num is not None, "Layer number must be specified."
@@ -93,7 +98,7 @@ class RKM(torch.nn.Module):
     @rkm.kwargs_decorator(
         {"maxiter": 1e+3,
          "tol": 1e-5})
-    def learn(self, x, y, verbose=True, test_x=None, test_y=None, **kwargs):
+    def learn(self, x, y, verbose=True, plot=False, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
         """
 
         :param x: input
@@ -104,10 +109,16 @@ class RKM(torch.nn.Module):
         maxiter = int(kwargs["maxiter"])
         tol = kwargs["tol"]
         test = test_x is not None and test_y is not None
-        if test:
+        val = val_x is not None and val_y is not None
+        if test and val:
+            val_x = torch.tensor(val_x, dtype=rkm.ftype).to(self.device)
+            val_y = torch.tensor(val_y, dtype=rkm.ftype).to(self.device)
             test_x = torch.tensor(test_x, dtype=rkm.ftype).to(self.device)
             test_y = torch.tensor(test_y, dtype=rkm.ftype).to(self.device)
-        test_val = "empty"
+        val_text = "empy"
+        test_text = "empty"
+
+        if plot: plotenv = rkm.plot.plotenv(rkm=self)
 
         x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
         y = torch.tensor(y, dtype=rkm.ftype).to(self.device)
@@ -135,23 +146,42 @@ class RKM(torch.nn.Module):
         else:
             tr = range(int(maxiter))
 
+        if val: best_val = 100
+        if val and test: best_test = 100
+
         for iter in tr:
             current_loss = self._optstep(opt, closure, solve).data
 
-            if (iter % 10)== 0 and verbose:
-                tr.set_description(f"Loss: {current_loss:6.4e}, test: {test_val}")
+            if (iter % 10) == 0 and verbose:
+                tr.set_description(f"Loss: {current_loss:6.4e}, V{val_text}, T{test_text}")
                 if abs(current_loss - min_loss) < tol: break
 
-            if (iter % 250) == 0 and test and verbose:
-                test_mse = torch.mean((self.evaluate(test_x, numpy=False) - test_y)**2)*100
-                test_val = f"{test_mse:4.2f}%"
-                print(self)
+            if (iter % 250) == 0 and test and val and verbose:
+                tr_mse = torch.mean((self.evaluate(x, numpy=False) - y) ** 2) * 100
+                tr_text = f"{tr_mse:4.2f}%"
+
+                val_mse = torch.mean((self.evaluate(val_x, numpy=False) - val_y) ** 2) * 100
+                val_text = f"{val_mse:4.2f}%"
+
+                test_mse = torch.mean((self.evaluate(test_x, numpy=False) - test_y) ** 2) * 100
+                test_text = f"{test_mse:4.2f}%"
+
+                if val_mse < best_val:
+                    best_val = val_mse
+                    best_test = test_mse
+
+                if plot:
+                    plotenv.update(tr_mse=tr_mse, val_mse=val_mse, test_mse=test_mse)
+                    plotenv.show()
+                    plotenv.save()
+                if verbose: print(self)
 
             if current_loss < min_loss: min_loss = current_loss
 
-        # print(self._model[0]._model['linear'].alpha.data)
-        # print(self._model[0]._model['kernel'].K.data)
-        # print('Learning model completed.')
+        if val: print(f"Best validation: {best_val:4.2f}%\n")
+        if val and test: print(f"Corresponding test: {best_test:4.2f}%\n")
+
+        if plot: plotenv.gif()
 
         return self._model[0]._model['linear'].alpha.data
 
@@ -175,7 +205,7 @@ class RKM(torch.nn.Module):
         size_in_new = kwargs["size_in"]
 
         if current > 0:
-            size_out_old = self._model[current-1].size_out
+            size_out_old = self._model[current - 1].size_out
             assert size_in_new == size_out_old, \
                 "Layer " + str(current + 1) + " (size_in=" + str(kwargs["size_in"]) + \
                 ") not compatible with layer " + str(current) + " (size_out=" + str() + ")."

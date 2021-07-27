@@ -15,8 +15,8 @@ from sklearn import datasets, preprocessing
 
 class data():
     @staticmethod
-    def gaussians(n_samples=100, shift=0):
-        size = n_samples / 2
+    def gaussians(tr_size=100, val_size=0, test_size=0):
+        size = tr_size / 2
         s1, m1 = .7, (2, 1)
         s2, m2 = 1.2, (-2, -3)
 
@@ -30,11 +30,11 @@ class data():
         input = np.concatenate((g1, g2))
         target = np.concatenate((np.repeat(-1, size), np.repeat(1, size)))
 
-        return input, target
+        return [input, target], None, None, None
 
     @staticmethod
-    def spiral(n_samples=194, shift=0):
-        size = n_samples / 2
+    def spiral(tr_size=194, val_size=0, test_size=0):
+        size = tr_size / 2
 
         def spiral_xy(i, spiral_num):
             """
@@ -51,7 +51,7 @@ class data():
             return (x, y)
 
         def spiral(spiral_num):
-            return [spiral_xy(i, spiral_num) for i in range(size)]
+            return [spiral_xy(i, spiral_num) for i in range(tr_size)]
 
         s1 = spiral(1)
         s2 = spiral(-1)
@@ -60,46 +60,56 @@ class data():
         target = np.concatenate((np.repeat(-1, 97), np.repeat(1, 97)))
         r = (-5, 6, -5, 5)
 
-        return input, target, r
+        return [input, target], None, None, r
 
     @staticmethod
-    def two_moons(n_samples=100, shift=0):
-        input, output = datasets.make_moons(n_samples, noise=.1)
+    def two_moons(tr_size=100, val_size=0, test_size=0):
+        input, output = datasets.make_moons(tr_size, noise=.1)
         output = np.where(output == 0, -1, 1)
         range = (-4, 7, -4, 4)
-        return 2.5 * input, output, range
+        return [2.5 * input, output], None, None, range
 
     @staticmethod
-    def usps(n_samples=100, shift=0):
+    def usps(tr_size=100, val_size=0, test_size=0):
         digits = datasets.load_digits(2)
         x = digits['data']
         y = digits['target']
         y = np.where(y == 0, -1, 1)
         r = (0, 1, 0, 1)
-        return x[:n_samples, :, :], y[:n_samples], r
+        return [x[:tr_size, :, :], y[:tr_size]], None, None, r
 
     @staticmethod
-    def pima_indians(n_samples=100, shift=0):
+    def pima_indians(tr_size=100, val_size=0, test_size=0):
         with open('rkm/expes/datasets/pima-indians-diabetes.csv') as csvfile:
             data = pd.read_csv(csvfile, delimiter=',',lineterminator='\n')
             # data = data.to_numpy()
         print('Pima Indians Diabetes dataset loaded. ')
-        data = data.to_numpy()[range(shift,n_samples+shift),:]
-        return data[:,0:8], data[:,8], None
+        data = data.to_numpy()
+
+        idx_random = np.random.permutation(767)
+        idx_tr = idx_random[0:tr_size]
+        idx_val = idx_random[tr_size:tr_size+val_size]
+        idx_test = idx_random[tr_size+val_size:tr_size+val_size+test_size]
+
+        training = [data[idx_tr,0:8], data[idx_tr,8]]
+        validation = [data[idx_val, 0:8], data[idx_val, 8]]
+        test = [data[idx_test, 0:8], data[idx_test, 8]]
+
+        return training, validation, test, None
 
     @staticmethod
-    def factory(name, n_samples=0, shift=0):
+    def factory(name, tr_size=0, val_size=0, test_size=0):
         datasets = {"gaussians": data.gaussians,
                     "spiral": data.spiral,
                     "two_moons": data.two_moons,
                     "usps": data.usps,
                     "pima_indians": data.pima_indians}
         func = datasets.get(name, "Invalid dataset")
-        if n_samples is None:
-            input, output, range = func()
+        if tr_size == 0:
+            training, validation, test, range = func()
         else:
-            input, output, range = func(n_samples, shift)
+            training, validation, test, range = func(tr_size, val_size, test_size)
 
-        return input, output, range
+        return training, validation, test, range
 
 

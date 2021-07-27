@@ -61,30 +61,38 @@ def kpca():
     print('Hard KPCA finished')
 
 def pima_indians():
+    # PRELIMINARIES
     params = load_params('multi', 'pima_indians')
     data_params = params['data']
-    input, target, _ = data.factory(data_params["dataset"],
-                                        data_params["n_samples"])
+    training, validation, test, _ = data.factory(data_params["dataset"], data_params["n_samples"], 112, 255)
 
-    input_test, target_test, _ = data.factory(data_params["dataset"],
-                                              512,
-                                              255)
+    # PREPROCESSING
+    tr_input, tr_target = training
+    val_input, val_target = validation
+    test_input, test_target = test
 
-    scaler = preprocessing.StandardScaler().fit(input)
-    input = scaler.transform(input)
-    input_test = scaler.transform(input_test)
+    scaler = preprocessing.StandardScaler().fit(tr_input)
+    tr_input = scaler.transform(tr_input)
+    val_input = scaler.transform(val_input)
+    test_input = scaler.transform(test_input)
 
+    # SETTING MODEL UP
     mdl = rkm.RKM(cuda=params["cuda"])
     mdl.append_level(**params["level1"])
     mdl.append_level(**params["level2"])
     mdl.append_level(**params["level3"])
     print(mdl)
 
-    mdl.learn(input, target, verbose=True, test_x=input_test, test_y=target_test, **params["opt"])
+    # TRAINING
+    mdl.learn(tr_input, tr_target, verbose=True,
+              val_x=val_input, val_y=val_target,
+              test_x=test_input, test_y=test_target,
+              **params["opt"])
     print(mdl)
 
-    y_hat = mdl.evaluate(input_test)
-    MSE = (1-np.mean((y_hat-target_test)**2))*100
+    # RESULTS
+    y_hat = mdl.evaluate(tr_input)
+    MSE = (1-np.mean((y_hat-tr_target)**2))*100
     print(f"MSE: {str(MSE)}%")
 
 #######################################################################################################################
