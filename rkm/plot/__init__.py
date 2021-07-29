@@ -37,21 +37,22 @@ class plotenv():
                 print(f"LEVEL{num} not recognized and cannot be plotted.")
 
         if val_mse is not None:
-            np.append(self.vals, val_mse.data.detach().cpu().numpy())
+            self.vals = np.append(self.vals, val_mse.data.detach().cpu().numpy())
         if test_mse is not None:
-            np.append(self.tests, test_mse.data.detach().cpu().numpy())
+            self.tests = np.append(self.tests, test_mse.data.detach().cpu().numpy())
         if tr_mse is not None:
-            np.append(self.trs, tr_mse.data.detach().cpu().numpy())
+            self.trs = np.append(self.trs, tr_mse.data.detach().cpu().numpy())
             self.losses()
 
     def kpca(self, num, level):
         #assert(isinstance(level, KPCA.KPCA), "This level is not an instance of KPCA and cannot be plotted as such.")
-        fig = plt.figure(num)
+        fig = plt.figure(num+1)
         axes = fig.subplots(1, 2)
 
         #TITLE
+        t0 = f"LEVEL {num + 1}" + "\n"
         t1 = level.__str__() + "\n"
-        plt.title(t1)
+        fig.suptitle(t0 + t1)
 
         #SUBPLOTS
         if isinstance(level.linear, DualLinear):
@@ -64,21 +65,26 @@ class plotenv():
             P = np.array([])
             K = np.array([])
 
-        axes[0].imshow(K)
+        axes[0].imshow(K, aspect='equal')
         axes[0].set_title("Correlation or kernel matrix")
-        axes[1].imshow(P)
+        axes[1].imshow(P, aspect='auto')
         axes[1].set_title("Projector")
+
+        plt.draw()
+        plt.pause(0.01)
+        plt.clf()
 
 
     def lssvm(self, num, level):
         #assert(isinstance(level, LSSVM.LSSVM), "This level is not an instance of LSSVM and cannot be plotted as such.")
-        fig = plt.figure(num)
+        fig = plt.figure(num+1)
         axes = fig.subplots(1, 2)
 
         # TITLE
+        t0 = f"LEVEL {num + 1}" + "\n"
         t1 = level.__str__() + "\n"
         t2 = f"Bias: {level.linear.bias.data.detach().cpu().numpy()}"
-        plt.title(t1 + t2)
+        fig.suptitle(t0 + t1 + t2)
 
         # SUBPLOTS
         if isinstance(level.linear, DualLinear):
@@ -99,16 +105,34 @@ class plotenv():
         P = P.squeeze()
         # assert P.size[1] <= 1, "Plotting not implemented for multiple outputs now."
         axes[1].set_xlim((-1, level.init_kernels))
-        #axes[1].bar(range(len(P)), np.abs(P), colors=np.where(P >= 0, 'g', 'r').squeeze())
-        axes[1].bar(range(len(P)), P)
+        axes[1].bar(range(len(P)), np.abs(P), color=np.where(P >= 0, 'g', 'r').squeeze())
+        #axes[1].bar(range(len(P)), P)
         axes[1].set_title("Weights or support vector values")
+
+        plt.draw()
+        plt.pause(0.01)
+        plt.clf()
 
     def losses(self):
         plt.figure(0)
-        #plt.plot(np.concatenate())
+        x = range(0,50*len(self.trs),50)
+        plt.plot(x, self.trs, label=f"Training {self.trs[-1]}")
+        plt.plot(x, self.vals, label=f"Validation {self.vals[-1]}")
+        plt.plot(x, self.tests, label=f"Test {self.tests[-1]}")
+        plt.xlabel("Iteration")
+        plt.ylabel("Score")
+        plt.legend()
+
+        plt.draw()
+        plt.pause(0.01)
+        plt.clf()
+
 
     def show(self):
-        plt.show()
+        pass
+        # plt.draw()
+        # plt.pause(0.01)
+        # plt.clf()
 
     def save(self):
         pass
