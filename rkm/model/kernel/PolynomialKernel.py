@@ -33,6 +33,10 @@ class PolynomialKernel(mdl.kernel.LinearKernel.LinearKernel):
     def __str__(self):
         return f"polynomial kernel of order {int(self.deg.data)}"
 
+    @property
+    def params(self):
+        return {'degree': self.deg}
+
     def implicit(self, x, idx_kernels=None):
         return (super().implicit(x, idx_kernels) + 1) ** self.deg
 

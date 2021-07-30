@@ -37,9 +37,25 @@ class LSSVM(Level, metaclass=ABCMeta):
         self._criterion = torch.nn.MSELoss(reduction="mean")
         self._generate_representation(**kwargs)
 
+        self._last_recon = torch.tensor(0.)
+        self._last_reg = torch.tensor(0.)
+        self._last_loss = torch.tensor(0.)
+
     @property
     def gamma(self):
         return self._gamma
+
+    @property
+    def last_recon(self):
+        return self._last_recon.data
+
+    @property
+    def last_reg(self):
+        return self.last_reg.data
+
+    @property
+    def last_loss(self):
+        return self._last_loss.data
 
     def _generate_representation(self, **kwargs):
         # REGULARIZATION
@@ -71,7 +87,11 @@ class LSSVM(Level, metaclass=ABCMeta):
         if idx_kernels is None: idx_kernels = self._all_kernels
         recon, x_tilde = self.recon(x, y, idx_kernels)
         reg = self.reg(idx_kernels)
-        return .5 * reg + .5 * self._gamma * recon, x_tilde
+        l = .5 * reg + .5 * self._gamma * recon
+        self._last_recon = recon.data
+        self._last_reg = reg.data
+        self._last_loss = l.data
+        return l, x_tilde
 
     def solve(self, x, y=None):
         assert y is not None, "Tensor y is unspecified. This is not allowed for a LSSVM level."
@@ -123,8 +143,10 @@ class LSSVM(Level, metaclass=ABCMeta):
 
     def get_params(self, slow_names=None):
         euclidean = torch.nn.ParameterList(
-            [p for n, p in self._model.named_parameters() if p.requires_grad and n not in slow_names])
+            [p for n, p in self._model['kernel'].named_parameters() if p.requires_grad and n not in slow_names])
+        euclidean.extend(
+            [p for p in self._model['linear'].parameters() if p.requires_grad])
         slow = torch.nn.ParameterList(
-            [p for n, p in self._model.named_parameters() if p.requires_grad and n in slow_names])
+            [p for n, p in self._model['kernel'].named_parameters() if p.requires_grad and n in slow_names])
         stiefel = torch.nn.ParameterList()
         return euclidean, slow, stiefel

@@ -33,6 +33,10 @@ class RBFKernel(mdl.kernel.Kernel):
     def __str__(self):
         return f"RBF kernel (sigma: {str(self.sigma.data.cpu().numpy()[0])})"
 
+    @property
+    def params(self):
+        return {'sigma': self.sigma}
+
     def implicit(self, x, idx_kernels=None):
         xs = x[:, None, :].expand(-1, len(idx_kernels), -1)
         params = self.kernels[idx_kernels,:].expand(x.size(0), -1, -1)

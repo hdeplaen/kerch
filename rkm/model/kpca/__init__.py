@@ -28,7 +28,13 @@ class KPCA(Level, metaclass=ABCMeta):
         self._centering = kwargs["centering"]
         self._generate_representation(**kwargs)
 
+        self._last_var = torch.tensor(0.)
+
         assert not self._centering, NotImplementedError  # True is not implemented.
+
+    @property
+    def last_var(self):
+        return self._last_var.data
 
     def _generate_representation(self, **kwargs):
         # REGULARIZATION
@@ -49,7 +55,9 @@ class KPCA(Level, metaclass=ABCMeta):
 
     def loss(self, x=None, y=None, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self._all_kernels
-        return self._var(idx_kernels), None
+        var = self._var(idx_kernels)
+        self._last_var = var.data
+        return var, None
 
     def solve(self, x, y=None):
         switcher = {'primal': lambda: self.primal(x),

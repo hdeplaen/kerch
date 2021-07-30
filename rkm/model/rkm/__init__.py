@@ -41,6 +41,8 @@ class RKM(torch.nn.Module):
         self._slow = torch.nn.ParameterList()
         self._stiefel = torch.nn.ParameterList()
 
+        self._last_loss = torch.tensor(0.)
+
     def __str__(self):
         text = f"\nThis RKM has {len(self._model)} levels:\n"
         num = 1
@@ -52,6 +54,10 @@ class RKM(torch.nn.Module):
     @property
     def num_levels(self):
         return len(self._model)
+
+    @property
+    def last_loss(self):
+        return self._last_loss.data
 
     def level(self, num=None):
         assert num is not None, "Layer number must be specified."
@@ -94,12 +100,14 @@ class RKM(torch.nn.Module):
             level.layerout = y
             x = level(x)
 
+        self._last_loss = tot_loss.data
         return tot_loss
 
     @rkm.kwargs_decorator(
         {"maxiter": 1e+3,
-         "tol": 1e-5})
-    def learn(self, x, y, verbose=True, plot=True, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
+         "tol": 1e-5,
+         "step": 100})
+    def learn(self, x, y, verbose=True, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
         """
 
         :param x: input
@@ -109,6 +117,7 @@ class RKM(torch.nn.Module):
         """
         maxiter = int(kwargs["maxiter"])
         tol = kwargs["tol"]
+        step = kwargs["step"]
         test = test_x is not None and test_y is not None
         val = val_x is not None and val_y is not None
         if test and val:
@@ -119,7 +128,7 @@ class RKM(torch.nn.Module):
         val_text = "empy"
         test_text = "empty"
 
-        if plot: plotenv = rkmplot.plotenv(model=self)
+        plotenv = rkmplot.plotenv(model=self)
 
         x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
         y = torch.tensor(y, dtype=rkm.ftype).to(self.device)
@@ -142,10 +151,7 @@ class RKM(torch.nn.Module):
 
         min_loss = float("Inf")
 
-        if verbose:
-            tr = trange(int(maxiter), desc='Training model')
-        else:
-            tr = range(int(maxiter))
+        tr = trange(int(maxiter), desc='Training model')
 
         if val: best_val = 100
         if val and test: best_test = 100
@@ -157,7 +163,7 @@ class RKM(torch.nn.Module):
                 tr.set_description(f"Loss: {current_loss:6.4e}, V{val_text}, T{test_text}")
                 if abs(current_loss - min_loss) < tol: break
 
-            if (iter % 50) == 0 and test and val and verbose:
+            if (iter % step) == 0 and test and val and verbose:
                 tr_mse = torch.mean((self.evaluate(x, numpy=False) - y) ** 2) * 100
                 tr_text = f"{tr_mse:4.2f}%"
 
@@ -171,20 +177,14 @@ class RKM(torch.nn.Module):
                     best_val = val_mse
                     best_test = test_mse
 
-                if plot:
-                    plotenv.update(tr_mse=tr_mse, val_mse=val_mse, test_mse=test_mse)
-                    plotenv.show()
-                    plotenv.save()
+                plotenv.update(iter, tr_mse=tr_mse, val_mse=val_mse, test_mse=test_mse)
                 if verbose: print(self)
 
             if current_loss < min_loss: min_loss = current_loss
 
+        plotenv.finish()
         if val: print(f"Best validation: {best_val:4.2f}%\n")
         if val and test: print(f"Corresponding test: {best_test:4.2f}%\n")
-
-        if plot: plotenv.gif()
-
-        return self._model[0]._model['linear'].alpha.data
 
     def evaluate(self, x, numpy=True):
         if numpy: x = torch.tensor(x, dtype=rkm.ftype).to(self.device)

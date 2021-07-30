@@ -56,6 +56,10 @@ class Kernel(nn.Module, metaclass=ABCMeta):
     def __str__(self):
         pass
 
+    @property
+    def params(self):
+        return {}
+
     def forward(self, x, representation, idx_kernels=None):
         switcher = {"primal": lambda: self.explicit(x, idx_kernels),
                     "dual": lambda: self.implicit(x, idx_kernels)}

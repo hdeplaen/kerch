@@ -52,6 +52,7 @@ pima_indians:
       sigma_trainable: True
   opt:
     type: sgd
-    maxiter: 5.e+4
-    tol: 1.e-9
-    lr: 2.e-2
+    maxiter: 5.e+5
+    tol: 0
+    lr: 2.e-3
+    step: 200
