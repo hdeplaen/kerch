@@ -46,6 +46,12 @@ class LSSVM(Level, metaclass=ABCMeta):
         return self._gamma
 
     @property
+    def hparams(self):
+        return {"Type": "LSSVM",
+                "Gamma": self.gamma,
+                **super(LSSVM, self).hparams}
+
+    @property
     def last_recon(self):
         return self._last_recon.data
 

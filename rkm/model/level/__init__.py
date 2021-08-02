@@ -47,6 +47,13 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self._generate_model(**kwargs)
 
     @property
+    def hparams(self):
+        return {"Representation": self._representation,
+                "Weight": self._eta,
+                "Size in": self._size_in,
+                "Size out": self._size_out}
+
+    @property
     def size_out(self):
         return self._size_out
 
@@ -65,6 +72,11 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
     @property
     def layerout(self):
         return self._output
+
+    @property
+    @abstractmethod
+    def hparams(self):
+        pass
 
     @layerin.setter
     def layerin(self, value):

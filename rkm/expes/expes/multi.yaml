@@ -17,7 +17,7 @@ pima_indians:
     init_kernels: 400
     kernel:
       kernel_type: "rbf"
-      sigma: 1.
+      sigma: 3.
       sigma_trainable: True
   level2:
     eta: 1.

@@ -14,16 +14,25 @@ import rkm.model.kpca as KPCA
 import rkm.model.lssvm as LSSVM
 import rkm.model.level.PrimalLinear as PrimalLinear
 import rkm.model.level.DualLinear as DualLinear
+from rkm.model.utils import invert_dict
 
 class plotenv():
     def __init__(self, model: RKM):
         self.model = model
         self.writer = SummaryWriter()
+        self._hyperparameters()
+
+    def _hyperparameters(self):
+        pass
 
     def update(self, iter, tr_mse=None, val_mse=None, test_mse=None) -> None:
+        self.writer.add_scalar("Total Loss", self.model.last_loss, global_step=iter)
+
         for num in range(self.model.num_levels):
             level = self.model.level(num)
-            self.writer.add_scalars(f"LEVEL{num}", level.kernel.params, global_step=iter)
+            self.writer.add_scalars("Level Losses", {f"LEVEL{num}": level.last_loss}, global_step=iter)
+            for (name, dict) in invert_dict(f"LEVEL{num}", level.kernel.params):
+                self.writer.add_scalars(name, dict, global_step=iter)
             if isinstance(level, KPCA.KPCA):
                 self.kpca(num, level, iter)
             elif isinstance(level, LSSVM.LSSVM):
@@ -58,6 +67,9 @@ class plotenv():
         elif isinstance(level.linear, PrimalLinear):
             P = level.linear.weight
             K = level.kernel.pmatrix()
+
+        self.writer.add_scalars("LSSVM Regularization Term", {f"LEVEL{num}": level.last_reg}, global_step=iter)
+        self.writer.add_scalars("LSSVM Reconstruction Term", {f"LEVEL{num}": level.last_recon}, global_step=iter)
 
         self.writer.add_image(f"LEVEL{num} (Kernel)", K, global_step=iter, dataformats="HW")
         self.writer.add_histogram(f"LEVEL{num} (Support Vector Values)", P, global_step=iter)

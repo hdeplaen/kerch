@@ -35,7 +35,11 @@ class RBFKernel(mdl.kernel.Kernel):
 
     @property
     def params(self):
-        return {'sigma': self.sigma}
+        return {'Sigma': self.sigma}
+
+    @property
+    def hparams(self):
+        return {"Kernel": "RBF", "Trainable sigma": self.sigma_trainable, **super(RBFKernel, self).hparams}
 
     def implicit(self, x, idx_kernels=None):
         xs = x[:, None, :].expand(-1, len(idx_kernels), -1)

@@ -21,7 +21,7 @@ class Optimizer():
                 out.append(p)
         return out
 
-    @rkm.kwargs_decorator({"lr": 5e-3})
+    @rkm.kwargs_decorator({"lr": 5e-3, "kernel_rate": 1.})
     def __init__(self, euclidean_params, slow_params, stiefel_params, type="sgd", **kwargs):
         self._kwargs = kwargs
         self._type = type
@@ -39,7 +39,7 @@ class Optimizer():
         if len(slow_params) > 0:
             dict_slow = {'params': slow_params, 'stiefel': False, 'lr': kwargs['lr'] / 1}
             dict_slow = {**dict_slow, **kwargs}
-            dict_slow['lr'] = dict_slow['lr'] / .2
+            dict_slow['lr'] = dict_slow['lr'] / self._kwargs["kernel_rate"]
             self._dict.append(dict_slow)
 
         if len(stiefel_params) > 0:
@@ -54,6 +54,10 @@ class Optimizer():
     @property
     def type(self):
         return self._type
+
+    @property
+    def hparams(self):
+        return {'type': self._type, **self._kwargs}
 
     @property
     def params(self):

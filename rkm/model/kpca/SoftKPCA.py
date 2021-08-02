@@ -16,6 +16,11 @@ class SoftKPCA(mdl.kpca.KPCA):
     def __str__(self):
         return f"Soft KPCA level with {self._model['kernel'].__str__()} {super(SoftKPCA, self).__str__()}."
 
+    @property
+    def hparams(self):
+        return {"Constraint": "soft",
+                **super(SoftKPCA, self).hparams}
+
     def forward(self, x, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self._all_kernels
         return super(SoftKPCA, self).forward(x, idx_kernels=idx_kernels)

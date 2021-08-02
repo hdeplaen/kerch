@@ -60,6 +60,10 @@ class Kernel(nn.Module, metaclass=ABCMeta):
     def params(self):
         return {}
 
+    @property
+    def hparams(self):
+        return {"Trainable Kernels": self.kernels_trainable}
+
     def forward(self, x, representation, idx_kernels=None):
         switcher = {"primal": lambda: self.explicit(x, idx_kernels),
                     "dual": lambda: self.implicit(x, idx_kernels)}

@@ -18,6 +18,11 @@ class HardKPCA(mdl.kpca.KPCA):
     def __str__(self):
         return f"Hard KPCA level with {self._model['kernel'].__str__()} {super(HardKPCA, self).__str__()}."
 
+    @property
+    def hparams(self):
+        return {"Constraint": "hard",
+                **super(HardKPCA, self).hparams}
+
     def loss(self, x=None, y=None, idx_kernels=None):
         return super().loss(x, y)
 

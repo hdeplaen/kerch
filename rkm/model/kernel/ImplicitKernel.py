@@ -29,6 +29,10 @@ class ImplicitKernel(mdl.kernel.Kernel):
     def __str__(self):
         return "implicit kernel"
 
+    @property
+    def hparams(self):
+        return {"Kernel": "Implicit", **super(ImplicitKernel, self).hparams}
+
     def implicit(self, x, idx_kernels=None):
         return self.__network(x, self.kernels(idx_kernels))
 

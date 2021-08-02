@@ -18,6 +18,11 @@ class HardLSSVM(LSSVM):
     def __str__(self):
         return f"Hard LS-SVM level with {self._model['kernel'].__str__()} {super(HardLSSVM, self).__str__()}."
 
+    @property
+    def hparams(self):
+        return {"Constraint": "hard",
+                **super(HardLSSVM, self).hparams}
+
     def loss(self, x=None, y=None, idx_kernels=None):
         return super().loss(x, y)
 

@@ -33,6 +33,12 @@ class KPCA(Level, metaclass=ABCMeta):
         assert not self._centering, NotImplementedError  # True is not implemented.
 
     @property
+    def hparams(self):
+        return {"Type": "KPCA",
+                "Centering": self._centering,
+                **super(KPCA, self).hparams}
+
+    @property
     def last_var(self):
         return self._last_var.data
 

@@ -35,7 +35,11 @@ class PolynomialKernel(mdl.kernel.LinearKernel.LinearKernel):
 
     @property
     def params(self):
-        return {'degree': self.deg}
+        return {'Degree': self.deg}
+
+    @property
+    def hparams(self):
+        return {"Kernel": "Polynomial"}
 
     def implicit(self, x, idx_kernels=None):
         return (super().implicit(x, idx_kernels) + 1) ** self.deg

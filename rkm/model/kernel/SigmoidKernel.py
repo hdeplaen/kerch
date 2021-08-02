@@ -41,6 +41,10 @@ class SigmoidKernel(mdl.kernel.LinearKernel.LinearKernel):
         return {'a': self._a,
                 'b': self._b}
 
+    @property
+    def hparams(self):
+        return {"Kernel": "Sigmoid", **super(SigmoidKernel, self).hparams}
+
     def implicit(self, x, idx_kernels=None):
         x = super().implicit(x, idx_kernels)
         x = self._linear(x)

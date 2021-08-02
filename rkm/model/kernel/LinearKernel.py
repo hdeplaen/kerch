@@ -26,6 +26,9 @@ class LinearKernel(mdl.kernel.Kernel):
     def __str__(self):
         return "linear kernel"
 
+    def hparams(self):
+        return {"Kernel": "Linear", **super(LinearKernel, self).hparams}
+
     def implicit(self, x, idx_kernels=None):
         return x @ self.kernels(idx_kernels).t()
 

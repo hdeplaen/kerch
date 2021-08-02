@@ -20,6 +20,11 @@ class SoftLSSVM(lssvm.LSSVM):
     def __str__(self):
         return f"Soft LS-SVM level with {self._model['kernel'].__str__()} {super(SoftLSSVM, self).__str__()}."
 
+    @property
+    def hparams(self):
+        return {"Constraint": "soft",
+                **super(SoftLSSVM, self).hparams}
+
     def forward(self, x, idx_kernels=None):
         if idx_kernels is None: idx_kernels = self._stoch_kernels()
         return super().forward(x, idx_kernels=idx_kernels)
