@@ -15,6 +15,7 @@ import numpy as np
 
 from .DualLinear import DualLinear
 from .PrimalLinear import PrimalLinear
+from .IDXK import IDXK
 
 class Level(torch.nn.Module, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
@@ -36,7 +37,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self._eta = kwargs["eta"]
 
         self._init_kernels = kwargs["init_kernels"]
-        self._num_kernels = kwargs["init_kernels"]
+        self._idxk = IDXK(**kwargs)
         self._live_update = kwargs["live_update"]
         self._representation = kwargs["representation"]
         self._model = torch.nn.ModuleDict({})
@@ -62,21 +63,12 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         return self._size_in
 
     @property
-    def init_kernels(self):
-        return self._init_kernels
-
-    @property
     def layerin(self):
         return self._input
 
     @property
     def layerout(self):
         return self._output
-
-    @property
-    @abstractmethod
-    def hparams(self):
-        pass
 
     @layerin.setter
     def layerin(self, value):
@@ -111,15 +103,15 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
             "kernel": rkm.model.kernel.KernelFactory.KernelFactory.create(**kernel_kwargs),
             "linear": linear})
 
-    def forward(self, x, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._all_kernels
+    def forward(self, x):
+        idx_kernels = self._idxk.idx_kernels
         if self._live_update: self.kernel.update(x)
         x = self.kernel(x, self._representation, idx_kernels)
         x = self.linear(x, idx_kernels)
         return x
 
     def evaluate(self, x):
-        idx_kernels = self._all_kernels
+        idx_kernels = self._idxk.all_kernels
         x = self.kernel(x, self._representation, idx_kernels)
         x = self.linear(x, idx_kernels)
         return x
@@ -131,10 +123,6 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
     @property
     def eta(self):
         return self._eta
-
-    @property
-    def num_kernels(self):
-        return self._num_kernels
 
     @property
     def representation(self) -> str:
@@ -176,18 +164,6 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self.kernel.kernels_init(x)
         self.kernels_initialized = True
 
-    @property
-    def _all_kernels(self):
-        return range(self._num_kernels)
-
-    def _stoch_kernels(self):
-        if self._stochastic < 1.:
-            idx = random.sample(self._all_kernels, k=np.maximum(
-                int(self._stochastic * self._init_kernels), self.num_kernels))
-        else:
-            idx = self._all_kernels
-        return idx
-
     @rkm.kwargs_decorator({"mtol": 1.0e-2, "rtol": 1.0e-4})
     def aggregate(self, **kwargs):
         """
@@ -201,12 +177,12 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         def merge(idxs):
             self.kernel.merge(idxs)
             self.linear.merge(idxs)
-            self._num_kernels -= idxs.size(0)
+            self._idxk.merge(idxs)
 
         def reduce(idxs):
             self.kernel.reduce(idxs)
             self.linear.reduce(idxs)
-            self._num_kernels -= idxs.size(0)
+            self._idxk.reduce(idxs)
 
         if kwargs["mtol"] is not None:
             idxs_merge = self.kernel.merge_idxs(**kwargs)

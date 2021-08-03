@@ -21,16 +21,14 @@ class SoftKPCA(mdl.kpca.KPCA):
         return {"Constraint": "soft",
                 **super(SoftKPCA, self).hparams}
 
-    def forward(self, x, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._all_kernels
-        return super(SoftKPCA, self).forward(x, idx_kernels=idx_kernels)
+    def forward(self, x):
+        return super(SoftKPCA, self).forward(x)
 
     def evaluate(self, x):
         return super(SoftKPCA, self).evaluate(x)
 
-    def loss(self, x=None, y=None, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._all_kernels
-        return super(SoftKPCA, self).loss(x, y, idx_kernels=idx_kernels)
+    def loss(self, x=None, y=None):
+        return super(SoftKPCA, self).loss(x, y)
 
     def before_step(self, x=None, y=None):
         pass

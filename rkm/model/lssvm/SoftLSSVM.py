@@ -26,23 +26,19 @@ class SoftLSSVM(lssvm.LSSVM):
                 **super(SoftLSSVM, self).hparams}
 
     def forward(self, x, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._stoch_kernels()
-        return super().forward(x, idx_kernels=idx_kernels)
+        return super().forward(x)
 
     def evaluate(self, x):
         return super(SoftLSSVM, self).evaluate(x)
 
-    def loss(self, x=None, y=None, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._stoch_kernels()
-        return super().loss(x, y, idx_kernels=idx_kernels)
+    def loss(self, x, y):
+        return super().loss(x, y)
 
-    def recon(self, x, y, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._stoch_kernels()
-        return super().recon(x, y, idx_kernels=idx_kernels)
+    def recon(self, x, y):
+        return super().recon(x, y)
 
-    def reg(self, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._stoch_kernels()
-        return super().reg(idx_kernels=idx_kernels)
+    def reg(self):
+        return super().reg()
 
     def before_step(self, x=None, y=None):
         pass

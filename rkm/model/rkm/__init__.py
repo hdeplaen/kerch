@@ -107,7 +107,7 @@ class RKM(torch.nn.Module):
         {"maxiter": 1e+3,
          "tol": 1e-5,
          "step": 100})
-    def learn(self, x, y, verbose=True, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
+    def learn(self, x, y, verbose=False, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
         """
 
         :param x: input
@@ -128,8 +128,6 @@ class RKM(torch.nn.Module):
         val_text = "empy"
         test_text = "empty"
 
-        plotenv = rkmplot.plotenv(model=self)
-
         x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
         y = torch.tensor(y, dtype=rkm.ftype).to(self.device)
         self.to(self.device)
@@ -137,6 +135,8 @@ class RKM(torch.nn.Module):
                                   self._slow,
                                   self._stiefel,
                                   **kwargs)
+
+        plotenv = rkmplot.plotenv(model=self, opt=opt)
 
         def solve():
             loss = self.loss(x, y)
@@ -153,7 +153,7 @@ class RKM(torch.nn.Module):
 
         tr = trange(int(maxiter), desc='Training model')
 
-        if val: best_val = 100
+        if val: best_tr, best_val = 100, 100
         if val and test: best_test = 100
 
         for iter in tr:
@@ -174,6 +174,7 @@ class RKM(torch.nn.Module):
                 test_text = f"{test_mse:4.2f}%"
 
                 if val_mse < best_val:
+                    best_tr = tr_mse
                     best_val = val_mse
                     best_test = test_mse
 
@@ -182,7 +183,7 @@ class RKM(torch.nn.Module):
 
             if current_loss < min_loss: min_loss = current_loss
 
-        plotenv.finish()
+        plotenv.finish(best_tr=best_tr, best_val=best_val, best_test=best_test)
         if val: print(f"Best validation: {best_val:4.2f}%\n")
         if val and test: print(f"Corresponding test: {best_test:4.2f}%\n")
 

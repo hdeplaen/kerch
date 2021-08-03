@@ -16,15 +16,14 @@ from abc import ABCMeta
 
 class KPCA(Level, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
-        {"centering": False})
+        {"centering": False,
+         "requires_bias": False})
     def __init__(self, **kwargs):
         """
 
         :param centering: True if input and kernel are centered (False by default).
         """
-        add_kwargs = {"requires_bias": False}
-        new_kwargs = {**kwargs, **add_kwargs}
-        super(KPCA, self).__init__(**new_kwargs)
+        super(KPCA, self).__init__(**kwargs)
         self._centering = kwargs["centering"]
         self._generate_representation(**kwargs)
 
@@ -39,8 +38,16 @@ class KPCA(Level, metaclass=ABCMeta):
                 **super(KPCA, self).hparams}
 
     @property
-    def last_var(self):
+    def last_loss(self):
         return self._last_var.data
+
+    def _centering(self, M: torch.Tensor):
+        if self._centering:
+            self.M0 = torch.mean(M, dim=0)
+            self.M1 = torch.mean(M, dim=1)
+            self.Mall = torch.mean(M, dim=(0 ,1))
+            M = M - self.M0 - self.M1 + self.Mall
+        return M
 
     def _generate_representation(self, **kwargs):
         # REGULARIZATION
@@ -51,16 +58,16 @@ class KPCA(Level, metaclass=ABCMeta):
 
         def dual_var(idx_kernels):
             K = self._model["kernel"].dmatrix(idx_kernels)
-            H = self._model["linear"].alpha[idx_kernels,:]
+            H = self._model["linear"].alpha[idx_kernels, :]
             # return torch.trace(K) - torch.trace(H @ H.t() @ K)
-            return (torch.trace(K) - torch.trace(H @ H.t() @ K)) / torch.sum(K, (0,1))
+            return (torch.trace(K) - torch.trace(H @ H.t() @ K)) / torch.sum(K, (0, 1))
 
         switcher_var = {"primal": lambda idx_kernels: primal_var(idx_kernels),
                         "dual": lambda idx_kernels: dual_var(idx_kernels)}
         self._var = switcher_var.get(kwargs["representation"], RepresentationError)
 
-    def loss(self, x=None, y=None, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._all_kernels
+    def loss(self, x=None, y=None):
+        idx_kernels = self._idxk.idx_kernels
         var = self._var(idx_kernels)
         self._last_var = var.data
         return var, None
@@ -89,17 +96,8 @@ class KPCA(Level, metaclass=ABCMeta):
 
     def get_params(self, slow_names=None):
         euclidean = torch.nn.ParameterList(
-            [p for n, p in  self._model['kernel'].named_parameters() if p.requires_grad and n not in slow_names])
+            [p for n, p in self._model['kernel'].named_parameters() if p.requires_grad and n not in slow_names])
         slow = torch.nn.ParameterList(
-            [p for n, p in  self._model['kernel'].named_parameters() if p.requires_grad and n in slow_names])
+            [p for n, p in self._model['kernel'].named_parameters() if p.requires_grad and n in slow_names])
         stiefel = self._model['linear'].parameters()
         return euclidean, slow, stiefel
-
-    # @staticmethod
-    # def create(**kwargs):
-    #     switcher = {"hard": lambda: HardKPCA.HardKPCA(**kwargs),
-    #                 "soft": lambda: SoftKPCA.SoftKPCA(**kwargs)}
-    #     func = switcher.get(kwargs["type"], "Invalid KPCA type (must be hard or soft).")
-    #     return func()
-
-

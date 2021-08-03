@@ -23,7 +23,7 @@ class HardLSSVM(LSSVM):
         return {"Constraint": "hard",
                 **super(HardLSSVM, self).hparams}
 
-    def loss(self, x=None, y=None, idx_kernels=None):
+    def loss(self, x=None, y=None):
         return super().loss(x, y)
 
     def before_step(self, x=None, y=None):

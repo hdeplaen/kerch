@@ -57,7 +57,7 @@ class LSSVM(Level, metaclass=ABCMeta):
 
     @property
     def last_reg(self):
-        return self.last_reg.data
+        return self._last_reg.data
 
     @property
     def last_loss(self):
@@ -80,19 +80,17 @@ class LSSVM(Level, metaclass=ABCMeta):
                         "dual": lambda idx_kernels: dual_reg(idx_kernels)}
         self._reg = switcher_reg.get(kwargs["representation"], RepresentationError)
 
-    def recon(self, x, y, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._all_kernels
-        x_tilde = self.forward(x, idx_kernels)
+    def recon(self, x, y):
+        x_tilde = self.forward(x)
         return self._criterion(x_tilde, y), x_tilde
 
-    def reg(self, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._all_kernels
+    def reg(self):
+        idx_kernels = self._idxk.idx_kernels
         return torch.trace(self._reg(idx_kernels))
 
     def loss(self, x=None, y=None, idx_kernels=None):
-        if idx_kernels is None: idx_kernels = self._all_kernels
-        recon, x_tilde = self.recon(x, y, idx_kernels)
-        reg = self.reg(idx_kernels)
+        recon, x_tilde = self.recon(x, y)
+        reg = self.reg()
         l = .5 * reg + .5 * self._gamma * recon
         self._last_recon = recon.data
         self._last_reg = reg.data
