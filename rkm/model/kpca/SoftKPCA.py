@@ -30,8 +30,8 @@ class SoftKPCA(mdl.kpca.KPCA):
     def loss(self, x=None, y=None):
         return super(SoftKPCA, self).loss(x, y)
 
-    def before_step(self, x=None, y=None):
+    def hard(self, x=None, y=None):
         pass
 
-    def after_step(self, x=None, y=None):
+    def projection(self, x=None, y=None):
         pass

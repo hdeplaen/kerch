@@ -16,7 +16,7 @@ from abc import ABCMeta
 
 class KPCA(Level, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
-        {"centering": False,
+        {"centering": True,
          "requires_bias": False})
     def __init__(self, **kwargs):
         """
@@ -24,12 +24,9 @@ class KPCA(Level, metaclass=ABCMeta):
         :param centering: True if input and kernel are centered (False by default).
         """
         super(KPCA, self).__init__(**kwargs)
-        self._centering = kwargs["centering"]
         self._generate_representation(**kwargs)
 
         self._last_var = torch.tensor(0.)
-
-        assert not self._centering, NotImplementedError  # True is not implemented.
 
     @property
     def hparams(self):
@@ -41,24 +38,18 @@ class KPCA(Level, metaclass=ABCMeta):
     def last_loss(self):
         return self._last_var.data
 
-    def _centering(self, M: torch.Tensor):
-        if self._centering:
-            self.M0 = torch.mean(M, dim=0)
-            self.M1 = torch.mean(M, dim=1)
-            self.Mall = torch.mean(M, dim=(0 ,1))
-            M = M - self.M0 - self.M1 + self.Mall
-        return M
-
     def _generate_representation(self, **kwargs):
         # REGULARIZATION
         def primal_var(idx_kernels):
-            C, _ = self._model["kernel"].pmatrix(None, idx_kernels)
-            V = self._model["linear"].weight
+            C, _ = self.kernel.pmatrix(None, idx_kernels)
+            if self._centering: C = self._center(C, idx_kernels)
+            V = self.linear.weight
             return torch.trace(C) - torch.trace(V.t() @ C @ V)
 
         def dual_var(idx_kernels):
-            K = self._model["kernel"].dmatrix(idx_kernels)
-            H = self._model["linear"].alpha[idx_kernels, :]
+            K = self.kernel.dmatrix(idx_kernels)
+            if self._centering: K = self._center(K, idx_kernels)
+            H = self.linear.alpha[idx_kernels, :]
             # return torch.trace(K) - torch.trace(H @ H.t() @ K)
             return (torch.trace(K) - torch.trace(H @ H.t() @ K)) / torch.sum(K, (0, 1))
 

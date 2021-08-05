@@ -31,7 +31,7 @@ class SoftLSSVM(lssvm.LSSVM):
     def evaluate(self, x):
         return super(SoftLSSVM, self).evaluate(x)
 
-    def loss(self, x, y):
+    def loss(self, x=None, y=None):
         return super().loss(x, y)
 
     def recon(self, x, y):
@@ -40,8 +40,8 @@ class SoftLSSVM(lssvm.LSSVM):
     def reg(self):
         return super().reg()
 
-    def before_step(self, x=None, y=None):
+    def hard(self, x, y):
         pass
 
-    def after_step(self, x=None, y=None):
-        self._model["linear"].project()
+    def projection(self):
+        self.linear.project()

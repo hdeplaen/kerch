@@ -45,10 +45,10 @@ class SigmoidKernel(mdl.kernel.LinearKernel.LinearKernel):
     def hparams(self):
         return {"Kernel": "Sigmoid", **super(SigmoidKernel, self).hparams}
 
-    def implicit(self, x, idx_kernels=None):
-        x = super().implicit(x, idx_kernels)
+    def implicit(self, x):
+        x = super()._implicit(x, self._idx_kernels)
         x = self._linear(x)
         return torch.sigmoid(x)
 
-    def explicit(self, x, idx_kernels=None):
+    def explicit(self, x):
         raise mdl.PrimalError

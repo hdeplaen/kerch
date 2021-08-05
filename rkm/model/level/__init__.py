@@ -35,6 +35,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self._size_in = kwargs["size_in"]
         self._size_out = kwargs["size_out"]
         self._eta = kwargs["eta"]
+        self._centering = kwargs["centering"]
 
         self._init_kernels = kwargs["init_kernels"]
         self._idxk = IDXK(**kwargs)
@@ -62,24 +63,6 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
     def size_in(self):
         return self._size_in
 
-    @property
-    def layerin(self):
-        return self._input
-
-    @property
-    def layerout(self):
-        return self._output
-
-    @layerin.setter
-    def layerin(self, value):
-        assert value.size(1) == self.size_in
-        self._input = value
-
-    @layerout.setter
-    def layerout(self, value):
-        # assert value.size(1) == self._size_out
-        self._output = value
-
     @abstractmethod
     def __str__(self):
         return f"[{str(self.size_in)}, {str(self.size_out)}]"
@@ -105,19 +88,21 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
 
     def forward(self, x):
         idx_kernels = self._idxk.idx_kernels
-        if self._live_update: self.kernel.update(x)
-        x = self.kernel(x, self._representation, idx_kernels)
+        if self._live_update: self.kernel.update_kernels(x)
+        x = self.kernel(x, self._representation)
         x = self.linear(x, idx_kernels)
         return x
 
     def evaluate(self, x):
+        # Out-of-sample
         idx_kernels = self._idxk.all_kernels
         x = self.kernel(x, self._representation, idx_kernels)
+        if self._centering: x = self._center(x, idx_kernels)
         x = self.linear(x, idx_kernels)
         return x
 
     @abstractmethod
-    def loss(self, x, y=None):
+    def loss(self, x=None, y=None):
         pass
 
     @property
@@ -135,10 +120,6 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
     @property
     def kernel(self):
         return self._model["kernel"]
-
-    @abstractmethod
-    def before_step(self, x=None, y=None):
-        pass
 
     @abstractmethod
     def after_step(self, x=None, y=None):
@@ -160,9 +141,24 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
     def dual(self, x, y):
         pass
 
+    @abstractmethod
+    def hard(self, x, y):
+        pass
+
+    @abstractmethod
+    def projection(self):
+        pass
+
     def kernels_init(self, x=None):
         self.kernel.kernels_init(x)
         self.kernels_initialized = True
+
+    def stoch_update(self):
+        return self._idxk.new()
+
+    def reset(self):
+        idx_kernels = self.stoch_update()
+        self.kernel.reset(idx_kernels)
 
     @rkm.kwargs_decorator({"mtol": 1.0e-2, "rtol": 1.0e-4})
     def aggregate(self, **kwargs):

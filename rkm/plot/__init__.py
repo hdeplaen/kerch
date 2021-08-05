@@ -23,10 +23,10 @@ class plotenv():
         self.writer = SummaryWriter()
         self.opt = opt
 
-        best = {"Training": 100,
-                "Validation": 100,
-                "Test": 100}
-        self._hyperparameters(best)
+        # best = {"Training": 100,
+        #         "Validation": 100,
+        #         "Test": 100}
+        # self._hyperparameters(best)
 
     def _hyperparameters(self, best):
         hparams_dict = self.opt.hparams

@@ -16,7 +16,7 @@ class HardLSSVM(LSSVM):
         # self._eta = 0.
 
     def __str__(self):
-        return f"Hard LS-SVM level with {self._model['kernel'].__str__()} {super(HardLSSVM, self).__str__()}."
+        return f"Hard LS-SVM level with {self.kernel.__str__()} {super(HardLSSVM, self).__str__()}."
 
     @property
     def hparams(self):
@@ -26,11 +26,9 @@ class HardLSSVM(LSSVM):
     def loss(self, x=None, y=None):
         return super().loss(x, y)
 
-    def before_step(self, x=None, y=None):
-        if x is None: x = self.layerin
-        if y is None: y = self.layerout
+    def hard(self, x=None, y=None):
         a, b = self.solve(x, y)
-        self._model["linear"].set(a, b)
+        self.linear.set(a, b)
 
-    def after_step(self, x=None, y=None):
+    def projection(self):
         pass

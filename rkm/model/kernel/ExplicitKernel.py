@@ -24,8 +24,8 @@ class ExplicitKernel(mdl.kernel.Kernel):
         :param kernels_trainable: True if support vectors / kernel are trainable (default False)
         """
         super(ExplicitKernel, self).__init__(**kwargs)
-        self.__network = kwargs["network"]
-        assert self.__network is not None, "Network module must be specified."
+        self._network = kwargs["network"]
+        assert self._network is not None, "Network module must be specified."
 
     def __str__(self):
         return "explicit kernel"
@@ -33,10 +33,10 @@ class ExplicitKernel(mdl.kernel.Kernel):
     def hparams(self):
         return {"Kernel": "Explicit", **super(ExplicitKernel, self).hparams}
 
-    def implicit(self, x, idx_kernels=None):
+    def implicit(self, x):
         x = self.explicit(x)
-        y = self.explicit(self.kernels(idx_kernels))
+        y = self.explicit(self.kernels(self._idx_kernels))
         return x @ y.t()
 
     def explicit(self, x, idx_kernels=None):
-        return self.__network(x)
+        return self._network(x)

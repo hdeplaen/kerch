@@ -84,7 +84,7 @@ def pima_indians():
     print(mdl)
 
     # TRAINING
-    mdl.learn(tr_input, tr_target, verbose=True,
+    mdl.learn(tr_input, tr_target, verbose=False,
               val_x=val_input, val_y=val_target,
               test_x=test_input, test_y=test_target,
               **params["opt"])

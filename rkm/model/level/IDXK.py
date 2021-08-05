@@ -49,6 +49,7 @@ class IDXK():
             self._idx_kernels = self.stoch_kernels
         else:
             self._idx_kernels = self.all_kernels
+        return self._idx_kernels
 
     def reduce(self, idxs):
         num = idxs.len(0)

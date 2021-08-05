@@ -23,15 +23,15 @@ class LSSVM(Level, metaclass=ABCMeta):
     """
 
     @rkm.kwargs_decorator(
-        {"gamma": 1.})
+        {"gamma": 1.,
+         "centering": False,
+         "requires_bias": True})
     def __init__(self, **kwargs):
         """
 
         :param gamma: reconstruction / regularization trade-off.
         """
-        add_kwargs = {"requires_bias": True}  # LS-SVM level becomes ridge regression if this is False.
-        new_kwargs = {**kwargs, **add_kwargs}
-        super(LSSVM, self).__init__(**new_kwargs)
+        super(LSSVM, self).__init__(**kwargs)
 
         self._gamma = kwargs["gamma"]
         self._criterion = torch.nn.MSELoss(reduction="mean")

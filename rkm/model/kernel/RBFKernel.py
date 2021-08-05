@@ -41,9 +41,9 @@ class RBFKernel(mdl.kernel.Kernel):
     def hparams(self):
         return {"Kernel": "RBF", "Trainable sigma": self.sigma_trainable, **super(RBFKernel, self).hparams}
 
-    def implicit(self, x, idx_kernels=None):
-        xs = x[:, None, :].expand(-1, len(idx_kernels), -1)
-        params = self.kernels[idx_kernels,:].expand(x.size(0), -1, -1)
+    def implicit(self, x):
+        xs = x[:, None, :].expand(-1, self.num_kernels(), -1)
+        params = self.kernels[self._idx_kernels,:].expand(x.size(0), -1, -1)
 
         diff = xs - params
         norm2 = torch.sum(diff * diff, dim=2)
@@ -52,5 +52,5 @@ class RBFKernel(mdl.kernel.Kernel):
 
         return output
 
-    def explicit(self, x, idx_kernels=None):
+    def explicit(self, x):
         raise mdl.PrimalError
