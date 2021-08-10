@@ -33,10 +33,10 @@ class ExplicitKernel(mdl.kernel.Kernel):
     def hparams(self):
         return {"Kernel": "Explicit", **super(ExplicitKernel, self).hparams}
 
-    def implicit(self, x):
+    def _implicit(self, x):
         x = self.explicit(x)
         y = self.explicit(self.kernels(self._idx_kernels))
         return x @ y.t()
 
-    def explicit(self, x, idx_kernels=None):
+    def _explicit(self, x, idx_kernels=None):
         return self._network(x)

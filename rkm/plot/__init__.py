@@ -39,9 +39,10 @@ class plotenv():
         with self.writer as w:
             w.add_hparams(hparams_dict, best)
 
-    def update(self, iter, tr_mse=None, val_mse=None, test_mse=None) -> None:
+    def update(self, iter, tr_mse=None, val_mse=None, test_mse=None, es=0) -> None:
         with self.writer as w:
             w.add_scalar("Total Loss", self.model.last_loss, global_step=iter)
+            w.add_scalar("Early Stopping", es, global_step=iter)
 
             for num in range(self.model.num_levels):
                 level = self.model.level(num)

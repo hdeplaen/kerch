@@ -29,7 +29,7 @@ class HardKPCA(mdl.kpca.KPCA):
     def hard(self, x, y):
         if x is None: x = self.layerin
         a, b = self.solve(x)
-        self._model["linear"].set(a, b)
+        self.linear.set(a, b)
 
     def projection(self):
         pass

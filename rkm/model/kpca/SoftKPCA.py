@@ -21,9 +21,6 @@ class SoftKPCA(mdl.kpca.KPCA):
         return {"Constraint": "soft",
                 **super(SoftKPCA, self).hparams}
 
-    def forward(self, x):
-        return super(SoftKPCA, self).forward(x)
-
     def evaluate(self, x):
         return super(SoftKPCA, self).evaluate(x)
 

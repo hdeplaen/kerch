@@ -1,4 +1,5 @@
 import torch
+import torch.linalg
 
 def norm(v, dim=1):
     assert len(v.size())==2
@@ -56,7 +57,8 @@ def polar_retraction(tan_vec): # tan_vec, p-by-n, p <= n
 def qr_retraction(tan_vec): # tan_vec, p-by-n, p <= n
     [p,n] = tan_vec.size()
     tan_vec.t_()
-    q,r = torch.qr(tan_vec)
+    q, r = torch.linalg.qr(tan_vec, 'reduced')
+    # q,r = torch.qr(tan_vec)
     d = torch.diag(r, 0)
     ph = d.sign()
     q *= ph.expand_as(q)
@@ -78,7 +80,7 @@ def check_identity(X):#n-by-p
     print('n={0}, p={1}, res norm={2}'.format(n, p ,torch.norm(res)))
 
 def stiefel_transport(y, g): # y,g p-by-n, p <= n, project g onto the tangent space of y      
-    return stiefel_proj(y, g)
+    return stiefel_proj_tan(y, g)
 
 def gproj(y, g, normalize=False):
     if normalize:

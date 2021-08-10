@@ -132,7 +132,8 @@ class SGDG(Optimizer):
                         else:
                             d_p = buf
 
-                    p.data.add_(-group['lr'], d_p)
+                    # p.data.add_(-group['lr'], d_p)
+                    p.data.add_(d_p, alpha=-group['lr'])
 
         return loss
 

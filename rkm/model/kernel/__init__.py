@@ -45,16 +45,17 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         self.kernels_trainable = kwargs["kernels_trainable"]
         self._centering = kwargs["centering"]
 
+        self.kernels = nn.Parameter(nn.init.orthogonal_(torch.empty((self.init_kernels, self.size_in))),
+                                    requires_grad=self.kernels_trainable)
+
         self._K = None
         self._K_mean = None
         self._K_mean_tot = None
+        self._phi = None
         self._C = None
         self._C_mean = None
         self._idx_kernels = None
         self.reset()
-
-        self.kernels = nn.Parameter(nn.init.orthogonal_(torch.empty((self.init_kernels, self.size_in))),
-                                    requires_grad=self.kernels_trainable)
 
     @abstractmethod
     def __str__(self):
@@ -124,28 +125,33 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         self._K = None
         self._K_mean = None
         self._K_mean_tot = None
+        self._phi = None
         self._C = None
         self._C_mean = None
 
     def update_kernels(self, x):
+        assert x is not None, "Kernels updated with None values."
         if not self.kernels_trainable:
             self.kernels.data = x.data
 
     def merge_idxs(self, **kwargs):
-        assert self._K is not None, "Kernel matrix must be computed first to perform aggregation."
-        return torch.nonzero(torch.triu(self._K) > (1 - kwargs["mtol"]), as_tuple=False)
+        raise NotImplementedError
+        self.dmatrix()
+        return torch.nonzero(torch.triu(self.dmatrix()) > (1 - kwargs["mtol"]), as_tuple=False)
 
     def merge(self, idxs):
+        raise NotImplementedError
         # suppress added up kernel
         self.kernels = (self.kernels.gather(dim=0, index=idxs[:, 1]) +
                         self.kernels.gather(dim=0, index=idxs[:, 0])) / 2
 
+        self.dmatrix()
         # suppress added up kernel entries in the kernel matrix
-        if self.K is not None:
-            self.K.gather(dim=0, index=idxs[:, 1], out=self.K)
-            self.K.gather(dim=1, index=idxs[:, 1], out=self.K)
+        self._K.gather(dim=0, index=idxs[:, 1], out=self._K)
+        self._K.gather(dim=1, index=idxs[:, 1], out=self._K)
 
     def reduce(self, idxs):
+        raise NotImplementedError
         self.kernels.gather(dim=0, index=idxs, out=self.kernels)
 
     def dmatrix(self):
@@ -157,6 +163,9 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         :return: Kernel matrix.
         """
         if self._K is None:
+            if self._idx_kernels is None:
+                self.reset()
+
             self._K = self._implicit(self.kernels[self._idx_kernels, :])
 
             if self._centering:
@@ -175,11 +184,14 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         Its size is output * output.
         """
         if self._C is None:
+            if self._idx_kernels is None:
+                self.reset()
+
             k = self.kernels[self._idx_kernels, :]
-            phi = self._explicit(k)
+            self._phi = self._explicit(k)
 
             if self._centering:
-                self._C_mean = torch.mean(phi, dim=0)
-                phi = phi - self._C_mean
-            self._C = phi.t() @ phi
-        return self._C
+                self._C_mean = torch.mean(self._phi, dim=0)
+                self._phi = self._phi - self._C_mean
+            self._C = self._phi.t() @ self._phi
+        return self._C, self._phi

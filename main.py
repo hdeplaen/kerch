@@ -12,7 +12,7 @@ import argparse
 import rkm.expes.run as run
 
 if __name__ == "__main__":
-    random.seed(42)
+    # random.seed(42)
 
     parser = argparse.ArgumentParser(description='Runs RKM models.')
     parser.add_argument('--experiment',

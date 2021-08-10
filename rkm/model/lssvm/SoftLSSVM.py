@@ -25,9 +25,6 @@ class SoftLSSVM(lssvm.LSSVM):
         return {"Constraint": "soft",
                 **super(SoftLSSVM, self).hparams}
 
-    def forward(self, x, idx_kernels=None):
-        return super().forward(x)
-
     def evaluate(self, x):
         return super(SoftLSSVM, self).evaluate(x)
 

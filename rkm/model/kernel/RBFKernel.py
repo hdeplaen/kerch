@@ -41,7 +41,7 @@ class RBFKernel(mdl.kernel.Kernel):
     def hparams(self):
         return {"Kernel": "RBF", "Trainable sigma": self.sigma_trainable, **super(RBFKernel, self).hparams}
 
-    def implicit(self, x):
+    def _implicit(self, x):
         xs = x[:, None, :].expand(-1, self.num_kernels(), -1)
         params = self.kernels[self._idx_kernels,:].expand(x.size(0), -1, -1)
 
@@ -52,5 +52,5 @@ class RBFKernel(mdl.kernel.Kernel):
 
         return output
 
-    def explicit(self, x):
+    def _explicit(self, x):
         raise mdl.PrimalError

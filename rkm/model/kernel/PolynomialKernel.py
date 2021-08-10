@@ -41,10 +41,10 @@ class PolynomialKernel(mdl.kernel.LinearKernel.LinearKernel):
     def hparams(self):
         return {"Kernel": "Polynomial"}
 
-    def implicit(self, x):
+    def _implicit(self, x):
         return (super()._implicit(x, self._idx_kernels) + 1) ** self.deg
 
-    def explicit(self, x):
+    def _explicit(self, x):
         # A primal representation is technically possible here (we will only consider the dual representation now).
         # raise rkm.PrimalError
         raise NotImplementedError

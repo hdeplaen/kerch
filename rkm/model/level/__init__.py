@@ -86,9 +86,10 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
             "kernel": rkm.model.kernel.KernelFactory.KernelFactory.create(**kernel_kwargs),
             "linear": linear})
 
-    def forward(self, x):
+    def forward(self, x, y):
         idx_kernels = self._idxk.idx_kernels
         if self._live_update: self.kernel.update_kernels(x)
+        self.hard(x, y)
         x = self.kernel(x, self._representation)
         x = self.linear(x, idx_kernels)
         return x
@@ -97,7 +98,6 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         # Out-of-sample
         idx_kernels = self._idxk.all_kernels
         x = self.kernel(x, self._representation, idx_kernels)
-        if self._centering: x = self._center(x, idx_kernels)
         x = self.linear(x, idx_kernels)
         return x
 
@@ -120,10 +120,6 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
     @property
     def kernel(self):
         return self._model["kernel"]
-
-    @abstractmethod
-    def after_step(self, x=None, y=None):
-        pass
 
     @abstractmethod
     def get_params(self):

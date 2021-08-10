@@ -40,28 +40,31 @@ class KPCA(Level, metaclass=ABCMeta):
 
     def _generate_representation(self, **kwargs):
         # REGULARIZATION
-        def primal_var(idx_kernels):
-            C, _ = self.kernel.pmatrix(None, idx_kernels)
-            if self._centering: C = self._center(C, idx_kernels)
+        def primal_var():
+            C, _ = self.kernel.pmatrix()
             V = self.linear.weight
             return torch.trace(C) - torch.trace(V.t() @ C @ V)
 
-        def dual_var(idx_kernels):
-            K = self.kernel.dmatrix(idx_kernels)
-            if self._centering: K = self._center(K, idx_kernels)
+        def dual_var():
+            K = self.kernel.dmatrix()
+            idx_kernels = self._idxk._idx_kernels
             H = self.linear.alpha[idx_kernels, :]
+            # l = torch.trace(K) - torch.trace(H @ H.t() @ K)
+            # if l<0:
+            #     print(f"{self.kernel.sigma} | {l}")
+            # return l
             # return torch.trace(K) - torch.trace(H @ H.t() @ K)
             return (torch.trace(K) - torch.trace(H @ H.t() @ K)) / torch.sum(K, (0, 1))
 
-        switcher_var = {"primal": lambda idx_kernels: primal_var(idx_kernels),
-                        "dual": lambda idx_kernels: dual_var(idx_kernels)}
+        switcher_var = {"primal": primal_var,
+                        "dual": dual_var}
         self._var = switcher_var.get(kwargs["representation"], RepresentationError)
 
     def loss(self, x=None, y=None):
-        idx_kernels = self._idxk.idx_kernels
-        var = self._var(idx_kernels)
+        x = self.forward(x, y)
+        var = self._var()
         self._last_var = var.data
-        return var, None
+        return var, x
 
     def solve(self, x, y=None):
         switcher = {'primal': lambda: self.primal(x),
@@ -87,8 +90,8 @@ class KPCA(Level, metaclass=ABCMeta):
 
     def get_params(self, slow_names=None):
         euclidean = torch.nn.ParameterList(
-            [p for n, p in self._model['kernel'].named_parameters() if p.requires_grad and n not in slow_names])
+            [p for n, p in self.kernel.named_parameters() if p.requires_grad and n not in slow_names])
         slow = torch.nn.ParameterList(
-            [p for n, p in self._model['kernel'].named_parameters() if p.requires_grad and n in slow_names])
+            [p for n, p in self.kernel.named_parameters() if p.requires_grad and n in slow_names])
         stiefel = self._model['linear'].parameters()
         return euclidean, slow, stiefel

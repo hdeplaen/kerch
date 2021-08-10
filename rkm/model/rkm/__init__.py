@@ -76,7 +76,7 @@ class RKM(torch.nn.Module):
         """
         for level in self.model: level.reset()
         opt.step(closure)
-        for level in self.model: level.after_step()
+        for level in self.model: level.projection()
 
     def forward(self, x):
         for level in self.model:
@@ -87,10 +87,8 @@ class RKM(torch.nn.Module):
         tot_loss = 0.
 
         for level in self.model:
-            level(x, y)
-            if level.eta != 0.:
-                l = level.loss()
-                tot_loss += l
+            l, x = level.loss(x, y)
+            tot_loss += level.eta * l
 
         self._last_loss = tot_loss
         return tot_loss
@@ -98,7 +96,8 @@ class RKM(torch.nn.Module):
     @rkm.kwargs_decorator(
         {"maxiter": 1e+3,
          "tol": 1e-5,
-         "step": 100})
+         "epoch": 100,
+         "early_stopping": 3})
     def learn(self, x, y, verbose=False, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
         """
 
@@ -109,7 +108,8 @@ class RKM(torch.nn.Module):
         """
         maxiter = int(kwargs["maxiter"])
         tol = kwargs["tol"]
-        step = kwargs["step"]
+        epoch = kwargs["epoch"]
+        early_stopping = kwargs["early_stopping"]
         test = test_x is not None and test_y is not None
         val = val_x is not None and val_y is not None
         if test and val:
@@ -118,7 +118,7 @@ class RKM(torch.nn.Module):
             test_x = torch.tensor(test_x, dtype=rkm.ftype).to(self.device)
             test_y = torch.tensor(test_y, dtype=rkm.ftype).to(self.device)
         tr_text = "empty"
-        val_text = "empy"
+        val_text = "empty"
         test_text = "empty"
 
         x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
@@ -143,13 +143,15 @@ class RKM(torch.nn.Module):
 
         if val: best_tr, best_val = 100, 100
         if val and test: best_test = 100
+        early_stopping_count = 0
 
         for iter in tr:
             self._optstep(opt, closure)
             current_loss = self.last_loss
 
-            if (iter % step) == 0 and test and val:
-                tr.set_description(f"Loss: {current_loss:6.4e}, Tr:{tr_text}, V:{val_text}, Te:{test_text}")
+            # EPOCH
+            if (iter % epoch) == 0 and test and val:
+                tr.set_description(f"Loss: {current_loss:6.4e}, Tr:{tr_text}, V:{val_text}, Te:{test_text}, ES:{early_stopping_count}/{early_stopping}")
                 if abs(current_loss - min_loss) < tol: break
 
                 tr_mse = torch.mean((self.evaluate(x, numpy=False) - y) ** 2) * 100
@@ -161,19 +163,25 @@ class RKM(torch.nn.Module):
                 test_mse = torch.mean((self.evaluate(test_x, numpy=False) - test_y) ** 2) * 100
                 test_text = f"{test_mse:4.2f}%"
 
+                # EARLY STOPPING
                 if val_mse < best_val:
                     best_tr = tr_mse
                     best_val = val_mse
                     best_test = test_mse
+                    early_stopping_count = 0
+                else:
+                    early_stopping_count += 1
+                    if early_stopping_count > early_stopping:
+                        break
 
-                plotenv.update(iter, tr_mse=tr_mse, val_mse=val_mse, test_mse=test_mse)
+                plotenv.update(iter, tr_mse=tr_mse, val_mse=val_mse, test_mse=test_mse, es=early_stopping_count)
                 if verbose: print(self)
 
             if current_loss < min_loss: min_loss = current_loss
 
         plotenv.finish(best_tr=best_tr, best_val=best_val, best_test=best_test)
-        if val: print(f"Best validation: {best_val:4.2f}%\n")
-        if val and test: print(f"Corresponding test: {best_test:4.2f}%\n")
+        if val: print(f"Best validation: {best_val:4.2f}%")
+        if val and test: print(f"Corresponding test: {best_test:4.2f}%")
 
     def evaluate(self, x, numpy=True):
         if numpy: x = torch.tensor(x, dtype=rkm.ftype).to(self.device)

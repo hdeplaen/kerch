@@ -65,30 +65,32 @@ class LSSVM(Level, metaclass=ABCMeta):
 
     def _generate_representation(self, **kwargs):
         # REGULARIZATION
-        def primal_reg(idx_kernels):
-            weight = self._model['linear'].weight
+        def primal_reg():
+            idx_kernels = self._idxk.idx_kernels
+            weight = self.linear.weight
             return (1 / len(idx_kernels)) * weight.t() @ weight
             # return weight.t() @ weight
 
-        def dual_reg(idx_kernels):
-            alpha = self._model["linear"].alpha[idx_kernels]
-            K = self._model["kernel"].dmatrix(idx_kernels)
+        def dual_reg():
+            idx_kernels = self._idxk.idx_kernels
+            alpha = self.linear.alpha[idx_kernels]
+            K = self.kernel.dmatrix()
             return (1 / len(idx_kernels)) * alpha.t() @ K @ alpha
             # return alpha.t() @ K @ alpha
 
-        switcher_reg = {"primal": lambda idx_kernels: primal_reg(idx_kernels),
-                        "dual": lambda idx_kernels: dual_reg(idx_kernels)}
+        switcher_reg = {"primal": primal_reg,
+                        "dual": dual_reg}
         self._reg = switcher_reg.get(kwargs["representation"], RepresentationError)
 
     def recon(self, x, y):
-        x_tilde = self.forward(x)
+        x_tilde = self.forward(x, y)
         return self._criterion(x_tilde, y), x_tilde
 
     def reg(self):
         idx_kernels = self._idxk.idx_kernels
-        return torch.trace(self._reg(idx_kernels))
+        return torch.trace(self._reg())
 
-    def loss(self, x=None, y=None, idx_kernels=None):
+    def loss(self, x=None, y=None):
         recon, x_tilde = self.recon(x, y)
         reg = self.reg()
         l = .5 * reg + .5 * self._gamma * recon
@@ -107,7 +109,7 @@ class LSSVM(Level, metaclass=ABCMeta):
     def primal(self, x, y):
         assert y.size(1) == 1, "Not implemented for multi-dimensional output (as for now)."
 
-        C, phi = self._model['kernel'].cov(x)
+        C, phi = self.kernel.pmatrix()
         n = phi.size(1)
         I = torch.eye(n)
         P = torch.sum(phi, dim=0)
@@ -119,7 +121,7 @@ class LSSVM(Level, metaclass=ABCMeta):
         B = torch.cat((Y, S), dim=0)
 
         sol = torch.solve(A, B)
-        weight = sol[0:-1].data
+        weight = sol[0:-1]
         bias = sol[-1].data
 
         return weight, bias
@@ -128,7 +130,7 @@ class LSSVM(Level, metaclass=ABCMeta):
         assert y.dim() == 1, "Not implemented for multi-dimensional output (as for now)."
         n = x.size(0)
 
-        K = self._model["kernel"].dmatrix(self._all_kernels)
+        K = self.kernel.dmatrix()
         I = torch.eye(n, device=self.device)
         N = torch.ones((n, 1), device=self.device)
         A = torch.cat((torch.cat((K + (1 / self._gamma) * I, N), dim=1),
@@ -147,10 +149,10 @@ class LSSVM(Level, metaclass=ABCMeta):
 
     def get_params(self, slow_names=None):
         euclidean = torch.nn.ParameterList(
-            [p for n, p in self._model['kernel'].named_parameters() if p.requires_grad and n not in slow_names])
+            [p for n, p in self.kernel.named_parameters() if p.requires_grad and n not in slow_names])
         euclidean.extend(
-            [p for p in self._model['linear'].parameters() if p.requires_grad])
+            [p for p in self.linear.parameters() if p.requires_grad])
         slow = torch.nn.ParameterList(
-            [p for n, p in self._model['kernel'].named_parameters() if p.requires_grad and n in slow_names])
+            [p for n, p in self.kernel.named_parameters() if p.requires_grad and n in slow_names])
         stiefel = torch.nn.ParameterList()
         return euclidean, slow, stiefel

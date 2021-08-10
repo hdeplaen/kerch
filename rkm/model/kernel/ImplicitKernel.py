@@ -33,8 +33,8 @@ class ImplicitKernel(mdl.kernel.Kernel):
     def hparams(self):
         return {"Kernel": "Implicit", **super(ImplicitKernel, self).hparams}
 
-    def implicit(self, x):
+    def _implicit(self, x):
         return self._network(x, self.kernels(self._idx_kernels))
 
-    def explicit(self, x, idx_kernels=None):
+    def _explicit(self, x, idx_kernels=None):
         raise mdl.PrimalError

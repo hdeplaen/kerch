@@ -39,7 +39,7 @@ class Optimizer():
         if len(slow_params) > 0:
             dict_slow = {'params': slow_params, 'stiefel': False, 'lr': kwargs['lr'] / 1}
             dict_slow = {**dict_slow, **kwargs}
-            dict_slow['lr'] = dict_slow['lr'] / self._kwargs["kernel_rate"]
+            dict_slow['lr'] = dict_slow['lr'] * self._kwargs["kernel_rate"]
             self._dict.append(dict_slow)
 
         if len(stiefel_params) > 0:
