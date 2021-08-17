@@ -46,7 +46,7 @@ class SigmoidKernel(mdl.kernel.LinearKernel.LinearKernel):
         return {"Kernel": "Sigmoid", **super(SigmoidKernel, self).hparams}
 
     def _implicit(self, x):
-        x = super()._implicit(x, self._idx_kernels)
+        x = super()._implicit(x)
         x = self._linear(x)
         return torch.sigmoid(x)
 

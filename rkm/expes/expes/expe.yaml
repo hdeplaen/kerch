@@ -1,0 +1,20 @@
+pima_indians:
+  cuda: True
+  num_iter: 20
+  data:
+    dataset: "pima_indians"
+    training: 400
+    validating: 112
+    testing: 255
+  level1:
+    type: "kpca"
+    kernel:
+      kernel_type: "rbf"
+  level2:
+    type: "kpca"
+    kernel:
+      kernel_type: "rbf"
+  level3:
+    type: "lssvm"
+    kernel:
+      kernel_type: "rbf"

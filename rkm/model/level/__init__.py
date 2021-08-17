@@ -20,7 +20,7 @@ from .IDXK import IDXK
 class Level(torch.nn.Module, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
         {"size_in": 1, "size_out": 1, "eta": 1, "representation": "dual", "init_kernels": 1,
-         "constraint": "hard", "live_update": True})
+         "constraint": "soft", "live_update": True})
     def __init__(self, device='cpu', **kwargs):
         """
 

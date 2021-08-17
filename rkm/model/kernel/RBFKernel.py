@@ -48,7 +48,7 @@ class RBFKernel(mdl.kernel.Kernel):
         diff = xs - params
         norm2 = torch.sum(diff * diff, dim=2)
         fact = 1 / (2 * self.sigma ** 2)
-        output = torch.exp(-fact * norm2)
+        output = torch.exp(torch.mul(norm2, -fact))
 
         return output
 

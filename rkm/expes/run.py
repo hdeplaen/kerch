@@ -16,6 +16,70 @@ from sklearn import preprocessing
 from rkm.expes.data import data
 import rkm.model.rkm as rkm
 
+def sanity():
+    # DEFAULT PARAMETERS
+    default_params = {"cuda": True}
+    default_data_params = {"dataset": "gaussian",
+                           "training": 100,
+                           "validating": 0,
+                           "testing": 0}
+
+    # LOADING PARAMETERS
+    params = {**default_params, **load_params('expe', 'model')}
+    data_params = {**default_data_params, **params['data']}
+
+    # SINGLE EXPERIMENT
+    def _single_expe(num=0):
+        print(f"ITERATION NUMBER {num + 1}")
+
+        training, validation, test, _ = data.factory(data_params["dataset"],
+                                                     data_params["training"],
+                                                     data_params["validating"],
+                                                     data_params["testing"])
+
+        # PREPROCESSING
+        tr_input, tr_target = training
+        val_input, val_target = validation
+        test_input, test_target = test
+
+        scaler = preprocessing.StandardScaler().fit(tr_input)
+        tr_input = scaler.transform(tr_input)
+        val_input = scaler.transform(val_input)
+        test_input = scaler.transform(test_input)
+
+        # SETTING MODEL UP
+        mdl = rkm.RKM(cuda=params["cuda"])
+
+        level_num = 1
+        while True:
+            level_name = f"level{level_num}"
+            try:
+                level_params = params[level_name]
+            except KeyError:
+                break
+            default_level_params = {"init_kernels": data_params["training"]}
+            level_params = {**default_level_params, **level_params}
+            mdl.append(**level_params)
+            level_num += 1
+
+        print(mdl)
+
+        # TRAINING
+        mdl.learn(tr_input, tr_target, verbose=verbose,
+                  val_x=val_input, val_y=val_target,
+                  test_x=test_input, test_y=test_target,
+                  **params["opt"])
+        print(mdl)
+
+        print("###########################################################")
+
+    print(f"STARTING EXPERIMENT {name}")
+    num_iter = params["num_iter"]
+    print(f"TOTAL NUMBER OF ITERATIONS: {num_iter}")
+    for iter in range(0, num_iter):
+        _single_expe(iter)
+
+    
 
 def lssvm():
     params = load_params('tests', 'lssvm')
