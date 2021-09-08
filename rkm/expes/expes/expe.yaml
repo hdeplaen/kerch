@@ -1,8 +1,8 @@
-pima_indians:
+pid:
   cuda: True
   num_iter: 20
   data:
-    dataset: "pima_indians"
+    dataset: "pid"
     training: 400
     validating: 112
     testing: 255
@@ -18,3 +18,69 @@ pima_indians:
     type: "lssvm"
     kernel:
       kernel_type: "rbf"
+
+bld:
+  cuda: True
+  num_iter: 20
+  data:
+    dataset: "bld"
+    training: 170
+    validating: 60
+    testing: 114
+  level1:
+    size_out: 10
+    type: "kpca"
+    kernel:
+      kernel_type: "rbf"
+      sigma_trainable: True
+      sigma: 2
+  level2:
+    size_out: 10
+    type: "kpca"
+    kernel:
+      kernel_type: "rbf"
+      sigma_trainable: True
+  level3:
+    size_out: 1
+    type: "lssvm"
+    kernel:
+      kernel_type: "rbf"
+      sigma_trainable: True
+  opt:
+    lr: 0.005
+    kernel_rate: 20
+
+
+adult:
+  cuda: True
+  num_iter: 20
+  data:
+    dataset: "adult"
+    training: 1000
+    validating: 200
+    testing: 200
+  level1:
+    stochastic: 1
+    size_out: 10
+    type: "kpca"
+    kernel:
+      kernel_type: "rbf"
+      sigma_trainable: True
+      sigma: 7
+  level2:
+    stochastic: 1
+    size_out: 5
+    type: "kpca"
+    kernel:
+      kernel_type: "rbf"
+      sigma_trainable: True
+  level3:
+    stochastic: 1
+    size_out: 1
+    type: "lssvm"
+    kernel:
+      kernel_type: "rbf"
+      sigma_trainable: True
+  opt:
+    lr: 0.005
+    kernel_rate: 20

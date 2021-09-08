@@ -8,9 +8,7 @@ LS-SVM abstract level
 """
 
 import torch
-import random
-import numpy as np
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 
 import rkm
 from rkm.model.level import Level
@@ -84,7 +82,10 @@ class LSSVM(Level, metaclass=ABCMeta):
 
     def recon(self, x, y):
         x_tilde = self.forward(x, y)
-        return self._criterion(x_tilde, y), x_tilde
+        try:
+            return self._criterion(x_tilde, y), x_tilde
+        except:
+            print('Probably input and output which are not of the same size.')
 
     def reg(self):
         idx_kernels = self._idxk.idx_kernels

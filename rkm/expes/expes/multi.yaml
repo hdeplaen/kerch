@@ -3,21 +3,21 @@ pima_indians:
   num_iter: 20
   data:
     dataset: "pima_indians"
-    training: 400
-    validating: 112
-    testing: 255
+    training: 567
+    validating: 100
+    testing: 100
   level1:
     eta: 1.
     stochastic: 1.
     size_in: 8
-    size_out: 20
+    size_out: 10
     plot: True
     type: "kpca"
     constraint: "soft"
     representation: "dual"
     points_trainable: False
     aggregate: False
-    init_kernels: 400
+    init_kernels: 567
     kernel:
       kernel_type: "rbf"
       sigma: 3.
@@ -25,14 +25,14 @@ pima_indians:
   level2:
     eta: 1.
     stochastic: 1
-    size_in: 20
-    size_out: 20
+    size_in: 10
+    size_out: 10
     plot: True
     type: "kpca"
     representation: "dual"
     points_trainable: False
     aggregate: False
-    init_kernels: 400
+    init_kernels: 567
     kernel:
       kernel_type: "rbf"
       sigma: 1.
@@ -40,15 +40,15 @@ pima_indians:
   level3:
     eta: 1.
     stochastic: 1
-    size_in: 20
+    size_in: 10
     size_out: 1
     plot: True
     type: "lssvm"
-    gamma: 5
+    gamma: 1.
     representation: "dual"
     points_trainable: False
     aggregate: False
-    init_kernels: 400
+    init_kernels: 567
     kernel:
       kernel_type: "rbf"
       sigma: 1.

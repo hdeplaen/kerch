@@ -25,8 +25,8 @@ if __name__ == "__main__":
                         help="Performs the experiment described in the expe.yaml file.")
 
     args = parser.parse_args()
-    experiment = args["experiment"]
-    sanity = args["sanity"]
+    experiment = args.experiment
+    sanity = args.sanity
 
     if sanity: run.sanity()
     if experiment is not None: run.experiment(experiment)

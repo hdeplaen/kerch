@@ -42,7 +42,7 @@ class RBFKernel(mdl.kernel.Kernel):
         return {"Kernel": "RBF", "Trainable sigma": self.sigma_trainable, **super(RBFKernel, self).hparams}
 
     def _implicit(self, x):
-        xs = x[:, None, :].expand(-1, self.num_kernels(), -1)
+        xs = x[:, None, :].expand(-1, self.num_idx(), -1)
         params = self.kernels[self._idx_kernels,:].expand(x.size(0), -1, -1)
 
         diff = xs - params

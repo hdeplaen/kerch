@@ -8,6 +8,7 @@ Base RKM model and various implementations
 """
 
 import torch
+import numpy as np
 from tqdm import trange
 
 import rkm
@@ -44,7 +45,7 @@ class RKM(torch.nn.Module):
         self._last_loss = torch.tensor(0.)
 
     def __str__(self):
-        text = f"\nThis RKM has {len(self._model)} levels:\n"
+        text = f"RKM with {len(self._model)} levels:\n"
         num = 1
         for level in self._model:
             text += ("LEVEL" + str(num) + ": " + level.__str__() + "\n")
@@ -97,7 +98,8 @@ class RKM(torch.nn.Module):
         {"maxiter": 1e+3,
          "tol": 1e-5,
          "epoch": 100,
-         "early_stopping": 3})
+         "early_stopping": 3,
+         "stochastic": 1.})
     def learn(self, x, y, verbose=False, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
         """
 
@@ -110,6 +112,7 @@ class RKM(torch.nn.Module):
         tol = kwargs["tol"]
         epoch = kwargs["epoch"]
         early_stopping = kwargs["early_stopping"]
+        stochastic = kwargs["stochastic"]
         test = test_x is not None and test_y is not None
         val = val_x is not None and val_y is not None
         if test and val:
@@ -133,6 +136,11 @@ class RKM(torch.nn.Module):
 
         def closure():
             opt.zero_grad()
+
+            if stochastic < 1.:
+                idx_stoch = random.sample(range(x.shape[0]), k=np.minimum(
+                    int(self._stochastic * self._init_kernels), self.num_kernels))
+
             loss = self.loss(x, y)
             loss.backward(create_graph=True)
             return loss
@@ -146,6 +154,9 @@ class RKM(torch.nn.Module):
         early_stopping_count = 0
 
         for iter in tr:
+            if self.cuda:
+                torch.cuda.empty_cache()
+
             self._optstep(opt, closure)
             current_loss = self.last_loss
 
@@ -191,7 +202,7 @@ class RKM(torch.nn.Module):
         if numpy: x = x.detach().cpu().numpy()
         return x
 
-    @rkm.kwargs_decorator({"size_in": 1, "constraint": "soft"})
+    @rkm.kwargs_decorator({"size_in": 1, "constraint": "soft", "representation": "dual"})
     def append_level(self, type, **kwargs):
         """
 
@@ -209,12 +220,13 @@ class RKM(torch.nn.Module):
                 ") not compatible with layer " + str(current) + " (size_out=" + str() + ")."
 
         # TO DO: make switchers cleaner with proper NameError
-        switcher1 = {"lssvm": SoftLSSVM.SoftLSSVM, "kpca": SoftKPCA.SoftKPCA}
-        switcher2 = {"lssvm": HardLSSVM.HardLSSVM, "kpca": HardKPCA.HardKPCA}
-        switcher3 = {"soft": switcher1, "hard": switcher2}
+        switcher2 = {"soft": SoftKPCA.SoftKPCA, "hard": HardKPCA.HardKPCA}
+        switcher3 = {"soft": SoftLSSVM.SoftLSSVM, "hard": HardLSSVM.HardLSSVM}
+        switcher4 = {"soft": torch.nn.Sigmoid, "hard": torch.nn.Hardsigmoid}
+        switcher1 = {"kpca": switcher2, "lssvm": switcher3, "sigmoid": switcher4}
 
-        level = switcher3.get(kwargs["constraint"], "Invalid level constraint (soft/hard)"). \
-            get(type, "Invalid level type (kpca/lssvm)")(device=self.device, **kwargs)
+        level = switcher1.get(type, "Invalid level type (kpca/lssvm)"). \
+            get(kwargs["constraint"], "Invalid level constraint (soft/hard)")(device=self.device, **kwargs)
 
         euclidean, slow, stiefel = level.get_params(slow_names='sigma')
         self._euclidean.extend(euclidean)

@@ -65,9 +65,13 @@ class Kernel(nn.Module, metaclass=ABCMeta):
     def params(self):
         return {}
 
-    #@property
+    # @property
     def num_kernels(self):
         return self.kernels.shape[0]
+
+    # @property
+    def num_idx(self):
+        return len(self._idx_kernels)
 
     @property
     def hparams(self):
@@ -166,6 +170,7 @@ class Kernel(nn.Module, metaclass=ABCMeta):
             if self._idx_kernels is None:
                 self.reset()
 
+            # self._k = self._implicit(self.kernels.gather(0, self._idx_kernels))
             self._K = self._implicit(self.kernels[self._idx_kernels, :])
 
             if self._centering:

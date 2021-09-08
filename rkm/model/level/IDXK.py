@@ -40,7 +40,7 @@ class IDXK():
         return self._idx_kernels
 
     def _restoch(self):
-        self._stoch_kernels = random.sample(self.all_kernels, k=np.maximum(
+        self._stoch_kernels = random.sample(self.all_kernels, k=np.minimum(
             int(self._stochastic * self._init_kernels), self.num_kernels))
 
     def new(self):

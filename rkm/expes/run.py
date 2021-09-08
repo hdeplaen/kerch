@@ -19,7 +19,7 @@ import rkm.model.rkm as rkm
 def sanity():
     # DEFAULT PARAMETERS
     default_params = {"cuda": True}
-    default_data_params = {"dataset": "gaussian",
+    default_data_params = {"dataset": "gaussians",
                            "training": 100,
                            "validating": 0,
                            "testing": 0}
@@ -65,7 +65,7 @@ def sanity():
         print(mdl)
 
         # TRAINING
-        mdl.learn(tr_input, tr_target, verbose=verbose,
+        mdl.learn(tr_input, tr_target, verbose=True,
                   val_x=val_input, val_y=val_target,
                   test_x=test_input, test_y=test_target,
                   **params["opt"])
@@ -73,13 +73,11 @@ def sanity():
 
         print("###########################################################")
 
-    print(f"STARTING EXPERIMENT {name}")
+    print(f"STARTING EXPERIMENT {'name'}")
     num_iter = params["num_iter"]
     print(f"TOTAL NUMBER OF ITERATIONS: {num_iter}")
     for iter in range(0, num_iter):
         _single_expe(iter)
-
-    
 
 def lssvm():
     params = load_params('tests', 'lssvm')
@@ -103,7 +101,6 @@ def lssvm():
 
     print('LS-SVM test finished')
 
-
 def kpca():
     params = load_params('tests', 'kpca')
     data_params = params['data']
@@ -126,7 +123,7 @@ def kpca():
     mdl_hard.learn(input, target, **params["opt"])
     print('Hard KPCA finished')
 
-def pima_indians():
+def pid():
     # PRELIMINARIES
     params = load_params('multi', 'pima_indians')
     data_params = params['data']
@@ -189,7 +186,7 @@ def general_expe(name, verbose=False):
     def _single_expe(num=0):
         print(f"ITERATION NUMBER {num+1}")
 
-        training, validation, test, _ = data.factory(data_params["dataset"],
+        training, validation, test, info = data.factory(data_params["dataset"],
                                                      data_params["training"],
                                                      data_params["validating"],
                                                      data_params["testing"])
@@ -208,6 +205,8 @@ def general_expe(name, verbose=False):
         mdl = rkm.RKM(cuda=params["cuda"])
 
         level_num = 1
+        size_params = {"size_in": info["size"],
+                       "size_out": 1}
         while True:
             level_name = f"level{level_num}"
             try:
@@ -215,9 +214,10 @@ def general_expe(name, verbose=False):
             except KeyError:
                 break
             default_level_params = {"init_kernels": data_params["training"]}
-            level_params = {**default_level_params, **level_params}
-            mdl.append(**level_params)
+            level_params = {**default_level_params, **size_params, **level_params}
+            mdl.append_level(**level_params)
             level_num += 1
+            size_params = {"size_in": level_params["size_out"]}
 
         print(mdl)
 
@@ -236,6 +236,16 @@ def general_expe(name, verbose=False):
     for iter in range(0, num_iter):
         _single_expe(iter)
 
+def experiment(name):
+    switcher = {"pid": pid,
+                "bld": lambda: general_expe("bld"),
+                "adult": lambda: general_expe("adult"),
+                "sanity": sanity,
+                "lssvm": lssvm,
+                "kpca": kpca}
+    if name not in switcher:
+        raise NameError("Invalid experiment.")
+    return switcher[name]()
 
 #######################################################################################################################
 
@@ -247,4 +257,4 @@ def load_params(file: str, expe: str):
     """
     with open(os.path.join(sys.path[0], "rkm/expes/expes/" + file + ".yaml"), "r") as file:
         content = yaml.safe_load(file)
-    return content.get(expe, 'Experiment not recognized in yaml file.')
+    return content.get(expe, 'Name of experiment not recognized in yaml file.')

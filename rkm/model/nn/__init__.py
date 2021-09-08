@@ -1,21 +1,19 @@
 """
-Abstract RKM level class.
+NN level
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
 @license: MIT
-@date: March 2021
+@date: August 2021
 """
 
-import rkm
 import torch
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 
-from .DualLinear import DualLinear
-from .PrimalLinear import PrimalLinear
-from .IDXK import IDXK
+import rkm
+from rkm.model.level import Level
 
-class Level(torch.nn.Module, metaclass=ABCMeta):
+class NN(Level, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
         {"size_in": 1, "size_out": 1, "eta": 1, "representation": "dual", "init_kernels": 1,
          "constraint": "soft", "live_update": True})
@@ -119,40 +117,32 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
     def kernel(self):
         return self._model["kernel"]
 
-    @abstractmethod
     def get_params(self):
         pass
 
-    @abstractmethod
     def solve(self, x, y):
         pass
 
-    @abstractmethod
     def primal(self, x, y):
         pass
 
-    @abstractmethod
     def dual(self, x, y):
         pass
 
-    @abstractmethod
     def hard(self, x, y):
         pass
 
-    @abstractmethod
     def projection(self):
         pass
 
     def kernels_init(self, x=None):
-        self.kernel.kernels_init(x)
-        self.kernels_initialized = True
+        pass
 
     def stoch_update(self):
-        return self._idxk.new()
+        pass
 
     def reset(self):
-        idx_kernels = self.stoch_update()
-        self.kernel.reset(idx_kernels)
+        pass
 
     @rkm.kwargs_decorator({"mtol": 1.0e-2, "rtol": 1.0e-4})
     def aggregate(self, **kwargs):
@@ -162,21 +152,4 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         :param mtol: Merges the kernel if the value is not 0.
         :param rtol: Reduces the kernel if the value is not 0.
         """
-        assert self._size_out == 1, NotImplementedError
-
-        def merge(idxs):
-            self.kernel.merge(idxs)
-            self.linear.merge(idxs)
-            self._idxk.merge(idxs)
-
-        def reduce(idxs):
-            self.kernel.reduce(idxs)
-            self.linear.reduce(idxs)
-            self._idxk.reduce(idxs)
-
-        if kwargs["mtol"] is not None:
-            idxs_merge = self.kernel.merge_idxs(**kwargs)
-            merge(idxs_merge)
-        if kwargs["rtol"] is not None:
-            idxs_reduce = self.linear.reduce_idxs(**kwargs)
-            reduce(idxs_reduce)
+        raise NotImplemented
