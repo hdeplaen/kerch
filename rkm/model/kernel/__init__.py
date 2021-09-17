@@ -133,10 +133,14 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         self._C = None
         self._C_mean = None
 
-    def update_kernels(self, x):
+    def kernels_init(self, x):
+        assert x is not None, "Kernels updated with None values."
+        self.kernels.data = x.data
+
+    def update_kernels(self, x, idx_kernels):
         assert x is not None, "Kernels updated with None values."
         if not self.kernels_trainable:
-            self.kernels.data = x.data
+            self.kernels.data[idx_kernels,:] = x.data
 
     def merge_idxs(self, **kwargs):
         raise NotImplementedError
@@ -163,7 +167,7 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         Computes the dual matrix, also known as the kernel matrix.
         Its size is len(idx_kernels) * len(idx_kernels).
 
-        :param idx_kernels: Index of the support vectors used to compute the kernel matrix. If nothing is provided, the kernel uses all of them.
+        :param idx_kernels: Index of the support vectors used to compute the kernel matrix. If nothing is provided, the kernel uses all_kernels of them.
         :return: Kernel matrix.
         """
         if self._K is None:

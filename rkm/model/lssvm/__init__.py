@@ -23,7 +23,8 @@ class LSSVM(Level, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
         {"gamma": 1.,
          "centering": False,
-         "requires_bias": True})
+         "requires_bias": True,
+         "classifier": False})
     def __init__(self, **kwargs):
         """
 
@@ -32,6 +33,7 @@ class LSSVM(Level, metaclass=ABCMeta):
         super(LSSVM, self).__init__(**kwargs)
 
         self._gamma = kwargs["gamma"]
+        self._classifier = kwargs["classifier"]
         self._criterion = torch.nn.MSELoss(reduction="mean")
         self._generate_representation(**kwargs)
 
@@ -47,6 +49,7 @@ class LSSVM(Level, metaclass=ABCMeta):
     def hparams(self):
         return {"Type": "LSSVM",
                 "Gamma": self.gamma,
+                "Classifier": self._classifier,
                 **super(LSSVM, self).hparams}
 
     @property
@@ -80,6 +83,16 @@ class LSSVM(Level, metaclass=ABCMeta):
                         "dual": dual_reg}
         self._reg = switcher_reg.get(kwargs["representation"], RepresentationError)
 
+    def forward(self, x, y, init=False):
+        x = super(LSSVM, self).forward(x, y, init=init)
+        if self._classifier: x = torch.sigmoid(x)
+        return x
+
+    def evaluate(self, x, all_kernels=False):
+        x = super(LSSVM, self).evaluate(x, all_kernels=all_kernels)
+        if self._classifier: x = torch.sigmoid(x)
+        return x
+            
     def recon(self, x, y):
         x_tilde = self.forward(x, y)
         try:

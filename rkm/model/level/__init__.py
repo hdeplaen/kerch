@@ -13,7 +13,7 @@ from abc import ABCMeta, abstractmethod
 
 from .DualLinear import DualLinear
 from .PrimalLinear import PrimalLinear
-from .IDXK import IDXK
+from rkm.model.level.IDXK import IDXK
 
 class Level(torch.nn.Module, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
@@ -84,17 +84,23 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
             "kernel": rkm.model.kernel.KernelFactory.KernelFactory.create(**kernel_kwargs),
             "linear": linear})
 
-    def forward(self, x, y):
+    def forward(self, x, y, init=False):
         idx_kernels = self._idxk.idx_kernels
-        if self._live_update: self.kernel.update_kernels(x)
+        if self._live_update and not init:
+            self.kernel.update_kernels(x, self._idxk.idx_update)
         self.hard(x, y)
         x = self.kernel(x, self._representation)
         x = self.linear(x, idx_kernels)
         return x
 
-    def evaluate(self, x):
+    def evaluate(self, x, all_kernels=False):
         # Out-of-sample
-        idx_kernels = self._idxk.all_kernels
+        if all_kernels:
+            idx_kernels = self._idxk.all_kernels
+        else:
+            idx_kernels = self._idxk.idx_kernels
+
+
         x = self.kernel(x, self._representation, idx_kernels)
         x = self.linear(x, idx_kernels)
         return x
@@ -148,7 +154,11 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self.kernels_initialized = True
 
     def stoch_update(self):
-        return self._idxk.new()
+        self._idxk.new_level()
+        return self._idxk.idx_kernels
+
+    def init_idxk(self, idxk: IDXK):
+        self._idxk = idxk
 
     def reset(self):
         idx_kernels = self.stoch_update()
@@ -162,7 +172,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         :param mtol: Merges the kernel if the value is not 0.
         :param rtol: Reduces the kernel if the value is not 0.
         """
-        assert self._size_out == 1, NotImplementedError
+        assert self._size_out == 1, NotImplemented
 
         def merge(idxs):
             self.kernel.merge(idxs)

@@ -41,6 +41,13 @@ class RBFKernel(mdl.kernel.Kernel):
     def hparams(self):
         return {"Kernel": "RBF", "Trainable sigma": self.sigma_trainable, **super(RBFKernel, self).hparams}
 
+    def reset(self, idx_kernels=None):
+        super(RBFKernel, self).reset(idx_kernels=idx_kernels)
+        # try:
+        #     self.sigma.data = self.sigma.data + torch.normal(0, .001, size=(1,1))[0,0]
+        # except AttributeError:
+        #     pass
+
     def _implicit(self, x):
         xs = x[:, None, :].expand(-1, self.num_idx(), -1)
         params = self.kernels[self._idx_kernels,:].expand(x.size(0), -1, -1)

@@ -141,11 +141,26 @@ class data():
         tr_target = (tr_target == " <=50K").astype(int).values.flatten()
         te_target = (te_target == " <=50K").astype(int).values.flatten()
 
-        print('Bupa liver disorder dataset loaded. ')
+        print('Adult dataset loaded. ')
 
         info = {"range": None,
                 "size": 60}
         return (tr_input, tr_target), (te_input, te_target), info
+
+    @staticmethod
+    def ionoshpere(tot_data, test_data):
+        with open('rkm/expes/datasets/ion.csv') as csvfile:
+            data_tr = pd.read_csv(csvfile, header=None, delimiter=',', lineterminator='\n')
+
+        tr_input = data_tr.iloc[:, 0:34].to_numpy()
+        tr_target = data_tr.iloc[:, -1]
+        tr_target = (tr_target == "g").astype(int).values.flatten()
+
+        print('Ionosphere dataset loaded. ')
+
+        info = {"range": None,
+                "size": 34}
+        return (tr_input, tr_target), (None, None), info
 
     @staticmethod
     def generate_dataset(fun, tr_size, val_size, test_size, tot_data, test_data):
@@ -178,7 +193,7 @@ class data():
         input, target = dataset
         test_input, test_target = test
 
-        print("Data loaded.")
+        # print("Data loaded.")
 
         # SELECT
         idx_random = np.random.permutation(tot_data)
@@ -207,7 +222,8 @@ class data():
                     "spiral": (data.spiral, None, None),
                     "two_moons": (data.two_moons, None, None),
                     "usps": (data.usps, 5000, None),
-                    "pima_indians": (data.pima_indians, 767, None),
+                    "pid": (data.pima_indians, 767, None),
+                    "ion": (data.ionoshpere, 351, None),
                     "bld": (data.bupa_liver_disorder, 344, None),
                     "adult": (data.adult, 32559, 16279)}
         fun, tot_data, test_data = datasets.get(name, "Please provide the name of a valid dataset.")

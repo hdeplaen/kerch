@@ -63,6 +63,11 @@ class Optimizer():
     def params(self):
         return self._kwargs
 
+    def reduce(self, rate):
+        if self._opt is not None:
+            for params in self._opt.param_groups:
+                params['lr'] /= rate
+
     def step(self, closure=None):
         if self._opt is not None: self._opt.step(closure)
 

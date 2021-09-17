@@ -237,9 +237,10 @@ def general_expe(name, verbose=False):
         _single_expe(iter)
 
 def experiment(name):
-    switcher = {"pid": pid,
+    switcher = {"pid": lambda: general_expe("pid"),
                 "bld": lambda: general_expe("bld"),
                 "adult": lambda: general_expe("adult"),
+                "ion": lambda: general_expe("ion"),
                 "sanity": sanity,
                 "lssvm": lssvm,
                 "kpca": kpca}
