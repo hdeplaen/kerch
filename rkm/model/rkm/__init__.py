@@ -22,7 +22,7 @@ import rkm.plot as rkmplot
 
 class RKM(torch.nn.Module):
     @rkm.kwargs_decorator(
-        {"cuda": False})
+        {"cuda": True})
     def __init__(self, **kwargs):
         super(RKM, self).__init__()
 
@@ -71,6 +71,10 @@ class RKM(torch.nn.Module):
         return self.model[num]
 
     def init(self, x, y):
+        for level in self.model:
+            level.init(x, y)
+
+    def cpu_forward(self, x, y):
         print('Initializing model (CPU).')
         for level in self.model:
             level.kernels_init(x)
@@ -152,7 +156,8 @@ class RKM(torch.nn.Module):
 
         plotenv = rkmplot.plotenv(model=self, opt=opt)
 
-        if init: self.init(x, y)
+        self.init(x, y)
+        if init: self.cpu_forward(x, y)
 
         # LOADING ON DEVICE
         self.to(self.device)
@@ -214,6 +219,7 @@ class RKM(torch.nn.Module):
                     return tot_loss
 
                 self._optstep(opt, closure)
+                for level in self.model: level.hard(x, y)
                 current_loss = self.last_loss
 
                 # REDUCE LEARNING RATE

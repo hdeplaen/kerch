@@ -34,6 +34,9 @@ class Linear(torch.nn.Module, metaclass=ABCMeta):
     def project(self):
         pass
 
+    def init_y(self, y, idxs):
+        pass
+
     @abstractmethod
     def merge(self, idxs):
         pass

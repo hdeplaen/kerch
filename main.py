@@ -15,7 +15,7 @@ if __name__ == "__main__":
     # random.seed(42)
 
     parser = argparse.ArgumentParser(description='Runs various deep RKM experiments.')
-    parser.add_argument("-s", "--sanity",
+    parser.add_argument("-t", "--tests",
                         action='store_true',
                         default=False,
                         help="Performs a series of sanity checks as described in the sanity.yaml file.")
@@ -25,8 +25,8 @@ if __name__ == "__main__":
                         help="Performs the experiment described in the expe.yaml file.")
 
     args = parser.parse_args()
+    tests = args.tests
     experiment = args.experiment
-    sanity = args.sanity
 
-    if sanity: run.sanity()
+    if tests: run.tests()
     if experiment is not None: run.experiment(experiment)

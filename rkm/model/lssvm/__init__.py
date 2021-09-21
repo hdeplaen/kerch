@@ -23,8 +23,7 @@ class LSSVM(Level, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
         {"gamma": 1.,
          "centering": False,
-         "requires_bias": True,
-         "classifier": False})
+         "requires_bias": True})
     def __init__(self, **kwargs):
         """
 
@@ -33,7 +32,6 @@ class LSSVM(Level, metaclass=ABCMeta):
         super(LSSVM, self).__init__(**kwargs)
 
         self._gamma = kwargs["gamma"]
-        self._classifier = kwargs["classifier"]
         self._criterion = torch.nn.MSELoss(reduction="mean")
         self._generate_representation(**kwargs)
 
@@ -85,20 +83,24 @@ class LSSVM(Level, metaclass=ABCMeta):
 
     def forward(self, x, y, init=False):
         x = super(LSSVM, self).forward(x, y, init=init)
-        if self._classifier: x = torch.sigmoid(x)
+        # if self._classifier: x = torch.sigmoid(x)
         return x
 
     def evaluate(self, x, all_kernels=False):
         x = super(LSSVM, self).evaluate(x, all_kernels=all_kernels)
-        if self._classifier: x = torch.sigmoid(x)
+        if self._classifier: x = torch.sign(x)
         return x
-            
+
     def recon(self, x, y):
         x_tilde = self.forward(x, y)
         try:
-            return self._criterion(x_tilde, y), x_tilde
+            if self._classifier:
+                r = self._criterion(y * x_tilde, torch.abs(y))
+            else:
+                r = self._criterion(x_tilde, y)
         except:
-            print('Probably input and output which are not of the same size.')
+            raise Exception('Probably input and output which are not of the same size.')
+        return r, x_tilde
 
     def reg(self):
         idx_kernels = self._idxk.idx_kernels
@@ -134,7 +136,7 @@ class LSSVM(Level, metaclass=ABCMeta):
                        torch.cat((P, n), dim=1)), dim=0)
         B = torch.cat((Y, S), dim=0)
 
-        sol = torch.solve(A, B)
+        sol = torch.linalg.solve(A, B)
         weight = sol[0:-1]
         bias = sol[-1].data
 
@@ -151,7 +153,7 @@ class LSSVM(Level, metaclass=ABCMeta):
                        torch.cat((N.t(), torch.tensor([[0.]], device=self.device)), dim=1)), dim=0)
         B = torch.cat((y, torch.tensor([0.], device=self.device)), dim=0)
 
-        sol, _ = torch.solve(B[:, None], A)
+        sol = torch.linalg.solve(A, B[:, None])
         alpha = sol[0:-1].data
         beta = sol[-1].data
 

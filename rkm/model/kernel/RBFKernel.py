@@ -28,7 +28,8 @@ class RBFKernel(mdl.kernel.Kernel):
         super(RBFKernel, self).__init__(**kwargs)
 
         self.sigma_trainable = kwargs["sigma_trainable"]
-        self.sigma = torch.nn.Parameter(torch.tensor([kwargs["sigma"]], dtype=rkm.ftype), requires_grad=self.sigma_trainable)
+        self.sigma = torch.nn.Parameter(
+            torch.tensor([kwargs["sigma"]], dtype=rkm.ftype), requires_grad=self.sigma_trainable)
 
     def __str__(self):
         return f"RBF kernel (sigma: {str(self.sigma.data.cpu().numpy()[0])})"
@@ -54,7 +55,7 @@ class RBFKernel(mdl.kernel.Kernel):
 
         diff = xs - params
         norm2 = torch.sum(diff * diff, dim=2)
-        fact = 1 / (2 * self.sigma ** 2)
+        fact = 1 / (2 * torch.abs(self.sigma) ** 2)
         output = torch.exp(torch.mul(norm2, -fact))
 
         return output

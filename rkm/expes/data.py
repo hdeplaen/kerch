@@ -101,6 +101,7 @@ class data():
 
         input = data[0:tot_data, 0:8]
         target = data[0:tot_data, 8]
+        target[target==0] = -1
 
         info = {"range": None,
                 "size": 8}
@@ -115,6 +116,7 @@ class data():
 
         input = data[0:tot_data, 0:6]
         target = data[0:tot_data, 6]
+        target[target==0] = -1
 
         info = {"range": None,
                 "size": 6}

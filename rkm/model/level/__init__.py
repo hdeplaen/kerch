@@ -18,7 +18,7 @@ from rkm.model.level.IDXK import IDXK
 class Level(torch.nn.Module, metaclass=ABCMeta):
     @rkm.kwargs_decorator(
         {"size_in": 1, "size_out": 1, "eta": 1, "representation": "dual", "init_kernels": 1,
-         "constraint": "soft", "live_update": True})
+         "constraint": "soft", "live_update": True, "classifier": False})
     def __init__(self, device='cpu', **kwargs):
         """
 
@@ -34,6 +34,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self._size_out = kwargs["size_out"]
         self._eta = kwargs["eta"]
         self._centering = kwargs["centering"]
+        self._classifier = kwargs["classifier"]
 
         self._init_kernels = kwargs["init_kernels"]
         self._idxk = IDXK(**kwargs)
@@ -83,6 +84,10 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self._model = torch.nn.ModuleDict({
             "kernel": rkm.model.kernel.KernelFactory.KernelFactory.create(**kernel_kwargs),
             "linear": linear})
+
+    def init(self, x, y):
+        if self._classifier:
+            self.linear.init_y(y, self._idxk.all_kernels)
 
     def forward(self, x, y, init=False):
         idx_kernels = self._idxk.idx_kernels

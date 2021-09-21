@@ -24,6 +24,8 @@ class KPCA(Level, metaclass=ABCMeta):
         :param centering: True if input and kernel are centered (False by default).
         """
         super(KPCA, self).__init__(**kwargs)
+        assert self._classifier is False, "No formulation exists for a KPCA classifier level."
+
         self._generate_representation(**kwargs)
 
         self._last_var = torch.tensor(0.)
