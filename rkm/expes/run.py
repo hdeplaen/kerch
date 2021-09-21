@@ -20,7 +20,7 @@ import rkm.model.rkm as rkm
 
 def tests():
     runner = unittest.TextTestRunner()
-    runner.run(Suites.levels_suite)
+    runner.run(Suites.levels_suite())
 
 def general_expe(name, verbose=False):
     # DEFAULT PARAMETERS

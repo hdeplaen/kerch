@@ -11,7 +11,6 @@ import unittest
 
 from rkm.expes.data import data
 import rkm.model.rkm as rkm
-from abc import abstractmethod
 
 class TestLevels(unittest.TestCase):
     def _test_prototype(self, type, representation, kernel, classifier=False):
@@ -34,13 +33,13 @@ class TestLevels(unittest.TestCase):
         # HARD
         hard = rkm.RKM()
         hard_params = {**level_params, "constraint": "hard"}
-        hard.add_level(type=type, **hard_params)
+        hard.append_level(type=type, **hard_params)
         out_hard = hard.learn(x, y, **learn_params)
 
         # SOFT
         soft = rkm.RKM()
         soft_params = {**level_params, "constraint": "soft"}
-        soft.add_level(type=type, **soft_params)
+        soft.append_level(type=type, **soft_params)
         out_soft = soft.learn(x, y, **learn_params)
 
         # TEST
@@ -74,8 +73,8 @@ class TestLevels(unittest.TestCase):
         self._test_prototype(type="lssvm", representation="dual", kernel="sigmoid", classifier=True)
 
 class Suites():
-    @abstractmethod
-    def levels_suite(self):
+    @staticmethod
+    def levels_suite():
         suite = unittest.TestSuite()
         suite.addTest(TestLevels('test_primal_kpca'))
         suite.addTest(TestLevels('test_dual_kpca'))
@@ -83,3 +82,4 @@ class Suites():
         suite.addTest(TestLevels('test_dual_lssvm'))
         suite.addTest(TestLevels('test_primal_lssvm_classifier'))
         suite.addTest(TestLevels('test_dual_lssvm_classifier'))
+        return suite
