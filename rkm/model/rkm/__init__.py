@@ -22,20 +22,22 @@ import rkm.plot as rkmplot
 
 class RKM(torch.nn.Module):
     @rkm.kwargs_decorator(
-        {"cuda": True})
+        {"cuda": True,
+         "verbose": True})
     def __init__(self, **kwargs):
         super(RKM, self).__init__()
+        self._verbose = kwargs["verbose"]
 
         # CUDA
         self.cuda = kwargs["cuda"]
         if torch.cuda.is_available() and self.cuda:
             self.device = torch.device("cuda")
             torch.cuda.empty_cache()
-            print("Using CUDA")
+            if self._verbose: print("Using CUDA")
         else:
             self.device = torch.device("cpu")
             self.cuda = False
-            print("Using CPU")
+            if self._verbose: print("Using CPU")
 
         self._model = torch.nn.ModuleList()
         self._euclidean = torch.nn.ParameterList()
@@ -43,6 +45,7 @@ class RKM(torch.nn.Module):
         self._stiefel = torch.nn.ParameterList()
 
         self._last_loss = torch.tensor(0.)
+        self._classifier = False
 
     def __str__(self):
         text = f"RKM with {len(self._model)} levels:\n"
@@ -109,13 +112,14 @@ class RKM(torch.nn.Module):
     @rkm.kwargs_decorator(
         {"maxiter": 1e+3,
          "tol": 1e-5,
-         "epoch": 25,
+         "epoch": 1,
          "early_stopping": 3,
          "stochastic": 1.,
          "batches": 1,
          "init": True,
          "reduce_epochs": float('inf'),
-         "reduce_rate": 2})
+         "reduce_rate": 2,
+         "save": True})
     def learn(self, x, y, verbose=False, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
         """
 
@@ -133,16 +137,20 @@ class RKM(torch.nn.Module):
         init = kwargs["init"]
         reduce_epochs = kwargs["reduce_epochs"]
         reduce_rate = kwargs["reduce_rate"]
+        save = kwargs["save"]
 
         test = test_x is not None and test_y is not None
         val = val_x is not None and val_y is not None
 
-        if test and val:
+        if val:
             val_x = torch.tensor(val_x, dtype=rkm.ftype)
             val_y = torch.tensor(val_y, dtype=rkm.ftype)
+        if test:
             test_x = torch.tensor(test_x, dtype=rkm.ftype)
             test_y = torch.tensor(test_y, dtype=rkm.ftype)
 
+        val_error = None
+        test_error = None
         tr_text = "empty"
         val_text = "empty"
         test_text = "empty"
@@ -154,7 +162,8 @@ class RKM(torch.nn.Module):
                                   self._stiefel,
                                   **kwargs)
 
-        plotenv = rkmplot.plotenv(model=self, opt=opt)
+        if save:
+            plotenv = rkmplot.plotenv(model=self, opt=opt)
 
         self.init(x, y)
         if init: self.cpu_forward(x, y)
@@ -163,9 +172,10 @@ class RKM(torch.nn.Module):
         self.to(self.device)
         x = x.to(self.device)
         y = y.to(self.device)
-        if test and val:
+        if val:
             val_x = val_x.to(self.device)
             val_y = val_y.to(self.device)
+        if test:
             test_x = test_x.to(self.device)
             test_y = test_y.to(self.device)
 
@@ -176,8 +186,15 @@ class RKM(torch.nn.Module):
             for level in self.model: level.init_idxk(self.idxk)
 
         min_loss = float("Inf")
-        if val: best_tr, best_val = 100, 100
-        if val and test: best_test = 100
+        best_tr = 100
+        if val:
+            best_val = 100
+        else:
+            best_val = None
+        if val and test:
+            best_test = 100
+        else:
+            best_test = None
         early_stopping_count = 0
 
         def gen_batch(x, y):
@@ -191,7 +208,7 @@ class RKM(torch.nn.Module):
                 y_loc = y
             return x_loc, y_loc
 
-        with trange(int(maxiter), desc='Loss', position=0, leave=True) as tri:
+        with trange(int(maxiter), desc='Loss', position=0, leave=True, disable=not self._verbose) as tri:
             for iter in tri:
                 if self.cuda:
                     torch.cuda.empty_cache()
@@ -207,7 +224,8 @@ class RKM(torch.nn.Module):
                         for _ in trange(int(batches),
                                         desc=f'Batches using {self.idxk.num_samples}/{self.idxk.num_kernels} datapoints',
                                         position=1,
-                                        leave=False):
+                                        leave=False,
+                                        disable=not self._verbose):
                             x_loc, y_loc = gen_batch(x, y)
                             loss = self.loss(x_loc, y_loc)
                             loss.backward(create_graph=True)
@@ -227,41 +245,56 @@ class RKM(torch.nn.Module):
                     opt.reduce(rate=reduce_rate)
 
                 # EPOCH
-                if (iter % epoch) == 0 and test and val:
-                    tri.set_description(f"Loss: {current_loss:6.4e}, Tr:{tr_text}, V:{val_text}, Te:{test_text}, ES:{early_stopping_count}/{early_stopping}")
-                    if abs(current_loss - min_loss) < tol: break
+                if (iter % epoch) == 0:
+                    if self._classifier:
+                        tr_error = (1-torch.sum(torch.round(self.evaluate(x, numpy=False)) == y)/len(y)) * 100
+                        if val: val_error = (1-torch.sum(torch.round(self.evaluate(val_x, numpy=False)) == val_y)/len(val_y)) * 100
+                        if test: test_error = (1-torch.sum(torch.round(self.evaluate(test_x, numpy=False)) == test_y)/len(test_y)) * 100
+                    else:
+                        tr_error = torch.mean((self.evaluate(x, numpy=False) - y) ** 2) * 100
+                        if val: val_error = torch.mean((self.evaluate(val_x, numpy=False) - val_y) ** 2) * 100
+                        if test: test_error = torch.mean((self.evaluate(test_x, numpy=False) - test_y) ** 2) * 100
 
-                    # tr_mse = torch.mean((self.evaluate(x, numpy=False) - y) ** 2) * 100
-                    # val_mse = torch.mean((self.evaluate(val_x, numpy=False) - val_y) ** 2) * 100
-                    # test_mse = torch.mean((self.evaluate(test_x, numpy=False) - test_y) ** 2) * 100
+                    tri.set_description(
+                        f"Loss: {current_loss:6.4e}, Tr:{tr_text}, V:{val_text}, Te:{test_text}, ES:{early_stopping_count}/{early_stopping}")
 
-                    tr_mse = (1-torch.sum(torch.round(self.evaluate(x, numpy=False)) == y)/len(y)) * 100
-                    val_mse = (1-torch.sum(torch.round(self.evaluate(val_x, numpy=False)) == val_y)/len(val_y)) * 100
-                    test_mse = (1-torch.sum(torch.round(self.evaluate(test_x, numpy=False)) == test_y)/len(test_y)) * 100
+                    tr_text = f"{tr_error:4.2f}%({best_tr:4.2f}%)"
+                    if val:
+                        val_text = f"{val_error:4.2f}({best_val:4.2f}%)%"
+                    else:
+                        val_text = "N/A"
+                    if test:
+                        test_text = f"{test_error:4.2f}({best_test:4.2f}%)%"
+                    else:
+                        test_text = "N/A"
+
+                    # CONVERGENCE
+                    if abs(current_loss - min_loss) <= tol: break
+                    if abs(current_loss) <= tol: break
 
                     # EARLY STOPPING
-                    if val_mse <= best_val:
-                        best_tr = tr_mse
-                        best_val = val_mse
-                        best_test = test_mse
-                        early_stopping_count = 0
-                    else:
-                        early_stopping_count += 1
-                        if early_stopping_count > early_stopping:
-                            break
+                    if val:
+                        if val_error <= best_val:
+                            best_tr = tr_error
+                            best_val = val_error
+                            if test: best_test = test_error
+                            early_stopping_count = 0
+                        else:
+                            early_stopping_count += 1
+                            if early_stopping_count > early_stopping:
+                                break
 
-                    tr_text = f"{tr_mse:4.2f}%({best_tr:4.2f}%)"
-                    val_text = f"{val_mse:4.2f}({best_val:4.2f}%)%"
-                    test_text = f"{test_mse:4.2f}({best_test:4.2f}%)%"
-
-                    plotenv.update(iter, tr_mse=tr_mse, val_mse=val_mse, test_mse=test_mse, es=early_stopping_count)
-                    if verbose: print(self)
+                    # OUTPUT
+                    if save: plotenv.update(iter, tr_mse=tr_error, val_mse=val_error, test_mse=test_error, es=early_stopping_count)
+                    # if self._verbose: print(self)
 
                 if current_loss < min_loss: min_loss = current_loss
 
-        plotenv.finish(best_tr=best_tr, best_val=best_val, best_test=best_test)
+        if save: plotenv.finish(best_tr=best_tr, best_val=best_val, best_test=best_test)
         if val: print(f"\nBest validation: {best_val:4.2f}%")
         if val and test: print(f"Corresponding test: {best_test:4.2f}%")
+
+        return self.evaluate(x, numpy=True)
 
     def evaluate(self, x, numpy=True):
         if numpy: x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
@@ -301,3 +334,4 @@ class RKM(torch.nn.Module):
         self._slow.extend(slow)
         self._stiefel.extend(stiefel)
         self._model.append(level)
+        self._classifier = level._classifier

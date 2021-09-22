@@ -30,11 +30,11 @@ class PrimalLinear(Linear.Linear):
         return self.__bias
 
     def set(self, a, b=None):
-        self.__weight.data = a.data
-        if b is not None: self.__bias.data = b.data
+        self.weight.data = a.data
+        if b is not None: self.bias.data = b.data
 
     def forward(self, x, idx_sv):
-        return x @ self.__weight + self.__bias.expand(x.shape[0])
+        return x @ self.weight + self.bias.expand((x.shape[0], 1))
 
     def project(self):
         pass

@@ -28,7 +28,6 @@ class Kernel(nn.Module, metaclass=ABCMeta):
 
     @abstractmethod
     @rkm.kwargs_decorator({"size_in": 1,
-                           "init_kernels": 1,
                            "kernels_trainable": False,
                            "centering": False})
     def __init__(self, **kwargs):

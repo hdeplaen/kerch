@@ -15,29 +15,33 @@ import rkm.model.rkm as rkm
 class TestLevels(unittest.TestCase):
     def _test_prototype(self, type, representation, kernel, classifier=False):
         # DATASET
-        train, _, _, info = data.factory("two_moons", 50)
+        cuda = False
+        verb = True
+        num_data = 50
+        train, _, _, info = data.factory("two_moons", num_data)
         x, y = train
         kernel_params = {"kernel_type": kernel}
         level_params = {"size_in": 2,
                         "size_out": 1,
                         "representation": representation,
                         "classifier": classifier,
-                        "kernel": kernel_params}
+                        "kernel": kernel_params,
+                        "init_kernels": num_data}
         learn_params = {"type": "sgd",
                         "init": False,
                         "maxiter": 1.e+4,
-                        "lr": 0.02,
+                        "lr": 0.1,
                         "tol": 1.e-9}
 
 
         # HARD
-        hard = rkm.RKM()
+        hard = rkm.RKM(cuda=cuda, verbose=verb)
         hard_params = {**level_params, "constraint": "hard"}
         hard.append_level(type=type, **hard_params)
         out_hard = hard.learn(x, y, **learn_params)
 
         # SOFT
-        soft = rkm.RKM()
+        soft = rkm.RKM(cuda=cuda, verbose=verb)
         soft_params = {**level_params, "constraint": "soft"}
         soft.append_level(type=type, **soft_params)
         out_soft = soft.learn(x, y, **learn_params)
@@ -47,7 +51,7 @@ class TestLevels(unittest.TestCase):
 
     def test_primal_kpca(self):
         self._test_prototype(type="kpca", representation="primal", kernel="linear")
-        self._test_prototype(type="kpca", representation="primal", kernel="polynomial")
+        # self._test_prototype(type="kpca", representation="primal", kernel="polynomial")
 
     def test_dual_kpca(self):
         self._test_prototype(type="kpca", representation="dual", kernel="rbf")
@@ -77,9 +81,9 @@ class Suites():
     def levels_suite():
         suite = unittest.TestSuite()
         suite.addTest(TestLevels('test_primal_kpca'))
-        suite.addTest(TestLevels('test_dual_kpca'))
-        suite.addTest(TestLevels('test_primal_lssvm'))
-        suite.addTest(TestLevels('test_dual_lssvm'))
-        suite.addTest(TestLevels('test_primal_lssvm_classifier'))
-        suite.addTest(TestLevels('test_dual_lssvm_classifier'))
+        # suite.addTest(TestLevels('test_dual_kpca'))
+        # suite.addTest(TestLevels('test_primal_lssvm'))
+        # suite.addTest(TestLevels('test_dual_lssvm'))
+        # suite.addTest(TestLevels('test_primal_lssvm_classifier'))
+        # suite.addTest(TestLevels('test_dual_lssvm_classifier'))
         return suite

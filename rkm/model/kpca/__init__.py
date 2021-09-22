@@ -45,7 +45,8 @@ class KPCA(Level, metaclass=ABCMeta):
         def primal_var():
             C, _ = self.kernel.pmatrix()
             V = self.linear.weight
-            return torch.trace(C) - torch.trace(V.t() @ C @ V)
+            # return torch.trace(C) - torch.trace(V.t() @ C @ V)
+            return torch.trace(C) - torch.trace(V @ V.t() @ C)
 
         def dual_var():
             K = self.kernel.dmatrix()
@@ -75,9 +76,13 @@ class KPCA(Level, metaclass=ABCMeta):
         return switcher.get(self.representation, RepresentationError)()
 
     def primal(self, x, y=None):
-        C = self.kernel.pmatrix()
-        s, v = torch.lobpcg(C, k=self._size_out)
-        w = v @ torch.diag(s)
+        C, _ = self.kernel.pmatrix()
+        u, s, v = torch.svd(C)
+        v = v[:, 0:self._size_out]
+        s = s[:self._size_out]
+        # s, v = torch.lobpcg(C, k=self._size_out)
+        # w = v @ torch.diag(s)
+        w = v
 
         return w.data, None
 
@@ -95,5 +100,5 @@ class KPCA(Level, metaclass=ABCMeta):
             [p for n, p in self.kernel.named_parameters() if p.requires_grad and n not in slow_names])
         slow = torch.nn.ParameterList(
             [p for n, p in self.kernel.named_parameters() if p.requires_grad and n in slow_names])
-        stiefel = self._model['linear'].parameters()
+        stiefel = self._model['linear'].parameters() #bias term is also going to appear, but is equal to zero and not optimized
         return euclidean, slow, stiefel

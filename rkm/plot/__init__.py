@@ -71,7 +71,7 @@ class plotenv():
             K = level.kernel.dmatrix()
         elif isinstance(level.linear, PrimalLinear):
             P = level.linear.weight
-            K = level.kernel.pmatrix()
+            K, _ = level.kernel.pmatrix()
 
         with self.writer as w:
             w.add_image(f"LEVEL{num} (Kernel)", K, global_step=iter, dataformats="HW")
@@ -93,9 +93,11 @@ class plotenv():
             self.writer.add_histogram(f"LEVEL{num} (Support Vector Values)", P, global_step=iter)
 
     def finish(self, best_tr, best_val, best_test):
-        best = {"Training": best_tr,
-                "Validation": best_val,
-                "Test": best_test}
+        best = {"Training": best_tr}
+        if best_val is not None:
+            best = {"Validation": best_val, **best}
+        if best_test is not None:
+            best = {"Test": best_test, **best}
         self._hyperparameters(best)
 
         with self.writer as w:
