@@ -81,11 +81,6 @@ class LSSVM(Level, metaclass=ABCMeta):
                         "dual": dual_reg}
         self._reg = switcher_reg.get(kwargs["representation"], RepresentationError)
 
-    def forward(self, x, y, init=False):
-        x = super(LSSVM, self).forward(x, y, init=init)
-        # if self._classifier: x = torch.sigmoid(x)
-        return x
-
     def evaluate(self, x, all_kernels=False):
         x = super(LSSVM, self).evaluate(x, all_kernels=all_kernels)
         if self._classifier: x = torch.sign(x)
@@ -107,6 +102,8 @@ class LSSVM(Level, metaclass=ABCMeta):
         return torch.trace(self._reg())
 
     def loss(self, x=None, y=None):
+        print(self.linear.weight.t())
+
         recon, x_tilde = self.recon(x, y)
         reg = self.reg()
         l = .5 * reg + .5 * self._gamma * recon
@@ -123,17 +120,16 @@ class LSSVM(Level, metaclass=ABCMeta):
         return switcher.get(self.representation, RepresentationError)()
 
     def primal(self, x, y):
-        assert y.size(1) == 1, "Not implemented for multi-dimensional output (as for now)."
-
         C, phi = self.kernel.pmatrix()
-        n = phi.size(1)
-        I = torch.eye(n)
-        P = torch.sum(phi, dim=0)
-        S = torch.sum(y, dim=0)
+        N, n = phi.shape
+        I = torch.eye(n, device=self.device)
+        N = torch.tensor([[N]], device=self.device)
+        P = torch.sum(phi, dim=0, keepdim=True)
+        S = torch.sum(y, dim=0, keepdim=True)
         Y = phi.t() @ y
 
         A = torch.cat((torch.cat((C + (1 / self._gamma) * I, P.t()), dim=1),
-                       torch.cat((P, n), dim=1)), dim=0)
+                       torch.cat((P, N), dim=1)), dim=0)
         B = torch.cat((Y, S), dim=0)
 
         sol = torch.linalg.solve(A, B)

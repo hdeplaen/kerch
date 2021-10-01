@@ -30,7 +30,7 @@ class LinearKernel(mdl.kernel.Kernel):
         return {"Kernel": "Linear", **super(LinearKernel, self).hparams}
 
     def _implicit(self, x):
-        return x @ self.kernels(self._idx_kernels).t()
+        return x @ self.kernels[self._idx_kernels,:].t()
 
     def _explicit(self, x):
         return x

@@ -19,7 +19,7 @@ class PolynomialKernel(mdl.kernel.LinearKernel.LinearKernel):
     """
 
     @rkm.kwargs_decorator(
-        {"deg": 1., "deg_trainable": False})
+        {"deg": 2., "deg_trainable": False})
     def __init__(self, **kwargs):
         """
         :param deg: degree of the kernel (default 1)
@@ -28,7 +28,7 @@ class PolynomialKernel(mdl.kernel.LinearKernel.LinearKernel):
         super(PolynomialKernel, self).__init__(**kwargs)
 
         self.deg_trainable = kwargs["deg_trainable"]
-        self.deg = torch.nn.Parameter(torch.tensor(kwargs["deg"].unsqueeze(0)), requires_grad=self.deg_trainable)
+        self.deg = torch.nn.Parameter(torch.tensor(kwargs["deg"]), requires_grad=self.deg_trainable)
 
     def __str__(self):
         return f"polynomial kernel of order {int(self.deg.data)}"
@@ -42,9 +42,17 @@ class PolynomialKernel(mdl.kernel.LinearKernel.LinearKernel):
         return {"Kernel": "Polynomial"}
 
     def _implicit(self, x):
-        return (super()._implicit(x, self._idx_kernels) + 1) ** self.deg
+        return (super(PolynomialKernel, self)._implicit(x) + 1) ** self.deg
 
     def _explicit(self, x):
         # A primal representation is technically possible here (we will only consider the dual representation now).
         # raise rkm.PrimalError
+
+        # if self.deg == 1.:
+        #     return super(PolynomialKernel, self)._explicit(x)
+        # elif self.deg == 2.:
+        #     return 0
+        # else:
+        #     pass
+
         raise NotImplementedError

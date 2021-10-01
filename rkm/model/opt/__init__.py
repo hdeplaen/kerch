@@ -27,29 +27,39 @@ class Optimizer():
         self._type = type
 
         euclidean_params = Optimizer.param_state(euclidean_params)
+        slow_params = Optimizer.param_state(slow_params)
         stiefel_params = Optimizer.param_state(stiefel_params)
 
         self._dict = []
         self._opt = None
+        self._requires_grad = False
 
         if len(euclidean_params) > 0:
             dict_euclidean = {'params': euclidean_params, 'stiefel': False}
             self._dict.append({**dict_euclidean, **kwargs})
+            self._requires_grad = True
 
         if len(slow_params) > 0:
             dict_slow = {'params': slow_params, 'stiefel': False, 'lr': kwargs['lr'] / 1}
             dict_slow = {**dict_slow, **kwargs}
             dict_slow['lr'] = dict_slow['lr'] * self._kwargs["kernel_rate"]
             self._dict.append(dict_slow)
+            self._requires_grad = True
 
         if len(stiefel_params) > 0:
             dict_stiefel = {'params': stiefel_params, 'stiefel': True}
             self._dict.append({**dict_stiefel, **kwargs})
+            self._requires_grad = True
 
         if self._dict:
             opt_switcher = {"sgd": cayley_stiefel_optimizer.SGDG,
                             "adam": cayley_stiefel_optimizer.AdamG}
             self._opt = opt_switcher.get(type, "Incorrect optimizer type.")(self._dict)
+
+    @property
+    def requires_grad(self):
+        return self._requires_grad
+
 
     @property
     def type(self):
@@ -70,6 +80,7 @@ class Optimizer():
 
     def step(self, closure=None):
         if self._opt is not None: self._opt.step(closure)
+        else: closure()
 
     def zero_grad(self):
         if self._opt is not None: self._opt.zero_grad()

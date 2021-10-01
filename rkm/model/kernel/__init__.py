@@ -181,8 +181,8 @@ class Kernel(nn.Module, metaclass=ABCMeta):
                 self._K_mean = torch.mean(self._K, dim=0)
                 self._K_mean_tot = torch.mean(self._K, dim=(0, 1))
                 self._K = self._K - self._K_mean.expand(n, n) \
-                          - self._K_mean.t().expand(n, n) \
-                          - self._K_mean_tot
+                          - self._K_mean.expand(n, n).t() \
+                          + self._K_mean_tot
 
         return self._K
 

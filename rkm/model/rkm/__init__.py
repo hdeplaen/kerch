@@ -228,16 +228,15 @@ class RKM(torch.nn.Module):
                                         disable=not self._verbose):
                             x_loc, y_loc = gen_batch(x, y)
                             loss = self.loss(x_loc, y_loc)
-                            loss.backward(create_graph=True)
+                            if opt.requires_grad: loss.backward(create_graph=False)
                             tot_loss += loss
                     else:
                         loss = self.loss(x, y)
-                        loss.backward(create_graph=True)
+                        if opt.requires_grad: loss.backward(create_graph=False)
                         tot_loss += loss
                     return tot_loss
 
                 self._optstep(opt, closure)
-                for level in self.model: level.hard(x, y)
                 current_loss = self.last_loss
 
                 # REDUCE LEARNING RATE
@@ -297,7 +296,7 @@ class RKM(torch.nn.Module):
         return self.evaluate(x, numpy=True)
 
     def evaluate(self, x, numpy=True):
-        if numpy: x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
+        if not torch.is_tensor(x): x = torch.tensor(x, dtype=rkm.ftype).to(self.device)
         self.to(self.device)
         for level in self.model:
             x = level.evaluate(x)

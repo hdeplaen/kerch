@@ -83,7 +83,7 @@ class plotenv():
             K = level.kernel.dmatrix()
         elif isinstance(level.linear, PrimalLinear):
             P = level.linear.weight
-            K = level.kernel.pmatrix()
+            K, _ = level.kernel.pmatrix()
 
         with self.writer as w:
             self.writer.add_scalars("LSSVM Regularization Term", {f"LEVEL{num}": level.last_reg}, global_step=iter)

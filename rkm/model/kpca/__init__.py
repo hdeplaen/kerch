@@ -10,6 +10,7 @@ KPCA level
 import rkm
 from rkm.model.level import Level
 from rkm.model import RepresentationError
+from rkm.model.utils import eigs
 import torch
 from abc import ABCMeta
 
@@ -56,8 +57,8 @@ class KPCA(Level, metaclass=ABCMeta):
             # if l<0:
             #     print(f"{self.kernel.sigma} | {l}")
             # return l
-            # return torch.trace(K) - torch.trace(H @ H.t() @ K)
-            return (torch.trace(K) - torch.trace(H @ H.t() @ K)) / torch.sum(K, (0, 1))
+            return torch.trace(K) - torch.trace(H @ H.t() @ K)
+            # return (torch.trace(K) - torch.trace(H @ H.t() @ K)) / torch.abs(torch.sum(K, (0, 1)))
 
         switcher_var = {"primal": primal_var,
                         "dual": dual_var}
@@ -77,23 +78,16 @@ class KPCA(Level, metaclass=ABCMeta):
 
     def primal(self, x, y=None):
         C, _ = self.kernel.pmatrix()
-        u, s, v = torch.svd(C)
-        v = v[:, 0:self._size_out]
-        s = s[:self._size_out]
-        # s, v = torch.lobpcg(C, k=self._size_out)
-        # w = v @ torch.diag(s)
+        s, v = eigs(C, k=self._size_out)
         w = v
 
         return w.data, None
 
     def dual(self, x, y=None):
         K = self.kernel.dmatrix()
-        _, v = torch.lobpcg(K, k=self._size_out)
-        h = v
-        # U, s, _ = torch.svd(K)
-        # h = U[:, self._size_out]
+        s, v = eigs(K, k=self._size_out)
 
-        return h.data, None
+        return v.data, None
 
     def get_params(self, slow_names=None):
         euclidean = torch.nn.ParameterList(

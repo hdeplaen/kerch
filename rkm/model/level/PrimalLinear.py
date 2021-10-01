@@ -16,22 +16,30 @@ import torch
 class PrimalLinear(Linear.Linear):
     def __init__(self, **kwargs):
         super(PrimalLinear, self).__init__(**kwargs)
-        self.__weight = torch.nn.Parameter(
-            torch.nn.init.orthogonal_(torch.Tensor(kwargs["size_in"], kwargs["size_out"])),
+        self._weight = torch.nn.Parameter(
+            torch.nn.init.orthogonal_(torch.Tensor(kwargs["size_out"], kwargs["size_in"])),
             requires_grad=self._soft)
-        self.__bias = torch.nn.Parameter(torch.tensor(0.), requires_grad=self._soft and self._requires_bias)
+        self._bias = torch.nn.Parameter(torch.tensor([0.]), requires_grad=self._soft and self._requires_bias)
 
     @property
     def weight(self):
-        return self.__weight
+        return self._weight.t()
+
+    @weight.setter
+    def weight(self, val):
+        self._weight.data[:,:] = val.data.t()
 
     @property
     def bias(self):
-        return self.__bias
+        return self._bias
+
+    @bias.setter
+    def bias(self, val):
+        self._bias.data[:] = val.data
 
     def set(self, a, b=None):
-        self.weight.data = a.data
-        if b is not None: self.bias.data = b.data
+        self.weight = a
+        if b is not None: self.bias = b
 
     def forward(self, x, idx_sv):
         return x @ self.weight + self.bias.expand((x.shape[0], 1))

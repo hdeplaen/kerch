@@ -33,13 +33,21 @@ class DualLinear(Linear.Linear):
         else:
             return self._alpha.t()
 
+    @alpha.setter
+    def alpha(self, val):
+        self._alpha.data[:,:] = val.data.t()
+
     @property
     def bias(self):
         return self._bias
 
+    @bias.setter
+    def bias(self, val):
+        self._bias.data[:] = val.data
+
     def set(self, a, b=None):
-        self.alpha.data = a.data.t()
-        if b is not None: self.bias.data = b.data
+        self.alpha = a
+        if b is not None: self.bias = b
 
     def forward(self, x, idx_sv):
         if self._classifier:
@@ -61,11 +69,11 @@ class DualLinear(Linear.Linear):
     def merge(self, idxs):
         if self._classifier: raise NotImplemented
         self.alpha[idxs[:, 0]] += self.alpha[idxs[:, 1]]
-        self.alpha.gather(dim=0, index=idxs[:, 1], out=self._alpha)
+        self.alpha.gather(dim=0, index=idxs[:, 1], out=self.alpha)
 
     def reduce(self, idxs):
         if self._classifier: raise NotImplemented
-        self.alpha.gather(dim=0, index=idxs, out=self._alpha)
+        self.alpha.gather(dim=0, index=idxs, out=self.alpha)
 
     def reduce_idxs(self, **kwargs):
         if self._classifier: raise NotImplemented

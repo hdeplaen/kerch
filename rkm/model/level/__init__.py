@@ -94,6 +94,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         idx_kernels = self._idxk.idx_kernels
         if self._live_update and not init:
             self.kernel.update_kernels(x, self._idxk.idx_update)
+        self.hard(x, y)
         x = self.kernel(x, self._representation)
         x = self.linear(x, idx_kernels)
         return x

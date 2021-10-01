@@ -19,7 +19,7 @@ from rkm.expes.data import data
 import rkm.model.rkm as rkm
 
 def tests():
-    runner = unittest.TextTestRunner()
+    runner = unittest.TextTestRunner(verbosity=2)
     runner.run(Suites.levels_suite())
 
 def general_expe(name, verbose=False):
