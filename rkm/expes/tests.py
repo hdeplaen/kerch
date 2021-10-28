@@ -74,7 +74,7 @@ class TestLevels(unittest.TestCase):
 
     def test_dual_lssvm(self):
         # print('DUAL LSSVM')
-        self._test_prototype(type="lssvm", representation="dual", kernel="linear", lr=0.002)
+        self._test_prototype(type="lssvm", representation="dual", kernel="linear", lr=0.001)
         self._test_prototype(type="lssvm", representation="dual", kernel="rbf", lr=0.1)
         # self._test_prototype(type="lssvm", representation="dual", kernel="polynomial")
         # self._test_prototype(type="lssvm", representation="dual", kernel="sigmoid", lr=0.05)
