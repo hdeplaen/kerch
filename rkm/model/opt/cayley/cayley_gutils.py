@@ -57,8 +57,8 @@ def polar_retraction(tan_vec): # tan_vec, p-by-n, p <= n
 def qr_retraction(tan_vec): # tan_vec, p-by-n, p <= n
     [p,n] = tan_vec.size()
     tan_vec.t_()
-    q, r = torch.linalg.qr(tan_vec, 'reduced')
-    # q,r = torch.qr(tan_vec)
+    # q, r = torch.linalg.qr(tan_vec, 'reduced')
+    q,r = torch.qr(tan_vec)
     d = torch.diag(r, 0)
     ph = d.sign()
     q *= ph.expand_as(q)

@@ -11,6 +11,7 @@ import torch
 from tqdm import trange
 
 import rkm
+from rkm.model.utils import process_y
 import rkm.model.level.IDXK as IDXK
 import rkm.model.opt as Optimizer
 import rkm.model.lssvm.SoftLSSVM as SoftLSSVM
@@ -145,9 +146,11 @@ class RKM(torch.nn.Module):
         if val:
             val_x = torch.tensor(val_x, dtype=rkm.ftype)
             val_y = torch.tensor(val_y, dtype=rkm.ftype)
+            val_y = process_y(val_y)
         if test:
             test_x = torch.tensor(test_x, dtype=rkm.ftype)
             test_y = torch.tensor(test_y, dtype=rkm.ftype)
+            test_y = process_y(test_y)
 
         val_error = None
         test_error = None
@@ -157,6 +160,8 @@ class RKM(torch.nn.Module):
 
         x = torch.tensor(x, dtype=rkm.ftype)
         y = torch.tensor(y, dtype=rkm.ftype)
+        y = process_y(y)
+
         opt = Optimizer.Optimizer(self._euclidean,
                                   self._slow,
                                   self._stiefel,
@@ -278,6 +283,7 @@ class RKM(torch.nn.Module):
                             best_val = val_error
                             if test: best_test = test_error
                             early_stopping_count = 0
+
                         else:
                             early_stopping_count += 1
                             if early_stopping_count > early_stopping:
@@ -293,7 +299,8 @@ class RKM(torch.nn.Module):
         if val: print(f"\nBest validation: {best_val:4.2f}%")
         if val and test: print(f"Corresponding test: {best_test:4.2f}%")
 
-        return self.evaluate(x, numpy=True)
+        final_loss = min_loss
+        return self.evaluate(x, numpy=True).squeeze()
 
     def evaluate(self, x, numpy=True):
         if not torch.is_tensor(x): x = torch.tensor(x, dtype=rkm.ftype).to(self.device)

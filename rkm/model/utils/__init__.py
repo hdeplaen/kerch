@@ -27,3 +27,8 @@ def eigs(A, k=None):
 
 def verify_dim(M):
     return M
+
+def process_y(y):
+    if len(list(y.shape)) == 1 :
+        y = y.unsqueeze(1)
+    return y

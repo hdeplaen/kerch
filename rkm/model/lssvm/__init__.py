@@ -62,6 +62,12 @@ class LSSVM(Level, metaclass=ABCMeta):
     def last_loss(self):
         return self._last_loss.data
 
+    def Omega(self):
+        K = self.kernel.dmatrix()
+        if self._classifier:
+            K = self._y @ self._y.t() * K
+        return K
+
     def _generate_representation(self, **kwargs):
         # REGULARIZATION
         def primal_reg():
@@ -74,7 +80,7 @@ class LSSVM(Level, metaclass=ABCMeta):
             idx_kernels = self._idxk.idx_kernels
             alpha = self.linear.alpha[idx_kernels]
             K = self.kernel.dmatrix()
-            return (1 / len(idx_kernels)) * alpha.t() @ K @ alpha
+            return (1 / len(idx_kernels)) * alpha.t() @ self.Omega() @ alpha
             # return alpha.t() @ K @ alpha
 
         switcher_reg = {"primal": primal_reg,
@@ -102,11 +108,14 @@ class LSSVM(Level, metaclass=ABCMeta):
         return torch.trace(self._reg())
 
     def loss(self, x=None, y=None):
-        print(self.linear.weight.t())
+        # print(self.linear.weight.t())
 
         recon, x_tilde = self.recon(x, y)
         reg = self.reg()
+
         l = .5 * reg + .5 * self._gamma * recon
+        # print(f"REG:{reg} | RECON:{recon} | LOSS:{l}")
+
         self._last_recon = recon.data
         self._last_reg = reg.data
         self._last_loss = l.data
@@ -132,30 +141,49 @@ class LSSVM(Level, metaclass=ABCMeta):
                        torch.cat((P, N), dim=1)), dim=0)
         B = torch.cat((Y, S), dim=0)
 
-        sol = torch.linalg.solve(A, B)
+        sol, _ = torch.solve(B, A)
+        # sol = torch.linalg.solve(A, B) # torch >= 1.8
         weight = sol[0:-1]
         bias = sol[-1].data
+
+        reg = (1 / N) * weight.t() @ weight
+        yhat = phi @ weight + bias
+        recon = (1 / N) * torch.sum((yhat - y) ** 2)
 
         return weight, bias
 
     def dual(self, x, y):
-        assert y.dim() == 1, "Not implemented for multi-dimensional output (as for now)."
-        n = x.size(0)
+        assert y.shape[1] == 1, "Not implemented for multi-dimensional output (as for now)."
 
+        n = x.size(0)
         K = self.kernel.dmatrix()
         I = torch.eye(n, device=self.device)
-        N = torch.ones((n, 1), device=self.device)
-        A = torch.cat((torch.cat((K + (1 / self._gamma) * I, N), dim=1),
-                       torch.cat((N.t(), torch.tensor([[0.]], device=self.device)), dim=1)), dim=0)
-        B = torch.cat((y, torch.tensor([0.], device=self.device)), dim=0)
 
-        sol = torch.linalg.solve(A, B[:, None])
+        if self._classifier:
+            N1 = y
+            N2 = torch.ones((n, 1), device=self.device)
+        else:
+            N1 = torch.ones((n, 1), device=self.device)
+            N2 = y
+
+        A = torch.cat((torch.cat((self.Omega() + (1 / self._gamma) * I, N1), dim=1),
+                       torch.cat((N1.t(), torch.tensor([[0.]], device=self.device)), dim=1)), dim=0)
+        B = torch.cat((N2, torch.tensor([[0.]], device=self.device)), dim=0)
+
+        sol, _ = torch.solve(B, A)
+        # sol = torch.linalg.solve(A, B[:, None]) # torch >= 1.8
         alpha = sol[0:-1].data
         beta = sol[-1].data
 
         reg = (1 / len(y)) * alpha.t() @ K @ alpha
-        yhat = (K @ alpha + beta.expand([n, 1])).squeeze()
+        if self._classifier:
+            yhat = (K @ (y * alpha) + beta.expand([n, 1]))
+        else:
+            yhat = (K @ alpha + beta.expand([n, 1]))
         recon = (1 / len(y)) * torch.sum((yhat - y) ** 2)
+
+        l = .5 * reg + .5 * self._gamma * recon
+        # print(f"REG:{reg} | RECON:{recon} | LOSS:{l}")
 
         return alpha, beta
 

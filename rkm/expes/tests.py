@@ -14,12 +14,12 @@ from rkm.expes.data import data
 import rkm.model.rkm as rkm
 
 class TestLevels(unittest.TestCase):
-    def _test_prototype(self, type, representation, kernel, classifier=False):
+    def _test_prototype(self, type, representation, kernel, classifier=False, lr=0.001):
         # DATASET
         tol = 1.e-2
         cuda = True
-        verb = True
-        num_data = 50
+        verb = False
+        num_data = 20
         train, _, _, info = data.factory("two_moons", num_data)
         x, y = train
         kernel_params = {"kernel_type": kernel}
@@ -31,8 +31,8 @@ class TestLevels(unittest.TestCase):
                         "init_kernels": num_data}
         learn_params = {"type": "sgd",
                         "init": False,
-                        "maxiter": 2e+3,
-                        "lr": 0.001,
+                        "maxiter": 5e+4,
+                        "lr": lr,
                         "tol": 1.e-12}
 
         # HARD
@@ -56,41 +56,49 @@ class TestLevels(unittest.TestCase):
         self.assertTrue(np.abs(error) <= tol)
 
     def test_primal_kpca(self):
+        # print('PRIMAL KPCA')
         self._test_prototype(type="kpca", representation="primal", kernel="linear")
         # self._test_prototype(type="kpca", representation="primal", kernel="polynomial") # NOT IMPLEMENTED
 
     def test_dual_kpca(self):
-        self._test_prototype(type="kpca", representation="dual", kernel="linear")
-        self._test_prototype(type="kpca", representation="dual", kernel="rbf")
+        # print('DUAL KPCA')
+        self._test_prototype(type="kpca", representation="dual", kernel="linear", lr=0.001)
+        self._test_prototype(type="kpca", representation="dual", kernel="rbf", lr=0.01)
         # self._test_prototype(type="kpca", representation="dual", kernel="polynomial") # ERROR
-        self._test_prototype(type="kpca", representation="dual", kernel="sigmoid")
+        self._test_prototype(type="kpca", representation="dual", kernel="sigmoid", lr=0.001)
 
     def test_primal_lssvm(self):
-        self._test_prototype(type="lssvm", representation="primal", kernel="linear")
-        self._test_prototype(type="lssvm", representation="primal", kernel="polynomial")
+        # print('PRIMAL LSSVM')
+        self._test_prototype(type="lssvm", representation="primal", kernel="linear", lr=0.05)
+        # self._test_prototype(type="lssvm", representation="primal", kernel="polynomial")
 
     def test_dual_lssvm(self):
-        self._test_prototype(type="lssvm", representation="dual", kernel="rbf")
-        self._test_prototype(type="lssvm", representation="dual", kernel="polynomial")
-        self._test_prototype(type="lssvm", representation="dual", kernel="sigmoid")
+        # print('DUAL LSSVM')
+        self._test_prototype(type="lssvm", representation="dual", kernel="linear", lr=0.002)
+        self._test_prototype(type="lssvm", representation="dual", kernel="rbf", lr=0.1)
+        # self._test_prototype(type="lssvm", representation="dual", kernel="polynomial")
+        # self._test_prototype(type="lssvm", representation="dual", kernel="sigmoid", lr=0.05)
 
     def test_primal_lssvm_classifier(self):
-        self._test_prototype(type="lssvm", representation="primal", kernel="linear", classifier=True)
-        self._test_prototype(type="lssvm", representation="primal", kernel="polynomial", classifier=True)
+        # print('PRIMAL LSSVM CLASSIFIER')
+        self._test_prototype(type="lssvm", representation="primal", kernel="linear", classifier=True, lr=0.01)
+        # self._test_prototype(type="lssvm", representation="primal", kernel="polynomial", classifier=True)
 
     def test_dual_lssvm_classifier(self):
-        self._test_prototype(type="lssvm", representation="dual", kernel="rbf", classifier=True)
-        self._test_prototype(type="lssvm", representation="dual", kernel="polynomial", classifier=True)
-        self._test_prototype(type="lssvm", representation="dual", kernel="sigmoid", classifier=True)
+        # print('DUAL LSSVM CLASSIFIER')
+        self._test_prototype(type="lssvm", representation="dual", kernel="linear", classifier=True, lr=0.001)
+        self._test_prototype(type="lssvm", representation="dual", kernel="rbf", classifier=True, lr=0.1)
+        # self._test_prototype(type="lssvm", representation="dual", kernel="polynomial", classifier=True)
+        # self._test_prototype(type="lssvm", representation="dual", kernel="sigmoid", classifier=True, lr=0.002)
 
 class Suites():
     @staticmethod
     def levels_suite():
         suite = unittest.TestSuite()
-        # suite.addTest(TestLevels('test_primal_kpca'))
-        # suite.addTest(TestLevels('test_dual_kpca'))
+        suite.addTest(TestLevels('test_primal_kpca'))
+        suite.addTest(TestLevels('test_dual_kpca'))
         suite.addTest(TestLevels('test_primal_lssvm'))
-        # suite.addTest(TestLevels('test_dual_lssvm'))
-        # suite.addTest(TestLevels('test_primal_lssvm_classifier'))
-        # suite.addTest(TestLevels('test_dual_lssvm_classifier'))
+        suite.addTest(TestLevels('test_dual_lssvm'))
+        suite.addTest(TestLevels('test_primal_lssvm_classifier'))
+        suite.addTest(TestLevels('test_dual_lssvm_classifier'))
         return suite

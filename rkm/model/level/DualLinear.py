@@ -55,16 +55,18 @@ class DualLinear(Linear.Linear):
                       self.bias.expand([x.shape[0], self.bias.shape[0]])
         else:
             x_tilde = x @ self.alpha[idx_sv] + self.bias.expand([x.shape[0],self.bias.shape[0]])
-        return x_tilde.squeeze()
+        return x_tilde
 
     def project(self):
         if self._classifier:
-            self.alpha.data -= self._y.data * torch.mean(self.alpha.data)
+            self.alpha = self.alpha - self._y * torch.mean(self._y * self.alpha)
+            # print(f"{(self._y * self.alpha).mean()}")
         else:
-            self.alpha.data -= torch.mean(self.alpha.data)
+            self.alpha = self.alpha - torch.mean(self.alpha)
+            # print(f"{(self.alpha).mean()}")
 
     def init_y(self, y, idxs):
-        self._y[idxs] = y.data.unsqueeze(dim=1)
+        self._y[idxs] = y.data
 
     def merge(self, idxs):
         if self._classifier: raise NotImplemented

@@ -42,6 +42,9 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
         self._representation = kwargs["representation"]
         self._model = torch.nn.ModuleDict({})
 
+        self._y = torch.nn.Parameter(torch.ones((kwargs["init_kernels"], kwargs["size_out"]), dtype=rkm.ftype),
+                                     requires_grad=False)
+
         self._input = None
         self._output = None
 
@@ -87,8 +90,8 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
             "linear": linear})
 
     def init(self, x, y):
-        if self._classifier:
-            self.linear.init_y(y, self._idxk.all_kernels)
+        self._y[self._idxk.all_kernels] = y.data
+        self.linear.init_y(y, self._idxk.all_kernels)
 
     def forward(self, x, y, init=False):
         idx_kernels = self._idxk.idx_kernels
