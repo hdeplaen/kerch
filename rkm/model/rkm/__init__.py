@@ -117,7 +117,7 @@ class RKM(torch.nn.Module):
          "early_stopping": 3,
          "stochastic": 1.,
          "batches": 1,
-         "init": True,
+         "init": False,
          "reduce_epochs": float('inf'),
          "reduce_rate": 2,
          "save": True})

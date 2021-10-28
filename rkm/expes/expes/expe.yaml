@@ -7,31 +7,16 @@ pid:
     validating: 112
     testing: 255
   level1:
-    size_out: 10
-    type: "kpca"
-    kernel:
-      kernel_type: "rbf"
-      sigma_trainable: False
-      sigma: 1
-  level2:
-    size_out: 10
-    type: "kpca"
-    kernel:
-      kernel_type: "rbf"
-      sigma_trainable: False
-      sigma: 1
-  level3:
-    eta: 1
-    gamma: 1
     size_out: 1
     type: "lssvm"
+    constraint: 'hard'
     classifier: True
     kernel:
       kernel_type: "rbf"
       sigma_trainable: False
+      sigma: 1
   opt:
     type: sgd
-    init: True
     batches: 1
     early_stopping: 5000
     maxiter: 1.e+5

@@ -97,9 +97,13 @@ class Kernel(nn.Module, metaclass=ABCMeta):
 
             Ky = self._implicit(x)
             if self._centering:
-                Ky = Ky - self._K_mean \
-                        - torch.mean(Ky, dim=1) \
-                        + self._K_mean_tot
+                # Ky = Ky - self._K_mean \
+                #         - torch.mean(Ky, dim=1) \
+                #         + self._K_mean_tot
+
+                Ky = Ky - self._K_mean
+                Ky = Ky - torch.mean(Ky, dim=1, keepdim=True).expand(-1,Ky.shape[1])
+                Ky = Ky + self._K_mean_tot
 
             return Ky
 

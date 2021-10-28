@@ -9,6 +9,7 @@ Runs RKM models.
 
 import random
 import argparse
+import rkm
 import rkm.expes.run as run
 
 if __name__ == "__main__":
@@ -23,10 +24,15 @@ if __name__ == "__main__":
                         default=None,
                         type=str,
                         help="Performs the experiment described in the expe.yaml file.")
+    parser.add_argument("-p", "--plotenv",
+                        default='tensorboard',
+                        type=str,
+                        help="Plotting environment. Weights&Biases (wandb) and Tensorboard (tensorboard, default) currently supported.")
 
     args = parser.parse_args()
     tests = args.tests
     experiment = args.experiment
+    rkm.PLOT_ENV = args.plotenv
 
     if tests: run.tests()
     if experiment is not None: run.experiment(experiment)
