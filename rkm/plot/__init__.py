@@ -8,6 +8,7 @@ Plotting solutions for a deep RKM model.
 """
 
 from abc import abstractmethod
+import warnings
 
 import rkm as rkm
 import rkm.plot.plotenv_parent as plotenv_parent
@@ -18,14 +19,14 @@ import rkm.model.rkm as RKM
 import rkm.model.opt as OPT
 
 class plotenv(plotenv_parent.plotenv_parent):
-    def __init__(self, model: RKM, opt: OPT.Optimizer):
-        super(plotenv_parent.plotenv_parent, self).__init__()
-        if rkm.PLOT_ENV=='wandb':
-            self = plotenv_wandb.plotenv_wandb(model, opt)
-        elif rkm.PLOT_ENV=='tensorboard':
-            self = plotenv_tensorboard.plotenv_tensorboard(model, opt)
+    def __new__(cls, model: RKM, opt: OPT.Optimizer):
+        if rkm.PLOT_ENV == 'wandb':
+            return plotenv_wandb.plotenv_wandb(model, opt)
+        elif rkm.PLOT_ENV == 'tensorboard':
+            return plotenv_tensorboard.plotenv_tensorboard(model, opt)
         else:
-            Warning('Plot environment not recognized. No plotting will occur.')
+            warnings.warn('Plot environment not recognized. No plotting will occur.')
+            return super(plotenv_parent.plotenv_parent, cls).__init__()
 
     def _hyperparameters(self, best):
         pass

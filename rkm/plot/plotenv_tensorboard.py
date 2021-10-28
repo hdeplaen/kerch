@@ -9,6 +9,9 @@ Plotting solutions for a deep RKM model.
 
 from torch.utils.tensorboard import SummaryWriter
 import rkm.plot.plotenv_parent as plotenv_parent
+import socket
+from datetime import datetime
+import os
 
 import rkm.model.rkm as RKM
 import rkm.model.opt as OPT
@@ -22,7 +25,12 @@ class plotenv_tensorboard(plotenv_parent.plotenv_parent):
     def __init__(self, model: RKM, opt: OPT.Optimizer):
         super(plotenv_parent.plotenv_parent, self).__init__()
         self.model = model
-        self.writer = SummaryWriter()
+
+        ## LOGDIR
+        current_time = datetime.now().strftime('%b%d_%H-%M-%S')
+        log_dir = os.path.join(f"runs/tensorboard/{self.model.name}",
+                               current_time + '_' + socket.gethostname())
+        self.writer = SummaryWriter(log_dir=log_dir)
         self.opt = opt
 
         # best = {"Training": 100,

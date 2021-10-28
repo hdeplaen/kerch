@@ -11,10 +11,11 @@ pid:
     type: "lssvm"
     constraint: 'hard'
     classifier: True
+    gamma: 0.4
     kernel:
       kernel_type: "rbf"
       sigma_trainable: False
-      sigma: 1
+      sigma: 2
   opt:
     type: sgd
     batches: 1

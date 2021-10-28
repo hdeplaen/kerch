@@ -13,7 +13,7 @@ import rkm.model.rkm as RKM
 import rkm.model.opt as OPT
 
 class plotenv_parent(metaclass=ABCMeta):
-    def __init__(self, model: RKM, opt: OPT.Optimizer):
+    def __init__(self):
         pass
 
     @abstractmethod

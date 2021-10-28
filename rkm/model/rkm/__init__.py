@@ -24,7 +24,8 @@ import rkm.plot as rkmplot
 class RKM(torch.nn.Module):
     @rkm.kwargs_decorator(
         {"cuda": True,
-         "verbose": True})
+         "verbose": True,
+         "name":'noname'})
     def __init__(self, **kwargs):
         super(RKM, self).__init__()
         self._verbose = kwargs["verbose"]
@@ -47,6 +48,8 @@ class RKM(torch.nn.Module):
 
         self._last_loss = torch.tensor(0.)
         self._classifier = False
+
+        self.name = kwargs['name']
 
     def __str__(self):
         text = f"RKM with {len(self._model)} levels:\n"
@@ -120,7 +123,7 @@ class RKM(torch.nn.Module):
          "init": False,
          "reduce_epochs": float('inf'),
          "reduce_rate": 2,
-         "save": True})
+         "plot": True})
     def learn(self, x, y, verbose=False, val_x=None, val_y=None, test_x=None, test_y=None, **kwargs):
         """
 
@@ -138,7 +141,7 @@ class RKM(torch.nn.Module):
         init = kwargs["init"]
         reduce_epochs = kwargs["reduce_epochs"]
         reduce_rate = kwargs["reduce_rate"]
-        save = kwargs["save"]
+        plot = kwargs["plot"]
 
         test = test_x is not None and test_y is not None
         val = val_x is not None and val_y is not None
@@ -167,7 +170,7 @@ class RKM(torch.nn.Module):
                                   self._stiefel,
                                   **kwargs)
 
-        if save:
+        if plot:
             plotenv = rkmplot.plotenv(model=self, opt=opt)
 
         self.init(x, y)
@@ -290,12 +293,12 @@ class RKM(torch.nn.Module):
                                 break
 
                     # OUTPUT
-                    if save: plotenv.update(iter, tr_mse=tr_error, val_mse=val_error, test_mse=test_error, es=early_stopping_count)
+                    if plot: plotenv.update(iter, tr_mse=tr_error, val_mse=val_error, test_mse=test_error, es=early_stopping_count)
                     # if self._verbose: print(self)
 
                 if current_loss < min_loss: min_loss = current_loss
 
-        if save: plotenv.finish(best_tr=best_tr, best_val=best_val, best_test=best_test)
+        if plot: plotenv.finish(best_tr=best_tr, best_val=best_val, best_test=best_test)
         if val: print(f"\nBest validation: {best_val:4.2f}%")
         if val and test: print(f"Corresponding test: {best_test:4.2f}%")
 

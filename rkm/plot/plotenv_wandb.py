@@ -9,6 +9,9 @@ Plotting solutions for a deep RKM model.
 
 from torch.utils.tensorboard import SummaryWriter
 import rkm.plot.plotenv_parent as plotenv_parent
+import socket
+from datetime import datetime
+import os
 
 import rkm.model.rkm as RKM
 import rkm.model.opt as OPT
@@ -23,21 +26,18 @@ import wandb
 class plotenv_wandb(plotenv_parent.plotenv_parent):
     def __init__(self, model: RKM, opt: OPT.Optimizer):
         super(plotenv_parent.plotenv_parent, self).__init__()
-
-        wandb.init()
-
-
-
         self.model = model
-        self.writer = SummaryWriter()
+
+        ## LOGDIR
+        current_time = datetime.now().strftime('%b%d_%H-%M-%S')
+        id = current_time + '_' + socket.gethostname()
+        dir = os.path.join(f"runs/wandb/{self.model.name}",id)
+        wandb.init(dir=dir)
+
         self.opt = opt
+        self._hyperparameters()
 
-        # best = {"Training": 100,
-        #         "Validation": 100,
-        #         "Test": 100}
-        # self._hyperparameters(best)
-
-    def _hyperparameters(self, best):
+    def _hyperparameters(self):
         hparams_dict = self.opt.hparams
         for num in range(self.model.num_levels):
             name = f"LEVEL{num}"
@@ -45,8 +45,7 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
             level_dict = {name + str(key): val for key, val in level.hparams.items()}
             hparams_dict = {**hparams_dict, **level_dict}
 
-        with self.writer as w:
-            w.add_hparams(hparams_dict, best)
+        wandb.config.update(hparams_dict)
 
     def update(self, iter, tr_mse=None, val_mse=None, test_mse=None, es=0) -> None:
         with self.writer as w:
@@ -100,6 +99,9 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
 
             self.writer.add_image(f"LEVEL{num} (Kernel)", K, global_step=iter, dataformats="HW")
             self.writer.add_histogram(f"LEVEL{num} (Support Vector Values)", P, global_step=iter)
+
+    def save_model(self):
+        pass
 
     def finish(self, best_tr, best_val, best_test):
         best = {"Training": best_tr}

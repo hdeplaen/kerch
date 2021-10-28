@@ -53,7 +53,7 @@ def general_expe(name, verbose=False):
         test_input = scaler.transform(test_input)
 
         # SETTING MODEL UP
-        mdl = rkm.RKM(cuda=params["cuda"])
+        mdl = rkm.RKM(cuda=params["cuda"], name=name)
 
         level_num = 1
         size_params = {"size_in": info["size"],

@@ -18,6 +18,7 @@ class TestLevels(unittest.TestCase):
         # DATASET
         tol = 1.e-2
         cuda = True
+        plot = False
         verb = False
         num_data = 20
         train, _, _, info = data.factory("two_moons", num_data)
@@ -31,12 +32,13 @@ class TestLevels(unittest.TestCase):
                         "init_kernels": num_data}
         learn_params = {"type": "sgd",
                         "init": False,
+                        "plot": False,
                         "maxiter": 5e+4,
                         "lr": lr,
                         "tol": 1.e-12}
 
         # HARD
-        hard = rkm.RKM(cuda=cuda, verbose=verb)
+        hard = rkm.RKM(cuda=cuda, verbose=verb, name='test')
         hard_params = {**level_params, "constraint": "hard"}
         hard.append_level(type=type, **hard_params)
         out_hard = hard.learn(x, y, **learn_params)
