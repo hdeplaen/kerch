@@ -7,10 +7,7 @@ Plotting solutions for a deep RKM model.
 @date: July 2021
 """
 
-from torch.utils.tensorboard import SummaryWriter
 import rkm.plot.plotenv_parent as plotenv_parent
-import socket
-from datetime import datetime
 import os
 
 import rkm.model.rkm as RKM
@@ -25,16 +22,15 @@ import wandb
 
 class plotenv_wandb(plotenv_parent.plotenv_parent):
     def __init__(self, model: RKM, opt: OPT.Optimizer):
-        super(plotenv_parent.plotenv_parent, self).__init__()
-        self.model = model
+        super(plotenv_wandb, self).__init__(model, opt)
 
         ## LOGDIR
-        current_time = datetime.now().strftime('%b%d_%H-%M-%S')
-        id = current_time + '_' + socket.gethostname()
-        dir = os.path.join(f"runs/wandb/{self.model.name}",id)
-        wandb.init(dir=dir)
+        name, dir, id = self.names
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        self.run = wandb.init(name=name, dir=dir, id=id)
+        self.artifact = wandb.Artifact(name=name, type='model')
 
-        self.opt = opt
         self._hyperparameters()
 
     def _hyperparameters(self):
@@ -45,45 +41,43 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
             level_dict = {name + str(key): val for key, val in level.hparams.items()}
             hparams_dict = {**hparams_dict, **level_dict}
 
-        wandb.config.update(hparams_dict)
+        self.run.config.update(hparams_dict)
 
     def update(self, iter, tr_mse=None, val_mse=None, test_mse=None, es=0) -> None:
-        with self.writer as w:
-            w.add_scalar("Total Loss", self.model.last_loss, global_step=iter)
-            w.add_scalar("Early Stopping", es, global_step=iter)
+        self.run.log({"Total Loss": self.model.last_loss}, step=iter)
+        self.run.log({"Early Stopping": es}, step=iter)
 
-            for num in range(self.model.num_levels):
-                level = self.model.level(num)
-                w.add_scalars("Level Losses", {f"LEVEL{num}": level.last_loss}, global_step=iter)
-                for (name, dict) in invert_dict(f"LEVEL{num}", level.kernel.params):
-                    w.add_scalars(name, dict, global_step=iter)
-                if isinstance(level, KPCA.KPCA):
-                    self.kpca(num, level, iter)
-                elif isinstance(level, LSSVM.LSSVM):
-                    self.lssvm(num, level, iter)
-                else:
-                    print(f"LEVEL{num} not recognized and cannot be plotted.")
+        for num in range(self.model.num_levels):
+            level = self.model.level(num)
+            self.run.log({f"LEVEL{num}": level.last_loss}, step=iter) # level losses
+            for (name, dict) in invert_dict(f"LEVEL{num}", level.kernel.params):
+                wandb.log(name, dict, step=iter)
+            if isinstance(level, KPCA.KPCA):
+                self.kpca(num, level, iter)
+            elif isinstance(level, LSSVM.LSSVM):
+                self.lssvm(num, level, iter)
+            else:
+                print(f"LEVEL{num} not recognized and cannot be plotted.")
 
-            if val_mse is not None:
-                w.add_scalars('Error', {'Validating': val_mse}, global_step=iter)
-            if test_mse is not None:
-                w.add_scalars('Error', {'Testing': test_mse}, global_step=iter)
-            if tr_mse is not None:
-                w.add_scalars('Error', {'Training': tr_mse}, global_step=iter)
-
-            w.flush()
+        if val_mse is not None:
+            self.run.log({'Validating': val_mse}, step=iter)
+        if test_mse is not None:
+            self.run.log({'Testing': test_mse}, step=iter)
+        if tr_mse is not None:
+            self.run.log({'Training': tr_mse}, step=iter)
 
     def kpca(self, num, level, iter):
         if isinstance(level.linear, DualLinear):
-            P = level.linear.alpha
+            # P = level.linear.alpha
             K = level.kernel.dmatrix()
         elif isinstance(level.linear, PrimalLinear):
-            P = level.linear.weight
+            # P = level.linear.weight
             K, _ = level.kernel.pmatrix()
+        else:
+            K = []
 
-        with self.writer as w:
-            w.add_image(f"LEVEL{num} (Kernel)", K, global_step=iter, dataformats="HW")
-            w.add_image(f"LEVEL{num} (Projector)", P, global_step=iter, dataformats="HW")
+        wandb.log({f"LEVEL{num} (Kernel)", wandb.Image(K)}, step=iter)
+        # wandb.log({f"LEVEL{num} (Projector)", P}, step=iter)
 
     def lssvm(self, num, level, iter):
         if isinstance(level.linear, DualLinear):
@@ -92,25 +86,27 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
         elif isinstance(level.linear, PrimalLinear):
             P = level.linear.weight
             K, _ = level.kernel.pmatrix()
+        else:
+            P = []
+            K = []
 
-        with self.writer as w:
-            self.writer.add_scalars("LSSVM Regularization Term", {f"LEVEL{num}": level.last_reg}, global_step=iter)
-            self.writer.add_scalars("LSSVM Reconstruction Term", {f"LEVEL{num}": level.last_recon}, global_step=iter)
+        self.run.log({f"LEVEL{num} (Regularization term)": level.last_reg}, step=iter)
+        self.run.log({f"LEVEL{num} (Reconstruction term)": level.last_recon}, step=iter)
 
-            self.writer.add_image(f"LEVEL{num} (Kernel)", K, global_step=iter, dataformats="HW")
-            self.writer.add_histogram(f"LEVEL{num} (Support Vector Values)", P, global_step=iter)
+        self.run.log({f"LEVEL{num} (Kernel)", wandb.Image(K)}, step=iter)
+        self.run.log({f"LEVEL{num} (Support Vector Values)", wandb.Histogram(P)}, step=iter)
 
-    def save_model(self):
-        pass
+    def save_model(self, best_tr, best_val, best_test):
+        path = super(plotenv_wandb, self).save_model(best_tr, best_val, best_test)
+        self.artifact.add_file(path)
+        self.run.log_artifact(self.artifact)
 
-    def finish(self, best_tr, best_val, best_test):
         best = {"Training": best_tr}
         if best_val is not None:
             best = {"Validation": best_val, **best}
         if best_test is not None:
             best = {"Test": best_test, **best}
-        self._hyperparameters(best)
+        self.run.config.update(best)
 
-        with self.writer as w:
-            self.writer.flush()
-            self.writer.close()
+    def finish(self, best_tr, best_val, best_test):
+        self.run.finish()

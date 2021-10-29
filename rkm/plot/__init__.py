@@ -9,6 +9,8 @@ Plotting solutions for a deep RKM model.
 
 from abc import abstractmethod
 import warnings
+import tensorboard
+import wandb
 
 import rkm as rkm
 import rkm.plot.plotenv_parent as plotenv_parent
@@ -24,11 +26,18 @@ class plotenv(plotenv_parent.plotenv_parent):
             return plotenv_wandb.plotenv_wandb(model, opt)
         elif rkm.PLOT_ENV == 'tensorboard':
             return plotenv_tensorboard.plotenv_tensorboard(model, opt)
+        elif rkm.PLOT_ENV == 'both':
+            pl = plotenv_tensorboard.plotenv_tensorboard(model, opt)
+            name, log_dir, id = pl.names
+            wandb.init(name=name, dir=log_dir, id=id, sync_tensorboard=True)
+            return pl
+        elif rkm.PLOT_ENV == 'none':
+            return super(plotenv, cls).__init__(model, opt)
         else:
             warnings.warn('Plot environment not recognized. No plotting will occur.')
-            return super(plotenv_parent.plotenv_parent, cls).__init__()
+            return super(plotenv, cls).__init__(model, opt)
 
-    def _hyperparameters(self, best):
+    def _hyperparameters(self):
         pass
 
     def update(self, iter, tr_mse=None, val_mse=None, test_mse=None, es=0) -> None:

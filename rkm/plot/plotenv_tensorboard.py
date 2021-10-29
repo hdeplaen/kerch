@@ -9,8 +9,6 @@ Plotting solutions for a deep RKM model.
 
 from torch.utils.tensorboard import SummaryWriter
 import rkm.plot.plotenv_parent as plotenv_parent
-import socket
-from datetime import datetime
 import os
 
 import rkm.model.rkm as RKM
@@ -23,13 +21,11 @@ from rkm.model.utils import invert_dict
 
 class plotenv_tensorboard(plotenv_parent.plotenv_parent):
     def __init__(self, model: RKM, opt: OPT.Optimizer):
-        super(plotenv_parent.plotenv_parent, self).__init__()
+        super(plotenv_tensorboard, self).__init__(model, opt)
         self.model = model
 
         ## LOGDIR
-        current_time = datetime.now().strftime('%b%d_%H-%M-%S')
-        log_dir = os.path.join(f"runs/tensorboard/{self.model.name}",
-                               current_time + '_' + socket.gethostname())
+        log_dir = os.path.join(self.proj_dir, 'tensorboard', self.id)
         self.writer = SummaryWriter(log_dir=log_dir)
         self.opt = opt
 
@@ -85,7 +81,7 @@ class plotenv_tensorboard(plotenv_parent.plotenv_parent):
 
         with self.writer as w:
             w.add_image(f"LEVEL{num} (Kernel)", K, global_step=iter, dataformats="HW")
-            w.add_image(f"LEVEL{num} (Projector)", P, global_step=iter, dataformats="HW")
+            # w.add_image(f"LEVEL{num} (Projector)", P, global_step=iter, dataformats="HW")
 
     def lssvm(self, num, level, iter):
         if isinstance(level.linear, DualLinear):
@@ -100,10 +96,10 @@ class plotenv_tensorboard(plotenv_parent.plotenv_parent):
             self.writer.add_scalars("LSSVM Reconstruction Term", {f"LEVEL{num}": level.last_recon}, global_step=iter)
 
             self.writer.add_image(f"LEVEL{num} (Kernel)", K, global_step=iter, dataformats="HW")
-            self.writer.add_histogram(f"LEVEL{num} (Support Vector Values)", P, global_step=iter)
+            # self.writer.add_histogram(f"LEVEL{num} (Support Vector Values)", P, global_step=iter)
 
-    def save_model(self):
-        pass
+    def save_model(self, best_tr, best_val, best_test):
+        super(plotenv_tensorboard, self).save_model(best_tr, best_val, best_test)
 
     def finish(self, best_tr, best_val, best_test):
         best = {"Training": best_tr}
