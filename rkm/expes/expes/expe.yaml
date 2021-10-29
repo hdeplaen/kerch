@@ -9,7 +9,7 @@ pid:
   level1:
     size_out: 1
     type: "lssvm"
-    constraint: 'hard'
+    constraint: 'soft'
     classifier: True
     gamma: 0.4
     kernel:
@@ -19,14 +19,14 @@ pid:
   opt:
     type: sgd
     batches: 1
-    early_stopping: 5000
+    early_stopping: 15
     maxiter: 1.e+5
-    lr: 0.01
+    lr: 0.005
     kernel_rate: 1
     stochastic: 1.
-    tol: 1.e-15
-    epoch: 200
-    reduce_epochs: 100000
+    tol: 1.e-10
+    epoch: 1
+    reduce_epochs: 2.e+4
 
 pid2:
   cuda: True

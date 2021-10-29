@@ -9,6 +9,13 @@ def invert_dict(name, dict):
         dicts.append((key, new_dict))
     return dicts
 
+def add_dict(name, dict):
+    dicts = {}
+    for key in dict:
+        new_entry = {name + ' ' + key: dict[key].data}
+        dicts = {**new_entry, **dicts}
+    return dicts
+
 def eigs(A, k=None):
     assert A is not None, 'Cannot decompose empty matrix.'
     k1, k2 = A.shape

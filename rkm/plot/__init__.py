@@ -29,22 +29,16 @@ class plotenv(plotenv_parent.plotenv_parent):
         elif rkm.PLOT_ENV == 'both':
             pl = plotenv_tensorboard.plotenv_tensorboard(model, opt)
             name, log_dir, id = pl.names
-            wandb.init(name=name, dir=log_dir, id=id, sync_tensorboard=True)
+            wandb.init(name=name,
+                       dir=log_dir,
+                       id=id,
+                       sync_tensorboard=True,
+                       project='RKM',
+                       entity='hdeplaen',
+                       reinit=True)
             return pl
         elif rkm.PLOT_ENV == 'none':
             return super(plotenv, cls).__init__(model, opt)
         else:
             warnings.warn('Plot environment not recognized. No plotting will occur.')
             return super(plotenv, cls).__init__(model, opt)
-
-    def _hyperparameters(self):
-        pass
-
-    def update(self, iter, tr_mse=None, val_mse=None, test_mse=None, es=0) -> None:
-        pass
-
-    def save_model(self):
-        pass
-
-    def finish(self, best_tr, best_val, best_test):
-        pass

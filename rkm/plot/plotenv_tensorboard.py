@@ -98,8 +98,8 @@ class plotenv_tensorboard(plotenv_parent.plotenv_parent):
             self.writer.add_image(f"LEVEL{num} (Kernel)", K, global_step=iter, dataformats="HW")
             # self.writer.add_histogram(f"LEVEL{num} (Support Vector Values)", P, global_step=iter)
 
-    def save_model(self, best_tr, best_val, best_test):
-        super(plotenv_tensorboard, self).save_model(best_tr, best_val, best_test)
+    def save_model(self, iter, best_tr, best_val, best_test):
+        super(plotenv_tensorboard, self).save_model(iter, best_tr, best_val, best_test)
 
     def finish(self, best_tr, best_val, best_test):
         best = {"Training": best_tr}

@@ -16,20 +16,29 @@ import rkm.model.kpca as KPCA
 import rkm.model.lssvm as LSSVM
 import rkm.model.level.PrimalLinear as PrimalLinear
 import rkm.model.level.DualLinear as DualLinear
-from rkm.model.utils import invert_dict
+from rkm.model.utils import add_dict
 
 import wandb
 
 class plotenv_wandb(plotenv_parent.plotenv_parent):
     def __init__(self, model: RKM, opt: OPT.Optimizer):
         super(plotenv_wandb, self).__init__(model, opt)
+        os.environ["WANDB_SILENT"] = "true"
+        self.SAVE_ALL = False
+        print('Loading Weights and Biases...')
 
         ## LOGDIR
         name, dir, id = self.names
         if not os.path.exists(dir):
             os.makedirs(dir)
-        self.run = wandb.init(name=name, dir=dir, id=id)
-        self.artifact = wandb.Artifact(name=name, type='model')
+        self.run = wandb.init(name=name,
+                              dir=dir,
+                              id=id,
+                              project='RKM',
+                              entity="hdeplaen",
+                              reinit=True)
+        self.artifact = wandb.Artifact(name=id,
+                                       type='model')
 
         self._hyperparameters()
 
@@ -49,9 +58,9 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
 
         for num in range(self.model.num_levels):
             level = self.model.level(num)
-            self.run.log({f"LEVEL{num}": level.last_loss}, step=iter) # level losses
-            for (name, dict) in invert_dict(f"LEVEL{num}", level.kernel.params):
-                wandb.log(name, dict, step=iter)
+            self.run.log({f"LEVEL{num} Loss": level.last_loss}, step=iter) # level losses
+            dict =  add_dict(f"LEVEL{num}", level.kernel.params)
+            wandb.log(dict, step=iter)
             if isinstance(level, KPCA.KPCA):
                 self.kpca(num, level, iter)
             elif isinstance(level, LSSVM.LSSVM):
@@ -60,11 +69,11 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
                 print(f"LEVEL{num} not recognized and cannot be plotted.")
 
         if val_mse is not None:
-            self.run.log({'Validating': val_mse}, step=iter)
+            self.run.log({'Validation Error': val_mse}, step=iter)
         if test_mse is not None:
-            self.run.log({'Testing': test_mse}, step=iter)
+            self.run.log({'Testing Error': test_mse}, step=iter)
         if tr_mse is not None:
-            self.run.log({'Training': tr_mse}, step=iter)
+            self.run.log({'Training Error': tr_mse}, step=iter)
 
     def kpca(self, num, level, iter):
         if isinstance(level.linear, DualLinear):
@@ -76,7 +85,7 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
         else:
             K = []
 
-        wandb.log({f"LEVEL{num} (Kernel)", wandb.Image(K)}, step=iter)
+        wandb.log({f"LEVEL{num} (Kernel)", wandb.Image(K.data)}, step=iter)
         # wandb.log({f"LEVEL{num} (Projector)", P}, step=iter)
 
     def lssvm(self, num, level, iter):
@@ -93,20 +102,25 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
         self.run.log({f"LEVEL{num} (Regularization term)": level.last_reg}, step=iter)
         self.run.log({f"LEVEL{num} (Reconstruction term)": level.last_recon}, step=iter)
 
-        self.run.log({f"LEVEL{num} (Kernel)", wandb.Image(K)}, step=iter)
-        self.run.log({f"LEVEL{num} (Support Vector Values)", wandb.Histogram(P)}, step=iter)
+        self.run.log({f"LEVEL{num} (Kernel)": wandb.Image(K.data)}, step=iter)
+        self.run.log({f"LEVEL{num} (Support Vector Values)": wandb.Histogram(P.data)}, step=iter)
 
-    def save_model(self, best_tr, best_val, best_test):
-        path = super(plotenv_wandb, self).save_model(best_tr, best_val, best_test)
-        self.artifact.add_file(path)
-        self.run.log_artifact(self.artifact)
+    def save_model(self, iter, best_tr, best_val, best_test):
+        path = super(plotenv_wandb, self).save_model(iter, best_tr, best_val, best_test)
+        if self.SAVE_ALL:
+            self.artifact.add_file(path, is_tmp=True)
 
-        best = {"Training": best_tr}
+        best = {"Best Training Error": best_tr}
         if best_val is not None:
-            best = {"Validation": best_val, **best}
+            best = {"Best Validation Error": best_val, **best}
         if best_test is not None:
-            best = {"Test": best_test, **best}
-        self.run.config.update(best)
+            best = {"Best Test Error": best_test, **best}
+        self.run.log(best, step=iter)
+        self.run.config.update(best, allow_val_change=True)
 
     def finish(self, best_tr, best_val, best_test):
+        path = super(plotenv_wandb, self).finish(best_tr, best_val, best_test)
+        print('Updating to Weights and Biases...')
+        self.artifact.add_file(path)
+        self.run.log_artifact(self.artifact)
         self.run.finish()

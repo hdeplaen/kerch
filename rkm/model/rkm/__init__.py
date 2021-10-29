@@ -287,7 +287,8 @@ class RKM(torch.nn.Module):
                             if test: best_test = test_error
                             early_stopping_count = 0
                             if plot:
-                                plotenv.save_model(best_tr=best_tr,
+                                plotenv.save_model(iter,
+                                                   best_tr=best_tr,
                                                    best_val=best_val,
                                                    best_test=best_test)
                         else:
@@ -304,7 +305,8 @@ class RKM(torch.nn.Module):
 
                 if current_loss < min_loss: min_loss = current_loss
 
-        if plot and not val: plotenv.save_model(best_tr=best_tr,
+        if plot and not val: plotenv.save_model(iter,
+                                                best_tr=best_tr,
                                                 best_val=best_val,
                                                 best_test=best_test)
         if plot: plotenv.finish(best_tr=best_tr,
@@ -313,7 +315,6 @@ class RKM(torch.nn.Module):
         if val: print(f"\nBest validation: {best_val:4.2f}%")
         if val and test: print(f"Corresponding test: {best_test:4.2f}%")
 
-        final_loss = min_loss
         return self.evaluate(x, numpy=True).squeeze()
 
     def evaluate(self, x, numpy=True):
