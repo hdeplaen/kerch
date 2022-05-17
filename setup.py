@@ -21,6 +21,7 @@ setuptools.setup(
     project_urls = {
         "E-DUALITY": "https://www.esat.kuleuven.be/stadius/E/",
         "ESAT-STADIUS": "https://www.esat.kuleuven.be/stadius/",
+        "Documentation": None,
         "Bug Tracker": "https://github.com/hdeplaen/rkm/issues"
     },
     license=license,
