@@ -1,0 +1,14 @@
+from rkm.src.model.kernel.Kernel import Kernel as base
+from rkm.src.model.kernel.ExplicitKernel import ExplicitKernel as explicit
+from rkm.src.model.kernel.ImplicitKernel import ImplicitKernel as implicit
+from rkm.src.model.kernel.LinearKernel import LinearKernel as linear
+from rkm.src.model.kernel.RBFKernel import RBFKernel as rbf
+from rkm.src.model.kernel.IndicatorKernel import IndicatorKernel as indicator
+from rkm.src.model.kernel.ImplicitKernel import ImplicitKernel as rbf
+from rkm.src.model.kernel.ImplicitNNKernel import ImplicitNNKernel as implicit_nn
+from rkm.src.model.kernel.ExplicitNNKernel import ExplicitNNKernel as explicit_nn
+from rkm.src.model.kernel.SigmoidKernel import SigmoidKernel as sigmoid
+from rkm.src.model.kernel.HatKernel import HatKernel as hat
+from rkm.src.model.kernel.NystromKernel import NystromKernel as nystrom
+from rkm.src.model.kernel.PolynomialKernel import PolynomialKernel as polynomial
+from rkm.src.model.kernel.KernelFactory import factory as factory
