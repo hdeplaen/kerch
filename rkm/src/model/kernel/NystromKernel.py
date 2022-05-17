@@ -39,9 +39,9 @@ class NystromKernel(ExplicitKernel.ExplicitKernel):
 
         self.dim = kwargs["dim"]
         if self.dim is None:
-            self.dim = self.init_kernels
+            self.dim = self._num_sample
 
-        self.kernels_init(self.kernels)
+        self.init_sample(self._sample)
 
     def __str__(self):
         return "Feature kernel"
@@ -49,10 +49,10 @@ class NystromKernel(ExplicitKernel.ExplicitKernel):
     def hparams(self):
         return {"Kernel": "Feature", **super(NystromKernel, self).hparams}
 
-    def kernels_init(self, x):
-        super(NystromKernel, self).kernels_init(x)
+    def init_sample(self, sample=None):
+        super(NystromKernel, self).init_sample(sample)
 
-        self._internal_kernel.kernels_init(x)
+        self._internal_kernel.init_sample(self.sample)
         K = self._internal_kernel.K
         self.lambdas, self.H = utils.eigs(K, k=self.dim)
 
@@ -72,9 +72,12 @@ class NystromKernel(ExplicitKernel.ExplicitKernel):
         self.lambdas_sqrt = torch.sqrt(self.lambdas)
         self._sample_phi = (self.H @ torch.diag(self.lambdas_sqrt)).data
 
+    def update_sample(self, sample_values, idx_sample=None):
+        raise NotImplementedError
+
     def _explicit(self, x=None):
         if x is None:
-            return self._sample_phi[self._idx_kernels,:]
+            return self._sample_phi[self._idx_sample, :]
 
         Ky = self._internal_kernel.k(x)
         return Ky @ self.H @ torch.diag(1/self.lambdas_sqrt)

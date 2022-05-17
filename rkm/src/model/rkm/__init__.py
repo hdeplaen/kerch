@@ -230,7 +230,7 @@ class RKM(torch.nn.Module):
 
                     if self.idxk is not None:
                         for _ in trange(int(batches),
-                                        desc=f'Batches using {self.idxk.num_samples}/{self.idxk.num_kernels} datapoints',
+                                        desc=f'Batches using {self.idxk.num_samples}/{self.idxk.num_sample} datapoints',
                                         position=1,
                                         leave=False,
                                         disable=not self._verbose):

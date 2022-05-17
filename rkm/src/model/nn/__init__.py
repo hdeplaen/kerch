@@ -92,7 +92,7 @@ class NN(Level, metaclass=ABCMeta):
 
     def evaluate(self, x):
         # Out-of-sample
-        idx_kernels = self._idxk.all_kernels
+        idx_kernels = self._idxk._all_sample
         x = self.kernel(x, self._representation, idx_kernels)
         x = self.linear(x, idx_kernels)
         return x

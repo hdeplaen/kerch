@@ -17,49 +17,46 @@ import rkm.src.utils.type as type_utils
 
 class Kernel(nn.Module, metaclass=ABCMeta):
     """
-    Abstract kernel mother class
-    k(x,y) = f(x,y)
+    :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
+    be given relative to these samples., default to `None`
+    :param sample_trainable: `True` if the gradients of the sample points are to be computed. If so, a graph is computed
+    and the sample can be updated. `False` just leads to a static computation., defaults to `False`
+    :param centering: `True` if any implicit feature or kernel is must be centered, `False` otherwise. The centering is
+    always performed relative to a statistic on the sample., defaults to `False`
+    :param num_sample: Number of sample points. This parameter is neglected if sample is not None and overwritten by the
+    number of points contained in sample., defaults to 1
+    :param dim_sample: Dimension of each sample point. This parameter is neglected if sample is not None and overwritten
+    by the dimension of the sample points., defaults to 1
+
+    :type sample: Tensor(num_sample, dim_sample), optional
+    :type sample_trainable: bool, optional
+    :type centering: bool, optional
+    :type sample_num: int, optional
+    :type sample_dim: int, optional
     """
 
-    # @property
-    # def kernels(self, idx_kernels=None):
-    #     if idx_kernels is None: idx_kernels = self.all_kernels
-    #     return self.kernels.gather(dim=1, index=idx_kernels)
-
     @abstractmethod
-    @rkm.src.kwargs_decorator({"size_in": 1,
-                                "kernels_trainable": False,
-                                "centering": False,
-                                "sample": None,
-                                "init_kernels": None})
+    @rkm.src.kwargs_decorator({
+        "sample": None,
+        "sample_trainable": False,
+        "centering": False,
+        "num_sample": 1,
+        "dim_sample": 1})
     def __init__(self, **kwargs):
-        """
-        Creates a mother class for a kernel. This class is useless as such and must be inherited.
-
-        :param size_in: dimension of the input (default 1)
-        :param init_kernels: number of kernel
-        :param kernels_trainable: True if support vectors / kernel are trainable (default False)
-        """
         super(Kernel, self).__init__()
 
-        self.kernels_trainable = kwargs["kernels_trainable"]
+        self.sample_trainable = kwargs["kernels_trainable"]
         self._centering = kwargs["centering"]
 
         input_sample = kwargs["sample"]
         input_sample = type_utils.castf(input_sample)
-        if input_sample is not None:
-            self.init_kernels, self.size_in = input_sample.shape
-            self.kernels = nn.Parameter(input_sample.data,
-                requires_grad=self.kernels_trainable)
-        elif kwargs["init_kernels"] is not None:
-            self.size_in = kwargs["size_in"]
-            self.init_kernels = kwargs["init_kernels"]
-            self.kernels = nn.Parameter(
-                nn.init.orthogonal_(torch.empty((self.init_kernels, self.size_in), dtype=rkm.ftype)),
-                requires_grad=self.kernels_trainable)
-        else:
-            raise NameError("Nor the dimensions, nor sample data has been provided.")
 
+        if input_sample is not None:
+            self._num_sample, self._dim_sample = input_sample.shape
+        else:
+            self._dim_sample = kwargs["dim_sample"]
+            self._num_sample = kwargs["num_sample"]
+        self.init_sample(input_sample)
 
         self._K = None
         self._K_mean = None
@@ -67,7 +64,7 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         self._phi = None
         self._C = None
         self._phi_mean = None
-        self._idx_kernels = None
+        self._idx_sample = None
         self.reset()
 
     @abstractmethod
@@ -87,60 +84,116 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         self._phi_mean = None
 
     # @property
-    def num_kernels(self):
-        return self.kernels.shape[0]
+    def num_sample(self):
+        return self._sample.shape[0]
 
     # @property
     def num_idx(self):
-        return len(self._idx_kernels)
+        return len(self._idx_sample)
 
     @property
     def hparams(self):
-        return {"Trainable Kernels": self.kernels_trainable,
+        return {"Trainable Kernels": self.sample_trainable,
                 "Centering": self._centering}
 
-    def all_kernels(self):
-        return range(self.num_kernels())
+    @property
+    def sample(self):
+        return self._sample.data
 
-    def reset(self, idx_kernels=None):
+    def _all_sample(self):
+        return range(self.num_sample())
+
+    def train(self, mode=True):
+        if not mode:
+            self.reset()
+        return self
+
+    def reset(self, idx_sample=None):
+        """
+        Resets which subset of the samples are to be used until the next call of this function.
+
+        :param idx_sample: Indices of the sample subset relative to the original sample set. If `None` is specified, all
+        samples are used and the subset equals the original sample set. This is also the default behavior if this
+        function is never called., defaults to `None`
+        :type idx_sample: int(), optional
+        """
         self._empty_cache()
-        if idx_kernels is None:
-            self._idx_kernels = self.all_kernels()
+        if idx_sample is None:
+            self._idx_sample = self._all_sample()
         else:
-            self._idx_kernels = idx_kernels
+            self._idx_sample = idx_sample
 
-    def kernels_init(self, x):
-        x = type_utils.castf(x)
+    def init_sample(self, sample=None):
+        """
+        Initializes the sample set.
+
+        :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it
+        will be given relative to these samples. In case of overwriting a current sample, `num_sample` and `dim_sample`
+        are also overwritten. If `None` is specified, the sample dataset will be initialized according to `num_sample`
+        and `dim_sample` specified during the construction. If a previous sample set has been used, it will keep the
+        same dimension by consequence., defaults to `None`
+        :param type: Tensor, optional
+        """
+        sample = type_utils.castf(sample)
         self._empty_cache()
-        assert x is not None, "Kernels updated with None values."
-        self.kernels.data = x.data
 
-    def update_kernels(self, x, idx_kernels):
-        x = type_utils.castf(x)
+        if sample is not None:
+            self._num_sample, self._dim_sample = sample.shape
+            self._sample = nn.Parameter(sample.data,
+                                        requires_grad=self.sample_trainable)
+        else:
+            self._sample = nn.Parameter(
+                nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_sample), dtype=rkm.ftype)),
+                requires_grad=self.sample_trainable)
+
+    def update_sample(self, sample_values, idx_sample=None):
+        """
+        Updates the sample set. In contradiction to `init_samples`, this only updates the values of the sample and sets
+        the gradients of the updated values to zero if relevant.
+
+        :param sample_values: Values given to the updated samples.
+        :param idx_sample: Indices of the samples to be updated. All indices are considered if `None`., defaults to
+        `None`
+        :type sample_values: Tensor
+        :type idx_sample: int(), optional
+        """
+        sample_values = type_utils.castf(sample_values)
         self._empty_cache()
-        assert x is not None, "Kernels updated with None values."
-        if not self.kernels_trainable:
-            self.kernels.data[idx_kernels, :] = x.data
 
-    def merge_idxs(self, **kwargs):
-        raise NotImplementedError
-        self.dmatrix()
-        return torch.nonzero(torch.triu(self.dmatrix()) > (1 - kwargs["mtol"]), as_tuple=False)
+        # use all indices if unspecified
+        if idx_sample is None:
+            idx_sample = self._all_sample()
 
-    def merge(self, idxs):
-        raise NotImplementedError
-        # suppress added up kernel
-        self.kernels = (self.kernels.gather(dim=0, index=idxs[:, 1]) +
-                        self.kernels.gather(dim=0, index=idxs[:, 0])) / 2
+        # check consistency of indices
+        assert len(idx_sample) == sample_values.shape[0], f"Number of sample values ({sample_values.shape[0]}) and " \
+                                                          f"corresponding indices ({len(idx_sample)}) are not " \
+                                                          f"consistent."
+        # update the values
+        self._sample.data[idx_sample, :] = sample_values.data
 
-        self.dmatrix()
-        # suppress added up kernel entries in the kernel matrix
-        self._K.gather(dim=0, index=idxs[:, 1], out=self._K)
-        self._K.gather(dim=1, index=idxs[:, 1], out=self._K)
+        # zeroing relevant gradient if relevant
+        if self.sample_trainable:
+            self._sample.grad.data[idx_sample, :].zero_()
 
-    def reduce(self, idxs):
-        raise NotImplementedError
-        self.kernels.gather(dim=0, index=idxs, out=self.kernels)
+    # def merge_idxs(self, **kwargs):
+    #     raise NotImplementedError
+    #     # self.dmatrix()
+    #     # return torch.nonzero(torch.triu(self.dmatrix()) > (1 - kwargs["mtol"]), as_tuple=False)
+    #
+    # def merge(self, idxs):
+    #     raise NotImplementedError
+    #     # # suppress added up kernel
+    #     # self._sample = (self._sample.gather(dim=0, index=idxs[:, 1]) +
+    #     #                 self._sample.gather(dim=0, index=idxs[:, 0])) / 2
+    #
+    #     self.dmatrix()
+    #     # suppress added up kernel entries in the kernel matrix
+    #     self._K.gather(dim=0, index=idxs[:, 1], out=self._K)
+    #     self._K.gather(dim=1, index=idxs[:, 1], out=self._K)
+    #
+    # def reduce(self, idxs):
+    #     raise NotImplementedError
+    #     self._sample.gather(dim=0, index=idxs, out=self._sample)
 
 ###################################################################################################
 ################################### MATHS ARE HERE ################################################
@@ -151,16 +204,16 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         # implicit without centering
         # explicit without centering
         if x_oos is None:
-            x_oos = self.kernels[self._idx_kernels, :]
+            x_oos = self._sample[self._idx_sample, :]
         if x_sample is None:
-            x_sample = self.kernels[self._idx_kernels, :]
+            x_sample = self._sample[self._idx_sample, :]
         return x_oos, x_sample
 
     @abstractmethod
     def _explicit(self, x=None):
         # explicit without centering
         if x is None:
-            x =  self.kernels[self._idx_kernels, :]
+            x = self._sample[self._idx_sample, :]
         return x
 
     def _dmatrix(self, implicit=False):
@@ -172,14 +225,14 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         :return: Kernel matrix.
         """
         if self._K is None and not implicit:
-            if self._idx_kernels is None:
+            if self._idx_sample is None:
                 self.reset()
 
             # self._k = self._implicit(self.kernels.gather(0, self._idx_kernels))
             self._K = self._implicit()
 
             if self._centering:
-                n = self.num_kernels()
+                n = self.num_sample()
                 self._K_mean = torch.mean(self._K, dim=0)
                 self._K_mean_tot = torch.mean(self._K, dim=(0, 1))
                 self._K = self._K - self._K_mean.expand(n, n) \
@@ -198,7 +251,7 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         Its size is output * output.
         """
         if self._C is None:
-            if self._idx_kernels is None:
+            if self._idx_sample is None:
                 self.reset()
 
             self._phi = self._explicit()
@@ -210,6 +263,15 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         return self._C
 
     def phi(self, x=None):
+        """
+        Returns the explicit feature map.
+
+        :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
+        default to `None`
+        :type x: Tensor(,dim_sample), optional
+        :raises: PrimalError
+        """
+
         # if x is None, phi(x) for x in the sample is returned.
         x = type_utils.castf(x)
 
@@ -222,6 +284,33 @@ class Kernel(nn.Module, metaclass=ABCMeta):
         return phi
 
     def k(self, x_oos=None, x_sample=None, implicit=False):
+        """
+        Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
+
+        .. math::
+            K = [k(x_i,y_j)]_{i,j=1}^{N,M},
+
+        with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`x_oos`) and :math:`\{y_i\}_{j=1}^N` the sample points
+        (`x_sample`).
+
+        The case of centered kernels requires a particular discussion.
+
+        :param x_oos: Out-of-sample points. If `None`, the default sample will be used., defaults to `None`
+        :param x_sample: If `None`, the default sample is used. If not, the kernel matrix is computed relatively to
+        another sample. This allows for a full out-of-sample matrix in both dimensions. It has no links with the
+        original sample unless the statistic used for centering if relevant. If the kernel only exists in an implicit
+        formulation and is centered, this will return an error as the centering consistent with the original sample is
+        untractable then. One may use a Nyström kernel to force the existence of an explicit feature map., defaults to
+        `None`
+
+        :type x_oos: Tensor(N,dim_sample), optional
+        :type x_sample: Tensor(M,dim_sample), optional
+
+        :return K: Kernel matrix
+        :rtype: Tensor(N,M)
+
+        :raises: PrimalError
+        """
         x_oos = type_utils.castf(x_oos)
         x_sample = type_utils.castf(x_sample)
 
@@ -247,8 +336,21 @@ class Kernel(nn.Module, metaclass=ABCMeta):
 
         return Ky
 
-    def forward(self, x, representation="dual", idx_kernels=None):
-        if idx_kernels is not None: self.reset(idx_kernels)
+    def forward(self, x, representation="dual"):
+        """
+        Passes datapoints through the kernel.
+
+        :param x: Datapoints to be passed through the kernel.
+        :param representation: Chosen representation. If `dual`, an out-of-sample kernel matrix is returned. If
+        `primal` is specified, it returns the explicit feature map., default to `dual`
+
+        :type x: Tensor(,dim_sample)
+        :type representation: str, optional
+
+        :return: Out-of-sample kernel matrix or explicit feature map depending on `representation`.
+
+        :raises: RepresentationError
+        """
 
         def primal(x):
             return self.phi(x)

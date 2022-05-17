@@ -28,7 +28,7 @@ class IndicatorKernel(ImplicitKernel.ImplicitKernel):
         :param gamma: value on the diagonal (default 2 * lag + 1, which ensures PSD)
         """
         super(IndicatorKernel, self).__init__(**kwargs)
-        assert self.size_in == 1, "The indicator kernel is only defined for 1-dimensional entries."
+        assert self._dim_sample == 1, "The indicator kernel is only defined for 1-dimensional entries."
 
         self.lag = kwargs["lag"]
         if kwargs["gamma"] is None:

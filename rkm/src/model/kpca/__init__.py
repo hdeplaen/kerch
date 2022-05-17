@@ -51,7 +51,7 @@ class KPCA(Level, metaclass=ABCMeta):
 
         def dual_var():
             K = self.kernel.dmatrix()
-            idx_kernels = self._idxk._idx_kernels
+            idx_kernels = self._idxk._idx_sample
             H = self.linear.alpha[idx_kernels, :]
             # l = torch.trace(K) - torch.trace(H @ H.t() @ K)
             # if l<0:

@@ -69,7 +69,7 @@ class plot():
         cmap = plt.get_cmap('RdYlGn')
 
         # TITLE
-        s1 = 'Number of support vectors: {:d}'.format(self.mdl.num_kernels)
+        s1 = 'Number of support vectors: {:d}'.format(self.mdl.num_sample)
         s2 = '$\sigma$ = {:f}'.format(sigma)
         s3 = 'Bias = {:f}'.format(bias)
         s = s1 + '\n' + s2 + '\n' + s3
