@@ -2,3 +2,5 @@
 *.pyc
 /runs/
 /results/
+/arch/
+/imgs/
