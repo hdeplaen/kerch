@@ -56,9 +56,7 @@ python setup.py install
 ## Resources
 
 * [E-DUALITY]("https://www.esat.kuleuven.be/stadius/E/): ERC Adv. Grant website.
-* [ESAT-STADIUS](https://www.esat.kuleuven.be/stadius/): KU Leuven, Department of Electrical Engineering (ESAT), STADIUS Center for
-
-    Dynamical Systems, Signal Processing and Data Analytics.
+* [ESAT-STADIUS](https://www.esat.kuleuven.be/stadius/): KU Leuven, Department of Electrical Engineering (ESAT), STADIUS Center for Dynamical Systems, Signal Processing and Data Analytics.
 * Documentation: to come...
 * [Bug Tracker](https://github.com/hdeplaen/rkm/issues)
 
