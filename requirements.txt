@@ -1,1 +1,13 @@
 torch
+
+
+numpy
+matplotlib
+torch
+pyyaml
+scikit-learn
+pandas
+tqdm
+nested_dict
+tensorboard
+torchvision
