@@ -26,9 +26,10 @@ class nystrom(explicit):
     :param base_type: The type of kernel on which the explicit feature map is going to be constructed., defaults to
         `"rbf"`
     :param base_centering: Specifies if the base kernel has to be centered., defaults to `True`
-    :param kwargs: Other parameter for the base kernel (e.g. the bandwidth for an RBF kernel, the degree for a
-        polynomial kernel etc.).
+    :param \**kwargs: Other arguments for the base kernel (e.g. the bandwidth for an RBF kernel, the degree for a
+        polynomial kernel etc.). For the default values, please refer to the requested class in question.
     :type dim: int, optional
+    :type \**kwargs: dict, optional
     :type base_type: str, optional
     :type base_centering: bool, optional
     """

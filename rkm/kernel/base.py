@@ -16,21 +16,21 @@ from .. import utils
 class base(nn.Module, metaclass=ABCMeta):
     r"""
     :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
-        be given relative to these samples., default to `None`
+        be given relative to these samples., defaults to `None`
     :param sample_trainable: `True` if the gradients of the sample points are to be computed. If so, a graph is
         computed and the sample can be updated. `False` just leads to a static computation., defaults to `False`
     :param centering: `True` if any implicit feature or kernel is must be centered, `False` otherwise. The centering
         is always performed relative to a statistic on the sample., defaults to `False`
-    :param num_sample: Number of sample points. This parameter is neglected if sample is not None and overwritten by
+    :param num_sample: Number of sample points. This parameter is neglected if `sample` is not `None` and overwritten by
         the number of points contained in sample., defaults to 1
-    :param dim_sample: Dimension of each sample point. This parameter is neglected if sample is not None and
+    :param dim_sample: Dimension of each sample point. This parameter is neglected if `sample` is not `None` and
         overwritten by the dimension of the sample points., defaults to 1
 
     :type sample: Tensor(num_sample, dim_sample), optional
     :type sample_trainable: bool, optional
     :type centering: bool, optional
-    :type sample_num: int, optional
-    :type sample_dim: int, optional
+    :type num_sample: int, optional
+    :type dim_sample: int, optional
     """
 
     @abstractmethod
@@ -63,7 +63,7 @@ class base(nn.Module, metaclass=ABCMeta):
         self._C = None
         self._phi_mean = None
         self._idx_sample = None
-        self.reset()
+        self.stochastic()
 
     @abstractmethod
     def __str__(self):
@@ -71,6 +71,9 @@ class base(nn.Module, metaclass=ABCMeta):
 
     @property
     def params(self):
+        r"""
+        Dictionnary containing the parameters and their values. This can be relevant for monitoring.
+        """
         return {}
 
     def _empty_cache(self):
@@ -82,6 +85,13 @@ class base(nn.Module, metaclass=ABCMeta):
         self._phi_mean = None
 
     @property
+    def dim_sample(self):
+        r"""
+        Dimension of each datapoint.
+        """
+        return self._dim_sample
+
+    @property
     def num_sample(self):
         r"""
         Number of datapoints in the sample set.
@@ -91,12 +101,24 @@ class base(nn.Module, metaclass=ABCMeta):
     @property
     def num_idx(self):
         r"""
-        Number of selected datapoints of the sample set when performaing various computations.
+        Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
+        the case of stochastic training.
         """
         return len(self._idx_sample)
 
     @property
+    def idx(self):
+        r"""
+        Indices of the selected datapoints of the sample set when performing various operations. This is only relevant
+        in the case of stochastic training.
+        """
+        return self._idx_sample
+
+    @property
     def hparams(self):
+        r"""
+        Dictionnary containing the hyperparameters and their values. This can be relevant for monitoring.
+        """
         return {"Trainable Kernels": self.sample_trainable,
                 "Centering": self._centering}
 
@@ -112,22 +134,24 @@ class base(nn.Module, metaclass=ABCMeta):
 
     def train(self, mode=True):
         r"""
-        Sets the kernel in training mode. Refer to torch.nn.Module documentation for more details. When put in
-        evaluation mode (`False`), all the sample points are used for the computations, regardless of the
-        previously specified indices.
+        Sets the kernel in training mode, which disables the gradients computation and disables stochasticity of the
+        kernel. For the gradients and other things, we refer to the `torch.nn.Module` documentation. For the stachistic
+        part, when put in evaluation mode (`False`), all the sample points are used for the computations, regardless of
+        the previously specified indices.
         """
         if not mode:
-            self.reset()
+            self.stochastic()
         return self
 
-    def reset(self, idx_sample=None):
+    def stochastic(self, idx_sample=None):
         """
-        Resets which subset of the samples are to be used until the next call of this function.
+        Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
+        case of stochastic training.
 
         :param idx_sample: Indices of the sample subset relative to the original sample set. If `None` is specified,
             all samples are used and the subset equals the original sample set. This is also the default behavior if
             this function is never called., defaults to `None`
-        :type idx_sample: int(), optional
+        :type idx_sample: int[], optional
         """
         self._empty_cache()
         if idx_sample is None:
@@ -238,7 +262,7 @@ class base(nn.Module, metaclass=ABCMeta):
         """
         if self._K is None and not implicit:
             if self._idx_sample is None:
-                self.reset()
+                self.stochastic()
 
             # self._k = self._implicit(self.kernels.gather(0, self._idx_kernels))
             self._K = self._implicit()
@@ -264,7 +288,7 @@ class base(nn.Module, metaclass=ABCMeta):
         """
         if self._C is None:
             if self._idx_sample is None:
-                self.reset()
+                self.stochastic()
 
             self._phi = self._explicit()
 
@@ -279,7 +303,7 @@ class base(nn.Module, metaclass=ABCMeta):
         Returns the explicit feature map.
 
         :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
-            default to `None`
+            defaults to `None`
         :type x: Tensor(,dim_sample), optional
         :raises: PrimalError
         """
@@ -318,7 +342,7 @@ class base(nn.Module, metaclass=ABCMeta):
         :type x_oos: Tensor(N,dim_sample), optional
         :type x_sample: Tensor(M,dim_sample), optional
 
-        :return K: Kernel matrix
+        :return: Kernel matrix
         :rtype: Tensor(N,M)
 
         :raises: PrimalError
@@ -354,7 +378,7 @@ class base(nn.Module, metaclass=ABCMeta):
 
         :param x: Datapoints to be passed through the kernel.
         :param representation: Chosen representation. If `dual`, an out-of-sample kernel matrix is returned. If
-            `primal` is specified, it returns the explicit feature map., default to `dual`
+            `primal` is specified, it returns the explicit feature map., defaults to `dual`
 
         :type x: Tensor(,dim_sample)
         :type representation: str, optional
@@ -379,7 +403,7 @@ class base(nn.Module, metaclass=ABCMeta):
     @property
     def K(self):
         r"""
-        Returns the kernel matrix on the sample. Same result as calling :py:func:`k()`, but faster as no assertions
+        Returns the kernel matrix on the sample dataset. Same result as calling :py:func:`k()`, but faster as no assertions
         and tests have to be performed. It is loaded from memory if already computed and unchanged since then, to avoid
         re-computation when reccurently called.
 
@@ -391,7 +415,7 @@ class base(nn.Module, metaclass=ABCMeta):
     @property
     def C(self):
         r"""
-        Returns the covariance matrix.
+        Returns the covariance matrix on the sample datapoints.
 
         .. math::
             C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.

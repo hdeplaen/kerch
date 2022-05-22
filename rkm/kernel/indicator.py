@@ -39,7 +39,7 @@ class indicator(implicit):
 
     :param lag: Lag parameter., defaults to 1.
     :param gamma: Identity value of the kernel. If `None`, the value will be `gamma`:math:` = 2*``lag`:math:`+1` to
-        ensure positive semi-definiteness., default to `None`
+        ensure positive semi-definiteness., defaults to `None`
     :param lag_trainable: `True` if the gradient of the lag is to be computed. If so, a graph is computed
         and the lag can be updated. `False` just leads to a static computation., defaults to `False`
     :param gamma_trainable: `True` if the gradient of the gamma is to be computed. If so, a graph is computed

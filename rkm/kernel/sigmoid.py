@@ -57,6 +57,9 @@ class sigmoid(implicit):
 
     @property
     def params_trainable(self):
+        r"""
+        Boolean returning if the parameters a trainable or not.
+        """
         return self._params_trainable
 
     def _implicit(self, x_oos=None, x_sample=None):
