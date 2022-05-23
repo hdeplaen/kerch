@@ -32,9 +32,9 @@ class explicit(base, metaclass=ABCMeta):
     @abstractmethod
     def _explicit(self, x=None):
         return super(explicit, self)._explicit(x)
-    
-    def _dmatrix(self, implicit=True):
-        return super(explicit, self)._dmatrix(implicit)
+
+    def _compute_K(self, implicit=True):
+        return super(explicit, self)._compute_K(implicit)
 
     def k(self, x_oos=None, x_sample=None, implicit=True):
         return super(explicit, self).k(x_oos, x_sample, implicit)

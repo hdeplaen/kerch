@@ -39,7 +39,7 @@ class rbf(implicit):
         self._sigma_trainable = kwargs["sigma_trainable"]
         sigma = kwargs["sigma"]
         if sigma is None:
-            self._dmatrix()
+            self._compute_K()
             self._sigma = None
         else:
             torch.nn.Parameter(

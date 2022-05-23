@@ -280,7 +280,7 @@ class base(nn.Module, metaclass=ABCMeta):
             x = self._sample[self._idx_sample, :]
         return x
 
-    def _dmatrix(self, implicit=False):
+    def _compute_K(self, implicit=False):
         """
         Computes the dual matrix, also known as the kernel matrix.
         Its size is len(idx_kernels) * len(idx_kernels).
@@ -309,7 +309,7 @@ class base(nn.Module, metaclass=ABCMeta):
 
         return self._K
 
-    def _pmatrix(self):
+    def _compute_C(self):
         """
         Computes the primal matrix, i.e. correlation between the different outputs.
         Its size is output * output.
@@ -339,7 +339,7 @@ class base(nn.Module, metaclass=ABCMeta):
         # if x is None, phi(x) for x in the sample is returned.
         x = utils.castf(x)
 
-        self._pmatrix()
+        self._compute_C()
 
         phi = self._explicit(x)
         if self._centering:
@@ -379,19 +379,19 @@ class base(nn.Module, metaclass=ABCMeta):
         x_sample = utils.castf(x_sample)
 
         if x_oos is None and x_sample is None:
-            return self._dmatrix(implicit=implicit)
+            return self._compute_K(implicit=implicit)
 
         if x_sample is not None and not implicit and self._centering:
             raise NameError(
                 "Impossible to compute centered out-of-sample to out-of-sample kernels for implicit-defined kernels as the centering statistic is only defined on the sample.")
 
         if implicit:
-            self._pmatrix()
+            self._compute_C()
             phi_sample = self.phi(x_sample)
             phi_oos = self.phi(x_oos)
             Ky = phi_oos @ phi_sample.T
         else:
-            self._dmatrix()
+            self._compute_K()
             Ky = self._implicit(x_oos, x_sample)
             if self._centering:
                 Ky = Ky - torch.mean(Ky, dim=1, keepdim=True).expand(-1, Ky.shape[1])
@@ -438,7 +438,7 @@ class base(nn.Module, metaclass=ABCMeta):
         .. math::
             K_{ij} = k(x_i,x_j).
         """
-        return self._dmatrix()
+        return self._compute_K()
 
     @property
     def C(self):
@@ -448,7 +448,7 @@ class base(nn.Module, metaclass=ABCMeta):
         .. math::
             C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.
         """
-        return self._pmatrix()[0]
+        return self._compute_C()[0]
 
     @property
     def phi_sample(self):
@@ -457,4 +457,4 @@ class base(nn.Module, metaclass=ABCMeta):
         assertions or tests have to be performed. It is loaded from memory if already computed and unchanged since
         then, to avoid re-computation when reccurently called.
         """
-        return self._pmatrix()[1]
+        return self._compute_C()[1]
