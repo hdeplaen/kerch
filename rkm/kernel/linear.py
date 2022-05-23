@@ -12,7 +12,7 @@ from .. import utils
 from .explicit import explicit, base
 
 
-@torch.jit.script
+
 @utils.extend_docstring(base)
 class linear(explicit):
     r"""

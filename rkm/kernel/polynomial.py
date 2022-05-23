@@ -12,11 +12,11 @@ from .base import base
 
 import torch
 
-@torch.jit.script
+
 @utils.extend_docstring(base)
 class polynomial(base):
     r"""
-    Polynomial kernel.
+    Polynomial kernel. Projection onto a hypershpere.
 
     .. math::
         k(x,y) = \left(x^\top y + 1\right)^\texttt{degree}.
@@ -44,6 +44,9 @@ class polynomial(base):
 
     @property
     def degree(self):
+        r"""
+        Degree of the polynomial.
+        """
         return self._degree.data
 
     @degree.setter
@@ -52,7 +55,10 @@ class polynomial(base):
         self._degree.data = val
 
     @property
-    def degree_trainable(self):
+    def degree_trainable(self) -> bool:
+        r"""
+        Boolean indicating if the degree is trainable.
+        """
         return self._degree_trainable
 
     @degree_trainable.setter

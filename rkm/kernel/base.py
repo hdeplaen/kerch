@@ -8,12 +8,11 @@ File containing the abstract kernel classes.
 """
 
 import torch
-import torch.nn as nn
 from abc import ABCMeta, abstractmethod
 
 from .. import utils
 
-class base(nn.Module, metaclass=ABCMeta):
+class base(torch.nn.Module, metaclass=ABCMeta):
     r"""
     :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
         be given relative to these samples., defaults to `None`
@@ -195,7 +194,7 @@ class base(nn.Module, metaclass=ABCMeta):
         :type idx_sample: int[], optional
         :param prop_sample: Instead of giving indices, specifying a proportion of the original sample set is also
             possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
-        such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
+            such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
             `prop_sample` are `None`., defaults to `None`.
         """
         sample = utils.castf(sample)
@@ -203,11 +202,11 @@ class base(nn.Module, metaclass=ABCMeta):
 
         if sample is not None:
             self._num_sample, self._dim_sample = sample.shape
-            self._sample = nn.Parameter(sample.data,
+            self._sample = torch.nn.Parameter(sample.data,
                                         requires_grad=self.sample_trainable)
         else:
-            self._sample = nn.Parameter(
-                nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_sample), dtype=utils.FTYPE)),
+            self._sample = torch.nn.Parameter(
+                torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_sample), dtype=utils.FTYPE)),
                 requires_grad=self.sample_trainable)
 
     def update_sample(self, sample_values, idx_sample=None):
@@ -328,7 +327,7 @@ class base(nn.Module, metaclass=ABCMeta):
 
     def phi(self, x=None):
         r"""
-        Returns the explicit feature map.
+        Returns the explicit feature map :math:`\phi(\cdot)` of the specified points.
 
         :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
             defaults to `None`
@@ -453,8 +452,8 @@ class base(nn.Module, metaclass=ABCMeta):
     @property
     def phi_sample(self):
         r"""
-        Returns the explicit feature map of the sample datapoints. Same as calling :py:func:`phi()`, but faster as no
-        assertions or tests have to be performed. It is loaded from memory if already computed and unchanged since
-        then, to avoid re-computation when reccurently called.
+        Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling
+        :py:func:`phi()`, but faster as no assertions or tests have to be performed. It is loaded from memory if
+        already computed and unchanged since then, to avoid re-computation when reccurently called.
         """
         return self._compute_C()[1]

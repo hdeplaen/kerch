@@ -13,7 +13,7 @@ from .. import utils
 from .implicit import implicit, base
 
 
-@torch.jit.script
+
 @utils.extend_docstring(base)
 class skewed_chi2(implicit):
     r"""

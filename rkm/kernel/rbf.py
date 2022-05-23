@@ -12,7 +12,7 @@ import torch
 from .. import utils
 from .implicit import implicit, base
 
-@torch.jit.script
+
 @utils.extend_docstring(base)
 class rbf(implicit):
     r"""
@@ -50,6 +50,9 @@ class rbf(implicit):
 
     @property
     def sigma(self):
+        r"""
+        Bandwidth of the RBF kernel.
+        """
         return self._sigma.data
 
     @sigma.setter
@@ -59,6 +62,9 @@ class rbf(implicit):
 
     @property
     def sigma_trainable(self) -> bool:
+        r"""
+        Boolean indicating of the bandwidth is trainable.
+        """
         return self._sigma_trainable
 
     @sigma_trainable.setter

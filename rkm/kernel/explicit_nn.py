@@ -12,7 +12,7 @@ from .explicit import explicit, base
 import torch
 
 
-@torch.jit.script
+
 @utils.extend_docstring(base)
 class explicit_nn(explicit):
     r"""
