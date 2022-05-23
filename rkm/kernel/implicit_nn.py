@@ -9,7 +9,10 @@ File containing the implicit kernel class.
 
 from .. import utils
 from .implicit import implicit, base
+import torch
 
+
+@torch.jit.script
 @utils.extend_docstring(base)
 class implicit_nn(implicit):
     r"""

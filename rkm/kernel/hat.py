@@ -12,6 +12,8 @@ from .implicit import implicit, base
 
 import torch
 
+
+@torch.jit.script
 @utils.extend_docstring(base)
 class hat(implicit):
     r"""

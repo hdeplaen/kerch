@@ -7,9 +7,12 @@ File containing the linear kernel class.
 @date: March 2021
 """
 
+import torch
 from .. import utils
 from .explicit import explicit, base
 
+
+@torch.jit.script
 @utils.extend_docstring(base)
 class linear(explicit):
     r"""

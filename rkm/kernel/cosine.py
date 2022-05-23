@@ -11,7 +11,10 @@ from .. import utils
 from .implicit import implicit, base
 
 from torch.nn.functional import cosine_similarity
+import torch
 
+
+@torch.jit.script
 @utils.extend_docstring(base)
 class cosine(implicit):
     r"""

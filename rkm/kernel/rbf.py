@@ -12,6 +12,7 @@ import torch
 from .. import utils
 from .implicit import implicit, base
 
+@torch.jit.script
 @utils.extend_docstring(base)
 class rbf(implicit):
     r"""
@@ -20,7 +21,10 @@ class rbf(implicit):
     .. math::
         k(x,y) = \exp\left( -\frac{\lVert x-y \rVert_2^2}{2\texttt{sigma}^2} \right).
 
-    :param sigma: Bandwidth of the polynomial kernel., defaults to 1.
+    :param sigma: Bandwidth :math:`\sigma` of the RBF kernel. If `None`, the value is filled by a heuristic on
+        the sample dataset: 7/10th of the median of the pairwise distances. Computing the heuristic on the full sample
+        dataset can be expensive and `idx_sample` or `prop_sample` could be specified to only compute it on a subset
+        only., defaults to `None`.
     :param sigma_trainable: `True` if the gradient of the bandwidth is to be computed. If so, a graph is computed
         and the bandwidth can be updated. `False` just leads to a static computation., defaults to `False`
     :type sigma: double, optional
@@ -28,16 +32,39 @@ class rbf(implicit):
     """
 
     @utils.kwargs_decorator(
-        {"sigma": 1., "sigma_trainable": False})
+        {"sigma": None, "sigma_trainable": False})
     def __init__(self, **kwargs):
         super(rbf, self).__init__(**kwargs)
 
-        self.sigma_trainable = kwargs["sigma_trainable"]
-        self.sigma = torch.nn.Parameter(
-            torch.tensor([kwargs["sigma"]], dtype=utils.FTYPE), requires_grad=self.sigma_trainable)
+        self._sigma_trainable = kwargs["sigma_trainable"]
+        sigma = kwargs["sigma"]
+        if sigma is None:
+            self._dmatrix()
+            self._sigma = None
+        else:
+            torch.nn.Parameter(
+                torch.tensor(kwargs["sigma"], dtype=utils.FTYPE), requires_grad=self._sigma_trainable)
 
     def __str__(self):
-        return f"RBF kernel (sigma: {str(self.sigma.data.cpu().numpy()[0])})"
+        return f"RBF kernel (sigma: {str(self.sigma.data.cpu().numpy())})"
+
+    @property
+    def sigma(self):
+        return self._sigma.data
+
+    @sigma.setter
+    def sigma(self, val):
+        self._reset()
+        self._sigma = val
+
+    @property
+    def sigma_trainable(self) -> bool:
+        return self._sigma_trainable
+
+    @sigma_trainable.setter
+    def sigma_trainable(self, val: bool):
+        self._sigma_trainable = val
+        self._sigma.requires_grad = self._sigma_trainable
 
     @property
     def params(self):
@@ -55,7 +82,13 @@ class rbf(implicit):
 
         diff = x_oos - x_sample
         norm2 = torch.sum(diff * diff, dim=0, keepdim=True)
-        fact = 1 / (2 * torch.abs(self.sigma) ** 2)
+
+        if self._sigma is None:
+            sigma = .7 * torch.median(norm2)
+            self._sigma = torch.nn.Parameter(
+                torch.tensor(sigma, dtype=utils.FTYPE), requires_grad=self._sigma_trainable)
+
+        fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(norm2, -fact))
 
         return output.squeeze(0)

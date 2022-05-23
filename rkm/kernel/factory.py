@@ -23,6 +23,8 @@ def factory(kernel_type='linear', **kwargs):
     from .explicit_nn import explicit_nn
     from .implicit_nn import implicit_nn
     from .cosine import cosine
+    from .additive_chi2 import additive_chi2
+    from .skewed_chi2 import skewed_chi2
 
     switcher = {"linear": linear,
                 "rbf": rbf,
@@ -30,10 +32,12 @@ def factory(kernel_type='linear', **kwargs):
                 "implicit": implicit_nn,
                 "polynomial": polynomial,
                 "sigmoid": sigmoid,
-                "indicator":  indicator,
+                "indicator": indicator,
                 "hat": hat,
                 "cosine": cosine,
-                "nystrom": nystrom}
+                "nystrom": nystrom,
+                "additive_chi2": additive_chi2,
+                "skewed_chi2": skewed_chi2}
     if kernel_type not in switcher:
         raise NameError("Invalid kernel type.")
     return switcher[kernel_type](**kwargs)

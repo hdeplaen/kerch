@@ -31,6 +31,14 @@ class base(nn.Module, metaclass=ABCMeta):
     :type centering: bool, optional
     :type num_sample: int, optional
     :type dim_sample: int, optional
+
+    :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
+        `idx_sample` and `prop_sample` are `None`., defaults to `None`
+    :type idx_sample: int[], optional
+    :param prop_sample: Instead of giving indices, specifying a proportion of the original sample set is also
+        possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
+        such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
+        `prop_sample` are `None`., defaults to `None`.
     """
 
     @abstractmethod
@@ -39,7 +47,9 @@ class base(nn.Module, metaclass=ABCMeta):
         "sample_trainable": False,
         "centering": False,
         "num_sample": 1,
-        "dim_sample": 1})
+        "dim_sample": 1,
+        "idx_sample": None,
+        "prop_sample": None})
     def __init__(self, **kwargs):
         super(base, self).__init__()
 
@@ -54,16 +64,7 @@ class base(nn.Module, metaclass=ABCMeta):
         else:
             self._dim_sample = kwargs["dim_sample"]
             self._num_sample = kwargs["num_sample"]
-        self.init_sample(input_sample)
-
-        self._K = None
-        self._K_mean = None
-        self._K_mean_tot = None
-        self._phi = None
-        self._C = None
-        self._phi_mean = None
-        self._idx_sample = None
-        self.stochastic()
+        self.init_sample(input_sample, kwargs["idx_sample"], kwargs["prop_sample"])
 
     @abstractmethod
     def __str__(self):
@@ -76,7 +77,7 @@ class base(nn.Module, metaclass=ABCMeta):
         """
         return {}
 
-    def _empty_cache(self):
+    def _reset(self):
         self._K = None
         self._K_mean = None
         self._K_mean_tot = None
@@ -143,25 +144,45 @@ class base(nn.Module, metaclass=ABCMeta):
             self.stochastic()
         return self
 
-    def stochastic(self, idx_sample=None):
+    def stochastic(self, idx_sample=None, prop_sample=None):
         """
         Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
         case of stochastic training.
 
-        :param idx_sample: Indices of the sample subset relative to the original sample set. If `None` is specified,
-            all samples are used and the subset equals the original sample set. This is also the default behavior if
-            this function is never called., defaults to `None`
+        :param idx_sample: Indices of the sample subset relative to the original sample set., defaults to `None`
         :type idx_sample: int[], optional
-        """
-        self._empty_cache()
-        if idx_sample is None:
-            self._idx_sample = self._all_sample()
-        else:
-            self._idx_sample = idx_sample
+        :param prop_sample: Instead of giving indices, passing a proportion of the original sample set is also
+            possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
+            such that :math:`0 <` `prop_sample` :math:`\leq 1`., defaults to `None`.
+        :type prop_sample: int, optional
 
-    def init_sample(self, sample=None):
+        If `None` is specified for both `idx_sample` and `prop_sample`, all samples are used and the subset equals the
+        original sample set. This is also the default behavior if this function is never called, nor the parameters
+        specified during initialization.
+
+        .. note::
+            Both `idx_sample` and `prop_sample` cannot be filled together as conflict would arise.
         """
-        Initializes the sample set.
+        self._reset()
+
+        assert idx_sample is None or prop_sample is None, "Both idx_sample and prop_sample are not None. " \
+                                                          "Please choose one non-None parameter only."
+
+        if idx_sample is not None:
+            self._idx_sample = idx_sample
+        elif prop_sample is not None:
+            assert prop_sample <= 1., 'Parameter prop_sample: the chosen proportion cannot be greater than 1.'
+            assert prop_sample > 0., 'Parameter prop_sample: the chosen proportion must be strictly greater than 0.'
+            n = self.num_sample
+            k = torch.round(n * prop_sample)
+            perm = torch.randperm(n)
+            self._idx_sample = perm[:k]
+        else:
+            self._idx_sample = self._all_sample()
+
+    def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
+        r"""
+        Initializes the sample set (and the stochastic indices).
 
         :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it
             will be given relative to these samples. In case of overwriting a current sample, `num_sample` and
@@ -169,9 +190,16 @@ class base(nn.Module, metaclass=ABCMeta):
             to `num_sample` and `dim_sample` specified during the construction. If a previous sample set has been used,
             it will keep the same dimension by consequence., defaults to `None`
         :type sample: Tensor, optional
+        :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
+            `idx_sample` and `prop_sample` are `None`., defaults to `None`
+        :type idx_sample: int[], optional
+        :param prop_sample: Instead of giving indices, specifying a proportion of the original sample set is also
+            possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
+        such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
+            `prop_sample` are `None`., defaults to `None`.
         """
         sample = utils.castf(sample)
-        self._empty_cache()
+        self.stochastic(idx_sample)
 
         if sample is not None:
             self._num_sample, self._dim_sample = sample.shape
@@ -191,10 +219,10 @@ class base(nn.Module, metaclass=ABCMeta):
         :param idx_sample: Indices of the samples to be updated. All indices are considered if `None`., defaults to
             `None`
         :type sample_values: Tensor
-        :type idx_sample: int(), optional
+        :type idx_sample: int[], optional
         """
         sample_values = utils.castf(sample_values)
-        self._empty_cache()
+        self._reset()
 
         # use all indices if unspecified
         if idx_sample is None:
@@ -231,9 +259,9 @@ class base(nn.Module, metaclass=ABCMeta):
     #     raise NotImplementedError
     #     self._sample.gather(dim=0, index=idxs, out=self._sample)
 
-###################################################################################################
-################################### MATHS ARE HERE ################################################
-###################################################################################################
+    ###################################################################################################
+    ################################### MATHS ARE HERE ################################################
+    ###################################################################################################
 
     @abstractmethod
     def _implicit(self, x_oos=None, x_sample=None):

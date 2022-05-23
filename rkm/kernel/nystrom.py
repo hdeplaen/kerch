@@ -14,6 +14,8 @@ from .. import utils
 from .explicit import explicit, base
 from .factory import factory
 
+
+@torch.jit.script
 @utils.extend_docstring(base)
 class nystrom(explicit):
     r"""

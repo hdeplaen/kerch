@@ -12,6 +12,7 @@ from .base import base
 
 import torch
 
+@torch.jit.script
 @utils.extend_docstring(base)
 class polynomial(base):
     r"""
@@ -35,11 +36,29 @@ class polynomial(base):
     def __init__(self, **kwargs):
         super(polynomial, self).__init__(**kwargs)
 
-        self.degree_trainable = kwargs["degree_trainable"]
-        self.degree = torch.nn.Parameter(torch.tensor(kwargs["degree"]), requires_grad=self.degree_trainable)
+        self._degree_trainable = kwargs["degree_trainable"]
+        self._degree = torch.nn.Parameter(torch.tensor(kwargs["degree"]), requires_grad=self.degree_trainable)
 
     def __str__(self):
         return f"polynomial kernel of order {int(self.degree.data)}"
+
+    @property
+    def degree(self):
+        return self._degree.data
+
+    @degree.setter
+    def degree(self, val):
+        self._reset()
+        self._degree.data = val
+
+    @property
+    def degree_trainable(self):
+        return self._degree_trainable
+
+    @degree_trainable.setter
+    def degree_trainable(self, val: bool):
+        self._degree_trainable = val
+        self.degree.requires_grad = self._degree_trainable
 
     @property
     def params(self):
@@ -54,14 +73,5 @@ class polynomial(base):
         return (x_oos.T @ x_sample + 1) ** self.degree
 
     def _explicit(self, x=None):
-        # A primal representation is technically possible here (we will only consider the dual representation now).
-        # raise rkm.PrimalError
-
-        # if self.degree == 1.:
-        #     return super(PolynomialKernel, self)._explicit(x)
-        # elif self.degree == 2.:
-        #     return 0
-        # else:
-        #     pass
-
+        assert (self.degree % 1) == 0, 'Explicit formulation is only possible for degrees that are natural numbers.'
         raise NotImplementedError
