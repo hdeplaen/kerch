@@ -2,6 +2,7 @@ rkm
 ===
 
 .. toctree::
-   :maxdepth: 4
+    :glob:
+    :maxdepth: 4
 
-   rkm.kernel
+    kernel/*

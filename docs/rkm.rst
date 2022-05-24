@@ -8,8 +8,8 @@ Subpackages
     :maxdepth: 4
     :glob:
 
-   .kernel/rkm.kernel
-   rkm.utils
+    kernel/rkm.kernel
+    rkm.utils
 
 Module contents
 ---------------

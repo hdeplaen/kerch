@@ -3,19 +3,26 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-RKM documentation
-=================
+=========================
+Welcome to the RKM pakage
+=========================
+
+This package is meant for various kernel-based operations. For the moment,
+only the kernel module is available, but a lot of models will follow soon.
+If you experience any bug, please let me now: this is only a pre-alpha version.
+
+.. include:: install.rst
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Modules
+   :glob:
 
-   rkm.kernel
+   kernel/rkm.kernel
 
 
-..
-   Indices and tables
-   ==================
+Indices and tables
+==================
 
    * :ref:`genindex`
    * :ref:`modindex`
