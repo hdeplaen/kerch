@@ -18,7 +18,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         be given relative to these samples., defaults to `None`
     :param sample_trainable: `True` if the gradients of the sample points are to be computed. If so, a graph is
         computed and the sample can be updated. `False` just leads to a static computation., defaults to `False`
-    :param centering: `True` if any implicit feature or kernel is must be centered, `False` otherwise. The centering
+    :param center: `True` if any implicit feature or kernel is must be centered, `False` otherwise. The center
         is always performed relative to a statistic on the sample., defaults to `False`
     :param num_sample: Number of sample points. This parameter is neglected if `sample` is not `None` and overwritten by
         the number of points contained in sample., defaults to 1
@@ -27,7 +27,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
 
     :type sample: Tensor(num_sample, dim_sample), optional
     :type sample_trainable: bool, optional
-    :type centering: bool, optional
+    :type center: bool, optional
     :type num_sample: int, optional
     :type dim_sample: int, optional
 
@@ -44,7 +44,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     @utils.kwargs_decorator({
         "sample": None,
         "sample_trainable": False,
-        "centering": False,
+        "center": False,
+        "normalize": False,
         "num_sample": 1,
         "dim_sample": 1,
         "idx_sample": None,
@@ -53,10 +54,21 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         super(base, self).__init__()
 
         self.sample_trainable = kwargs["sample_trainable"]
-        self._centering = kwargs["centering"]
+        self._center = kwargs["center"]
+
+        normalize = kwargs["normalize"]
+        if normalize is True or normalize is False:
+            self._eps = 1.e-8
+            self._normalize = normalize
+        else:
+            self._eps = normalize
+            self._normalize = True
 
         input_sample = kwargs["sample"]
         input_sample = utils.castf(input_sample)
+
+        self._eps = 1.e-8
+
 
         if input_sample is not None:
             self._num_sample, self._dim_sample = input_sample.shape
@@ -80,9 +92,11 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         self._K = None
         self._K_mean = None
         self._K_mean_tot = None
+        self._K_norm = None
         self._phi = None
         self._C = None
         self._phi_mean = None
+        self._phi_norm = None
 
     @property
     def dim_sample(self):
@@ -107,6 +121,30 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         return len(self._idx_sample)
 
     @property
+    def center(self) -> bool:
+        r"""
+        Indicates if the kernel has to be centered. Changing this value leads to a recomputation of the statistics.
+        """
+        return self._center
+
+    @center.setter
+    def center(self, val:bool):
+        self._center = val
+        self._reset()
+
+    @property
+    def normalize(self) -> bool:
+        r"""
+        Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.
+        """
+        return self._center
+
+    @normalize.setter
+    def normalize(self, val: bool):
+        self._normalize = val
+        self._reset()
+
+    @property
     def idx(self):
         r"""
         Indices of the selected datapoints of the sample set when performing various operations. This is only relevant
@@ -120,7 +158,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         Dictionnary containing the hyperparameters and their values. This can be relevant for monitoring.
         """
         return {"Trainable Kernels": self.sample_trainable,
-                "Centering": self._centering}
+                "center": self._center}
 
     @property
     def sample(self):
@@ -130,7 +168,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         return self._sample.data
 
     def _all_sample(self):
-        return range(self.num_sample())
+        return range(self.num_sample)
 
     def train(self, mode=True):
         r"""
@@ -198,7 +236,6 @@ class base(torch.nn.Module, metaclass=ABCMeta):
             `prop_sample` are `None`., defaults to `None`.
         """
         sample = utils.castf(sample)
-        self.stochastic(idx_sample)
 
         if sample is not None:
             self._num_sample, self._dim_sample = sample.shape
@@ -208,6 +245,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
             self._sample = torch.nn.Parameter(
                 torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_sample), dtype=utils.FTYPE)),
                 requires_grad=self.sample_trainable)
+
+        self.stochastic(idx_sample, prop_sample)
 
     def update_sample(self, sample_values, idx_sample=None):
         r"""
@@ -263,18 +302,38 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     ###################################################################################################
 
     @abstractmethod
-    def _implicit(self, x_oos=None, x_sample=None):
-        # implicit without centering
-        # explicit without centering
-        if x_oos is None:
-            x_oos = self._sample[self._idx_sample, :]
-        if x_sample is None:
-            x_sample = self._sample[self._idx_sample, :]
-        return x_oos, x_sample
+    def _implicit(self, oos1=None, oos2=None):
+        # implicit without center
+        # explicit without center
+        if oos1 is None:
+            oos1 = self._sample[self._idx_sample, :]
+        if oos2 is None:
+            oos2 = self._sample[self._idx_sample, :]
+        return oos1, oos2
+
+    def _implicit_self(self, x=None):
+        K = self.k(x,x, center=False, normalize=False)
+        return torch.trace(K)
+
+    def _compute_K_norm(self, center, x=None):
+        r"""
+        Computes the kernel norm given a sample.
+        """
+        if x is None and self._K_norm is None and center==self._center:
+            self._K_norm = torch.sqrt(self._implicit_self())[:, None]
+            return self._K_norm
+        else:
+            return torch.sqrt(self._implicit_self(x))[:, None]
+
+    def _normalize_K(self, K, center, oos1=None, oos2=None):
+        n_oos1 = self._compute_K_norm(center, oos1)
+        n_oos2 = self._compute_K_norm(center, oos2).T
+        N = n_oos1 * n_oos2
+        return K / torch.clamp(N, min=1.e-8)
 
     @abstractmethod
     def _explicit(self, x=None):
-        # explicit without centering
+        # explicit without center
         if x is None:
             x = self._sample[self._idx_sample, :]
         return x
@@ -287,24 +346,22 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         :param idx_kernels: Index of the support vectors used to compute the kernel matrix. If nothing is provided, the kernel uses all_kernels of them.
         :return: Kernel matrix.
         """
-        if self._K is None and not implicit:
-            if self._idx_sample is None:
-                self.stochastic()
+        if self._K is None:
+            if implicit:
+                phi = self.phi()
+                self._K = phi @ phi.T
+            else:
+                self._K = self._implicit()
 
-            # self._k = self._implicit(self.kernels.gather(0, self._idx_kernels))
-            self._K = self._implicit()
-
-            if self._centering:
-                n = self.num_sample()
-                self._K_mean = torch.mean(self._K, dim=0)
-                self._K_mean_tot = torch.mean(self._K, dim=(0, 1))
-                self._K = self._K - self._K_mean.expand(n, n) \
-                          - self._K_mean.expand(n, n).t() \
-                          + self._K_mean_tot
-
-        elif self._K is None and implicit:
-            phi = self.phi()
-            self._K = phi @ phi.T
+                # centering in the implicit case happens ad hoc
+                if self._center:
+                    self._K_mean = torch.mean(self._K, dim=0, keepdim=True)
+                    self._K_mean_tot = torch.mean(self._K, dim=(0, 1), keepdim=True)
+                    self._K = self._K - self._K_mean \
+                              - self._K_mean.T \
+                              + self._K_mean_tot
+                if self._normalize:
+                    self._K = self._normalize_K(self._K)
 
         return self._K
 
@@ -314,90 +371,119 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         Its size is output * output.
         """
         if self._C is None:
-            if self._idx_sample is None:
-                self.stochastic()
-
             self._phi = self._explicit()
 
-            if self._centering:
+            if self._center:
                 self._phi_mean = torch.mean(self._phi, dim=0)
                 self._phi = self._phi - self._phi_mean
+            if self._normalize:
+                self._phi_norm = torch.sqrt(torch.norm(self._phi, dim=1, keepdim=True))
+                self._phi = self._phi / self._phi_norm
             self._C = self._phi.T @ self._phi
-        return self._C
+        return self._C, self._phi
 
-    def phi(self, x=None):
+    def phi(self, x=None, center=None, normalize=None):
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the specified points.
 
         :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
             defaults to `None`
         :type x: Tensor(,dim_sample), optional
+        :param center: Returns if the matrix has to be centered or not. If None, then the default value used during
+            construction is used., defaults to None
+        :param normalize: Returns if the matrix has to be normalized or not. If None, then the default value used during
+            construction is used., defaults to None
+        :type center: bool, optional
+        :type normalize: bool, optional
         :raises: PrimalError
         """
 
         # if x is None, phi(x) for x in the sample is returned.
-        x = utils.castf(x)
+        if center is None:
+            center = self._center
+        if normalize is None:
+            normalize = self._normalize
 
         self._compute_C()
 
+        x = utils.castf(x)
         phi = self._explicit(x)
-        if self._centering:
+        if center:
             phi = phi - self._phi_mean
+        if normalize:
+            phi = phi / torch.sqrt(torch.norm(phi, dim=1, keepdim=True))
 
         return phi
 
-    def k(self, x_oos=None, x_sample=None, implicit=False):
+    def k(self, oos1=None, oos2=None, implicit=False, center=None, normalize=None):
         """
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
         .. math::
             K = [k(x_i,y_j)]_{i,j=1}^{N,M},
 
-        with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`x_oos`) and :math:`\{y_i\}_{j=1}^N` the sample points
-        (`x_sample`).
+        with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`oos1`) and :math:`\{y_i\}_{j=1}^N` the sample points
+        (`oos2`).
 
-        The case of centered kernels requires a particular discussion.
+        .. note::
+            In the case of centered kernels, this computation is more expensive as it requires to center according to
+            the sample dataset, which implies computing a statistic on the out-of-sample kernel matrix and thus
+            also computing it.
 
-        :param x_oos: Out-of-sample points. If `None`, the default sample will be used., defaults to `None`
-        :param x_sample: If `None`, the default sample is used. If not, the kernel matrix is computed relatively to
-            another sample. This allows for a full out-of-sample matrix in both dimensions. It has no links with the
-            original sample unless the statistic used for centering if relevant. If the kernel only exists in an
-            implicit formulation and is centered, this will return an error as the centering consistent with the
-            original sample is untractable then. One may use a Nyström kernel to force the existence of an explicit
-            feature map., defaults to `None`
+        :param oos1: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
+        :param oos2: Out-of-sample points (second dimension). If `None`, the default sample will be used., defaults to `None`
 
-        :type x_oos: Tensor(N,dim_sample), optional
-        :type x_sample: Tensor(M,dim_sample), optional
+        :type oos1: Tensor(N,dim_sample), optional
+        :type oos2: Tensor(M,dim_sample), optional
+
+        :param center: Returns if the matrix has to be centered or not. If None, then the default value used during
+            construction is used., defaults to None
+        :param normalize: Returns if the matrix has to be normalized or not. If None, then the default value used during
+            construction is used., defaults to None
+        :type center: bool, optional
+        :type normalize: bool, optional
 
         :return: Kernel matrix
         :rtype: Tensor(N,M)
 
         :raises: PrimalError
         """
-        x_oos = utils.castf(x_oos)
-        x_sample = utils.castf(x_sample)
+        if center is None:
+            center = self._center
+        if normalize is None:
+            normalize = self._normalize
 
-        if x_oos is None and x_sample is None:
-            return self._compute_K(implicit=implicit)
-
-        if x_sample is not None and not implicit and self._centering:
-            raise NameError(
-                "Impossible to compute centered out-of-sample to out-of-sample kernels for implicit-defined kernels as the centering statistic is only defined on the sample.")
+        oos1 = utils.castf(oos1)
+        oos2 = utils.castf(oos2)
 
         if implicit:
             self._compute_C()
-            phi_sample = self.phi(x_sample)
-            phi_oos = self.phi(x_oos)
-            Ky = phi_oos @ phi_sample.T
+            phi_sample = self.phi(oos2, center, normalize)
+            phi_oos = self.phi(oos1, center, normalize)
+            return phi_oos @ phi_sample.T
         else:
             self._compute_K()
-            Ky = self._implicit(x_oos, x_sample)
-            if self._centering:
-                Ky = Ky - torch.mean(Ky, dim=1, keepdim=True).expand(-1, Ky.shape[1])
-                Ky = Ky - self._K_mean
-                Ky = Ky + self._K_mean_tot
 
-        return Ky
+        K = self._implicit(oos1, oos2)
+        if center:
+            if oos1 is not None:
+                K_oos1_sample = self._implicit(oos1)
+                m_oos1_sample = torch.mean(K_oos1_sample, dim=1, keepdim=True)
+            else:
+                m_oos1_sample = self._K_mean
+
+            if oos2 is not None:
+                K_oos2_sample = self._implicit(oos2)
+                m_oos2_sample = torch.mean(K_oos2_sample, dim=1, keepdim=True)
+            else:
+                m_oos2_sample = self._K_mean
+
+            K = K - m_oos1_sample \
+                  - m_oos2_sample.T \
+                  + self._K_mean_tot
+        if normalize:
+            K = self._normalize_K(center, oos1, oos2)
+        return K
 
     def forward(self, x, representation="dual"):
         """
@@ -430,9 +516,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     @property
     def K(self):
         r"""
-        Returns the kernel matrix on the sample dataset. Same result as calling :py:func:`k()`, but faster as no assertions
-        and tests have to be performed. It is loaded from memory if already computed and unchanged since then, to avoid
-        re-computation when reccurently called.
+        Returns the kernel matrix on the sample dataset. Same result as calling :py:func:`k()`, but faster.
+        It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+        called.
 
         .. math::
             K_{ij} = k(x_i,x_j).
@@ -453,7 +539,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     def phi_sample(self):
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling
-        :py:func:`phi()`, but faster as no assertions or tests have to be performed. It is loaded from memory if
-        already computed and unchanged since then, to avoid re-computation when reccurently called.
+        :py:func:`phi()`, but faster.
+        It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+        called.
         """
         return self._compute_C()[1]

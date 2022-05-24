@@ -24,9 +24,9 @@ class explicit(base, metaclass=ABCMeta):
     def __str__(self):
         return f"Explicit kernel."
 
-    def _implicit(self, x_oos=None, x_sample=None):
-        phi_oos = self._explicit(x_oos)
-        phi_sample = self._explicit(x_sample)
+    def _implicit(self, oos1=None, oos2=None):
+        phi_oos = self._explicit(oos1)
+        phi_sample = self._explicit(oos2)
         return phi_oos @ phi_sample.T
 
     @abstractmethod
@@ -36,5 +36,5 @@ class explicit(base, metaclass=ABCMeta):
     def _compute_K(self, implicit=True):
         return super(explicit, self)._compute_K(implicit)
 
-    def k(self, x_oos=None, x_sample=None, implicit=True):
-        return super(explicit, self).k(x_oos, x_sample, implicit)
+    def k(self, oos1=None, oos2=None, implicit=True):
+        return super(explicit, self).k(oos1, oos2, implicit)

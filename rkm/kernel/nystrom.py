@@ -27,19 +27,24 @@ class nystrom(explicit):
         instability. If `None`, the value will be assigned to `num_sample`., defaults to `None`
     :param base_type: The type of kernel on which the explicit feature map is going to be constructed., defaults to
         `"rbf"`
-    :param base_centering: Specifies if the base kernel has to be centered., defaults to `True`
+    :param base_center: Specifies if the base kernel has to be centered. This is redundant and can be directly handled
+        by the Nystrom kernel itself. It is only added for completeness., defaults to `False`
+    :param base_normalize: Specifies if the base kernel has to be normalized., This is redundant and can be directly
+        handled by the Nystrom kernel itself. It is only added for completeness., defaults to `False`
     :param \**kwargs: Other arguments for the base kernel (e.g. the bandwidth for an RBF kernel, the degree for a
         polynomial kernel etc.). For the default values, please refer to the requested class in question.
     :type dim: int, optional
     :type \**kwargs: dict, optional
     :type base_type: str, optional
-    :type base_centering: bool, optional
+    :type base_center: bool, optional
+    :type base_normalize: bool, optional
     """
 
     @utils.kwargs_decorator({
         "dim": None,
         "base_type": "rbf",
-        "base_centering": True
+        "base_center": False,
+        "base_normalize": False
     })
     def __init__(self, **kwargs):
         assert kwargs["base_type"] != "nystrom", 'Cannot create a Nyström kernel based on another Nyström kernel.'
@@ -47,7 +52,8 @@ class nystrom(explicit):
         super(nystrom, self).__init__(**kwargs)
 
         self._internal_kernel = factory(**{**kwargs,
-                                            "centering": kwargs["base_centering"],
+                                            "center": kwargs["base_center"],
+                                            "normalize": kwargs["base_normalize"],
                                             "kernel_type": kwargs["base_type"]})
 
         self.dim = kwargs["dim"]

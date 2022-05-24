@@ -19,10 +19,10 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url='https://github.com/hdeplaen/rkm',
     project_urls = {
+        "Documentation": "https://hdeplaen.github.io/rkm",
+        "Bug Tracker": "https://github.com/hdeplaen/rkm/issues",
         "E-DUALITY": "https://www.esat.kuleuven.be/stadius/E/",
-        "ESAT-STADIUS": "https://www.esat.kuleuven.be/stadius/",
-        "Documentation": None,
-        "Bug Tracker": "https://github.com/hdeplaen/rkm/issues"
+        "ESAT-STADIUS": "https://www.esat.kuleuven.be/stadius/"
     },
     license=license,
     install_requires=requirements,

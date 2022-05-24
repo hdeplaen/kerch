@@ -37,14 +37,14 @@ class additive_chi2(implicit):
     def hparams(self):
         return {"Kernel": "Additive Chi Squared", **super(additive_chi2, self).hparams}
 
-    def _implicit(self, x_oos=None, x_sample=None):
-        x_oos, x_sample = super(additive_chi2, self)._implicit(x_oos, x_sample)
+    def _implicit(self, oos1=None, oos2=None):
+        oos1, oos2 = super(additive_chi2, self)._implicit(oos1, oos2)
 
-        x_oos = x_oos.T[:, :, None]
-        x_sample = x_sample.T[:, None, :]
+        oos1 = oos1.T[:, :, None]
+        oos2 = oos2.T[:, None, :]
 
-        prod = x_oos * x_sample
-        sum = x_oos + x_sample
+        prod = oos1 * oos2
+        sum = oos1 + oos2
         output = torch.sum(2 * prod / sum, dim=0, keepdim=True)
 
         return output.squeeze(0)

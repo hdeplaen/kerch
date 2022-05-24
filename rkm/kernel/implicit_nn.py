@@ -48,8 +48,8 @@ class implicit_nn(implicit):
     def hparams(self):
         return {"Kernel": "Implicit", **super(implicit_nn, self).hparams}
 
-    def _implicit(self, x_oos=None, x_sample=None):
+    def _implicit(self, oos1=None, oos2=None):
         raise NotImplementedError
 
-        # x_oos, x_sample = super(ImplicitKernel, self)._implicit(x_oos, x_sample)
-        # return self._network(x_oos, x_sample)
+        # oos1, oos2 = super(ImplicitKernel, self)._implicit(oos1, oos2)
+        # return self._network(oos1, oos2)

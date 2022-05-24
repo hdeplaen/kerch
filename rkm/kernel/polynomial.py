@@ -74,9 +74,9 @@ class polynomial(base):
     def hparams(self):
         return {"Kernel": "Polynomial"}
 
-    def _implicit(self, x_oos=None, x_sample=None):
-        x_oos, x_sample = super(polynomial, self)._implicit(x_oos, x_sample)
-        return (x_oos.T @ x_sample + 1) ** self.degree
+    def _implicit(self, oos1=None, oos2=None):
+        oos1, oos2 = super(polynomial, self)._implicit(oos1, oos2)
+        return (oos1.T @ oos2 + 1) ** self.degree
 
     def _explicit(self, x=None):
         assert (self.degree % 1) == 0, 'Explicit formulation is only possible for degrees that are natural numbers.'

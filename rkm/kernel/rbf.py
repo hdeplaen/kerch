@@ -42,7 +42,7 @@ class rbf(implicit):
             self._compute_K()
             self._sigma = None
         else:
-            torch.nn.Parameter(
+            self._sigma = torch.nn.Parameter(
                 torch.tensor(kwargs["sigma"], dtype=utils.FTYPE), requires_grad=self._sigma_trainable)
 
     def __str__(self):
@@ -80,13 +80,13 @@ class rbf(implicit):
     def hparams(self):
         return {"Kernel": "RBF", "Trainable sigma": self.sigma_trainable, **super(rbf, self).hparams}
 
-    def _implicit(self, x_oos=None, x_sample=None):
-        x_oos, x_sample = super(rbf, self)._implicit(x_oos, x_sample)
+    def _implicit(self, oos1=None, oos2=None):
+        oos1, oos2 = super(rbf, self)._implicit(oos1, oos2)
 
-        x_oos = x_oos.T[:, :, None]
-        x_sample = x_sample.T[:, None, :]
+        oos1 = oos1.T[:, :, None]
+        oos2 = oos2.T[:, None, :]
 
-        diff = x_oos - x_sample
+        diff = oos1 - oos2
         norm2 = torch.sum(diff * diff, dim=0, keepdim=True)
 
         if self._sigma is None:

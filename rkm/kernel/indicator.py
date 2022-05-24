@@ -97,13 +97,13 @@ class indicator(implicit):
             self._gamma.data = 2 * self.lag + 1
         return self._gamma
 
-    def _implicit(self, x_oos=None, x_sample=None):
-        x_oos, x_sample = super(indicator, self)._implicit(x_oos, x_sample)
+    def _implicit(self, oos1=None, oos2=None):
+        oos1, oos2 = super(indicator, self)._implicit(oos1, oos2)
 
-        x_oos = x_oos.T[:, :, None]
-        x_sample = x_sample.T[:, None, :]
+        oos1 = oos1.T[:, :, None]
+        oos2 = oos2.T[:, None, :]
 
-        diff = (x_oos - x_sample).squeeze()
+        diff = (oos1 - oos2).squeeze()
         assert len(diff.shape) == 2, 'Indicator kernel is only defined for 1-dimensional entries.'
 
         output = (torch.abs(diff) <= self.lag).type(dtype=utils.FTYPE)

@@ -8,3 +8,4 @@ tqdm
 nested_dict
 tensorboard
 torchvision
+logging

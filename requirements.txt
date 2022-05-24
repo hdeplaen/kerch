@@ -1,9 +1,5 @@
 torch
-
-
 numpy
-matplotlib
-torch
 pyyaml
 scikit-learn
 pandas

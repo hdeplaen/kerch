@@ -56,13 +56,13 @@ class hat(implicit):
     def hparams(self):
         return {"Kernel": "Hat", **super(hat, self).hparams}
 
-    def _implicit(self, x_oos=None, x_sample=None):
-        x_oos, x_sample = super(hat, self)._implicit(x_oos, x_sample)
+    def _implicit(self, oos1=None, oos2=None):
+        oos1, oos2 = super(hat, self)._implicit(oos1, oos2)
 
-        x_oos = x_oos[:, :, None]
-        x_sample = x_sample[:, None, :]
+        oos1 = oos1[:, :, None]
+        oos2 = oos2[:, None, :]
 
-        diff = (x_oos-x_sample).squeeze()
+        diff = (oos1-oos2).squeeze()
         assert len(diff.shape) == 2, 'Hat kernel is only defined for 1-dimensional entries.'
 
         output = self.lag + 1 - torch.abs(diff)
