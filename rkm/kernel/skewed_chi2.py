@@ -51,14 +51,14 @@ class skewed_chi2(implicit):
     def hparams(self):
         return {"Kernel": "Skewed Chi Squred", "Trainable c": self._c_trainable, **super(skewed_chi2, self).hparams}
 
-    def _implicit(self, oos1=None, oos2=None):
-        oos1, oos2 = super(skewed_chi2, self)._implicit(oos1, oos2)
+    def _implicit(self, x=None, y=None):
+        x, y = super(skewed_chi2, self)._implicit(x, y)
 
-        oos1 = oos1.T[:, :, None]
-        oos2 = oos2.T[:, None, :]
+        x = x.T[:, :, None]
+        y = y.T[:, None, :]
 
-        prod = torch.sqrt(oos1 + self.c) * torch.sqrt(oos2 + self.c)
-        sum = oos1 + oos2 + 2 * self.c
+        prod = torch.sqrt(x + self.c) * torch.sqrt(y + self.c)
+        sum = x + y + 2 * self.c
         output = torch.prod(2 * prod / sum, dim=0, keepdim=True)
 
         return output.squeeze(0)

@@ -11,6 +11,7 @@ from .. import utils
 from .linear import linear, base
 
 import torch
+import logging
 
 
 
@@ -28,7 +29,8 @@ class cosine(linear):
 
     def __init__(self, **kwargs):
         super(cosine, self).__init__(**kwargs)
-        self.normalize = True
+        self._is_normalized = True
+        self._normalize = False
 
     def __str__(self):
         return "Cosine kernel."
@@ -36,3 +38,15 @@ class cosine(linear):
     @property
     def hparams(self):
         return {"Kernel": "Cosine", **super(cosine, self).hparams}
+
+    @property
+    def normalize(self) -> bool:
+        r"""
+        Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.
+        """
+        return self._is_normalized
+
+    @normalize.setter
+    def normalize(self, val: bool):
+        logging.info('Changing the normalization has not effect on the cosine kernel as it is always normalized by '
+                     'definition')

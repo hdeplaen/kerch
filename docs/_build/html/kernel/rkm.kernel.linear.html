@@ -85,7 +85,9 @@
 be given relative to these samples., defaults to <cite>None</cite></p></li>
 <li><p><strong>sample_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
 computed and the sample can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
-<li><p><strong>centering</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if any implicit feature or kernel is must be centered, <cite>False</cite> otherwise. The centering
+<li><p><strong>center</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if any implicit feature or kernel is must be centered, <cite>False</cite> otherwise. The center
+is always performed relative to a statistic on the sample., defaults to <cite>False</cite></p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if any implicit feature or kernel is must be normalized, <cite>False</cite> otherwise. The center
 is always performed relative to a statistic on the sample., defaults to <cite>False</cite></p></li>
 <li><p><strong>num_sample</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of sample points. This parameter is neglected if <cite>sample</cite> is not <cite>None</cite> and overwritten by
 the number of points contained in sample., defaults to 1</p></li>
@@ -111,11 +113,17 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.linear.K">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><a class="headerlink" href="#rkm.kernel.linear.K" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.linear.k" title="rkm.kernel.linear.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster as no assertions
-and tests have to be performed. It is loaded from memory if already computed and unchanged since then, to avoid
-re-computation when reccurently called.</p>
+<dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.linear.k" title="rkm.kernel.linear.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
+It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+called.</p>
 <div class="math notranslate nohighlight">
 \[K_{ij} = k(x_i,x_j).\]</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rkm.kernel.linear.center">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.linear.center" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates if the kernel has to be centered. Changing this value leads to a recomputation of the statistics.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -183,23 +191,27 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rkm.kernel.linear.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_oos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.linear.k" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.linear.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
-<p>with <span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^N\)</span> the out-of-sample points (<cite>x_oos</cite>) and <span class="math notranslate nohighlight">\(\{y_i\}_{j=1}^N\)</span> the sample points
-(<cite>x_sample</cite>).</p>
-<p>The case of centered kernels requires a particular discussion.</p>
+<p>with <span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^N\)</span> the out-of-sample points (<cite>x</cite>) and <span class="math notranslate nohighlight">\(\{y_i\}_{j=1}^N\)</span> the sample points
+(<cite>y</cite>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the case of centered kernels, this computation is more expensive as it requires to center according to
+the sample dataset, which implies computing a statistic on the out-of-sample kernel matrix and thus
+also computing it.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x_oos</strong> (<em>Tensor</em><em>(</em><em>N</em><em>,</em><em>dim_sample</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points. If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p></li>
-<li><p><strong>x_sample</strong> (<em>Tensor</em><em>(</em><em>M</em><em>,</em><em>dim_sample</em><em>)</em><em>, </em><em>optional</em>) – If <cite>None</cite>, the default sample is used. If not, the kernel matrix is computed relatively to
-another sample. This allows for a full out-of-sample matrix in both dimensions. It has no links with the
-original sample unless the statistic used for centering if relevant. If the kernel only exists in an
-implicit formulation and is centered, this will return an error as the centering consistent with the
-original sample is untractable then. One may use a Nyström kernel to force the existence of an explicit
-feature map., defaults to <cite>None</cite></p></li>
+<li><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>N</em><em>,</em><em>dim_sample</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p></li>
+<li><p><strong>y</strong> (<em>Tensor</em><em>(</em><em>M</em><em>,</em><em>dim_sample</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (second dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p></li>
+<li><p><strong>center</strong> (<em>bool</em><em>, </em><em>optional</em>) – Returns if the matrix has to be centered or not. If None, then the default value used during
+construction is used., defaults to None</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Returns if the matrix has to be normalized or not. If None, then the default value used during
+construction is used., defaults to None</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -212,6 +224,12 @@ feature map., defaults to <cite>None</cite></p></li>
 <dd class="field-even"><p>PrimalError</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rkm.kernel.linear.normalize">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.linear.normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -235,12 +253,18 @@ the case of stochastic training.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rkm.kernel.linear.phi">
-<span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.linear.phi" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.linear.phi" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the specified points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>,</em><em>dim_sample</em><em>)</em><em>, </em><em>optional</em>) – The datapoints serving as input of the explicit feature map. If <cite>None</cite>, the sample will be used.,
-defaults to <cite>None</cite></p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>,</em><em>dim_sample</em><em>)</em><em>, </em><em>optional</em>) – The datapoints serving as input of the explicit feature map. If <cite>None</cite>, the sample will be used.,
+defaults to <cite>None</cite></p></li>
+<li><p><strong>center</strong> (<em>bool</em><em>, </em><em>optional</em>) – Returns if the matrix has to be centered or not. If None, then the default value used during
+construction is used., defaults to None</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Returns if the matrix has to be normalized or not. If None, then the default value used during
+construction is used., defaults to None</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p>PrimalError</p>
@@ -252,8 +276,9 @@ defaults to <cite>None</cite></p>
 <dt class="sig sig-object py" id="rkm.kernel.linear.phi_sample">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phi_sample</span></span><a class="headerlink" href="#rkm.kernel.linear.phi_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the sample datapoints. Same as calling
-<a class="reference internal" href="#rkm.kernel.linear.phi" title="rkm.kernel.linear.phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code></a>, but faster as no assertions or tests have to be performed. It is loaded from memory if
-already computed and unchanged since then, to avoid re-computation when reccurently called.</p>
+<a class="reference internal" href="#rkm.kernel.linear.phi" title="rkm.kernel.linear.phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code></a>, but faster.
+It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+called.</p>
 </dd></dl>
 
 <dl class="py property">

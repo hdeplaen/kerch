@@ -20,6 +20,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         computed and the sample can be updated. `False` just leads to a static computation., defaults to `False`
     :param center: `True` if any implicit feature or kernel is must be centered, `False` otherwise. The center
         is always performed relative to a statistic on the sample., defaults to `False`
+    :param normalize: `True` if any implicit feature or kernel is must be normalized, `False` otherwise. The center
+        is always performed relative to a statistic on the sample., defaults to `False`
     :param num_sample: Number of sample points. This parameter is neglected if `sample` is not `None` and overwritten by
         the number of points contained in sample., defaults to 1
     :param dim_sample: Dimension of each sample point. This parameter is neglected if `sample` is not `None` and
@@ -28,6 +30,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     :type sample: Tensor(num_sample, dim_sample), optional
     :type sample_trainable: bool, optional
     :type center: bool, optional
+    :type normalize: bool, optional
     :type num_sample: int, optional
     :type dim_sample: int, optional
 
@@ -63,6 +66,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         else:
             self._eps = normalize
             self._normalize = True
+
+        # It may be that some kernels are naturally normalized and don't need the additional computation
+        self._is_normalized = self._normalize
 
         input_sample = kwargs["sample"]
         input_sample = utils.castf(input_sample)
@@ -137,7 +143,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         r"""
         Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.
         """
-        return self._center
+        return self._is_normalized
 
     @normalize.setter
     def normalize(self, val: bool):
@@ -302,34 +308,17 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     ###################################################################################################
 
     @abstractmethod
-    def _implicit(self, oos1=None, oos2=None):
+    def _implicit(self, x=None, y=None):
         # implicit without center
-        # explicit without center
-        if oos1 is None:
-            oos1 = self._sample[self._idx_sample, :]
-        if oos2 is None:
-            oos2 = self._sample[self._idx_sample, :]
-        return oos1, oos2
+        if x is None:
+            x = self._sample[self._idx_sample, :]
+        if y is None:
+            y = self._sample[self._idx_sample, :]
+        return x, y
 
     def _implicit_self(self, x=None):
-        K = self.k(x,x, center=False, normalize=False)
-        return torch.trace(K)
-
-    def _compute_K_norm(self, center, x=None):
-        r"""
-        Computes the kernel norm given a sample.
-        """
-        if x is None and self._K_norm is None and center==self._center:
-            self._K_norm = torch.sqrt(self._implicit_self())[:, None]
-            return self._K_norm
-        else:
-            return torch.sqrt(self._implicit_self(x))[:, None]
-
-    def _normalize_K(self, K, center, oos1=None, oos2=None):
-        n_oos1 = self._compute_K_norm(center, oos1)
-        n_oos2 = self._compute_K_norm(center, oos2).T
-        N = n_oos1 * n_oos2
-        return K / torch.clamp(N, min=1.e-8)
+        K = self._implicit(x,x)
+        return torch.diag(K)
 
     @abstractmethod
     def _explicit(self, x=None):
@@ -361,7 +350,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
                               - self._K_mean.T \
                               + self._K_mean_tot
                 if self._normalize:
-                    self._K = self._normalize_K(self._K)
+                    self._K_norm = torch.sqrt(torch.diag(self._K))[:,None]
+                    K_norm = self._K_norm * self._K_norm.T
+                    self._K = self._K / torch.clamp(K_norm, min=self._eps)
 
         return self._K
 
@@ -377,7 +368,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
                 self._phi_mean = torch.mean(self._phi, dim=0)
                 self._phi = self._phi - self._phi_mean
             if self._normalize:
-                self._phi_norm = torch.sqrt(torch.norm(self._phi, dim=1, keepdim=True))
+                self._phi_norm = torch.norm(self._phi, dim=1, keepdim=True)
                 self._phi = self._phi / self._phi_norm
             self._C = self._phi.T @ self._phi
         return self._C, self._phi
@@ -411,30 +402,31 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         if center:
             phi = phi - self._phi_mean
         if normalize:
-            phi = phi / torch.sqrt(torch.norm(phi, dim=1, keepdim=True))
+            phi_norm = torch.norm(phi, dim=1, keepdim=True)
+            phi = phi / torch.clamp(phi_norm, min=self._eps)
 
         return phi
 
-    def k(self, oos1=None, oos2=None, implicit=False, center=None, normalize=None):
+    def k(self, x=None, y=None, implicit=False, center=None, normalize=None):
         """
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
         .. math::
             K = [k(x_i,y_j)]_{i,j=1}^{N,M},
 
-        with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`oos1`) and :math:`\{y_i\}_{j=1}^N` the sample points
-        (`oos2`).
+        with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`x`) and :math:`\{y_i\}_{j=1}^N` the sample points
+        (`y`).
 
         .. note::
             In the case of centered kernels, this computation is more expensive as it requires to center according to
             the sample dataset, which implies computing a statistic on the out-of-sample kernel matrix and thus
             also computing it.
 
-        :param oos1: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
-        :param oos2: Out-of-sample points (second dimension). If `None`, the default sample will be used., defaults to `None`
+        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
+        :param y: Out-of-sample points (second dimension). If `None`, the default sample will be used., defaults to `None`
 
-        :type oos1: Tensor(N,dim_sample), optional
-        :type oos2: Tensor(M,dim_sample), optional
+        :type x: Tensor(N,dim_sample), optional
+        :type y: Tensor(M,dim_sample), optional
 
         :param center: Returns if the matrix has to be centered or not. If None, then the default value used during
             construction is used., defaults to None
@@ -453,36 +445,54 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         if normalize is None:
             normalize = self._normalize
 
-        oos1 = utils.castf(oos1)
-        oos2 = utils.castf(oos2)
+        x = utils.castf(x)
+        y = utils.castf(y)
 
         if implicit:
             self._compute_C()
-            phi_sample = self.phi(oos2, center, normalize)
-            phi_oos = self.phi(oos1, center, normalize)
+            phi_sample = self.phi(y, center, normalize)
+            phi_oos = self.phi(x, center, normalize)
             return phi_oos @ phi_sample.T
         else:
             self._compute_K()
 
-        K = self._implicit(oos1, oos2)
+        K = self._implicit(x, y)
         if center:
-            if oos1 is not None:
-                K_oos1_sample = self._implicit(oos1)
-                m_oos1_sample = torch.mean(K_oos1_sample, dim=1, keepdim=True)
+            if x is not None:
+                K_x_sample = self._implicit(x)
+                m_x_sample = torch.mean(K_x_sample, dim=1, keepdim=True)
             else:
-                m_oos1_sample = self._K_mean
+                m_x_sample = self._K_mean
 
-            if oos2 is not None:
-                K_oos2_sample = self._implicit(oos2)
-                m_oos2_sample = torch.mean(K_oos2_sample, dim=1, keepdim=True)
+            if y is not None:
+                K_y_sample = self._implicit(y)
+                m_y_sample = torch.mean(K_y_sample, dim=1, keepdim=True)
             else:
-                m_oos2_sample = self._K_mean
+                m_y_sample = self._K_mean
 
-            K = K - m_oos1_sample \
-                  - m_oos2_sample.T \
+            K = K - m_x_sample \
+                  - m_y_sample.T \
                   + self._K_mean_tot
         if normalize:
-            K = self._normalize_K(center, oos1, oos2)
+            if x is None:
+                n_x = self._K_norm
+            else:
+                diag_K_x = self._implicit_self(x)
+                if center:
+                    diag_K_x = diag_K_x - m_x_sample.squeeze() + self._K_mean_tot
+                n_x = torch.sqrt(diag_K_x)
+
+            if y is None:
+                n_y = self._K_norm
+            else:
+                diag_K_y = self._implicit_self(y)
+                if center:
+                    diag_K_y = diag_K_y - m_y_sample.squeeze() + self._K_mean_tot
+                n_y = torch.sqrt(diag_K_y)
+
+            K_norm = n_x[:,None] * n_y[None,:]
+            K = K / torch.clamp(K_norm, min=self._eps)
+
         return K
 
     def forward(self, x, representation="dual"):

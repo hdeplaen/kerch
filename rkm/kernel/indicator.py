@@ -33,7 +33,7 @@ class indicator(implicit):
 
     .. warning::
         Depending on the choice of `gamma`, the kernel may not be positive semi-definite. The default value however
-        ensures it.
+        ensures it, as long as the inputs are integers. If they are not, this may get more complicated.
 
     .. warning::
         For this type of kernel, the input dimension of the datapoints `dim_sample` must be 1.
@@ -97,13 +97,13 @@ class indicator(implicit):
             self._gamma.data = 2 * self.lag + 1
         return self._gamma
 
-    def _implicit(self, oos1=None, oos2=None):
-        oos1, oos2 = super(indicator, self)._implicit(oos1, oos2)
+    def _implicit(self, x=None, y=None):
+        x, y = super(indicator, self)._implicit(x, y)
 
-        oos1 = oos1.T[:, :, None]
-        oos2 = oos2.T[:, None, :]
+        x = x.T[:, :, None]
+        y = y.T[:, None, :]
 
-        diff = (oos1 - oos2).squeeze()
+        diff = (x - y).squeeze()
         assert len(diff.shape) == 2, 'Indicator kernel is only defined for 1-dimensional entries.'
 
         output = (torch.abs(diff) <= self.lag).type(dtype=utils.FTYPE)

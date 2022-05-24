@@ -63,8 +63,8 @@ class sigmoid(implicit):
         """
         return self._params_trainable
 
-    def _implicit(self, oos1=None, oos2=None):
-        oos1, oos2 = super(sigmoid, self)._implicit(oos1, oos2)
-        K = oos1 @ oos2.T
+    def _implicit(self, x=None, y=None):
+        x, y = super(sigmoid, self)._implicit(x, y)
+        K = x @ y.T
         K = self._linear(K)
         return torch.sigmoid(K)

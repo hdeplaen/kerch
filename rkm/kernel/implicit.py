@@ -27,8 +27,8 @@ class implicit(base, metaclass=ABCMeta):
         return f"Implicit kernel."
 
     @abstractmethod
-    def _implicit(self, oos1=None, oos2=None):
-        return super(implicit, self)._implicit(oos1, oos2)
+    def _implicit(self, x=None, y=None):
+        return super(implicit, self)._implicit(x, y)
 
     def _explicit(self, x=None):
         raise utils.model.PrimalError

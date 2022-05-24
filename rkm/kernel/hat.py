@@ -45,6 +45,8 @@ class hat(implicit):
         self.lag = torch.nn.Parameter(
             torch.tensor([kwargs["lag"]], dtype=utils.FTYPE), requires_grad=self.lag_trainable)
 
+        self._relu = torch.nn.ReLU(inplace=False)
+
     def __str__(self):
         return f"Hat kernel (lag: {str(self.lag.data.cpu().numpy())})"
 
@@ -56,16 +58,16 @@ class hat(implicit):
     def hparams(self):
         return {"Kernel": "Hat", **super(hat, self).hparams}
 
-    def _implicit(self, oos1=None, oos2=None):
-        oos1, oos2 = super(hat, self)._implicit(oos1, oos2)
+    def _implicit(self, x=None, y=None):
+        x, y = super(hat, self)._implicit(x, y)
 
-        oos1 = oos1[:, :, None]
-        oos2 = oos2[:, None, :]
+        x = x[:, :, None]
+        y = y.T[:, None, :]
 
-        diff = (oos1-oos2).squeeze()
+        diff = (x-y).squeeze()
         assert len(diff.shape) == 2, 'Hat kernel is only defined for 1-dimensional entries.'
 
         output = self.lag + 1 - torch.abs(diff)
-        output = torch.nn.ReLU(output)
+        output = self._relu(output)
 
         return output

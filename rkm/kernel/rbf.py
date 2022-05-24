@@ -8,6 +8,7 @@ File containing the RBF kernel class.
 """
 
 import torch
+import logging
 
 from .. import utils
 from .implicit import implicit, base
@@ -36,6 +37,10 @@ class rbf(implicit):
     def __init__(self, **kwargs):
         super(rbf, self).__init__(**kwargs)
 
+        # RBF kernels are always naturally normalized
+        self._is_normalized = True
+        self._normalize = False
+
         self._sigma_trainable = kwargs["sigma_trainable"]
         sigma = kwargs["sigma"]
         if sigma is None:
@@ -47,6 +52,18 @@ class rbf(implicit):
 
     def __str__(self):
         return f"RBF kernel (sigma: {str(self.sigma.data.cpu().numpy())})"
+
+    @property
+    def normalize(self) -> bool:
+        r"""
+        Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.
+        """
+        return self._is_normalized
+
+    @normalize.setter
+    def normalize(self, val: bool):
+        logging.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
+                     'definition')
 
     @property
     def sigma(self):
@@ -80,13 +97,13 @@ class rbf(implicit):
     def hparams(self):
         return {"Kernel": "RBF", "Trainable sigma": self.sigma_trainable, **super(rbf, self).hparams}
 
-    def _implicit(self, oos1=None, oos2=None):
-        oos1, oos2 = super(rbf, self)._implicit(oos1, oos2)
+    def _implicit(self, x=None, y=None):
+        x, y = super(rbf, self)._implicit(x, y)
 
-        oos1 = oos1.T[:, :, None]
-        oos2 = oos2.T[:, None, :]
+        x = x.T[:, :, None]
+        y = y.T[:, None, :]
 
-        diff = oos1 - oos2
+        diff = x - y
         norm2 = torch.sum(diff * diff, dim=0, keepdim=True)
 
         if self._sigma is None:
