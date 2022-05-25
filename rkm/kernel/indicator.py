@@ -22,30 +22,34 @@ class indicator(implicit):
     .. math::
         k(x,y) = \left\{
         \begin{array}[lll]
-        \texttt{gamma} & \text{ if } & |x-y|=0, \\
-        1 & \text{ if } & 0 < |x-y| \leq \texttt{lag}, \\
+        \gamma & \text{ if } & |x-y|=0, \\
+        1 & \text{ if } & 0 < |x-y| \leq p, \\
         0 & \text{ otherwise.} &
         \end{array}
         \right.
 
+    .. warning ::
+        This kernel is still under development and may suffer from some issues.
+
     .. note ::
-        If the default value for `gamma` is used and the `lag` is to be trained, their two values will be linked.
+        If the default value for :math:`\gamma` is used and the :math:`lp` is to be trained, their two values will be
+        linked.
 
     .. warning::
-        Depending on the choice of `gamma`, the kernel may not be positive semi-definite. The default value however
-        ensures it, as long as the inputs are integers. If they are not, this may get more complicated.
+        Depending on the choice of :math:`\gamma`, the kernel may not be positive semi-definite. The default value
+        however ensures it, as long as the inputs are integers. If they are not, this may get more complicated.
 
     .. warning::
         For this type of kernel, the input dimension of the datapoints `dim_sample` must be 1.
 
-    :param lag: Lag parameter., defaults to 1.
-    :param gamma: Identity value of the kernel. If `None`, the value will be `gamma`:math:` = 2*``lag`:math:`+1` to
+    :param lag: Lag parameter :math:`p`., defaults to 1.
+    :param gamma: Identity value :math:`\gamma` of the kernel. If `None`, the value will be :math:`\gamma = 2p+1` to
         ensure positive semi-definiteness., defaults to `None`
-    :param lag_trainable: `True` if the gradient of the lag is to be computed. If so, a graph is computed
+    :param lag_trainable: `True` if the gradient of the lag :math:`p` is to be computed. If so, a graph is computed
         and the lag can be updated. `False` just leads to a static computation., defaults to `False`
-    :param gamma_trainable: `True` if the gradient of the gamma is to be computed. If so, a graph is computed
-        and the gamma can be updated. `False` just leads to a static computation., this value will be tied to the
-        evolution of `lag`., defaults to `False`
+    :param gamma_trainable: `True` if the gradient of the :math:`\gamma` is to be computed. If so, a graph is computed
+        and the :math:`\gamma` can be updated. `False` just leads to a static computation., this value will be tied to the
+        evolution of the lag :math:`p`., defaults to `False`
     :type lag: double, optional
     :type gamma: double, optional
     :type lag_trainable: bool, optional
@@ -100,7 +104,7 @@ class indicator(implicit):
     def _implicit(self, x=None, y=None):
         x, y = super(indicator, self)._implicit(x, y)
 
-        x = x.T[:, :, None]
+        x = x[:, :, None]
         y = y.T[:, None, :]
 
         diff = (x - y).squeeze()
