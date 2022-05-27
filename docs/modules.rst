@@ -3,6 +3,6 @@ rkm
 
 .. toctree::
     :glob:
-    :maxdepth: 4
+    :maxdepth: 2
 
-    kernel/*
+    kernel/index

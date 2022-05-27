@@ -25,6 +25,7 @@ def factory(kernel_type='linear', **kwargs):
     from .cosine import cosine
     from .additive_chi2 import additive_chi2
     from .skewed_chi2 import skewed_chi2
+    from .laplacian import laplacian
 
     switcher = {"linear": linear,
                 "rbf": rbf,
@@ -37,7 +38,8 @@ def factory(kernel_type='linear', **kwargs):
                 "cosine": cosine,
                 "nystrom": nystrom,
                 "additive_chi2": additive_chi2,
-                "skewed_chi2": skewed_chi2}
+                "skewed_chi2": skewed_chi2,
+                "laplacian": laplacian}
     if kernel_type not in switcher:
         raise NameError("Invalid kernel type.")
     return switcher[kernel_type](**kwargs)

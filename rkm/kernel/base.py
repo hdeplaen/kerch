@@ -59,6 +59,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         self.sample_trainable = kwargs["sample_trainable"]
         self._center = kwargs["center"]
 
+        # normalization settings
         normalize = kwargs["normalize"]
         if normalize is True or normalize is False:
             self._eps = 1.e-8
@@ -77,6 +78,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
 
 
         if input_sample is not None:
+            if len(input_sample.shape) == 1:
+                input_sample = input_sample.unsqueeze(1)
             self._num_sample, self._dim_sample = input_sample.shape
         else:
             self._dim_sample = kwargs["dim_sample"]
@@ -197,7 +200,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         :param prop_sample: Instead of giving indices, passing a proportion of the original sample set is also
             possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
             such that :math:`0 <` `prop_sample` :math:`\leq 1`., defaults to `None`.
-        :type prop_sample: int, optional
+        :type prop_sample: double, optional
 
         If `None` is specified for both `idx_sample` and `prop_sample`, all samples are used and the subset equals the
         original sample set. This is also the default behavior if this function is never called, nor the parameters

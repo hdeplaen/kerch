@@ -1,8 +1,8 @@
-===========================
-Additive Chi Squared Kernel
-===========================
+==================
+Exponential Kernel
+==================
 
-.. autoclass:: rkm.kernel.additive_chi2
+.. autoclass:: rkm.kernel.exponential
    :members:
    :inherited-members: Module
    :undoc-members:

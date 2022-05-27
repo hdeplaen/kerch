@@ -18,7 +18,7 @@ If you experience any bug, please let me now: this is only a pre-alpha version.
    :caption: Modules
    :glob:
 
-   kernel/rkm.kernel
+   kernel/index
 
 
 Indices and tables

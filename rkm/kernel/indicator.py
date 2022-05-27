@@ -28,11 +28,8 @@ class indicator(implicit):
         \end{array}
         \right.
 
-    .. warning ::
-        This kernel is still under development and may suffer from some issues.
-
     .. note ::
-        If the default value for :math:`\gamma` is used and the :math:`lp` is to be trained, their two values will be
+        If the default value for :math:`\gamma` is used and the :math:`p` is to be trained, their two values will be
         linked.
 
     .. warning::
@@ -64,7 +61,7 @@ class indicator(implicit):
     def __init__(self, **kwargs):
         """
         :param lag: bandwidth of the kernel (default 1)
-        :param gamma: value on the diagonal (default 2 * lag + 1, which ensures PSD)
+        :param gamma: value on the diagonal (default 2 * lag + 1, which ensures PSD in most cases)
         """
         super(indicator, self).__init__(**kwargs)
         assert self._dim_sample == 1, "The indicator kernel is only defined for 1-dimensional entries."
@@ -76,6 +73,8 @@ class indicator(implicit):
         self.gamma_trainable = kwargs["gamma_trainable"]
         if kwargs["gamma"] is None:
             self._link_training = True
+            self._gamma = torch.nn.Parameter(
+                torch.tensor(2 * self.lag + 1, dtype=utils.FTYPE), requires_grad=False)
             self._gamma = torch.nn.Parameter(
                 torch.tensor(2 * self.lag + 1, dtype=utils.FTYPE), requires_grad=False)
         else:

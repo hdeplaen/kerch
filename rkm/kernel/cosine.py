@@ -28,9 +28,8 @@ class cosine(linear):
     """
 
     def __init__(self, **kwargs):
-        super(cosine, self).__init__(**kwargs)
-        self._is_normalized = True
-        self._normalize = False
+        super(cosine, self).__init__(**{**kwargs,
+                                        "normalize":True})
 
     def __str__(self):
         return "Cosine kernel."
@@ -49,4 +48,4 @@ class cosine(linear):
     @normalize.setter
     def normalize(self, val: bool):
         logging.info('Changing the normalization has not effect on the cosine kernel as it is always normalized by '
-                     'definition')
+                     'definition. Consider a linear kernel then.')

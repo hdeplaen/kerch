@@ -21,9 +21,9 @@ At last, a Nystrom kernel is also implemented, which created an explicit feature
 implicit), using eigendocomposition. Among other things, this can serve as a solution for centering fully out-of-sample
 kernel matrices of implicitly defined kernels.
 
-The general structure of the module is based around an abstract kernel class `rkm.kernel.base`, of which
-`rkm.kernle.implicit` and `rkm.kernel.explicit` inherit. All other kernels inherit of one of these two at the exception
-of `rkm.kernel.polynomial` which directly inherits `rkm.kernel.base` as it has a primal formulation and a dual
+The general structure of the module is based around an abstract kernel class `base`, of which
+`rkm.kernle.implicit` and `explicit` inherit. All other kernels inherit of one of these two at the exception
+of `polynomial` which directly inherits `base` as it has a primal formulation and a dual
 formulation which can be computed otherwise than with an inner product of the explicit feature map.
 
 Kernel Factory
@@ -35,40 +35,51 @@ Generic Kernels
 ---------------
 
 .. toctree::
-    rkm.kernel.linear
-    rkm.kernel.rbf
-    rkm.kernel.polynomial
-    rkm.kernel.cosine
-    rkm.kernel.sigmoid
-    rkm.kernel.nystrom
+    :maxdepth: 1
+
+    linear
+    rbf
+    laplacian
+    polynomial
+    cosine
+    sigmoid
+    nystrom
 
 Network-based kernels
 ---------------------
 
 .. toctree::
-    rkm.kernel.explicit_nn
-    rkm.kernel.implicit_nn
+    :maxdepth: 1
+
+    explicit_nn
+    implicit_nn
 
 Time Kernels
 ------------
 
 .. toctree::
-    rkm.kernel.indicator
-    rkm.kernel.hat
+    :maxdepth: 1
+
+    indicator
+    hat
 
 Vision Kernels
 --------------
 
 .. toctree::
-    rkm.kernel.additive_chi2
-    rkm.kernel.skewed_chi2
+    :maxdepth: 1
 
+    additive_chi2
+    skewed_chi2
 
 Abstract Kernels
 ----------------
 
 .. toctree::
-    rkm.kernel.explicit
-    rkm.kernel.implicit
-    rkm.kernel.base
+    :maxdepth: 1
+
+    exponential
+    explicit
+    implicit
+    base
 

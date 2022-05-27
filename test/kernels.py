@@ -1,11 +1,8 @@
+from matplotlib import pyplot as plt
 import rkm
 import numpy as np
 
-x = np.sin(np.arange(50) / np.pi)
-x = x[:,None]
-k = rkm.kernel.indicator(sigma=1., sample=x, center=False, normalize=False)
-K = k.K
-
-from matplotlib import pyplot as plt
-plt.imshow(K)
+x = np.sin(np.arange(50) / np.pi) + 1.5
+k = rkm.kernel.cosine(sample=x, center=True)
+plt.imshow(k.K)
 plt.show()

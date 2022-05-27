@@ -1,8 +1,8 @@
-=============================
-Implicit Network-based Kernel
-=============================
+================
+Laplacian Kernel
+================
 
-.. autoclass:: rkm.kernel.implicit_nn
+.. autoclass:: rkm.kernel.laplacian
    :members:
    :inherited-members: Module
    :undoc-members:
