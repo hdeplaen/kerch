@@ -43,11 +43,11 @@ class exponential(implicit, metaclass=ABCMeta):
             self._sigma = None
             self._compute_K()
         else:
-            self._sigma = torch.nn.Parameter(
-                torch.tensor(kwargs["sigma"], dtype=utils.FTYPE), requires_grad=self._sigma_trainable)
+            sigma = torch.tensor(sigma, dtype=utils.FTYPE)
+            self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
 
     def __str__(self):
-        return f"Exponential kernel (sigma: {str(self.sigma.data.cpu().numpy())})"
+        return f"Exponential kernel (sigma: {str(self.sigma)})"
 
     @property
     def normalize(self) -> bool:
@@ -105,8 +105,7 @@ class exponential(implicit, metaclass=ABCMeta):
         # define sigma if not set by the user
         if self._sigma is None:
             sigma = .7 * torch.median(D)
-            self._sigma = torch.nn.Parameter(
-                torch.tensor(sigma, dtype=utils.FTYPE), requires_grad=self._sigma_trainable)
+            self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
 
         fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(D, -fact))

@@ -23,9 +23,9 @@ Linear (Time)
     :include-source:
 
     import rkm
-    import numpy as np
     from matplotlib import pyplot as plt
 
-    k = rkm.kernel.indicator(sample=range(50), lag=7)
+    k = rkm.kernel.indicator(sample=range(10), lag=3)
     plt.imshow(k.K)
     plt.colorbar()
+    plt.title("Indicator with lag " + str(k.lag))

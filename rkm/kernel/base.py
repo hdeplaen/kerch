@@ -9,6 +9,7 @@ File containing the abstract kernel classes.
 
 import torch
 from abc import ABCMeta, abstractmethod
+from torch import Tensor
 
 from .. import utils
 
@@ -108,21 +109,21 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         self._phi_norm = None
 
     @property
-    def dim_sample(self):
+    def dim_sample(self) -> int:
         r"""
         Dimension of each datapoint.
         """
         return self._dim_sample
 
     @property
-    def num_sample(self):
+    def num_sample(self) -> int:
         r"""
         Number of datapoints in the sample set.
         """
         return self._sample.shape[0]
 
     @property
-    def num_idx(self):
+    def num_idx(self) -> int:
         r"""
         Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
         the case of stochastic training.
@@ -170,7 +171,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
                 "center": self._center}
 
     @property
-    def sample(self):
+    def sample(self) -> Tensor:
         r"""
         Sample dataset.
         """
@@ -376,7 +377,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
             self._C = self._phi.T @ self._phi
         return self._C, self._phi
 
-    def phi(self, x=None, center=None, normalize=None):
+    def phi(self, x=None, center=None, normalize=None) -> Tensor:
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the specified points.
 
@@ -410,7 +411,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
 
         return phi
 
-    def k(self, x=None, y=None, implicit=False, center=None, normalize=None):
+    def k(self, x=None, y=None, implicit=False, center=None, normalize=None) -> Tensor:
         """
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
@@ -527,7 +528,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         return fun(x)
 
     @property
-    def K(self):
+    def K(self) -> Tensor:
         r"""
         Returns the kernel matrix on the sample dataset. Same result as calling :py:func:`k()`, but faster.
         It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
@@ -539,7 +540,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         return self._compute_K()
 
     @property
-    def C(self):
+    def C(self) -> Tensor:
         r"""
         Returns the covariance matrix on the sample datapoints.
 
@@ -549,7 +550,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         return self._compute_C()[0]
 
     @property
-    def phi_sample(self):
+    def phi_sample(self) -> Tensor:
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling
         :py:func:`phi()`, but faster.

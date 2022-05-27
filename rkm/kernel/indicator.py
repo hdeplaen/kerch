@@ -21,10 +21,10 @@ class indicator(implicit):
 
     .. math::
         k(x,y) = \left\{
-        \begin{array}[lll]
-        \gamma & \text{ if } & |x-y|=0, \\
-        1 & \text{ if } & 0 < |x-y| \leq p, \\
-        0 & \text{ otherwise.} &
+        \begin{array}
+        g\gamma & \text{ if } |x-y|=0, \\
+        1 & \text{ if } 0 < |x-y| \leq p, \\
+        0 & \text{ otherwise.}
         \end{array}
         \right.
 
@@ -66,24 +66,21 @@ class indicator(implicit):
         super(indicator, self).__init__(**kwargs)
         assert self._dim_sample == 1, "The indicator kernel is only defined for 1-dimensional entries."
 
-        self.lag_trainable = kwargs["lag_trainable"]
-        self.lag = torch.nn.Parameter(
-            torch.tensor(kwargs["lag"], dtype=utils.FTYPE), requires_grad=self.lag_trainable)
+        self._lag_trainable = kwargs["lag_trainable"]
+        self._lag = torch.nn.Parameter(
+            torch.tensor(kwargs["lag"], dtype=utils.FTYPE), requires_grad=self._lag_trainable)
 
-        self.gamma_trainable = kwargs["gamma_trainable"]
+        self._gamma_trainable = kwargs["gamma_trainable"]
         if kwargs["gamma"] is None:
             self._link_training = True
-            self._gamma = torch.nn.Parameter(
-                torch.tensor(2 * self.lag + 1, dtype=utils.FTYPE), requires_grad=False)
-            self._gamma = torch.nn.Parameter(
-                torch.tensor(2 * self.lag + 1, dtype=utils.FTYPE), requires_grad=False)
+            self._gamma = torch.nn.Parameter(2 * self._lag.data + 1, requires_grad=False)
         else:
             self._link_training = False
             self._gamma = torch.nn.Parameter(
-                torch.tensor(kwargs["gamma"], dtype=utils.FTYPE), requires_grad=self.gamma_trainable)
+                torch.tensor(kwargs["gamma"], dtype=utils.FTYPE), requires_grad=self._gamma_trainable)
 
     def __str__(self):
-        return f"Indicator kernel (lag: {str(self.lag.data.cpu().numpy())}, gamma: {str(self.gamma.data.cpu().numpy())})"
+        return f"Indicator kernel (lag: {str(self.lag)}, gamma: {str(self.gamma)})"
 
     @property
     def params(self):
@@ -91,16 +88,46 @@ class indicator(implicit):
                 'Gamma': self.gamma}
 
     @property
+    def lag(self):
+        r"""
+        Lag :math:`p` of the kernel.
+        """
+        return self._lag.data.cpu().numpy()
+
+    @lag.setter
+    def lag(self, val):
+        self._reset()
+        self._lag.data = utils.castf(val, tensor=False)
+
+    @property
+    def lag_trainable(self) -> bool:
+        r"""
+        Boolean indicating if the lag :math:`p` is trainable.
+        """
+        return self._lag_trainable
+
+    @lag_trainable.setter
+    def lag_trainable(self, val: bool):
+        self._lag_trainable = val
+        self._lag.requires_grad = self._lag_trainable
+
+    @property
     def hparams(self):
         return {"Kernel": "Indicator", **super(indicator, self).hparams}
 
     @property
     def gamma(self):
-        if self._link_training and self.lag_trainable:
-            self._gamma.data = 2 * self.lag + 1
-        return self._gamma
+        return self._gamma.data.cpu().numpy()
+
+    @gamma.setter
+    def gamma(self, val):
+        self._reset()
+        self._gamma.data = utils.castf(val, tensor=False)
 
     def _implicit(self, x=None, y=None):
+        if self._link_training and self.lag_trainable:
+            self._gamma.data = 2 * self.lag + 1
+
         x, y = super(indicator, self)._implicit(x, y)
 
         x = x[:, :, None]
@@ -109,7 +136,7 @@ class indicator(implicit):
         diff = (x - y).squeeze()
         assert len(diff.shape) == 2, 'Indicator kernel is only defined for 1-dimensional entries.'
 
-        output = (torch.abs(diff) <= self.lag).type(dtype=utils.FTYPE)
-        output[diff == 0] = self.gamma
+        output = (torch.abs(diff).le(self._lag)).type(dtype=utils.FTYPE)
+        output[diff == 0] = self._gamma
 
         return output

@@ -27,7 +27,7 @@ class rbf(exponential):
         super(rbf, self).__init__(**kwargs)
 
     def __str__(self):
-        return f"RBF kernel (sigma: {str(self.sigma.data.cpu().numpy())})"
+        return f"RBF kernel (sigma: {str(self.sigma)})"
 
     @property
     def hparams(self):

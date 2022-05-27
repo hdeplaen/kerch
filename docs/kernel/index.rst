@@ -57,11 +57,17 @@ Network-based kernels
 Time Kernels
 ------------
 
+The idea behind time kernels is that time has the same local effect at
+all time, or in other words that the kernels are translational invariant. We typically consider the following kernels:
+
 .. toctree::
     :maxdepth: 1
 
     indicator
     hat
+    rbf
+
+
 
 Vision Kernels
 --------------
