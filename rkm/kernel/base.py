@@ -177,6 +177,10 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         """
         return self._sample.data
 
+    @property
+    def _current_sample(self):
+        return self._sample[self._idx_sample, :]
+
     def _all_sample(self):
         return range(self.num_sample)
 
@@ -315,9 +319,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     def _implicit(self, x=None, y=None):
         # implicit without center
         if x is None:
-            x = self._sample[self._idx_sample, :]
+            x = self._current_sample
         if y is None:
-            y = self._sample[self._idx_sample, :]
+            y = self._current_sample
         return x, y
 
     def _implicit_self(self, x=None):
@@ -328,7 +332,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     def _explicit(self, x=None):
         # explicit without center
         if x is None:
-            x = self._sample[self._idx_sample, :]
+            x = self._current_sample
         return x
 
     def _compute_K(self, implicit=False):
