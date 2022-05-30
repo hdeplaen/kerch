@@ -43,7 +43,7 @@ class cosine(linear):
         r"""
         Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.
         """
-        return self._is_normalized
+        return self._normalize_requested
 
     @normalize.setter
     def normalize(self, val: bool):

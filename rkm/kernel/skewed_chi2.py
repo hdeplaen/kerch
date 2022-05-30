@@ -58,7 +58,7 @@ class skewed_chi2(implicit):
         y = y.T[:, None, :]
 
         prod = torch.sqrt(x + self.c) * torch.sqrt(y + self.c)
-        sum = x + y + 2 * self.c
+        sum = torch.clamp(x + y + 2 * self.c, min=self._eps)
         output = torch.prod(2 * prod / sum, dim=0, keepdim=True)
 
         return output.squeeze(0)

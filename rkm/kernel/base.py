@@ -57,6 +57,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     def __init__(self, **kwargs):
         super(base, self).__init__()
 
+        self._sample = None
         self.sample_trainable = kwargs["sample_trainable"]
         self._center = kwargs["center"]
 
@@ -64,19 +65,18 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         normalize = kwargs["normalize"]
         if normalize is True or normalize is False:
             self._eps = 1.e-8
-            self._normalize = normalize
+            self._normalize_requested = normalize
         else:
             self._eps = normalize
-            self._normalize = True
+            self._normalize_requested = True
 
         # It may be that some kernels are naturally normalized and don't need the additional computation
-        self._is_normalized = self._normalize
+        self._normalize = self._normalize_requested
 
         input_sample = kwargs["sample"]
         input_sample = utils.castf(input_sample)
 
         self._eps = 1.e-8
-
 
         if input_sample is not None:
             if len(input_sample.shape) == 1:
@@ -85,11 +85,15 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         else:
             self._dim_sample = kwargs["dim_sample"]
             self._num_sample = kwargs["num_sample"]
+
         self.init_sample(input_sample, kwargs["idx_sample"], kwargs["prop_sample"])
 
     @abstractmethod
     def __str__(self):
         pass
+
+    def __repr__(self):
+        return self.__str__()
 
     @property
     def params(self):
@@ -147,7 +151,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         r"""
         Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.
         """
-        return self._is_normalized
+        return self._normalize
 
     @normalize.setter
     def normalize(self, val: bool):
@@ -175,6 +179,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         r"""
         Sample dataset.
         """
+        assert self._sample is not None, "Sample dataset has not been initialized already."
         return self._sample.data
 
     @property

@@ -44,7 +44,7 @@ class additive_chi2(implicit):
         y = y.T[:, None, :]
 
         prod = x * y
-        sum = x + y
+        sum = torch.clamp(x + y, min=self._eps)
         output = torch.sum(2 * prod / sum, dim=0, keepdim=True)
 
         return output.squeeze(0)

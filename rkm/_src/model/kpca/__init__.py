@@ -53,12 +53,12 @@ class KPCA(Level, metaclass=ABCMeta):
             K = self.kernel.dmatrix()
             idx_kernels = self._idxk._idx_sample
             H = self.linear.alpha[idx_kernels, :]
-            # l = torch.trace(K) - torch.trace(H @ H.t() @ K)
+            # l = torch.trace(K) - torch.trace(_H @ _H.t() @ K)
             # if l<0:
             #     print(f"{self.kernel.sigma} | {l}")
             # return l
             return torch.trace(K) - torch.trace(H @ H.t() @ K)
-            # return (torch.trace(K) - torch.trace(H @ H.t() @ K)) / torch.abs(torch.sum(K, (0, 1)))
+            # return (torch.trace(K) - torch.trace(_H @ _H.t() @ K)) / torch.abs(torch.sum(K, (0, 1)))
 
         switcher_var = {"primal": primal_var,
                         "dual": dual_var}

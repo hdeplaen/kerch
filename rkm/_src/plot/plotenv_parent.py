@@ -20,7 +20,7 @@ class plotenv_parent(metaclass=ABCMeta):
         self.model = model
         self.opt = opt
 
-        current_time = datetime.now().strftime('%b%d_%H-%M-%S')
+        current_time = datetime.now().strftime('%b%d_%_H-%M-%S')
         self.id = current_time + '_' + socket.gethostname()
         self.expe_name = self.model.name
         self.proj_dir = os.path.join("runs", self.expe_name)

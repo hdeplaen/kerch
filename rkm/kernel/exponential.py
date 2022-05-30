@@ -33,9 +33,9 @@ class exponential(implicit, metaclass=ABCMeta):
     def __init__(self, **kwargs):
         super(exponential, self).__init__(**kwargs)
 
-        # Exponential kernels are always naturally normalized
-        self._is_normalized = True
-        self._normalize = False
+        # Exponential kernels are always naturally normalized if not centered
+        if not self._center:
+            self._normalize = False
 
         self._sigma_trainable = kwargs["sigma_trainable"]
         sigma = kwargs["sigma"]
@@ -54,12 +54,35 @@ class exponential(implicit, metaclass=ABCMeta):
         r"""
         Indicates if the kernel is normalized. This value cannot be changed for exponential kernels.
         """
-        return self._is_normalized
+        if self._center:
+            return self._normalize
+        else:
+            return True
 
     @normalize.setter
     def normalize(self, val: bool):
-        logging.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
-                     'definition')
+        self._normalize_requested = val
+        if self._center:
+            self._normalize = self._normalize_requested
+        else:
+            logging.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
+                         'definition if non-centered.')
+
+    @property
+    def center(self) -> bool:
+        r"""
+        Indicates if the kernel has to be centered. Changing this value leads to a recomputation of the statistics.
+        """
+        return self._center
+
+    @center.setter
+    def center(self, val: bool):
+        self._center = val
+        if self._center:
+            self._normalize = self._normalize_requested
+        else:
+            self._normalize = False
+        self._reset()
 
     @property
     def sigma(self):
@@ -111,3 +134,9 @@ class exponential(implicit, metaclass=ABCMeta):
         output = torch.exp(torch.mul(D, -fact))
 
         return output.squeeze(0)
+
+    def _implicit_self(self, x=None):
+        if x is None:
+            x = self._current_sample
+
+        return torch.ones(x.shape[0], dtype=utils.FTYPE, device=x.device)

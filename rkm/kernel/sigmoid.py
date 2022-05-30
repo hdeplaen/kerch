@@ -23,6 +23,9 @@ class sigmoid(implicit):
 
     where :math:`\sigma(\cdot)` is the sigmoid function.
 
+    .. warning::
+        This kernel is not positive semi-definite. Normalization after centering is not possible.
+
     :param a: Value for :math:`a`., defaults to 1
     :param b: Value for :math:`b`., defaults to 0
     :param params: `True` if the gradient of :math:`a` and :math:`b` are to be computed. If so, a graph is computed
