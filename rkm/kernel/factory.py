@@ -1,15 +1,15 @@
-def factory(kernel_type='linear', **kwargs):
+def factory(type='linear', **kwargs):
     r"""
     Creates a kernel based on the specified type with the specified arguments. This is the same as
     calling `rkm.kernel.kernel_type(**kwargs)` (if `kernel_type` is not a string here). This allows for the creation of kernel where the type of
     kernel is passed as a string.
 
-    :param kernel_type: Type of kernel chosen. For the possible choices, please refer to the (non-abstract) classes
+    :param type: Type of kernel chosen. For the possible choices, please refer to the (non-abstract) classes
         herebelow., defaults to `linear`
     :param \**kwargs: Arguments to be passed to the kernel constructor, such as `sample` or `sigma`. If an argument is
         passed that does not exist (e.g. `sigma` to a `linear` kernel), it will just be neglected. For the default
         values, please refer to the default values of the requested kernel.
-    :type kernel_type: str, optional
+    :type type: str, optional
     :type \**kwargs: dict, optional
     :return: An instantiation of the specified kernel.
     """
@@ -40,7 +40,7 @@ def factory(kernel_type='linear', **kwargs):
                 "additive_chi2": additive_chi2,
                 "skewed_chi2": skewed_chi2,
                 "laplacian": laplacian}
-    if kernel_type not in switcher:
+    if type not in switcher:
         raise NameError("Invalid kernel type.")
-    return switcher[kernel_type](**kwargs)
+    return switcher[type](**kwargs)
 

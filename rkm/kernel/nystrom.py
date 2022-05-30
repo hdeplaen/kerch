@@ -54,7 +54,7 @@ class nystrom(explicit):
         self._internal_kernel = factory(**{**kwargs,
                                             "center": kwargs["base_center"],
                                             "normalize": kwargs["base_normalize"],
-                                            "kernel_type": kwargs["base_type"]})
+                                            "type": kwargs["base_type"]})
 
         self.dim = kwargs["dim"]
         if self.dim is None:

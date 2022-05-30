@@ -1,25 +1,32 @@
 import rkm
+import numpy as np
 from matplotlib import pyplot as plt
 
-x = range(10)
+sample = np.sin(np.arange(0,15) / np.pi) + .1
+oos = np.sin(np.arange(15,30) / np.pi) + .1
 
-k1 = rkm.kernel.indicator(sample=x, lag=3)
-k2 = rkm.kernel.hat(sample=x, lag=3)
-k3 = rkm.kernel.rbf(sample=x, sigma=3)
 
-plt.figure(1)
-plt.imshow(k1.K)
-plt.colorbar()
-plt.title("Indicator with lag " + str(k1.lag))
+k = rkm.kernel.factory(type="polynomial", sample=sample, center=True, normalize=True)
+k2 = rkm.kernel.polynomial(sample=sample, center=True, normalize=True)
 
-plt.figure(2)
-plt.imshow(k2.K)
-plt.colorbar()
-plt.title("Hat with lag " + str(k2._lag))
+fig, axs = plt.subplots(2,2)
 
-plt.figure(3)
-plt.imshow(k3.K)
-plt.colorbar()
-plt.title("RBF with sigma " + str(k3.sigma))
+axs[0,0].imshow(k.K, vmin=-1, vmax=1)
+axs[0,0].set_title("Sample - Sample")
+
+axs[0,1].imshow(k.k(y=oos), vmin=-1, vmax=1)
+axs[0,1].set_title("Sample - OOS")
+
+axs[1,0].imshow(k.k(x=oos), vmin=-1, vmax=1)
+axs[1,0].set_title("OOS - Sample")
+
+im = axs[1,1].imshow(k.k(x=oos, y=oos), vmin=-1, vmax=1)
+axs[1,1].set_title("OOS - OOS")
+
+for ax in axs.flat:
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+fig.colorbar(im, ax=axs.ravel().tolist())
 
 plt.show()

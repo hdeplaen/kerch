@@ -348,8 +348,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
 
                 # centering in the implicit case happens ad hoc
                 if self._center:
-                    self._K_mean = torch.mean(self._K, dim=0, keepdim=True)
-                    self._K_mean_tot = torch.mean(self._K, dim=(0, 1), keepdim=True)
+                    self._K_mean = torch.mean(self._K, dim=1, keepdim=True)
+                    self._K_mean_tot = torch.mean(self._K, dim=(0, 1))
                     self._K = self._K - self._K_mean \
                               - self._K_mean.T \
                               + self._K_mean_tot
@@ -444,6 +444,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
 
         :raises: PrimalError
         """
+        # if x is None and y is None:
+        #     return self.K
+
         if center is None:
             center = self._center
         if normalize is None:
@@ -481,20 +484,20 @@ class base(torch.nn.Module, metaclass=ABCMeta):
             if x is None:
                 n_x = self._K_norm
             else:
-                diag_K_x = self._implicit_self(x)
+                diag_K_x = self._implicit_self(x)[:, None]
                 if center:
-                    diag_K_x = diag_K_x - m_x_sample.squeeze() + self._K_mean_tot
+                    diag_K_x = diag_K_x - 2 * m_x_sample + self._K_mean_tot
                 n_x = torch.sqrt(diag_K_x)
 
             if y is None:
                 n_y = self._K_norm
             else:
-                diag_K_y = self._implicit_self(y)
+                diag_K_y = self._implicit_self(y)[:, None]
                 if center:
-                    diag_K_y = diag_K_y - m_y_sample.squeeze() + self._K_mean_tot
+                    diag_K_y = diag_K_y - 2 * m_y_sample + self._K_mean_tot
                 n_y = torch.sqrt(diag_K_y)
 
-            K_norm = n_x[:,None] * n_y[None,:]
+            K_norm = n_x * n_y.T
             K = K / torch.clamp(K_norm, min=self._eps)
 
         return K
