@@ -17,7 +17,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     r"""
     :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
         be given relative to these samples., defaults to `None`
-    :param sample_trainable: `True` if the gradients of the sample points are to be computed. If so, a graph is
+    :param _sample_trainable: `True` if the gradients of the sample points are to be computed. If so, a graph is
         computed and the sample can be updated. `False` just leads to a static computation., defaults to `False`
     :param center: `True` if any implicit feature or kernel is must be centered, `False` otherwise. The center
         is always performed relative to a statistic on the sample., defaults to `False`
@@ -29,7 +29,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         overwritten by the dimension of the sample points., defaults to 1
 
     :type sample: Tensor(num_sample, dim_sample), optional
-    :type sample_trainable: bool, optional
+    :type _sample_trainable: bool, optional
     :type center: bool, optional
     :type normalize: bool, optional
     :type num_sample: int, optional
@@ -47,7 +47,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     @abstractmethod
     @utils.kwargs_decorator({
         "sample": None,
-        "sample_trainable": False,
+        "_sample_trainable": False,
         "center": False,
         "normalize": False,
         "num_sample": 1,
@@ -58,7 +58,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         super(base, self).__init__()
 
         self._sample = None
-        self.sample_trainable = kwargs["sample_trainable"]
+        self._sample_trainable = kwargs["_sample_trainable"]
         self._center = kwargs["center"]
 
         # normalization settings
@@ -73,20 +73,20 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         # It may be that some kernels are naturally normalized and don't need the additional computation
         self._normalize = self._normalize_requested
 
-        input_sample = kwargs["sample"]
-        input_sample = utils.castf(input_sample)
+        sample = kwargs["sample"]
+        sample = utils.castf(sample)
 
         self._eps = 1.e-8
 
-        if input_sample is not None:
-            if len(input_sample.shape) == 1:
-                input_sample = input_sample.unsqueeze(1)
-            self._num_sample, self._dim_sample = input_sample.shape
+        if sample is not None:
+            if len(sample.shape) == 1:
+                sample = sample.unsqueeze(1)
+            self._num_sample, self._dim_sample = sample.shape
         else:
             self._dim_sample = kwargs["dim_sample"]
             self._num_sample = kwargs["num_sample"]
 
-        self.init_sample(input_sample, kwargs["idx_sample"], kwargs["prop_sample"])
+        self.init_sample(sample, kwargs["idx_sample"], kwargs["prop_sample"])
 
     @abstractmethod
     def __str__(self):
@@ -166,7 +166,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         self._reset()
 
     @property
-    def idx(self):
+    def idx(self) -> Tensor:
         r"""
         Indices of the selected datapoints of the sample set when performing various operations. This is only relevant
         in the case of stochastic training.
@@ -178,7 +178,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         r"""
         Dictionnary containing the hyperparameters and their values. This can be relevant for monitoring.
         """
-        return {"Trainable Kernels": self.sample_trainable,
+        return {"Trainable Kernels": self._sample_trainable,
                 "center": self._center}
 
     @property
@@ -189,8 +189,34 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         assert self._sample is not None, "Sample dataset has not been initialized already."
         return self._sample.data
 
+    @sample.setter
+    def sample(self, val):
+        assert val is not None, 'The assigned sample set is None.'
+        self.init_sample(val)
+
     @property
-    def _current_sample(self):
+    def sample_as_param(self):
+        assert self._sample is not None, "Sample dataset has not been initialized already."
+        return self._sample
+
+    @property
+    def sample_trainable(self) -> bool:
+        r"""
+        Boolean if the sample dataset can be trained.
+        """
+        return self._sample_trainable
+
+    @sample_trainable.setter
+    def sample_trainable(self, val: bool):
+        self._sample_trainable = val
+        self._sample.requires_grad = self._sample_trainable
+
+    @property
+    def current_sample(self) -> Tensor:
+        r"""
+        Returns the sample that is currently used in the computations and for the normalizing and centering statistics
+        if relevant.
+        """
         return self._sample[self._idx_sample, :]
 
     def _all_sample(self):
@@ -251,7 +277,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
             will be given relative to these samples. In case of overwriting a current sample, `num_sample` and
             `dim_sample` are also overwritten. If `None` is specified, the sample dataset will be initialized according
             to `num_sample` and `dim_sample` specified during the construction. If a previous sample set has been used,
-            it will keep the same dimension by consequence., defaults to `None`
+            it will keep the same dimension by consequence. A last case occurs when `sample` is of the class
+            `torch.nn.Parameter`: the sample will then use those values and they can thus be shared with the module
+            calling this method., defaults to `None`
         :type sample: Tensor, optional
         :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
             `idx_sample` and `prop_sample` are `None`., defaults to `None`
@@ -261,21 +289,19 @@ class base(torch.nn.Module, metaclass=ABCMeta):
             such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
             `prop_sample` are `None`., defaults to `None`.
         """
-        if self._sample is not None:
-            device = self._sample.device
-        else:
-            device = None
+        sample = utils.castf(sample)
 
-        sample = utils.castf(sample, dev=device)
-
-        if sample is not None:
-            self._num_sample, self._dim_sample = sample.shape
-            self._sample = torch.nn.Parameter(sample.data,
-                                        requires_grad=self.sample_trainable)
-        else:
+        if sample is None:
             self._sample = torch.nn.Parameter(
                 torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_sample), dtype=utils.FTYPE)),
-                requires_grad=self.sample_trainable)
+                requires_grad=self._sample_trainable)
+        elif isinstance(sample, torch.nn.Parameter):
+            self._num_sample, self._dim_sample = sample.shape
+            self._sample = sample
+        else:
+            self._num_sample, self._dim_sample = sample.shape
+            self._sample = torch.nn.Parameter(sample.data,
+                                              requires_grad=self._sample_trainable)
 
         self.stochastic(idx_sample, prop_sample)
 
@@ -305,7 +331,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         self._sample.data[idx_sample, :] = sample_values.data
 
         # zeroing relevant gradient if relevant
-        if self.sample_trainable:
+        if self._sample_trainable:
             self._sample.grad.data[idx_sample, :].zero_()
 
     # def merge_idxs(self, **kwargs):
@@ -336,9 +362,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     def _implicit(self, x=None, y=None):
         # implicit without center
         if x is None:
-            x = self._current_sample
+            x = self.current_sample
         if y is None:
-            y = self._current_sample
+            y = self.current_sample
         return x, y
 
     def _implicit_self(self, x=None):
@@ -349,7 +375,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     def _explicit(self, x=None):
         # explicit without center
         if x is None:
-            x = self._current_sample
+            x = self.current_sample
         return x
 
     def _compute_K(self, implicit=False):
@@ -523,7 +549,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
 
         return K
 
-    def forward(self, x, representation="dual"):
+    def forward(self, x, representation="dual") -> Tensor:
         """
         Passes datapoints through the kernel.
 

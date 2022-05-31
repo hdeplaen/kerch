@@ -11,7 +11,7 @@ import torch
 from abc import ABCMeta
 
 import rkm
-from rkm._src.model.level import Level
+from rkm._archive.model.level import Level
 
 class NN(Level, metaclass=ABCMeta):
     @rkm.kwargs_decorator(

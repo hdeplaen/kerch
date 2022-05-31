@@ -7,7 +7,7 @@ Hard KPCA level
 @date: April 2021
 """
 
-import rkm._src as mdl
+import rkm._archive as mdl
 
 
 class HardKPCA(mdl.kpca.KPCA):

@@ -12,9 +12,9 @@ import torch
 from abc import ABCMeta, abstractmethod
 
 import rkm.kernel.factory as KernelFactory
-import rkm._src.model.level.DualLinear as DualLinear
-import rkm._src.model.level.PrimalLinear as PrimalLinear
-import rkm._src.model.level.IDXK as IDXK
+import rkm._archive.model.level.DualLinear as DualLinear
+import rkm._archive.model.level.PrimalLinear as PrimalLinear
+import rkm._archive.model.level.IDXK as IDXK
 
 class Level(torch.nn.Module, metaclass=ABCMeta):
     @rkm.kwargs_decorator(

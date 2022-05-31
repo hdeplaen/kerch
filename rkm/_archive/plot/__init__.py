@@ -11,9 +11,9 @@ import warnings
 import wandb
 
 import rkm as rkm
-import rkm._src.plot.plotenv_parent as plotenv_parent
-import rkm._src.plot.plotenv_wandb as plotenv_wandb
-import rkm._src.plot.plotenv_tensorboard as plotenv_tensorboard
+import rkm._archive.plot.plotenv_parent as plotenv_parent
+import rkm._archive.plot.plotenv_wandb as plotenv_wandb
+import rkm._archive.plot.plotenv_tensorboard as plotenv_tensorboard
 
 
 class plotenv(plotenv_parent.plotenv_parent):

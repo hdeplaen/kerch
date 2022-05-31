@@ -7,12 +7,12 @@ Plotting solutions for a deep RKM _src.
 @date: July 2021
 """
 
-import rkm._src.plot.plotenv_parent as plotenv_parent
+import rkm._archive.plot.plotenv_parent as plotenv_parent
 import os
 
-import rkm._src.model.level.PrimalLinear as PrimalLinear
-import rkm._src.model.level.DualLinear as DualLinear
-from rkm._src import add_dict
+import rkm._archive.model.level.PrimalLinear as PrimalLinear
+import rkm._archive.model.level.DualLinear as DualLinear
+from rkm._archive import add_dict
 
 import wandb
 

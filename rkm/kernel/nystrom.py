@@ -104,22 +104,19 @@ class nystrom(explicit):
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         super(nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
         if self._base_kernel is not None:
-            self._base_kernel.init_sample(sample=self._sample, idx_sample=self.idx)
-
-    def _reset(self):
-        super(nystrom, self)._reset()
-        self._H = None
-        self._lambdas = None
-        self._lambdas_sqrt = None
-        self._sample_phi = None
+            self._base_kernel.init_sample(sample=self.sample, idx_sample=self.idx)
 
     def _compute_decomposition(self):
-        if self._H is None:
+        if "H" not in self._cache:
             K = self._base_kernel.K
-            self._lambdas, self._H = utils.eigs(K, k=self._dim)
+            lambdas, H = utils.eigs(K, k=self._dim)
+
+            # ensure that the decomposed kernel is PSD
+            assert torch.sum(lambdas < 0.) == 0, "Nyström cannot be performed with negative eigenvalues. Please ensure that " \
+                                                 "the kernel is positive semi-definite."
 
             # prune very small eigenvalues if they exist to avoid unstability due to the later inversion
-            idx_small = self._lambdas < 1.e-10
+            idx_small = lambdas < 1.e-10
             sum_small = torch.sum(idx_small)
             if sum_small > 0:
                 logging.warning(
@@ -127,12 +124,14 @@ class nystrom(explicit):
                     f"To avoid numerical instability, these values are pruned."
                     f"The new explicit dimension is now {self._dim - sum_small}.")
                 keep_idx = torch.logical_not(idx_small)
-                self._lambdas = self._lambdas[keep_idx]
-                self._H = self._H[:, keep_idx]
+                lambdas = lambdas[keep_idx]
+                H = H[:, keep_idx]
                 self._dim -= sum_small
 
-        self._lambdas_sqrt = torch.sqrt(self._lambdas)
-        self._sample_phi = (self._H @ torch.diag(self._lambdas_sqrt)).data
+            self._cache["lambdas"] = lambdas
+            self._cache["H"] = H
+            self._cache["lambdas_sqrt"] = torch.sqrt(lambdas)
+            self._cache["sample_phi"] = (H @ torch.diag(self._cache["lambdas_sqrt"])).data
 
     def update_sample(self, sample_values, idx_sample=None):
         raise NotImplementedError
@@ -141,7 +140,7 @@ class nystrom(explicit):
         self._compute_decomposition()
 
         if x is None:
-            return self._sample_phi
+            return self._cache["sample_phi"]
 
         Ky = self._base_kernel.k(x)
-        return Ky @ self._H @ torch.diag(1 / self._lambdas_sqrt)
+        return Ky @ self._cache["H"] @ torch.diag(1 / self._cache["lambdas_sqrt"])

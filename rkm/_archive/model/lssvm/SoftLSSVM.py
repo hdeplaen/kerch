@@ -8,7 +8,7 @@ Soft LS-SVM abstract level
 """
 
 import rkm
-import rkm._src.model.lssvm as lssvm
+import rkm._archive.model.lssvm as lssvm
 
 class SoftLSSVM(lssvm.LSSVM):
     @rkm.kwargs_decorator(

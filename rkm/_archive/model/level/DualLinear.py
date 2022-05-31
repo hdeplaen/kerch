@@ -10,7 +10,7 @@ Dual linear class for a RKM level.
 import torch
 
 import rkm
-import rkm._src.model.level.Linear as Linear
+import rkm._archive.model.level.Linear as Linear
 
 
 class DualLinear(Linear.Linear):

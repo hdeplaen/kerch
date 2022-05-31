@@ -7,8 +7,8 @@ Primal linear class for a RKM level.
 @date: March 2021
 """
 
-import rkm._src as mdl
-import rkm._src.model.level.Linear as Linear
+import rkm._archive as mdl
+import rkm._archive.model.level.Linear as Linear
 
 import torch
 

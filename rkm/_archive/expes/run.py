@@ -13,9 +13,9 @@ import yaml
 import unittest
 from sklearn import preprocessing
 
-from rkm._src.expes.tests import Suites
-from rkm._src.expes.data import data
-from rkm._src.model import rkm as rkm
+from rkm._archive.expes.tests import Suites
+from rkm._archive.expes.data import data
+from rkm._archive.model import rkm as rkm
 
 
 def tests():

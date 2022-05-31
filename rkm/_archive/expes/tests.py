@@ -10,8 +10,8 @@ Various sanity tests
 import unittest
 import numpy as np
 
-from rkm._src.expes.data import data
-from rkm._src.model import rkm as rkm
+from rkm._archive.expes.data import data
+from rkm._archive.model import rkm as rkm
 
 
 class TestLevels(unittest.TestCase):

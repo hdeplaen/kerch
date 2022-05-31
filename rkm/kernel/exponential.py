@@ -137,6 +137,6 @@ class exponential(implicit, metaclass=ABCMeta):
 
     def _implicit_self(self, x=None):
         if x is None:
-            x = self._current_sample
+            x = self.current_sample
 
         return torch.ones(x.shape[0], dtype=utils.FTYPE, device=x.device)

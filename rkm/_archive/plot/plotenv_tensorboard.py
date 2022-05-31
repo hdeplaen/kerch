@@ -8,12 +8,12 @@ Plotting solutions for a deep RKM _src.
 """
 
 from torch.utils.tensorboard import SummaryWriter
-import rkm._src.plot.plotenv_parent as plotenv_parent
+import rkm._archive.plot.plotenv_parent as plotenv_parent
 import os
 
-import rkm._src.model.level.PrimalLinear as PrimalLinear
-import rkm._src.model.level.DualLinear as DualLinear
-from rkm._src import invert_dict
+import rkm._archive.model.level.PrimalLinear as PrimalLinear
+import rkm._archive.model.level.DualLinear as DualLinear
+from rkm._archive import invert_dict
 
 class plotenv_tensorboard(plotenv_parent.plotenv_parent):
     def __init__(self, model: rkm, opt: opt.Optimizer):

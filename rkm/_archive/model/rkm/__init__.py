@@ -12,13 +12,13 @@ from tqdm import trange
 
 import rkm
 from rkm.utils import process_y
-import rkm._src.model.level.IDXK as IDXK
-import rkm._src.model.opt as Optimizer
-import rkm._src.model.lssvm.SoftLSSVM as SoftLSSVM
-import rkm._src.model.lssvm.HardLSSVM as HardLSSVM
-import rkm._src.model.kpca.SoftKPCA as SoftKPCA
-import rkm._src.model.kpca.HardKPCA as HardKPCA
-import rkm._src.plot as rkmplot
+import rkm._archive.model.level.IDXK as IDXK
+import rkm._archive.model.opt as Optimizer
+import rkm._archive.model.lssvm.SoftLSSVM as SoftLSSVM
+import rkm._archive.model.lssvm.HardLSSVM as HardLSSVM
+import rkm._archive.model.kpca.SoftKPCA as SoftKPCA
+import rkm._archive.model.kpca.HardKPCA as HardKPCA
+import rkm._archive.plot as rkmplot
 
 
 class RKM(torch.nn.Module):

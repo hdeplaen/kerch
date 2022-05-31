@@ -8,8 +8,8 @@ KPCA level
 """
 
 import rkm
-from rkm._src.model.level import Level
-from rkm._src import RepresentationError
+from rkm._archive.model.level import Level
+from rkm._archive import RepresentationError
 from rkm.utils import eigs
 import torch
 from abc import ABCMeta

@@ -7,7 +7,7 @@ Hard LS-SVM abstract level
 @date: March 2021
 """
 
-from rkm._src.model.lssvm import LSSVM
+from rkm._archive.model.lssvm import LSSVM
 
 
 class HardLSSVM(LSSVM):

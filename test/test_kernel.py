@@ -33,10 +33,11 @@ class TestKernels(unittest.TestCase):
 
     def test_kernel_matrices(self):
         """
-        Verifies of the kernel matrices can be computed."
+        Verifies of the kernel matrices can be computed and can be put on CPU."
         """
         for type_name in self.tested_kernels:
             k = rkm.kernel.factory(type=type_name, sample=self.sample)
+            k = k.to(device='cpu')
             self.assertIsInstance(k.K, torch.Tensor, msg=type_name)
 
     def test_centered_kernel_matrices(self):
@@ -122,7 +123,6 @@ class TestKernels(unittest.TestCase):
         """
         Verifies if the kernels run on GPU.
         """
-        # if rkm.gpu_available():
         for type_name in self.tested_kernels:
             k = rkm.kernel.factory(type=type_name, sample=self.sample)
             k = k.to(device='cuda')
