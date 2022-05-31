@@ -117,6 +117,14 @@ class TestKernels(unittest.TestCase):
         k_nystrom = rkm.kernel.nystrom(base_kernel=k_base)
         self.assertAlmostEqual(torch.norm(k_nystrom.k() - k_base.K, p='fro').numpy(), 0)
 
+    def test_gpu(self):
+        """
+        Verifies if the kernels run on GPU.
+        """
+        for type_name in self.tested_kernels:
+            k = rkm.kernel.factory(type=type_name, sample=self.sample)
+            self.assertIsInstance(k.K, torch.Tensor, msg=type_name)
+
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestKernels)

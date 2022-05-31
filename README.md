@@ -1,4 +1,6 @@
 # RKM
+[![PyPI version](https://badge.fury.io/py/rkm.svg)](https://badge.fury.io/py/rkm)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 RKM is a Python package meant for various kernel methods, and in particular Deep Restricted Kernel Machines. You can natively perform SVMs, LS-SVMs, (K)PCA with various kernels, automatic centering, out-of-sample, etc.
 
@@ -6,11 +8,15 @@ The package is built on PyTorch and supports GPU acceleration.
 
 <!-- toc -->
 
-* [Examples](#examples)
-  - [KPCA](#kernel-principal-component-analysis)
-  - [Large-scale LS-SVM](#training-a-large-scale-least-squares-support-vector-machine)
-  - [Deep RKM](#deep-restricted-kernel-machine)
-  - [Recurrent RKM](#recurrent-restricted-kernel-machines)
+[//]: # (* [Examples]&#40;#examples&#41;)
+
+[//]: # (  - [KPCA]&#40;#kernel-principal-component-analysis&#41;)
+
+[//]: # (  - [Large-scale LS-SVM]&#40;#training-a-large-scale-least-squares-support-vector-machine&#41;)
+
+[//]: # (  - [Deep RKM]&#40;#deep-restricted-kernel-machine&#41;)
+
+[//]: # (  - [Recurrent RKM]&#40;#recurrent-restricted-kernel-machines&#41;)
 * [Installation](#installation)
   - [PIP](#pip)
   - [From source](#from-source)
@@ -18,22 +24,30 @@ The package is built on PyTorch and supports GPU acceleration.
 * [Resources](#resources)
 * [License](#license)
 
-## Examples
+[//]: # (## Examples)
 
-### Kernel Principal Component Analysis
-Example to come...
-### Training a large-scale Least-Squares Support Vector Machine
-Example to come...
-### Deep Restricted Kernel Machine
-Example to come...
-### Recurrent Restricted Kernel Machines 
-Example to come...
+[//]: # ()
+[//]: # (### Kernel Principal Component Analysis)
+
+[//]: # (Example to come...)
+
+[//]: # (### Training a large-scale Least-Squares Support Vector Machine)
+
+[//]: # (Example to come...)
+
+[//]: # (### Deep Restricted Kernel Machine)
+
+[//]: # (Example to come...)
+
+[//]: # (### Recurrent Restricted Kernel Machines )
+
+[//]: # (Example to come...)
 
 ## Installation
 As for now, there are two ways to install the package.
 
 ### PIP
-Using pip, it suffices to run `pip install git+https://github.com/hdeplaen/rkm.git`. Just rerun this command to update the package to its newest version.
+Using pip, it suffices to run `pip install rkm`. Just rerun this command with the suffix `--upgrade` to upgrade the package to its newest version.
 
 ### From source
 You can also install the package directly from the GitHub repository.
@@ -43,16 +57,6 @@ cd rkm
 python setup.py install
 ```
 
-## Acknowledgements
-
-* EU: The research leading to these results has received funding from the European Research Council under the European Union's Horizon 2020 research and innovation program / ERC Advanced Grant E-DUALITY (787960).
-* Research Council KUL:
-    - Optimization frameworks for deep kernel machines C14/18/068
-* Flemish Government:
-    - FWO: projects: GOA4917N (Deep Restricted Kernel Machines: Methods and Foundations), PhD/Postdoc grant
-    - This research received funding from the Flemish Government (AI Research Program). Johan Suykens and [your name] are affiliated to Leuven.AI - KU Leuven institute for AI, B-3000, Leuven, Belgium.
-* Ford KU Leuven Research Alliance Project KUL0076 (Stability analysis and performance improvement of deep reinforcement learning algorithms)
-
 ## Resources
 
 * [Documentation](https://hdeplaen.github.io/rkm/)
@@ -61,6 +65,8 @@ python setup.py install
 * [ESAT-STADIUS](https://www.esat.kuleuven.be/stadius/): KU Leuven, Department of Electrical Engineering (ESAT), STADIUS Center for
     Dynamical Systems, Signal Processing and Data Analytics.
 
+## Contributors
+The contributors and acknowledgements can be found in the [CONRIBUTORS](CONTRIBUTORS) file.
 
 ## License
 RKM has a MIT license, as found in the [LICENSE](LICENSE) file.

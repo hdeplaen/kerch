@@ -1,8 +1,6 @@
 torch
 numpy
 pyyaml
-scikit-learn
-pandas
 tqdm
 nested_dict
 tensorboard
