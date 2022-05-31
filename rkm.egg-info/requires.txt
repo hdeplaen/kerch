@@ -1,7 +1,0 @@
-torch
-numpy
-pyyaml
-tqdm
-nested_dict
-tensorboard
-torchvision
