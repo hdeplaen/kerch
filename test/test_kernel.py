@@ -8,7 +8,7 @@ import unittest
 import torch
 import rkm
 
-# unittest.TestCase.shortDescription = lambda x: None
+unittest.TestCase.__str__ = lambda x: ""
 
 class TestKernels(unittest.TestCase):
     r"""
@@ -117,12 +117,15 @@ class TestKernels(unittest.TestCase):
         k_nystrom = rkm.kernel.nystrom(base_kernel=k_base)
         self.assertAlmostEqual(torch.norm(k_nystrom.k() - k_base.K, p='fro').numpy(), 0)
 
+    @unittest.skipUnless(rkm.gpu_available(), 'CUDA is not available for PyTorch on this machine.')
     def test_gpu(self):
         """
         Verifies if the kernels run on GPU.
         """
+        # if rkm.gpu_available():
         for type_name in self.tested_kernels:
             k = rkm.kernel.factory(type=type_name, sample=self.sample)
+            k = k.to(device='cuda')
             self.assertIsInstance(k.K, torch.Tensor, msg=type_name)
 
 

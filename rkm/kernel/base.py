@@ -102,15 +102,22 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         """
         return {}
 
+    def _apply(self, fn):
+        with torch.no_grad():
+            for _, cache_entry in self._cache.items():
+                cache_entry.data = fn(cache_entry)
+        return super(base, self)._apply(fn)
+
     def _reset(self):
-        self._K = None
-        self._K_mean = None
-        self._K_mean_tot = None
-        self._K_norm = None
-        self._phi = None
-        self._C = None
-        self._phi_mean = None
-        self._phi_norm = None
+        self._cache = {}
+        # self._cache["K"] = None
+        # self._cache["K_mean"] = None
+        # self._cache["K_mean_tot"] = None
+        # self._cache["K_norm"] = None
+        # self._cache["phi"] = None
+        # self._cache["C"] = None
+        # self._cache["phi_mean"] = None
+        # self._cache["phi_norm"] = None
 
     @property
     def dim_sample(self) -> int:
@@ -314,8 +321,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
     #
     #     self.dmatrix()
     #     # suppress added up kernel entries in the kernel matrix
-    #     self._K.gather(dim=0, index=idxs[:, 1], out=self._K)
-    #     self._K.gather(dim=1, index=idxs[:, 1], out=self._K)
+    #     self._cache["K"].gather(dim=0, index=idxs[:, 1], out=self._cache["K"])
+    #     self._cache["K"].gather(dim=1, index=idxs[:, 1], out=self._cache["K"])
     #
     # def reduce(self, idxs):
     #     raise NotImplementedError
@@ -353,43 +360,43 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         :param idx_kernels: Index of the support vectors used to compute the kernel matrix. If nothing is provided, the kernel uses all_kernels of them.
         :return: Kernel matrix.
         """
-        if self._K is None:
+        if "K" not in self._cache:
             if implicit:
                 phi = self.phi()
-                self._K = phi @ phi.T
+                self._cache["K"] = phi @ phi.T
             else:
-                self._K = self._implicit()
+                self._cache["K"] = self._implicit()
 
                 # centering in the implicit case happens ad hoc
                 if self._center:
-                    self._K_mean = torch.mean(self._K, dim=1, keepdim=True)
-                    self._K_mean_tot = torch.mean(self._K, dim=(0, 1))
-                    self._K = self._K - self._K_mean \
-                              - self._K_mean.T \
-                              + self._K_mean_tot
+                    self._cache["K_mean"] = torch.mean(self._cache["K"], dim=1, keepdim=True)
+                    self._cache["K_mean_tot"] = torch.mean(self._cache["K"], dim=(0, 1))
+                    self._cache["K"] = self._cache["K"] - self._cache["K_mean"] \
+                              - self._cache["K_mean"].T \
+                              + self._cache["K_mean_tot"]
                 if self._normalize:
-                    self._K_norm = torch.sqrt(torch.diag(self._K))[:,None]
-                    K_norm = self._K_norm * self._K_norm.T
-                    self._K = self._K / torch.clamp(K_norm, min=self._eps)
+                    self._cache["K_norm"] = torch.sqrt(torch.diag(self._cache["K"]))[:,None]
+                    K_norm = self._cache["K_norm"] * self._cache["K_norm"].T
+                    self._cache["K"] = self._cache["K"] / torch.clamp(K_norm, min=self._eps)
 
-        return self._K
+        return self._cache["K"]
 
     def _compute_C(self):
         """
         Computes the primal matrix, i.e. correlation between the different outputs.
         Its size is output * output.
         """
-        if self._C is None:
-            self._phi = self._explicit()
+        if "C" not in self._cache:
+            self._cache["phi"] = self._explicit()
 
             if self._center:
-                self._phi_mean = torch.mean(self._phi, dim=0)
-                self._phi = self._phi - self._phi_mean
+                self._cache["phi_mean"] = torch.mean(self._cache["phi"], dim=0)
+                self._cache["phi"] = self._cache["phi"] - self._cache["phi_mean"]
             if self._normalize:
-                self._phi_norm = torch.norm(self._phi, dim=1, keepdim=True)
-                self._phi = self._phi / self._phi_norm
-            self._C = self._phi.T @ self._phi
-        return self._C, self._phi
+                self._cache["phi_norm"] = torch.norm(self._cache["phi"], dim=1, keepdim=True)
+                self._cache["phi"] = self._cache["phi"] / self._cache["phi_norm"]
+            self._cache["C"] = self._cache["phi"].T @ self._cache["phi"]
+        return self._cache["C"], self._cache["phi"]
 
     def phi(self, x=None, center=None, normalize=None) -> Tensor:
         r"""
@@ -418,7 +425,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         x = utils.castf(x)
         phi = self._explicit(x)
         if center:
-            phi = phi - self._phi_mean
+            phi = phi - self._cache["phi_mean"]
         if normalize:
             phi_norm = torch.norm(phi, dim=1, keepdim=True)
             phi = phi / torch.clamp(phi_norm, min=self._eps)
@@ -483,32 +490,32 @@ class base(torch.nn.Module, metaclass=ABCMeta):
                 K_x_sample = self._implicit(x)
                 m_x_sample = torch.mean(K_x_sample, dim=1, keepdim=True)
             else:
-                m_x_sample = self._K_mean
+                m_x_sample = self._cache["K_mean"]
 
             if y is not None:
                 K_y_sample = self._implicit(y)
                 m_y_sample = torch.mean(K_y_sample, dim=1, keepdim=True)
             else:
-                m_y_sample = self._K_mean
+                m_y_sample = self._cache["K_mean"]
 
             K = K - m_x_sample \
                   - m_y_sample.T \
-                  + self._K_mean_tot
+                  + self._cache["K_mean_tot"] 
         if normalize:
             if x is None:
-                n_x = self._K_norm
+                n_x = self._cache["K_norm"]
             else:
                 diag_K_x = self._implicit_self(x)[:, None]
                 if center:
-                    diag_K_x = diag_K_x - 2 * m_x_sample + self._K_mean_tot
+                    diag_K_x = diag_K_x - 2 * m_x_sample + self._cache["K_mean_tot"] 
                 n_x = torch.sqrt(diag_K_x)
 
             if y is None:
-                n_y = self._K_norm
+                n_y = self._cache["K_norm"]
             else:
                 diag_K_y = self._implicit_self(y)[:, None]
                 if center:
-                    diag_K_y = diag_K_y - 2 * m_y_sample + self._K_mean_tot
+                    diag_K_y = diag_K_y - 2 * m_y_sample + self._cache["K_mean_tot"] 
                 n_y = torch.sqrt(diag_K_y)
 
             K_norm = n_x * n_y.T

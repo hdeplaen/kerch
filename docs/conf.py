@@ -13,16 +13,17 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
+import rkm
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'RKM'
-copyright = '2022, HENRI DE PLAEN'
+copyright = '2022, KU Leuven'
 author = 'HENRI DE PLAEN'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = rkm.__version__
 
 
 # -- General configuration ---------------------------------------------------

@@ -4,7 +4,6 @@ __credits__ = "KU Leuven"
 
 PLOT_ENV = None
 
-@property
 def gpu_available() -> bool:
     r"""
     Returns whether GPU-enhanced computation is possible on this machine.
