@@ -1,3 +1,6 @@
 .idea/
 rkm/__pycache__/
 docs/_build/
+/build/
+/rkm.egg-info/
+/dist/
