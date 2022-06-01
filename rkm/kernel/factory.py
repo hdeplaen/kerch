@@ -1,4 +1,7 @@
-def factory(type='linear', **kwargs):
+from .base import base
+from .. import utils
+
+def factory(type='linear', **kwargs) -> base:
     r"""
     Creates a kernel based on the specified type with the specified arguments. This is the same as
     calling `rkm.kernel.type(**kwargs)` (if `type` is not a string here). This allows for the creation of kernel where
@@ -17,6 +20,7 @@ def factory(type='linear', **kwargs):
         import rkm.kernel
         kernel = getattr(rkm.kernel, type)
     except:
-        raise NameError("Invalid kernel type.")
+        utils.logger.error("Invalid kernel type.")
+        raise
     return kernel(**kwargs)
 

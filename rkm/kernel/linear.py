@@ -8,7 +8,7 @@ File containing the linear kernel class.
 """
 
 import torch
-import logging
+
 from .. import utils
 from .explicit import explicit, base
 
@@ -28,7 +28,7 @@ class linear(explicit):
     def __init__(self, **kwargs):
         super(linear, self).__init__(**kwargs)
         if self.normalize == True:
-            logging.info("A normalized linear kernel also corresponds to a cosine kernel.")
+            utils.logger.info("A normalized linear kernel also corresponds to a cosine kernel.")
 
     def __str__(self):
         return "linear kernel"

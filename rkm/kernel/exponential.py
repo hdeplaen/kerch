@@ -8,7 +8,7 @@ File containing the RBF kernel class.
 """
 
 import torch
-import logging
+
 
 from abc import ABCMeta, abstractmethod
 from .. import utils
@@ -41,7 +41,7 @@ class exponential(implicit, metaclass=ABCMeta):
         sigma = kwargs["sigma"]
         if sigma is None:
             self._sigma = None
-            self._compute_K()
+            # self._compute_K()
         else:
             sigma = torch.tensor(sigma, dtype=utils.FTYPE)
             self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
@@ -65,7 +65,7 @@ class exponential(implicit, metaclass=ABCMeta):
         if self._center:
             self._normalize = self._normalize_requested
         else:
-            logging.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
+            utils.logger.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
                          'definition if non-centered.')
 
     @property
@@ -89,6 +89,7 @@ class exponential(implicit, metaclass=ABCMeta):
         r"""
         Bandwidth :math:`\sigma` of the kernel.
         """
+        if self._sigma is None: return None
         return self._sigma.data.cpu().numpy()
 
     @sigma.setter
@@ -129,6 +130,7 @@ class exponential(implicit, metaclass=ABCMeta):
         if self._sigma is None:
             sigma = .7 * torch.median(D)
             self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
+            utils.logger.info("Bandwidth not provided and assigned by a heuristic.")
 
         fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(D, -fact))

@@ -13,3 +13,4 @@ def gpu_available() -> bool:
 
 # IMPORTS
 from . import kernel
+from .utils import logger, set_ftype, set_itype

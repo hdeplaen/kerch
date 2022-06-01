@@ -37,7 +37,7 @@ class indicator(implicit):
         however ensures it, as long as the inputs are integers. If they are not, this may get more complicated.
 
     .. warning::
-        For this type of kernel, the input dimension of the datapoints `dim_sample` must be 1.
+        For this type of kernel, the input dimension of the datapoints `dim_input` must be 1.
 
     :param lag: Lag parameter :math:`p`., defaults to 1.
     :param gamma: Identity value :math:`\gamma` of the kernel. If `None`, the value will be :math:`\gamma = 2p+1` to
@@ -64,7 +64,7 @@ class indicator(implicit):
         :param gamma: value on the diagonal (default 2 * lag + 1, which ensures PSD in most cases)
         """
         super(indicator, self).__init__(**kwargs)
-        assert self._dim_sample == 1, "The indicator kernel is only defined for 1-dimensional entries."
+        assert self._dim_input == 1, "The indicator kernel is only defined for 1-dimensional entries."
 
         self._lag_trainable = kwargs["lag_trainable"]
         self._lag = torch.nn.Parameter(

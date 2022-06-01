@@ -8,7 +8,7 @@ File containing the feature kernel class.
 """
 
 import torch
-import logging
+
 
 from .. import utils
 from .explicit import explicit, base
@@ -104,23 +104,26 @@ class nystrom(explicit):
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         super(nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
         if self._base_kernel is not None:
-            self._base_kernel.init_sample(sample=self.sample, idx_sample=self.idx)
+            self._base_kernel.init_sample(sample=self.sample_as_param, idx_sample=self.idx)
 
     def _compute_decomposition(self):
         if "H" not in self._cache:
             K = self._base_kernel.K
             lambdas, H = utils.eigs(K, k=self._dim)
 
-            # ensure that the decomposed kernel is PSD
-            assert torch.sum(lambdas < 0.) == 0, "Nyström cannot be performed with negative eigenvalues. Please ensure that " \
-                                                 "the kernel is positive semi-definite."
+            # verify that the decomposed kernel is PSD
+            sum_neg = torch.sum(lambdas < 0)
+            if sum_neg > 0:
+                utils.logger.warning(f"The decomposed kernel is not positive semi-definite as it possesses {sum_neg} "
+                                     f"negative eigenvalues. These will be discarded, but may prove relevant if their "
+                                     f"magnitude is non-negligible.")
 
             # prune very small eigenvalues if they exist to avoid unstability due to the later inversion
             idx_small = lambdas < 1.e-10
             sum_small = torch.sum(idx_small)
             if sum_small > 0:
-                logging.warning(
-                    f"Nyström kernel: {sum_small} very small eigenvalues are detected on {self._dim}."
+                utils.logger.warning(
+                    f"{sum_small} very small (or negative) eigenvalues are detected on {self._dim}."
                     f"To avoid numerical instability, these values are pruned."
                     f"The new explicit dimension is now {self._dim - sum_small}.")
                 keep_idx = torch.logical_not(idx_small)

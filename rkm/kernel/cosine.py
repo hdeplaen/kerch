@@ -11,7 +11,7 @@ from .. import utils
 from .linear import linear, base
 
 import torch
-import logging
+
 
 
 
@@ -47,5 +47,5 @@ class cosine(linear):
 
     @normalize.setter
     def normalize(self, val: bool):
-        logging.info('Changing the normalization has not effect on the cosine kernel as it is always normalized by '
+        utils.logger.info('Changing the normalization has not effect on the cosine kernel as it is always normalized by '
                      'definition. Consider a linear kernel then.')

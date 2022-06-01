@@ -1,7 +1,10 @@
 import rkm
-import torch
+import logging
 
-k = rkm.kernel.factory(type="rbf", sample=range(10))
+rkm.logger.setLevel(logging.DEBUG)
 
-
+k = rkm.kernel.factory(type="yolo")
+print(k.K)
+k.dim_input = 1
+k.num_sample = 10
 print(k.K)

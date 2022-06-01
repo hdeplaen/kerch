@@ -8,6 +8,7 @@ File containing the abstract kernel classes.
 """
 
 import torch
+
 from abc import ABCMeta, abstractmethod
 from torch import Tensor
 
@@ -25,15 +26,15 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         is always performed relative to a statistic on the sample., defaults to `False`
     :param num_sample: Number of sample points. This parameter is neglected if `sample` is not `None` and overwritten by
         the number of points contained in sample., defaults to 1
-    :param dim_sample: Dimension of each sample point. This parameter is neglected if `sample` is not `None` and
+    :param dim_input: Dimension of each sample point. This parameter is neglected if `sample` is not `None` and
         overwritten by the dimension of the sample points., defaults to 1
 
-    :type sample: Tensor(num_sample, dim_sample), optional
+    :type sample: Tensor(num_sample, dim_input), optional
     :type _sample_trainable: bool, optional
     :type center: bool, optional
     :type normalize: bool, optional
     :type num_sample: int, optional
-    :type dim_sample: int, optional
+    :type dim_input: int, optional
 
     :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
         `idx_sample` and `prop_sample` are `None`., defaults to `None`
@@ -50,14 +51,15 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         "_sample_trainable": False,
         "center": False,
         "normalize": False,
-        "num_sample": 1,
-        "dim_sample": 1,
+        "num_sample": None,
+        "dim_input": None,
         "idx_sample": None,
         "prop_sample": None})
     def __init__(self, **kwargs):
         super(base, self).__init__()
+        utils.logger.debug("Initializing new kernel.")
 
-        self._sample = None
+        self._sample = torch.nn.Parameter(torch.empty((0,0)))
         self._sample_trainable = kwargs["_sample_trainable"]
         self._center = kwargs["center"]
 
@@ -79,11 +81,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         self._eps = 1.e-8
 
         if sample is not None:
-            if len(sample.shape) == 1:
-                sample = sample.unsqueeze(1)
-            self._num_sample, self._dim_sample = sample.shape
+            self._num_sample, self._dim_input = sample.shape
         else:
-            self._dim_sample = kwargs["dim_sample"]
+            self._dim_input = kwargs["dim_input"]
             self._num_sample = kwargs["num_sample"]
 
         self.init_sample(sample, kwargs["idx_sample"], kwargs["prop_sample"])
@@ -110,28 +110,36 @@ class base(torch.nn.Module, metaclass=ABCMeta):
 
     def _reset(self):
         self._cache = {}
-        # self._cache["K"] = None
-        # self._cache["K_mean"] = None
-        # self._cache["K_mean_tot"] = None
-        # self._cache["K_norm"] = None
-        # self._cache["phi"] = None
-        # self._cache["C"] = None
-        # self._cache["phi_mean"] = None
-        # self._cache["phi_norm"] = None
 
     @property
-    def dim_sample(self) -> int:
+    def dim_input(self) -> int:
         r"""
         Dimension of each datapoint.
         """
-        return self._dim_sample
+        return self._dim_input
+
+    @dim_input.setter
+    def dim_input(self, val:int):
+        assert self._dim_input is None, "Cannot set the dimension of the sample points after initialization if the " \
+                                        "sample dataset. Use init_sample() instead."
+        self._dim_input = val
+        if self._num_sample is not None:
+            self.init_sample()
 
     @property
     def num_sample(self) -> int:
         r"""
         Number of datapoints in the sample set.
         """
-        return self._sample.shape[0]
+        return self._num_sample
+
+    @num_sample.setter
+    def num_sample(self, val:int):
+        assert self._num_sample is None, "Cannot set the dimension of the sample points after initialization if the " \
+                                       "sample dataset. Use init_sample() instead."
+        self._num_sample = val
+        if self._dim_input is not None:
+            self.init_sample()
 
     @property
     def num_idx(self) -> int:
@@ -186,17 +194,15 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         r"""
         Sample dataset.
         """
-        assert self._sample is not None, "Sample dataset has not been initialized already."
         return self._sample.data
 
     @sample.setter
     def sample(self, val):
-        assert val is not None, 'The assigned sample set is None.'
+        assert val is not None, 'The assigned sample cannot be None.'
         self.init_sample(val)
 
     @property
     def sample_as_param(self):
-        assert self._sample is not None, "Sample dataset has not been initialized already."
         return self._sample
 
     @property
@@ -275,8 +281,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
 
         :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it
             will be given relative to these samples. In case of overwriting a current sample, `num_sample` and
-            `dim_sample` are also overwritten. If `None` is specified, the sample dataset will be initialized according
-            to `num_sample` and `dim_sample` specified during the construction. If a previous sample set has been used,
+            `dim_input` are also overwritten. If `None` is specified, the sample dataset will be initialized according
+            to `num_sample` and `dim_input` specified during the construction. If a previous sample set has been used,
             it will keep the same dimension by consequence. A last case occurs when `sample` is of the class
             `torch.nn.Parameter`: the sample will then use those values and they can thus be shared with the module
             calling this method., defaults to `None`
@@ -292,14 +298,23 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         sample = utils.castf(sample)
 
         if sample is None:
+            utils.logger.debug("Initializing new sample with the sample dimensions.")
+            if self._num_sample is None and self.dim_input is None:
+                utils.logger.info('The sample  cannot be initialized because no sample dataset has been provided nor the '
+                             'sample dimensions have been initialized yet.')
+                return
             self._sample = torch.nn.Parameter(
-                torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_sample), dtype=utils.FTYPE)),
+                torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_input),
+                                                      dtype=utils.FTYPE,
+                                                      device=self._sample.device),),
                 requires_grad=self._sample_trainable)
         elif isinstance(sample, torch.nn.Parameter):
-            self._num_sample, self._dim_sample = sample.shape
+            utils.logger.debug("Using existing sample defined as an external parameter.")
+            self._num_sample, self._dim_input = sample.shape
             self._sample = sample
         else:
-            self._num_sample, self._dim_sample = sample.shape
+            utils.logger.debug("Assigning new sample based on the given values.")
+            self._num_sample, self._dim_input = sample.shape
             self._sample = torch.nn.Parameter(sample.data,
                                               requires_grad=self._sample_trainable)
 
@@ -316,6 +331,11 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         :type sample_values: Tensor
         :type idx_sample: int[], optional
         """
+
+        if self._sample.nelement() == 0:
+            utils.logger.warning('Cannot update the sample values of a None sample dataset.')
+            return
+
         sample_values = utils.castf(sample_values, dev=self._sample.device)
         self._reset()
 
@@ -386,7 +406,13 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         :param idx_kernels: Index of the support vectors used to compute the kernel matrix. If nothing is provided, the kernel uses all_kernels of them.
         :return: Kernel matrix.
         """
+        if self._sample.nelement() == 0:
+            utils.logger.warning('No sample dataset. Please assign a sample dataset or specify the dimensions of the '
+                            'sample dataset to initialize random values before computing kernel values.')
+            return None
+
         if "K" not in self._cache:
+            utils.logger.debug("Computing kernel matrix and dual statistics.")
             if implicit:
                 phi = self.phi()
                 self._cache["K"] = phi @ phi.T
@@ -412,7 +438,13 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         Computes the primal matrix, i.e. correlation between the different outputs.
         Its size is output * output.
         """
+        if self._sample.nelement() == 0:
+            utils.logger.warning('No sample dataset. Please specify a sample dataset or the dimensions of the sample '
+                            'dataset to initialize random values before computing kernel values.')
+            return None
+
         if "C" not in self._cache:
+            utils.logger.debug("Computing explicit feature map and primal statistics.")
             self._cache["phi"] = self._explicit()
 
             if self._center:
@@ -430,7 +462,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
 
         :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
             defaults to `None`
-        :type x: Tensor(,dim_sample), optional
+        :type x: Tensor(,dim_input), optional
         :param center: Returns if the matrix has to be centered or not. If None, then the default value used during
             construction is used., defaults to None
         :param normalize: Returns if the matrix has to be normalized or not. If None, then the default value used during
@@ -446,7 +478,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         if normalize is None:
             normalize = self._normalize
 
-        self._compute_C()
+        if self._compute_C() is None:
+            return None
 
         x = utils.castf(x)
         phi = self._explicit(x)
@@ -476,8 +509,8 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
         :param y: Out-of-sample points (second dimension). If `None`, the default sample will be used., defaults to `None`
 
-        :type x: Tensor(N,dim_sample), optional
-        :type y: Tensor(M,dim_sample), optional
+        :type x: Tensor(N,dim_input), optional
+        :type y: Tensor(M,dim_input), optional
 
         :param center: Returns if the matrix has to be centered or not. If None, then the default value used during
             construction is used., defaults to None
@@ -503,12 +536,14 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         y = utils.castf(y)
 
         if implicit:
-            self._compute_C()
+            if self._compute_C() is None:
+                return None
             phi_sample = self.phi(y, center, normalize)
             phi_oos = self.phi(x, center, normalize)
             return phi_oos @ phi_sample.T
         else:
-            self._compute_K()
+            if self._compute_K() is None:
+                return None
 
         K = self._implicit(x, y)
         if center:
@@ -557,7 +592,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         :param representation: Chosen representation. If `dual`, an out-of-sample kernel matrix is returned. If
             `primal` is specified, it returns the explicit feature map., defaults to `dual`
 
-        :type x: Tensor(,dim_sample)
+        :type x: Tensor(,dim_input)
         :type representation: str, optional
 
         :return: Out-of-sample kernel matrix or explicit feature map depending on `representation`.

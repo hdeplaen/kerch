@@ -27,6 +27,8 @@ class rbf(exponential):
         super(rbf, self).__init__(**kwargs)
 
     def __str__(self):
+        if self._sigma is None:
+            return f"RBF kernel (sigma undefined)"
         return f"RBF kernel (sigma: {str(self.sigma)})"
 
     @property

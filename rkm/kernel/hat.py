@@ -39,7 +39,7 @@ class hat(implicit):
          "lag_trainable": False})
     def __init__(self, **kwargs):
         super(hat, self).__init__(**kwargs)
-        assert self._dim_sample == 1, "The hat kernel is only defined for 1-dimensional entries."
+        assert self._dim_input == 1, "The hat kernel is only defined for 1-dimensional entries."
 
         self._lag_trainable = kwargs["lag_trainable"]
         self._lag = torch.nn.Parameter(

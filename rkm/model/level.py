@@ -21,7 +21,10 @@ class level(torch.nn.Module, metaclass=ABCMeta):
         "kernel": None,
         "eta": 1.,
         "sample": None,
-        "sample_trainable": False
+        "sample_trainable": False,
+        "num_sample": 1.,
+        "dim_input": None,
+        "dim_output": None
     })
     def __init__(self, **kwargs):
         super(level, self).__init__()
@@ -29,6 +32,9 @@ class level(torch.nn.Module, metaclass=ABCMeta):
         self._eta = kwargs["eta"]
         self._sample = kwargs["sample"]
         self._sample_trainable = kwargs["sample_trainable"]
+
+        self._dim_input = kwargs["dim_input"]
+        self._dim_output = kwargs["dim_output"]
 
         self._requires_bias = kwargs["_requires_bias"]
 
@@ -50,6 +56,24 @@ class level(torch.nn.Module, metaclass=ABCMeta):
 
     def __repr__(self):
         return self.__str__()
+
+    @property
+    def dim_input(self) -> int:
+        assert self._dim_input is not None, "Input dimension not initialized yet."
+        return self._dim_input
+
+    @dim_input.setter
+    def dim_input(self, val:int):
+        raise NotImplementedError
+
+    @property
+    def dim_output(self) -> int:
+        assert self._dim_output is not None, "Output dimension not initialized yet."
+        return self._dim_output
+
+    @dim_output.setter
+    def dim_output(self, val:int):
+        raise NotImplementedError
 
     @property
     def kernel(self) -> base:
@@ -172,15 +196,15 @@ class level(torch.nn.Module, metaclass=ABCMeta):
 
         if sample is None:
             self._sample = torch.nn.Parameter(
-                torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_sample), dtype=utils.FTYPE)),
+                torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_input), dtype=utils.FTYPE)),
                 requires_grad=self._sample_trainable)
             self._kernel.init_sample(self._sample)
             self.stochastic(idx_sample, prop_sample)
         elif isinstance(sample, torch.nn.Parameter):
-            self._num_sample, self._dim_sample = sample.shape
+            self._num_sample, self._dim_input = sample.shape
             self._sample = sample
         else:
-            self._num_sample, self._dim_sample = sample.shape
+            self._num_sample, self._dim_input = sample.shape
             self._sample = torch.nn.Parameter(sample.data,
                                               requires_grad=self._sample_trainable)
             self._kernel.init_sample(self.sample)
