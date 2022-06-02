@@ -20,7 +20,7 @@ def factory(type='linear', **kwargs) -> base:
         import rkm.kernel
         kernel = getattr(rkm.kernel, type)
     except:
-        utils.logger.error("Invalid kernel type.")
+        self._log.error("Invalid kernel type.")
         raise
     return kernel(**kwargs)
 

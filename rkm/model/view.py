@@ -9,216 +9,179 @@ Abstract RKM view class.
 
 import torch
 from torch import Tensor
+from abc import ABCMeta, abstractmethod
 
 from .. import utils
 from ..kernel import factory, base
+from .._sample import _sample
 
-class view(torch.nn.Module):
+
+@utils.extend_docstring(_sample)
+class view(_sample, metaclass=ABCMeta):
+    r"""
+    :param kernel: Initiates a view based on an existing kernel object. If the value is not `None`, all other
+        parameters are neglected and inherited from the provided kernel., default to `None`
+    :param bias: Bias
+    :param bias_trainable: defaults to `False`
+    :param dim_output: Output dimension
+
+    :type kernel: rkm.kernel.base, optional
+    :type bias: bool, optional
+    :type bias_trainable: bool, optional
+    :type dim_output: int, optional
+    """
+
     @utils.kwargs_decorator({
         "kernel": None,
-        "sample": None,
-        "sample_trainable": False,
-        "num_sample": None,
-        "dim_input": None,
-        "dim_output": None
+        "dim_output": None,
+        "bias": False,
+        "bias_trainable": False
     })
     def __init__(self, **kwargs):
-        super(view, self).__init__()
-
-        self._sample = kwargs["sample"]
-        self._sample_trainable = kwargs["sample_trainable"]
-
-        self._dim_input = kwargs["dim_input"]
+        """
+        A view is made of a kernel and primal or dual variables. This second part is handled by the daughter classes.
+        """
+        super(view, self).__init__(**kwargs)
         self._dim_output = kwargs["dim_output"]
 
-        self._requires_bias = kwargs["_requires_bias"]
+        # BIAS
+        self._bias_trainable = kwargs["bias_trainable"]
+        self._requires_bias = kwargs["bias"]
+        self._bias = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
+                                        requires_grad=self._bias_trainable)
 
         # KERNEL INIT
+        # always share sample with kernel
         kernel = kwargs["kernel"]
         if kernel is None:
-            self._kernel = factory(**kwargs)
-            self.init_sample(self._kernel.sample_as_param)
+            self._kernel = factory(**{**kwargs,
+                                      "sample": self.sample_as_param,
+                                      "idx_sample": self.idx})
         elif isinstance(kernel, base):
+            self._log.info("Initiating view based on existing kernel and overwriting its sample.")
             self._kernel = kernel
-            self.init_sample(self._kernel.sample_as_param)
-            self.stochastic(self._kernel.idx)
+            self._kernel.init_sample(sample=self.sample_as_param,
+                                     idx_sample=self.idx)
         else:
-            raise Exception("Argument kernel is not of the kernel class.")
+            raise TypeError("Argument kernel is not of the kernel class.")
 
-        utils.logger.debug("Creating view with "+str(self._kernel))
+        self._log.debug("View initialized with " + str(self._kernel))
 
     def __str__(self):
-        pass
+        return "View with " + str(self._kernel)
 
     def __repr__(self):
         return self.__str__()
 
     @property
-    def dim_input(self) -> int:
-        return self._dim_input
+    def bias(self):
+        if self._bias.nelement() == 0:
+            return None
+        return self._bias.data.cpu().numpy()
 
-    @dim_input.setter
-    def dim_input(self, val:int):
-        raise NotImplementedError
+    @bias.setter
+    def bias(self, val):
+        if val is not None:
+            val = utils.castf(val, dev=self._bias.device).squeeze()
+            dim_val = len(val.shape)
+
+            # verifying the shape of the bias
+            if dim_val == 0:
+                val = val.repeat(self._dim_output)
+            elif dim_val > 1:
+                self._log.error("The bias can only be set to a scalar or a vector. "
+                                "This operation is thus discarded.")
+            # setting the value
+            if self._bias.nelement() == 0:
+                self._bias = torch.nn.Parameter(val,
+                                                requires_grad=self._bias_trainable)
+            else:
+                self._bias.data = val
+                # zeroing the gradients if relevant
+                if self._bias_trainable:
+                    self._bias.grad.data.zero_()
+
+    @property
+    def bias_trainable(self) -> bool:
+        return self._bias_trainable
+
+    @bias_trainable.setter
+    def bias_trainable(self, val: bool):
+        self._bias_trainable = val
+        self._bias.requires_grad = self._bias_trainable
 
     @property
     def dim_output(self) -> int:
+        r"""
+        Output dimension
+        """
         return self._dim_output
 
     @dim_output.setter
-    def dim_output(self, val:int):
-        raise NotImplementedError
+    def dim_output(self, val: int):
+        self._log.error("This value cannot be set.")
 
     @property
     def kernel(self) -> base:
         r"""
-        The kernel used by the model or view.
+        The kernel used by the model or view. Reassigning this value
         """
         return self._kernel
 
     @kernel.setter
-    def kernel(self, val:base):
-        raise NotImplementedError
+    def kernel(self, val: base):
+        self._kernel = val
+        self.init_sample(self._kernel.sample_as_param)
+        self._idx_sample = self._kernel.idx
 
-    @property
-    def sample(self) -> Tensor:
-        return self._sample
+    ## MATHS
 
-    @sample.setter
-    def sample(self, val):
-        raise NotImplementedError
-        # val = utils.castf(val)
+    def phi(self, x=None) -> Tensor:
+        return self.kernel.phi(x)
 
-    @property
-    def dim_sample(self) -> int:
-        r"""
-        Dimension of each datapoint.
-        """
-        return self._dim_sample
+    def k(self, x=None) -> Tensor:
+        return self._kernel.k(x)
 
-    @property
-    def num_sample(self) -> int:
-        r"""
-        Number of datapoints in the sample set.
-        """
-        return self._num_sample
-
-    @property
-    def num_idx(self) -> int:
-        r"""
-        Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
-        the case of stochastic training.
-        """
-        return len(self._idx_sample)
-
-    @property
-    def _current_sample(self) -> Tensor:
-        return self._sample[self._idx_sample, :]
-
-    def _all_sample(self):
-        return range(self.num_sample)
-
-    def train(self, mode=True):
-        r"""
-        Sets the view in training mode, which disables the gradients computation and disables stochasticity of the
-        kernel. For the gradients and other things, we refer to the `torch.nn.Module` documentation. For the stochastic
-        part, when put in evaluation mode (`False`), all the sample points are used for the computations, regardless of
-        the previously specified indices.
-        """
-        if not mode:
-            self.stochastic()
-        return self
-
-    def stochastic(self, idx_sample=None, prop_sample=None):
-        """
-        Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
-        case of stochastic training.
-
-        :param idx_sample: Indices of the sample subset relative to the original sample set., defaults to `None`
-        :type idx_sample: int[], optional
-        :param prop_sample: Instead of giving indices, passing a proportion of the original sample set is also
-            possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
-            such that :math:`0 <` `prop_sample` :math:`\leq 1`., defaults to `None`.
-        :type prop_sample: double, optional
-
-        If `None` is specified for both `idx_sample` and `prop_sample`, all samples are used and the subset equals the
-        original sample set. This is also the default behavior if this function is never called, nor the parameters
-        specified during initialization.
-
-        .. note::
-            Both `idx_sample` and `prop_sample` cannot be filled together as conflict would arise.
-        """
-        assert idx_sample is None or prop_sample is None, "Both idx_sample and prop_sample are not None. " \
-                                                          "Please choose one non-None parameter only."
-
-        if idx_sample is not None:
-            self._idx_sample = idx_sample
-        elif prop_sample is not None:
-            assert prop_sample <= 1., 'Parameter prop_sample: the chosen proportion cannot be greater than 1.'
-            assert prop_sample > 0., 'Parameter prop_sample: the chosen proportion must be strictly greater than 0.'
-            n = self.num_sample
-            k = torch.round(n * prop_sample)
-            perm = torch.randperm(n)
-            self._idx_sample = perm[:k]
-        else:
-            self._idx_sample = self._all_sample()
-
-        self._kernel.stochastic(idx_sample=self._idx_sample)
-
-    def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
-        r"""
-        Initializes the sample set (and the stochastic indices).
-
-        :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it
-            will be given relative to these samples. In case of overwriting a current sample, `num_sample` and
-            `dim_sample` are also overwritten. If `None` is specified, the sample dataset will be initialized according
-            to `num_sample` and `dim_sample` specified during the construction. If a previous sample set has been used,
-            it will keep the same dimension by consequence. A last case occurs when `sample` is of the class
-            `torch.nn.Parameter`: the sample will then use those values and they can thus be shared with the module
-            calling this method., defaults to `None`
-        :type sample: Tensor, optional
-        :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
-            `idx_sample` and `prop_sample` are `None`., defaults to `None`
-        :type idx_sample: int[], optional
-        :param prop_sample: Instead of giving indices, specifying a proportion of the original sample set is also
-            possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
-            such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
-            `prop_sample` are `None`., defaults to `None`.
-        """
-        sample = utils.castf(sample)
-
-        if sample is None:
-            self._sample = torch.nn.Parameter(
-                torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_input), dtype=utils.FTYPE)),
-                requires_grad=self._sample_trainable)
-            self._kernel.init_sample(self._sample)
-            self.stochastic(idx_sample, prop_sample)
-        elif isinstance(sample, torch.nn.Parameter):
-            self._num_sample, self._dim_input = sample.shape
-            self._sample = sample
-        else:
-            self._num_sample, self._dim_input = sample.shape
-            self._sample = torch.nn.Parameter(sample.data,
-                                              requires_grad=self._sample_trainable)
-            self._kernel.init_sample(self.sample)
-            self.stochastic(idx_sample, prop_sample)
-
-    def update_sample(self, sample_values, idx_sample=None):
-        raise NotImplementedError
-
-## MATHS
-
-    def H(self, x=None):
+    @abstractmethod
+    def h(self, x=None) -> Tensor:
         pass
 
-    def V(self, x=None):
+    @abstractmethod
+    def w(self, x=None) -> Tensor:
         pass
 
-    def VH(self, x=None):
+    @abstractmethod
+    def wh(self, x=None) -> Tensor:
         pass
 
-    def phi(self, x=None):
+    @abstractmethod
+    def phiw(self, x=None) -> Tensor:
         pass
 
-    def phiV(self, x=None):
-        pass
+    @property
+    def Phi(self) -> Tensor:
+        return self.phi()
+
+    @property
+    def K(self) -> Tensor:
+        return self._kernel.K
+
+    @property
+    def H(self) -> Tensor:
+        return self.h()
+
+    @property
+    def W(self) -> Tensor:
+        return self.w()
+
+    @property
+    def WH(self) -> Tensor:
+        return self.wh()
+
+    @property
+    def PhiW(self) -> Tensor:
+        return self.phiw()
+
+    def forward(self, x=None):
+        if x is None:
+            return self.phiw(x) + self._bias[:, None]

@@ -62,8 +62,8 @@ class exponential(implicit, metaclass=ABCMeta):
         if self._center:
             self._normalize = self._normalize_requested
         else:
-            utils.logger.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
-                         'definition if non-centered.')
+            self._log.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
+                           'definition if non-centered.')
 
     @property
     def center(self) -> bool:
@@ -128,7 +128,7 @@ class exponential(implicit, metaclass=ABCMeta):
         if self._sigma is None:
             sigma = .7 * torch.median(D)
             self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
-            utils.logger.info("Bandwidth not provided and assigned by a heuristic.")
+            self._log.info("Bandwidth not provided and assigned by a heuristic.")
 
         fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(D, -fact))

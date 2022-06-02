@@ -114,15 +114,15 @@ class nystrom(explicit):
             # verify that the decomposed kernel is PSD
             sum_neg = torch.sum(lambdas < 0)
             if sum_neg > 0:
-                utils.logger.warning(f"The decomposed kernel is not positive semi-definite as it possesses {sum_neg} "
-                                     f"negative eigenvalues. These will be discarded, but may prove relevant if their "
-                                     f"magnitude is non-negligible.")
+                self._log.warning(f"The decomposed kernel is not positive semi-definite as it possesses {sum_neg} "
+                                  f"negative eigenvalues. These will be discarded, but may prove relevant if their "
+                                  f"magnitude is non-negligible.")
 
             # prune very small eigenvalues if they exist to avoid unstability due to the later inversion
             idx_small = lambdas < 1.e-10
             sum_small = torch.sum(idx_small)
             if sum_small > 0:
-                utils.logger.warning(
+                self._log.warning(
                     f"{sum_small} very small (or negative) eigenvalues are detected on {self._dim}."
                     f"To avoid numerical instability, these values are pruned."
                     f"The new explicit dimension is now {self._dim - sum_small}.")

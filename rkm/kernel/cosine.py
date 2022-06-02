@@ -47,5 +47,5 @@ class cosine(linear):
 
     @normalize.setter
     def normalize(self, val: bool):
-        utils.logger.info('Changing the normalization has not effect on the cosine kernel as it is always normalized by '
-                     'definition. Consider a linear kernel then.')
+        self._log.info('Changing the normalization has not effect on the cosine kernel as it is always normalized by '
+                       'definition. Consider a linear kernel then.')

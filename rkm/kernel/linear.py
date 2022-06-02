@@ -28,7 +28,7 @@ class linear(explicit):
     def __init__(self, **kwargs):
         super(linear, self).__init__(**kwargs)
         if self.normalize == True:
-            utils.logger.info("A normalized linear kernel also corresponds to a cosine kernel.")
+            self._log.info("A normalized linear kernel also corresponds to a cosine kernel.")
 
     def __str__(self):
         return "linear kernel"
