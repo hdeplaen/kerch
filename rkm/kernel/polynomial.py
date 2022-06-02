@@ -34,20 +34,24 @@ class polynomial(base):
     @utils.kwargs_decorator(
         {"degree": 2., "degree_trainable": False})
     def __init__(self, **kwargs):
+        self._degree = kwargs["degree"]
         super(polynomial, self).__init__(**kwargs)
 
         self._degree_trainable = kwargs["degree_trainable"]
-        self._degree = torch.nn.Parameter(torch.tensor(kwargs["degree"]), requires_grad=self.degree_trainable)
+        self._degree = torch.nn.Parameter(torch.tensor(self._degree),
+                                          requires_grad=self.degree_trainable)
 
     def __str__(self):
-        return f"polynomial kernel of order {int(self.degree.data)}"
+        return f"polynomial kernel of order {self.degree}."
 
     @property
     def degree(self):
         r"""
         Degree of the polynomial.
         """
-        return self._degree.data
+        if isinstance(self._degree, torch.nn.Parameter):
+            return self._degree.cpu().numpy()
+        return self._degree
 
     @degree.setter
     def degree(self, val):

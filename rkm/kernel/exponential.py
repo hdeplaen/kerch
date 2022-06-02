@@ -31,6 +31,7 @@ class exponential(implicit, metaclass=ABCMeta):
     @utils.kwargs_decorator(
         {"sigma": None, "sigma_trainable": False})
     def __init__(self, **kwargs):
+        self._sigma = kwargs["sigma"]
         super(exponential, self).__init__(**kwargs)
 
         # Exponential kernels are always naturally normalized if not centered
@@ -38,12 +39,8 @@ class exponential(implicit, metaclass=ABCMeta):
             self._normalize = False
 
         self._sigma_trainable = kwargs["sigma_trainable"]
-        sigma = kwargs["sigma"]
-        if sigma is None:
-            self._sigma = None
-            # self._compute_K()
-        else:
-            sigma = torch.tensor(sigma, dtype=utils.FTYPE)
+        if self._sigma is not None:
+            sigma = torch.tensor(self._sigma, dtype=utils.FTYPE)
             self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
 
     def __str__(self):
@@ -89,8 +86,9 @@ class exponential(implicit, metaclass=ABCMeta):
         r"""
         Bandwidth :math:`\sigma` of the kernel.
         """
-        if self._sigma is None: return None
-        return self._sigma.data.cpu().numpy()
+        if isinstance(self._sigma, torch.nn.Parameter):
+            return self._sigma.data.cpu().numpy()
+        return None
 
     @sigma.setter
     def sigma(self, val):

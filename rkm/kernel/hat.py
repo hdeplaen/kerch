@@ -38,24 +38,28 @@ class hat(implicit):
         {"lag": 1,
          "lag_trainable": False})
     def __init__(self, **kwargs):
+        self._lag = kwargs["lag"]
         super(hat, self).__init__(**kwargs)
+
         assert self._dim_input == 1, "The hat kernel is only defined for 1-dimensional entries."
 
         self._lag_trainable = kwargs["lag_trainable"]
         self._lag = torch.nn.Parameter(
-            torch.tensor(kwargs["lag"], dtype=utils.FTYPE), requires_grad=self._lag_trainable)
+            torch.tensor(self._lag, dtype=utils.FTYPE), requires_grad=self._lag_trainable)
 
         self._relu = torch.nn.ReLU(inplace=False)
 
     def __str__(self):
-        return f"Hat kernel (lag: {str(self._lag.data.cpu().numpy())})"
+        return f"Hat kernel (lag: {self.lag})"
 
     @property
     def lag(self):
         r"""
         Lah :math:`p` of the kernel.
         """
-        return self._lag.data.cpu().numpy()
+        if isinstance(self._lag, torch.nn.Parameter):
+            return self._lag.data.cpu().numpy()
+        return self._lag
 
     @lag.setter
     def lag(self, val):

@@ -4,6 +4,7 @@ Date: May 2022
 License: MIT
 """
 
+import importlib
 import unittest
 import torch
 import rkm
@@ -128,6 +129,14 @@ class TestKernels(unittest.TestCase):
             k = k.to(device='cuda')
             self.assertIsInstance(k.K, torch.Tensor, msg=type_name)
 
+    @unittest.skip
+    def test_basic_properties(self):
+        r"""
+        Tests the basic properties of the kernels as defined by base.test()
+        """
+        for type_name in self.tested_kernels:
+            cls = importlib.import_module(type_name, 'rkm.kernel.subpkg')
+            self.assertTrue(cls.test(sample=self.sample))
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestKernels)

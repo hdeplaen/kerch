@@ -27,7 +27,7 @@ class additive_chi2(implicit):
         super(additive_chi2, self).__init__(**kwargs)
 
     def __str__(self):
-        return f"Additive Chi Squared kernel"
+        return f"Additive Chi Squared kernel."
 
     @property
     def params(self):

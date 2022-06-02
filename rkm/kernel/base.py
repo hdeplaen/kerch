@@ -12,7 +12,9 @@ import torch
 from abc import ABCMeta, abstractmethod
 from torch import Tensor
 
+import rkm.utils
 from .. import utils
+
 
 class base(torch.nn.Module, metaclass=ABCMeta):
     r"""
@@ -57,9 +59,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         "prop_sample": None})
     def __init__(self, **kwargs):
         super(base, self).__init__()
-        utils.logger.debug("Initializing new kernel.")
+        utils.logger.debug("Initializing " + str(self))
 
-        self._sample = torch.nn.Parameter(torch.empty((0,0)))
+        self._sample = torch.nn.Parameter(torch.empty((0, 0)))
         self._sample_trainable = kwargs["_sample_trainable"]
         self._center = kwargs["center"]
 
@@ -119,7 +121,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         return self._dim_input
 
     @dim_input.setter
-    def dim_input(self, val:int):
+    def dim_input(self, val: int):
         assert self._dim_input is None, "Cannot set the dimension of the sample points after initialization if the " \
                                         "sample dataset. Use init_sample() instead."
         self._dim_input = val
@@ -134,9 +136,9 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         return self._num_sample
 
     @num_sample.setter
-    def num_sample(self, val:int):
+    def num_sample(self, val: int):
         assert self._num_sample is None, "Cannot set the dimension of the sample points after initialization if the " \
-                                       "sample dataset. Use init_sample() instead."
+                                         "sample dataset. Use init_sample() instead."
         self._num_sample = val
         if self._dim_input is not None:
             self.init_sample()
@@ -157,7 +159,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         return self._center
 
     @center.setter
-    def center(self, val:bool):
+    def center(self, val: bool):
         self._center = val
         self._reset()
 
@@ -300,13 +302,14 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         if sample is None:
             utils.logger.debug("Initializing new sample with the sample dimensions.")
             if self._num_sample is None and self.dim_input is None:
-                utils.logger.info('The sample  cannot be initialized because no sample dataset has been provided nor the '
-                             'sample dimensions have been initialized yet.')
+                utils.logger.info(
+                    'The sample  cannot be initialized because no sample dataset has been provided nor the '
+                    'sample dimensions have been initialized yet.')
                 return
             self._sample = torch.nn.Parameter(
                 torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_input),
                                                       dtype=utils.FTYPE,
-                                                      device=self._sample.device),),
+                                                      device=self._sample.device), ),
                 requires_grad=self._sample_trainable)
         elif isinstance(sample, torch.nn.Parameter):
             utils.logger.debug("Using existing sample defined as an external parameter.")
@@ -388,7 +391,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         return x, y
 
     def _implicit_self(self, x=None):
-        K = self._implicit(x,x)
+        K = self._implicit(x, x)
         return torch.diag(K)
 
     @abstractmethod
@@ -408,7 +411,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         """
         if self._sample.nelement() == 0:
             utils.logger.warning('No sample dataset. Please assign a sample dataset or specify the dimensions of the '
-                            'sample dataset to initialize random values before computing kernel values.')
+                                 'sample dataset to initialize random values before computing kernel values.')
             return None
 
         if "K" not in self._cache:
@@ -424,10 +427,10 @@ class base(torch.nn.Module, metaclass=ABCMeta):
                     self._cache["K_mean"] = torch.mean(self._cache["K"], dim=1, keepdim=True)
                     self._cache["K_mean_tot"] = torch.mean(self._cache["K"], dim=(0, 1))
                     self._cache["K"] = self._cache["K"] - self._cache["K_mean"] \
-                              - self._cache["K_mean"].T \
-                              + self._cache["K_mean_tot"]
+                                       - self._cache["K_mean"].T \
+                                       + self._cache["K_mean_tot"]
                 if self._normalize:
-                    self._cache["K_norm"] = torch.sqrt(torch.diag(self._cache["K"]))[:,None]
+                    self._cache["K_norm"] = torch.sqrt(torch.diag(self._cache["K"]))[:, None]
                     K_norm = self._cache["K_norm"] * self._cache["K_norm"].T
                     self._cache["K"] = self._cache["K"] / torch.clamp(K_norm, min=self._eps)
 
@@ -440,7 +443,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         """
         if self._sample.nelement() == 0:
             utils.logger.warning('No sample dataset. Please specify a sample dataset or the dimensions of the sample '
-                            'dataset to initialize random values before computing kernel values.')
+                                 'dataset to initialize random values before computing kernel values.')
             return None
 
         if "C" not in self._cache:
@@ -560,15 +563,15 @@ class base(torch.nn.Module, metaclass=ABCMeta):
                 m_y_sample = self._cache["K_mean"]
 
             K = K - m_x_sample \
-                  - m_y_sample.T \
-                  + self._cache["K_mean_tot"] 
+                - m_y_sample.T \
+                + self._cache["K_mean_tot"]
         if normalize:
             if x is None:
                 n_x = self._cache["K_norm"]
             else:
                 diag_K_x = self._implicit_self(x)[:, None]
                 if center:
-                    diag_K_x = diag_K_x - 2 * m_x_sample + self._cache["K_mean_tot"] 
+                    diag_K_x = diag_K_x - 2 * m_x_sample + self._cache["K_mean_tot"]
                 n_x = torch.sqrt(diag_K_x)
 
             if y is None:
@@ -576,7 +579,7 @@ class base(torch.nn.Module, metaclass=ABCMeta):
             else:
                 diag_K_y = self._implicit_self(y)[:, None]
                 if center:
-                    diag_K_y = diag_K_y - 2 * m_y_sample + self._cache["K_mean_tot"] 
+                    diag_K_y = diag_K_y - 2 * m_y_sample + self._cache["K_mean_tot"]
                 n_y = torch.sqrt(diag_K_y)
 
             K_norm = n_x * n_y.T
@@ -643,3 +646,61 @@ class base(torch.nn.Module, metaclass=ABCMeta):
         called.
         """
         return self._compute_C()[1]
+
+    ####################################################################################################################
+
+    @classmethod
+    def test(cls, sample=None) -> bool:
+        r"""
+        When creating a new kernel, one can use this method to test it and verify basic properties:
+        * shape
+        * symmetry
+        * psd
+        """
+        # LOGGING
+        import logging
+        logger = utils.logger
+        _TEST_LEVEL = logging.INFO
+        _RESTORE_LEVEL = logger.level
+        logger.setLevel(_TEST_LEVEL)
+
+        if sample is None:
+            sample = range(1, 10)
+
+        # create instance of the class and retrieve kernel matrix
+        k = cls(sample=sample)
+        num_sample = k.num_sample
+        K = k.K
+
+        # verify shape
+        verify_shape = True
+        verify_shape = verify_shape and len(K.shape) == 2  # verify tensor dimension
+        verify_shape = verify_shape and K.shape[0] == num_sample
+        verify_shape = verify_shape and K.shape[1] == num_sample
+        if verify_shape:
+            logger.info("The kernel matrix has the required shape.")
+        else:
+            logger.error("The kernel matrix is not of the correct shape.")
+            return False
+
+        # verify symmetry
+        verify_symmetry = torch.sum(K - K.T) < 1.e-10
+        if verify_symmetry:
+            logger.info("The kernel is symmetric.")
+        else:
+            logger.error("The kernel is not symmetric.")
+            return False
+
+        # verify psd
+        s, _ = rkm.utils.eigs(K, psd=False)
+        verify_psd = torch.sum(s < 0) == 0
+        if verify_psd:
+            logger.info("The kernel is positive semi-definite.")
+        else:
+            logger.warning("The kernel is not positive semi-definite. This is not essential in the general case.")
+            return False
+
+        # verify device support
+
+        logger.setLevel(_RESTORE_LEVEL)
+        return True

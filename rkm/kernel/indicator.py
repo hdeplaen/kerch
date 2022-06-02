@@ -63,12 +63,13 @@ class indicator(implicit):
         :param lag: bandwidth of the kernel (default 1)
         :param gamma: value on the diagonal (default 2 * lag + 1, which ensures PSD in most cases)
         """
+        self._lag = kwargs["lag"]
         super(indicator, self).__init__(**kwargs)
         assert self._dim_input == 1, "The indicator kernel is only defined for 1-dimensional entries."
 
         self._lag_trainable = kwargs["lag_trainable"]
         self._lag = torch.nn.Parameter(
-            torch.tensor(kwargs["lag"], dtype=utils.FTYPE), requires_grad=self._lag_trainable)
+            torch.tensor(self._lag, dtype=utils.FTYPE), requires_grad=self._lag_trainable)
 
         self._gamma_trainable = kwargs["gamma_trainable"]
         if kwargs["gamma"] is None:
@@ -80,7 +81,7 @@ class indicator(implicit):
                 torch.tensor(kwargs["gamma"], dtype=utils.FTYPE), requires_grad=self._gamma_trainable)
 
     def __str__(self):
-        return f"Indicator kernel (lag: {str(self.lag)}, gamma: {str(self.gamma)})"
+        return f"Indicator kernel (lag: {self.lag})"
 
     @property
     def params(self):
@@ -90,9 +91,11 @@ class indicator(implicit):
     @property
     def lag(self):
         r"""
-        Lag :math:`p` of the kernel.
+        Lah :math:`p` of the kernel.
         """
-        return self._lag.data.cpu().numpy()
+        if isinstance(self._lag, torch.nn.Parameter):
+            return self._lag.data.cpu().numpy()
+        return self._lag
 
     @lag.setter
     def lag(self, val):

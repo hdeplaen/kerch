@@ -31,7 +31,9 @@ class laplacian(exponential):
         super(laplacian, self).__init__(**kwargs)
 
     def __str__(self):
-        return f"Laplacian kernel (sigma: {str(self.sigma.data.cpu().numpy())})"
+        if self._sigma is None:
+            return f"Laplacian kernel (sigma undefined)"
+        return f"Laplacian kernel (sigma: {str(self.sigma)})"
 
     @property
     def hparams(self):

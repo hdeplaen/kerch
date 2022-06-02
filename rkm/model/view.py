@@ -1,5 +1,5 @@
 """
-Abstract RKM level class.
+Abstract RKM view class.
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -10,26 +10,21 @@ Abstract RKM level class.
 import torch
 from torch import Tensor
 
-from abc import ABCMeta, abstractmethod
-
 from .. import utils
 from ..kernel import factory, base
 
-class level(torch.nn.Module, metaclass=ABCMeta):
+class view(torch.nn.Module):
     @utils.kwargs_decorator({
-        "_requires_bias": False,
         "kernel": None,
-        "eta": 1.,
         "sample": None,
         "sample_trainable": False,
-        "num_sample": 1.,
+        "num_sample": None,
         "dim_input": None,
         "dim_output": None
     })
     def __init__(self, **kwargs):
-        super(level, self).__init__()
+        super(view, self).__init__()
 
-        self._eta = kwargs["eta"]
         self._sample = kwargs["sample"]
         self._sample_trainable = kwargs["sample_trainable"]
 
@@ -50,7 +45,8 @@ class level(torch.nn.Module, metaclass=ABCMeta):
         else:
             raise Exception("Argument kernel is not of the kernel class.")
 
-    @abstractmethod
+        utils.logger.debug("Creating view with "+str(self._kernel))
+
     def __str__(self):
         pass
 
@@ -59,7 +55,6 @@ class level(torch.nn.Module, metaclass=ABCMeta):
 
     @property
     def dim_input(self) -> int:
-        assert self._dim_input is not None, "Input dimension not initialized yet."
         return self._dim_input
 
     @dim_input.setter
@@ -68,7 +63,6 @@ class level(torch.nn.Module, metaclass=ABCMeta):
 
     @property
     def dim_output(self) -> int:
-        assert self._dim_output is not None, "Output dimension not initialized yet."
         return self._dim_output
 
     @dim_output.setter
@@ -78,7 +72,7 @@ class level(torch.nn.Module, metaclass=ABCMeta):
     @property
     def kernel(self) -> base:
         r"""
-        The kernel used by the model or level.
+        The kernel used by the model or view.
         """
         return self._kernel
 
@@ -88,7 +82,6 @@ class level(torch.nn.Module, metaclass=ABCMeta):
 
     @property
     def sample(self) -> Tensor:
-        assert self._sample is not None, "Sample dataset has not been initialized yet."
         return self._sample
 
     @sample.setter
@@ -108,7 +101,7 @@ class level(torch.nn.Module, metaclass=ABCMeta):
         r"""
         Number of datapoints in the sample set.
         """
-        return self._sample.shape[0]
+        return self._num_sample
 
     @property
     def num_idx(self) -> int:
@@ -127,7 +120,7 @@ class level(torch.nn.Module, metaclass=ABCMeta):
 
     def train(self, mode=True):
         r"""
-        Sets the level in training mode, which disables the gradients computation and disables stochasticity of the
+        Sets the view in training mode, which disables the gradients computation and disables stochasticity of the
         kernel. For the gradients and other things, we refer to the `torch.nn.Module` documentation. For the stochastic
         part, when put in evaluation mode (`False`), all the sample points are used for the computations, regardless of
         the previously specified indices.
@@ -215,22 +208,17 @@ class level(torch.nn.Module, metaclass=ABCMeta):
 
 ## MATHS
 
-    @property
-    def H(self):
+    def H(self, x=None):
         pass
 
-    @property
-    def V(self):
+    def V(self, x=None):
         pass
 
-    @property
-    def VH(self):
+    def VH(self, x=None):
         pass
 
-    @property
-    def phi(self):
+    def phi(self, x=None):
         pass
 
-    @property
-    def phiV(self):
+    def phiV(self, x=None):
         pass

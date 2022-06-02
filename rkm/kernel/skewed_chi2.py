@@ -30,22 +30,34 @@ class skewed_chi2(implicit):
     @utils.kwargs_decorator(
         {"c": 0., "c_trainable": False})
     def __init__(self, **kwargs):
+        self._c = kwargs["c"]
         super(skewed_chi2, self).__init__(**kwargs)
 
         self._c_trainable = kwargs["c_trainable"]
         self._c = torch.nn.Parameter(
-            torch.tensor([kwargs["c"]], dtype=utils.FTYPE), requires_grad=self._c_trainable)
+            torch.tensor(self._c, dtype=utils.FTYPE),
+            requires_grad=self._c_trainable)
 
     def __str__(self):
-        return f"RBF kernel (c: {str(self.c.cpu().numpy()[0])})"
+        return f"RBF kernel (c: {self.c})."
 
     @property
-    def c(self):
-        return self._c.data
+    def c(self) -> float:
+        r"""
+        Parameter :math:``c` of the kernel.
+        """
+        if isinstance(self._c, torch.nn.Parameter):
+            return self._c.data.cpu().numpy()
+        return self._c
+
+    @c.setter
+    def c(self, val):
+        self._reset()
+        self._c.data = utils.castf(val, tensor=False, dev=self._c.device)
 
     @property
     def params(self):
-        return {'Sigma': self.sigma}
+        return {'c': self.c}
 
     @property
     def hparams(self):
