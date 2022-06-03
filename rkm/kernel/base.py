@@ -65,15 +65,6 @@ class base(_sample, metaclass=ABCMeta):
         """
         return {}
 
-    def _apply(self, fn):
-        with torch.no_grad():
-            for _, cache_entry in self._cache.items():
-                cache_entry.data = fn(cache_entry)
-        return super(base, self)._apply(fn)
-
-    def _reset(self):
-        self._cache = {}
-
     @property
     def center(self) -> bool:
         r"""

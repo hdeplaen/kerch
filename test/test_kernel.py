@@ -4,7 +4,6 @@ Date: May 2022
 License: MIT
 """
 
-import importlib
 import unittest
 import torch
 import rkm
@@ -29,17 +28,32 @@ class TestKernels(unittest.TestCase):
                                'additive_chi2',
                                'skewed_chi2']
 
-        # small sample for fast tests
-        self.sample = range(1, 5)
+        self.sample = range(1,5)
 
     def test_kernel_matrices(self):
         """
-        Verifies of the kernel matrices can be computed and can be put on CPU."
+        Verifies if the sample kernel matrices can be computed."
         """
         for type_name in self.tested_kernels:
             k = rkm.kernel.factory(type=type_name, sample=self.sample)
-            k = k.to(device='cpu')
             self.assertIsInstance(k.K, torch.Tensor, msg=type_name)
+
+    def test_symmetry(self):
+        """
+        Verifies if the sample kernel matrices are symmetric."
+        """
+        for type_name in self.tested_kernels:
+            k = rkm.kernel.factory(type=type_name, sample=self.sample)
+            self.assertAlmostEqual(torch.norm(k.K - k.K.T, p='fro').numpy(), 0, msg=type_name)
+
+    def test_psd(self):
+        """
+        Verifies if the sample kernel matrices are positive semi-definie."
+        """
+        for type_name in self.tested_kernels:
+            k = rkm.kernel.factory(type=type_name, sample=self.sample)
+            e = torch.linalg.eigvals(k.K).real < -1.e-15
+            self.assertEqual(e.sum().numpy(), 0, msg=self.sample)
 
     def test_centered_kernel_matrices(self):
         """
@@ -128,15 +142,6 @@ class TestKernels(unittest.TestCase):
             k = rkm.kernel.factory(type=type_name, sample=self.sample)
             k = k.to(device='cuda')
             self.assertIsInstance(k.K, torch.Tensor, msg=type_name)
-
-    @unittest.skip
-    def test_basic_properties(self):
-        r"""
-        Tests the basic properties of the kernels as defined by base.test()
-        """
-        for type_name in self.tested_kernels:
-            cls = importlib.import_module(type_name, 'rkm.kernel.subpkg')
-            self.assertTrue(cls.test(sample=self.sample))
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestKernels)

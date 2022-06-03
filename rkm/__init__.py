@@ -1,10 +1,16 @@
-__version__ = "0.1.2"
+__version__ = "v0.1.2"
 __author__ = "HENRI DE PLAEN"
 __credits__ = "KU Leuven"
+__status__ = "alpha"
+__date__ = "June 2022"
 
-_PLOT_ENV = None
+# GLOBAL MODULE-WIDE VARIABLES
+_GLOBALS = {"PLOT_ENV": None,
+            "LOG_LEVEL": 30,  # this corresponds to logging.WARNING
+            }
 
 
+# CHECK FUNCTIONALITIES
 def gpu_available() -> bool:
     r"""
     Returns whether GPU-enhanced computation is possible on this machine.
@@ -13,12 +19,8 @@ def gpu_available() -> bool:
     return torch.cuda.is_available()
 
 
-# LOGGING
-import logging
-
-_LOG_LEVEL = logging.DEBUG
-
 # IMPORTS
 from . import kernel
 from . import model
-from .utils import _logger, set_log_level, get_log_level, set_ftype, set_itype
+from ._logger import set_log_level, get_log_level
+from .utils import set_ftype, set_itype

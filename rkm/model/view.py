@@ -44,6 +44,9 @@ class view(_sample, metaclass=ABCMeta):
         super(view, self).__init__(**kwargs)
         self._dim_output = kwargs["dim_output"]
 
+        # INITIATES HIDDEN
+        self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE))
+
         # BIAS
         self._bias_trainable = kwargs["bias_trainable"]
         self._requires_bias = kwargs["bias"]
@@ -77,7 +80,7 @@ class view(_sample, metaclass=ABCMeta):
     def bias(self):
         if self._bias.nelement() == 0:
             return None
-        return self._bias.data.cpu().numpy()
+        return self._bias.data
 
     @bias.setter
     def bias(self, val):
@@ -119,7 +122,8 @@ class view(_sample, metaclass=ABCMeta):
 
     @dim_output.setter
     def dim_output(self, val: int):
-        self._log.error("This value cannot be set.")
+        self._log.error("This value cannot be set. Change the hidden property, or the weights "
+                        "property if applicable.")
 
     @property
     def kernel(self) -> base:
@@ -133,6 +137,68 @@ class view(_sample, metaclass=ABCMeta):
         self._kernel = val
         self.init_sample(self._kernel.sample_as_param)
         self._idx_sample = self._kernel.idx
+
+    ## HIDDEN
+    @property
+    def hidden(self):
+        if self._hidden.nelement() == 0:
+            return None
+        return self._hidden.data[self._idx_sample, :]
+
+    def update_hidden(self, val:Tensor, idx_sample=None):
+        # first verify the existence of the hidden values before updating them.
+        if not self.hidden_exists:
+            self._log.warning("Could not update hidden values as these do not exist. "
+                              "Please set the values for hidden first.")
+            return
+
+        if idx_sample is None:
+            idx_sample = self._all_sample()
+        self._hidden.data[idx_sample,:] = val.data
+
+    @property
+    def hidden_as_param(self):
+        r"""
+        The hidden values as a torch.nn.Parameter
+        """
+        if not self.hidden_exists:
+            return None
+        return self._hidden
+
+    @hidden.setter
+    def hidden(self, val):
+        # sets the parameter to an axisting one
+        if isinstance(val, torch.nn.Parameter):
+            self._hidden = val
+        else: # sets the value to a new one
+            val = utils.castf(val, tensor=False, dev=self._hidden.device)
+            if val is not None:
+                if self._hidden.nelement() == 0:
+                    self._hidden = torch.nn.Parameter(val, requires_grad=self._hidden_trainable)
+                else:
+                    self._hidden.data = val
+                    # zeroing the gradients if relevant
+                    if self._hidden_trainable:
+                        self._hidden.grad.data[self._idx_sample, :].zero_()
+
+            self._num_h, self._dim_output = self._hidden.shape
+
+    @property
+    def hidden_trainable(self) -> bool:
+        return self._hidden_trainable
+
+    @hidden_trainable.setter
+    def hidden_trainable(self, val: bool):
+        # changes the possibility of training the hidden values through backpropagation
+        self._hidden_trainable = val
+        self._hidden.requires_grad = self._hidden_trainable
+
+    @property
+    def hidden_exists(self):
+        r"""
+        Returns if this view has hidden variables attached to it.
+        """
+        return self._hidden.nelement() == 0
 
     ## MATHS
 

@@ -73,9 +73,9 @@ class nystrom(explicit):
 
         self._dim = kwargs["dim"]
         if self._dim is None:
-            self._dim = self._num_sample
+            self._dim = self._num_total
 
-        assert self._dim <= self._num_sample, 'Cannot construct an explicit feature map of greater dimension than ' \
+        assert self._dim <= self._num_total, 'Cannot construct an explicit feature map of greater dimension than ' \
                                               'the number of sample points.'
 
     @property

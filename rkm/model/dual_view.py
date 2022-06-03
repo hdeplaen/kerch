@@ -32,31 +32,6 @@ class dual_view(view):
         assert self._num_h == self._kernel.num_sample, "The input dimension is not consistent with the sample size " \
                                                        "of the kernel."
 
-    @property
-    def hidden(self):
-        return self._hidden.data[self._idx_sample, :]
-
-    @hidden.setter
-    def hidden(self, val):
-        val = utils.castf(val, tensor=False, dev=self._hidden.device)
-        if val is not None:
-            if self._hidden.nelement() == 0:
-                self._hidden = torch.nn.Parameter(val, requires_grad=self._hidden_trainable)
-            else:
-                self._hidden.data = val
-                # zeroing the gradients if relevant
-                if self._hidden_trainable:
-                    self._hidden.grad.data[self._idx_sample, :].zero_()
-
-    @property
-    def hidden_trainable(self) -> bool:
-        return self._hidden_trainable
-
-    @hidden_trainable.setter
-    def hidden_trainable(self, val: bool):
-        self._hidden_trainable = val
-        self._hidden.requires_grad = self._hidden_trainable
-
     ## MATHS
 
     def h(self, x=None):

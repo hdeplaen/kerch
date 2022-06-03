@@ -20,7 +20,7 @@ class primal_view(view):
     :type weights: torch.nn.Parameter
     """
 
-    def __init__(self, weights: torch.nn.Parameter, **kwargs):
+    def __init__(self, weights:torch.nn.Parameter, **kwargs):
         """
         A view is made of a kernel and primal or dual variables. This second part is handled by the daughter classes.
         """

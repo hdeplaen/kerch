@@ -1,10 +1,5 @@
 """
-File containing the abstract kernel classes.
-
-@author: HENRI DE PLAEN
-@copyright: KU LEUVEN
-@license: MIT
-@date: March 2021
+Allows for a sample set manager, with stochastic support.
 """
 
 import torch
@@ -13,9 +8,16 @@ from abc import ABCMeta, abstractmethod
 from torch import Tensor
 
 from . import utils
+from ._cache import _cache
+from ._logger import _logger
+from ._stochastic import _stochastic
 
 
-class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
+@utils.extend_docstring(_stochastic)
+class _sample(_stochastic,          # manager stochastic indices
+              _cache,               # creates a transportable cache (e.g. for GPU)
+              _logger,              # allows logging actions and errors
+              metaclass=ABCMeta):
     r"""
     :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
         be given relative to these samples., defaults to `None`
@@ -25,19 +27,21 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
         the number of points contained in sample., defaults to 1
     :param dim_input: Dimension of each sample point. This parameter is neglected if `sample` is not `None` and
         overwritten by the dimension of the sample points., defaults to 1
-    :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
-        `idx_sample` and `prop_sample` are `None`., defaults to `None`
-    :param prop_sample: Instead of giving indices, specifying a proportion of the original sample set is also
-        possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
-        such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
-        `prop_sample` are `None`., defaults to `None`.
 
     :type sample: Tensor(num_sample, dim_input), optional
     :type sample_trainable: bool, optional
     :type num_sample: int, optional
     :type dim_input: int, optional
+
+    :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
+        `idx_stochastic` and `prop_stochastic` are `None`., defaults to `None`
+    :param prop_sample: Instead of giving indices, specifying a proportion of the original sample set is also
+        possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
+        such that :math:`0 <` `prop_stochastic` :math:`\leq 1`. All indices are considered if both `idx_stochastic` and
+        `prop_stochastic` are `None`., defaults to `None`.
+
     :type idx_sample: int[], optional
-    :type prop_sample: float, optional
+    :type idx_sample: float, optional
     """
 
     @abstractmethod
@@ -49,22 +53,20 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
         "idx_sample": None,
         "prop_sample": None})
     def __init__(self, **kwargs):
-        super(_sample, self).__init__()
-        _sample.__bases__[1].__init__(self)
+        super(_sample, self).__init__(**kwargs)
+
+        sample = kwargs["sample"]
+        if sample is not None:
+            sample = utils.castf(sample)
+            self._num_total, self._dim_input = sample.shape
+        else:
+            self._dim_input = kwargs["dim_input"]
+            self._num_total = kwargs["num_sample"]
 
         self._sample = torch.nn.Parameter(torch.empty((0, 0)))
         self._sample_trainable = kwargs["sample_trainable"]
-
-        sample = kwargs["sample"]
-        sample = utils.castf(sample)
-
-        if sample is not None:
-            self._num_sample, self._dim_input = sample.shape
-        else:
-            self._dim_input = kwargs["dim_input"]
-            self._num_sample = kwargs["num_sample"]
-
-        self.init_sample(sample, kwargs["idx_sample"], kwargs["prop_sample"])
+        
+        self.init_sample(sample, idx_sample=kwargs["idx_sample"], prop_sample=kwargs["prop_sample"])
 
     @property
     def dim_input(self) -> int:
@@ -78,11 +80,11 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
         assert self._dim_input is None, "Cannot set the dimension of the sample points after initialization if the " \
                                         "sample dataset. Use init_sample() instead."
         self._dim_input = val
-        if self._num_sample is not None:
+        if self._num_total is not None:
             self.init_sample()
 
     @property
-    def empty_sample(self) -> bool:
+    def _empty_sample(self) -> bool:
         r"""
         Boolean specifying if the sample is empty or not.
         """
@@ -93,31 +95,17 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
         r"""
         Number of datapoints in the sample set.
         """
-        return self._num_sample
+        if self._empty_sample:
+            return 0
+        return self._num_total
 
     @num_sample.setter
     def num_sample(self, val: int):
-        assert self._num_sample is None, "Cannot set the number of sample points after initialization if the " \
+        assert self._num_total is None, "Cannot set the number of sample points after initialization if the " \
                                          "sample dataset. Use init_sample() instead."
-        self._num_sample = val
+        self._num_total = val
         if self._dim_input is not None:
             self.init_sample()
-
-    @property
-    def num_idx(self) -> int:
-        r"""
-        Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
-        the case of stochastic training.
-        """
-        return len(self._idx_sample)
-
-    @property
-    def idx(self) -> Tensor:
-        r"""
-        Indices of the selected datapoints of the sample set when performing various operations. This is only relevant
-        in the case of stochastic training.
-        """
-        return self._idx_sample
 
     @property
     def sample(self) -> Tensor:
@@ -133,7 +121,7 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
         self.init_sample(val)
 
     @property
-    def sample_as_param(self):
+    def sample_as_param(self) -> torch.nn.Parameter:
         return self._sample
 
     @property
@@ -154,61 +142,7 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
         Returns the sample that is currently used in the computations and for the normalizing and centering statistics
         if relevant.
         """
-        return self._sample[self._idx_sample, :]
-
-    def _all_sample(self):
-        return range(self.num_sample)
-
-    def train(self, mode=True):
-        r"""
-        Activates the training mode, which disables the gradients computation and disables stochasticity. For the
-        gradients and other things, we refer to the `torch.nn.Module` documentation. For the stochastic part, when put
-        in evaluation mode (`False`), all the sample points are used for the computations, regardless of
-        the previously specified indices.
-        """
-        if not mode:
-            self.stochastic()
-        return self
-
-    def stochastic(self, idx_sample=None, prop_sample=None):
-        """
-        Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
-        case of stochastic training.
-
-        :param idx_sample: Indices of the sample subset relative to the original sample set., defaults to `None`
-        :type idx_sample: int[], optional
-        :param prop_sample: Instead of giving indices, passing a proportion of the original sample set is also
-            possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
-            such that :math:`0 <` `prop_sample` :math:`\leq 1`., defaults to `None`.
-        :type prop_sample: double, optional
-
-        If `None` is specified for both `idx_sample` and `prop_sample`, all samples are used and the subset equals the
-        original sample set. This is also the default behavior if this function is never called, nor the parameters
-        specified during initialization.
-
-        .. note::
-            Both `idx_sample` and `prop_sample` cannot be filled together as conflict would arise.
-        """
-        self._reset()
-
-        assert idx_sample is None or prop_sample is None, "Both idx_sample and prop_sample are not None. " \
-                                                          "Please choose one non-None parameter only."
-
-        if idx_sample is not None:
-            self._idx_sample = idx_sample
-        elif prop_sample is not None:
-            assert prop_sample <= 1., 'Parameter prop_sample: the chosen proportion cannot be greater than 1.'
-            assert prop_sample > 0., 'Parameter prop_sample: the chosen proportion must be strictly greater than 0.'
-            n = self.num_sample
-            k = torch.round(n * prop_sample)
-            perm = torch.randperm(n)
-            self._idx_sample = perm[:k]
-        else:
-            self._idx_sample = self._all_sample()
-
-        for sample_module in self.children():
-            if isinstance(sample_module, _sample):
-                sample_module.stochastic(idx_sample=self._idx_sample)
+        return self._sample[self.idx, :]
 
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         r"""
@@ -234,24 +168,24 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
 
         if sample is None:
             self._log.debug("Initializing new sample with the sample dimensions.")
-            if self._num_sample is None and self.dim_input is None:
+            if self._num_total is None and self.dim_input is None:
                 self._log.info(
                     'The sample cannot be initialized because no sample dataset has been provided nor the '
                     'sample dimensions have been initialized yet.')
                 return
             self._sample = torch.nn.Parameter(
-                torch.nn.init.orthogonal_(torch.empty((self._num_sample, self._dim_input),
+                torch.nn.init.orthogonal_(torch.empty((self._num_total, self._dim_input),
                                                       dtype=utils.FTYPE,
                                                       device=self._sample.device), ),
                 requires_grad=self._sample_trainable)
         elif isinstance(sample, torch.nn.Parameter):
             self._log.debug("Using existing sample defined as an external parameter.")
-            self._num_sample, self._dim_input = sample.shape
+            self._num_total, self._dim_input = sample.shape
             self._sample_trainable = sample.requires_grad
             self._sample = sample
         else:
             self._log.debug("Assigning new sample points based on the given values.")
-            self._num_sample, self._dim_input = sample.shape
+            self._num_total, self._dim_input = sample.shape
             self._sample = torch.nn.Parameter(sample.data,
                                               requires_grad=self._sample_trainable)
 
@@ -259,7 +193,7 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
             if isinstance(sample_module, _sample):
                 sample_module.init_sample(self.sample_as_param)
 
-        self.stochastic(idx_sample, prop_sample)
+        self.stochastic(idx=idx_sample, prop=prop_sample)
 
     def update_sample(self, sample_values, idx_sample=None):
         r"""
@@ -273,7 +207,7 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
         :type idx_sample: int[], optional
         """
 
-        if self.empty_sample:
+        if self._empty_sample:
             self._log.warning('Cannot update the sample values of a None sample dataset.')
             return
 
@@ -282,7 +216,7 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
 
         # use all indices if unspecified
         if idx_sample is None:
-            idx_sample = self._all_sample()
+            idx_sample = self._all_idx()
 
         # check consistency of indices
         assert len(idx_sample) == sample_values.shape[0], f"Number of sample values ({sample_values.shape[0]}) and " \
@@ -294,6 +228,3 @@ class _sample(torch.nn.Module, utils._logger, metaclass=ABCMeta):
         # zeroing relevant gradient if relevant
         if self._sample_trainable:
             self._sample.grad.data[idx_sample, :].zero_()
-
-    def _reset(self):
-        pass

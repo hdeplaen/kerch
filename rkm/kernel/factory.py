@@ -1,5 +1,4 @@
 from .base import base
-from .. import utils
 
 def factory(type='linear', **kwargs) -> base:
     r"""
@@ -20,7 +19,6 @@ def factory(type='linear', **kwargs) -> base:
         import rkm.kernel
         kernel = getattr(rkm.kernel, type)
     except:
-        self._log.error("Invalid kernel type.")
-        raise
+        raise NameError("Invalid kernel type.")
     return kernel(**kwargs)
 

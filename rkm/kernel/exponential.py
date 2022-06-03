@@ -128,7 +128,7 @@ class exponential(implicit, metaclass=ABCMeta):
         if self._sigma is None:
             sigma = .7 * torch.median(D)
             self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
-            self._log.info("Bandwidth not provided and assigned by a heuristic.")
+            self._log.info(f"Bandwidth sigma not provided and assigned by a heuristic (sigma={self.sigma}).")
 
         fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(D, -fact))
