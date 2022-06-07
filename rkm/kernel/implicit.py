@@ -31,4 +31,4 @@ class implicit(base, metaclass=ABCMeta):
         return super(implicit, self)._implicit(x, y)
 
     def _explicit(self, x=None):
-        raise utils.model.PrimalError
+        raise utils.PrimalError(self)

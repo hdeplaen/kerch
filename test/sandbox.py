@@ -5,7 +5,6 @@ import logging
 rkm.set_log_level(logging.INFO)
 
 k = rkm.kernel.factory(type='rbf')
-print(k.K)
-k.dim_input = 2
-k.num_sample = 10
-print(k.K)
+v = rkm.model.view(kernel=k)
+v.init_sample(range(10))
+print(v(5, representation="primal"))

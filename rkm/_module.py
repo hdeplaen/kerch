@@ -10,6 +10,7 @@ from ._logger import _logger
 
 class _module(_logger,
               torch.nn.Module,
+              object,
               metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, **kwargs):

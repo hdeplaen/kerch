@@ -6,22 +6,39 @@ Source code for the RKM toolbox.
 @license: MIT
 @date: March 2021
 """
+from abc import ABCMeta, abstractmethod
+from .._module import _module
 
 
-class DualError(Exception):
-    def __init__(self):
+class KerPyError(Exception, metaclass=ABCMeta):
+    @abstractmethod
+    def __init__(self, cls=None):
+
+        msg = ""
+        if hasattr(self, 'message'):
+            msg = self.message
+
+        if isinstance(cls, _module):
+            cls._log.error(msg)
+            msg = "[" + cls.__class__.__name__ + "] " + msg
+
+        super(KerPyError, self).__init__(msg)
+
+
+class DualError(KerPyError):
+    def __init__(self, *args, **kwargs):
         self.message = "Dual representation not available."
-        super(DualError, self).__init__(self.message)
+        super(DualError, self).__init__(*args, **kwargs)
 
 
-class PrimalError(Exception):
-    def __init__(self):
-        self.message = "Primal representation not available. \
-        The explicit representation lies in an infinite dimensional Hilbert space."
-        super(PrimalError, self).__init__(self.message)
+class PrimalError(KerPyError):
+    def __init__(self, *args, **kwargs):
+        self.message = "Primal representation not available. " \
+                       "The explicit representation lies in an infinite dimensional Hilbert space."
+        super(PrimalError, self).__init__(*args, **kwargs)
 
 
-class RepresentationError(Exception):
-    def __init__(self):
+class RepresentationError(KerPyError):
+    def __init__(self, *args, **kwargs):
         self.message = "Unrecognized or unspecified representation (must be primal or dual)."
-        super(RepresentationError, self).__init__(self.message)
+        super(RepresentationError, self).__init__(*args, **kwargs)
