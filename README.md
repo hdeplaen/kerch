@@ -1,8 +1,8 @@
-# RKM
-[![PyPI version](https://badge.fury.io/py/rkm.svg)](https://badge.fury.io/py/rkm)
+# KerPy
+[![PyPI version](https://badge.fury.io/py/kerpy.svg)](https://badge.fury.io/py/kerpy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-RKM is a Python package meant for various kernel methods, and in particular Deep Restricted Kernel Machines. You can natively perform SVMs, LS-SVMs, (K)PCA with various kernels, automatic centering, out-of-sample, etc.
+KerPy is a Python package meant for various kernel methods, and in particular Deep Restricted Kernel Machines. You can natively perform SVMs, LS-SVMs, (K)PCA with various kernels, automatic centering, out-of-sample, etc.
 
 The package is built on PyTorch and supports GPU acceleration.
 
@@ -47,20 +47,20 @@ The package is built on PyTorch and supports GPU acceleration.
 As for now, there are two ways to install the package.
 
 ### PIP
-Using pip, it suffices to run `pip install rkm`. Just rerun this command with the suffix `--upgrade` to upgrade the package to its newest version.
+Using pip, it suffices to run `pip install kerpy`. Just rerun this command with the suffix `--upgrade` to upgrade the package to its newest version.
 
 ### From source
 You can also install the package directly from the GitHub repository.
 ```
-git clone --recursive https://github.com/hdeplaen/rkm
-cd rkm
+git clone --recursive https://github.com/hdeplaen/kerpy
+cd kerpy
 python setup.py install
 ```
 
 ## Resources
 
-* [Documentation](https://hdeplaen.github.io/rkm/)
-* [Bug Tracker](https://github.com/hdeplaen/rkm/issues)
+* [Documentation](https://hdeplaen.github.io/kerpy/)
+* [Bug Tracker](https://github.com/hdeplaen/kerpyissues)
 * [E-DUALITY](https://www.esat.kuleuven.be/stadius/E/): ERC Adv. Grant website.
 * [ESAT-STADIUS](https://www.esat.kuleuven.be/stadius/): KU Leuven, Department of Electrical Engineering (ESAT), STADIUS Center for
     Dynamical Systems, Signal Processing and Data Analytics.
