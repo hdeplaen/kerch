@@ -13,7 +13,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
-import rkm
+import kerpy
 
 
 # -- Project information -----------------------------------------------------
@@ -23,7 +23,7 @@ copyright = '2022, KU Leuven'
 author = 'HENRI DE PLAEN'
 
 # The full version, including alpha/beta/rc tags
-release = rkm.__version__
+release = kerpy.__version__
 
 
 # -- General configuration ---------------------------------------------------

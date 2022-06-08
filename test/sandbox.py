@@ -1,10 +1,12 @@
-import rkm
-import torch
+import kerpy as kp
+import numpy as np
 import logging
 
-rkm.set_log_level(logging.INFO)
+kp.set_log_level(logging.DEBUG)
 
-k = rkm.kernel.factory(type='rbf')
-v = rkm.model.view(kernel=k)
-v.init_sample(range(10))
-print(v(5, representation="primal"))
+k = kp.kernel.factory(type='rbf')
+l = kp.model.lssvm(kernel=k, representation="primal")
+
+X = np.random.randn(10,4)
+y = np.random.randn(10,2)
+l.solve(X, y)

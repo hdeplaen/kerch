@@ -1,5 +1,5 @@
 .idea/
-rkm/__pycache__/
+kerpy/__pycache__/
 docs/_build/
 /build/
 /rkm.egg-info/

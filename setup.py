@@ -16,11 +16,11 @@ with open("LICENSE", "r", encoding="utf-8") as fh:
     license = fh.read()
 
 setuptools.setup(
-    name='rkm',
-    version='0.1.2',
+    name='kerpy',
+    version='0.2',
     author='HENRI DE PLAEN',
     author_email='henri.deplaen@esat.kuleuven.be',
-    description='Restricted Kernel Machines',
+    description='Python for Kernel Methods',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/hdeplaen/rkm',
