@@ -9,7 +9,7 @@ Date: June 2022
 import logging
 from abc import ABCMeta, abstractmethod
 
-from . import _GLOBALS
+from . import _GLOBALS, utils
 
 _LOGGING_FORMAT = "KerPy %(levelname)s [%(name)s]: %(message)s"
 
@@ -19,10 +19,21 @@ _kerpy_handler.setFormatter(_kerpy_format)
 
 class _logger(metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self):
+    @utils.kwargs_decorator({
+        "log_level": None
+    })
+    def __init__(self, **kwargs):
         self._log = logging.getLogger(name=self.__class__.__name__)
         self._log.addHandler(_kerpy_handler)
-        self._log.setLevel(_GLOBALS["LOG_LEVEL"])
+        self.set_log_level(kwargs["log_level"])
+
+    def set_log_level(self, level: int=None):
+        if level is None:
+            level = _GLOBALS["LOG_LEVEL"]
+        self._log.setLevel(level)
+
+    def get_log_level(self) -> int:
+        return self._log.level
 
 def set_log_level(level: int):
     r"""

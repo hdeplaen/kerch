@@ -1,108 +1,121 @@
-import numpy as np
 import torch
+import logging
 from abc import ABCMeta, abstractmethod
 
+
 from .._module import _module
+from .._dataholder import _dataholder
 from .. import utils
 
-class Model(_module, metaclass=ABCMeta):
+class Model(_dataholder, _module, metaclass=ABCMeta):
     @abstractmethod
     @utils.kwargs_decorator({
-        "loss": torch.nn.MSELoss
+        "loss": torch.nn.MSELoss(),
+        "log_level": logging.ERROR
     })
     def __init__(self, **kwargs):
-        super(Model, self).__init__(**kwargs)
+        _module.__init__(self, **kwargs)
+        _dataholder.__init__(self, **kwargs)
         self._loss = kwargs["loss"]
+        self.set_log_level()
 
-        self._training_data = None
-        self._training_labels = None
-        self._validation_data = None
-        self._validation_labels = None
-        self._testing_data = None
-        self._testing_labels = None
+    @abstractmethod
+    def fit(self, data=None, labels=None) -> None:
+        pass
 
-    def loss(self, data, labels):
+    def error(self, data=None, labels=None):
+        data, labels = self._get_default_data(data, labels)
         pred = self.forward(data)
         return self._loss(pred, labels)
 
-    def fit(self, training_data=None, training_labels=None):
-        if training_data is None:
-            training_data = self._training_data
-            training_labels = self._training_labels
-        self.solve(training_data, training_labels)
+    def validate(self, k:int=0, prop:float=.2):
+        if k==0:
+            self.fit()
+            return self.error(self._validation_data, self._validation_labels)
+        else:
+            loss = 0.
+            if self._validation_data is not None:
+                self.info("The validation set is not used for k-fold cross-validation, "
+                          "only the training set is divided.")
+            for fold in range(k):
+                data_list, labels_list = _dataholder._get_fold(prop=prop)
+                self.fit(data_list[0], labels_list[0])
+                loss += self.error(data_list[1], labels_list[1])
+            return loss/k
 
-    def validate(self):
-
-    def set_data_raw(self, training_data=None, training_labels=None,
-                           validation_data=None, validation_labels=None,
-                           testing_data=None, testing_labels=None):
-        self._training_data = utils.castf(training_data)
-        self._training_labels = utils.castf(training_labels)
-        self._validation_data = utils.castf(validation_data)
-        self._validation_labels = utils.castf(validation_labels)
-        self._testing_data = utils.castf(testing_data)
-        self._testing_labels = utils.castf(testing_labels)
-
-    def create_val(self, prop_of_training=.2):
-
-    def set_data_prop(self, data=None, labels=None, proportions=None):
-        if proportions is None:
-            proportions = [.7, .15, .15]
-
-        data_list, labels_list = Model._split_data(data, labels, proportions)
-
-        self.set_data_raw(training_data=data_list[0], training_labels=labels_list[0],
-                          validation_data=data_list[1], validation_labels=labels_list[1],
-                          testing_data=data_list[2], testing_labels=labels_list[2])
-
-    def hyperopt(self, model_params, kernel_params):
-        for key, value in model_params:
-            if value is None:
-                try:
-                    base_value = self.__getattr__(key)
-                    model_params[key] = base_value
-                except AttributeError:
-                    self._log.warning(f"Cannot optimize parameter {key} as it appears to not exist in this model. "
-                                      f"Maybe this is a kernel parameter and not a model parameter.")
-
-        for key, value in kernel_params:
-            if value is None:
-                try:
-                    base_value = self.__getattr__(key)
-                    kernel_params[key] = base_value
-                except AttributeError:
-                    self._log.warning(f"Cannot optimize parameter {key} as it appears to not exist in the kernel "
-                                      f"of this model.")
-
-    ####################################################################################################################
-
-    @staticmethod
-    def _split_data(data, labels=None, props=None):
+    def hyperopt(self, params, k:int=0, max_evals=1000):
         r"""
-        Splits the data in multiple random datasets based on props.
+        Optimizes the hyperparameters of the model based on a random grid search.
         """
-        if props is None:
-            return data, labels
 
-        n = data.shape[0]
-        perm = np.random.permutation(n)
-        data = data[perm]
-        if labels is not None:
-            labels = labels[perm]
+        # we only import the packages in hyperopt
+        from hyperopt import hp, fmin, tpe, STATUS_OK
+        from math import log
+        import copy
 
-        data_list = []
-        labels_list = []
-        pos_start = 0
-        for prop in props:
-            pos_end = pos_start + round(prop * n)
-            data_list.append(data[pos_start:pos_end])
-            if labels is None:
-                labels_list.append(labels[pos_start:pos_end])
+        _KERNEL_IDENTIFIER = "__KERNEL__ "
+        _PARAM_LOG_RANGE = 3
+
+        ## OBJECTIVE FUNCTION
+        def objective(*args,**kwargs):
+            model = copy.deepcopy(self)
+            self._log.debug("Executing a hyperparameter trial on a copy of the model.")
+            for key, value in kwargs:
+                if key.startswith(_KERNEL_IDENTIFIER):
+                    model.kernel.__setattr__(key.split()[1], value)
+                else:
+                    model.__setattr__(key, value)
+            return {'loss': model.validate(k=k),
+                    'status': STATUS_OK}
+
+        ## PARAMETER SPACE
+        def _add_range(key, base_value):
+            if type(base_value)==bool:
+                return hp.choice([True, False])
             else:
-                labels_list.append(None)
-
-        return data_list, labels_list
-
+                return hp.loguniform(key, base_value - _PARAM_LOG_RANGE,
+                                    base_value + _PARAM_LOG_RANGE)
 
 
+        hp_params = {}
+        for key in params:
+            try: # first see if this is a parameter of the model
+                base_value = log(getattr(self, key))
+                hp_params.update({key: _add_range(key, base_value)})
+            except AttributeError:
+                try: # if not, this may be a parameter of the kernel
+                    base_value = log(getattr(self.kernel, key))
+                    kernel_key = _KERNEL_IDENTIFIER + key
+                    hp_params.update({kernel_key: _add_range(kernel_key, base_value)})
+                except AttributeError:
+                    self._log.warning(f"Cannot optimize parameter {key} as it appears to not exist in this "
+                                      f"model, neither in its kernel component.")
 
+        if k==0:
+            self._log.info("Using a classical validation scheme.")
+        else:
+            self._log.info(f"Using a {k}-fold cross-validation scheme.")
+
+        ## OPERATE SEARCH
+        # avoid printing everything multiple times during all the searches
+        import logging
+        _OLD_LEVEL = self._log.level
+        _OLD_LEVEL_KERNEL = self.kernel._log.level
+        self._log.setLevel(logging.ERROR)
+        self.kernel._log.setLevel(logging.ERROR)
+
+        best = fmin(objective, space=hp_params, algo=tpe.suggest, max_evals=max_evals)
+
+        # reset the log levels
+        self.set_log_level(_OLD_LEVEL)
+        self.kernel.set_log_level(_OLD_LEVEL_KERNEL)
+
+        # set the fond values
+        for key, value in best.items():
+            if key.startswith(_KERNEL_IDENTIFIER):
+                kernel_key = key.split()[1]
+                self.kernel.__setattr__(kernel_key, value)
+                self._log.info(f"The new kernel value for {kernel_key} is {value}.")
+            else:
+                self.__setattr__(key, value)
+                self._log.info(f"The new model value for {key} is {value}.")

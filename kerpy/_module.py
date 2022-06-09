@@ -16,5 +16,5 @@ class _module(_logger,
     def __init__(self, **kwargs):
         # for some obscure reason, calling the super init does not lead to the call of both classes.
         # by consequence, we make the calls manually to each parents
-        _logger.__init__(self)
+        _logger.__init__(self, **kwargs)
         torch.nn.Module.__init__(self)

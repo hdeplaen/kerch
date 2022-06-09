@@ -4,4 +4,4 @@ pyyaml
 tqdm
 nested_dict
 logging
-ray
+hyperopt

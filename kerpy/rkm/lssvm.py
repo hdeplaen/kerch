@@ -20,7 +20,7 @@ class lssvm(level):
 
     @property
     def gamma(self) -> float:
-        return self._gamma.data.cpu().numpy()
+        return self._gamma.data.cpu().numpy().item()
 
     @gamma.setter
     def gamma(self, val):
