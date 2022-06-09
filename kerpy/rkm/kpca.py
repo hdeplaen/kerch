@@ -7,7 +7,7 @@ from kerpy import utils
 
 class kpca(level):
     r"""
-    Kernel Principal Component Analaysis.
+    Kernel Principal Component Analysis.
     """
 
     @utils.extend_docstring(level)
@@ -15,11 +15,17 @@ class kpca(level):
     def __init__(self, **kwargs):
         super(kpca, self).__init__(**kwargs)
 
-    def _solve_primal(self, sample: T, target: T) -> None:
+    def _solve_primal(self,target: T=None) -> None:
         pass
 
-    def _solve_dual(self, sample: T, target: T) -> None:
-        pass
+    def _solve_dual(self,target: T=None) -> None:
+        if self.dim_output is None:
+            self._dim_output = self.num_idx
+
+        K = self.kernel.K
+        _, v = utils.eigs(K, k=self.dim_output, psd=True)
+
+        self.hidden = v
 
 
     def solve(self, sample=None, target=None, representation=None) -> None:

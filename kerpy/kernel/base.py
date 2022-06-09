@@ -319,6 +319,18 @@ class base(_sample, metaclass=ABCMeta):
 
         return K
 
+    def c(self, x=None, y=None, center=None, normalize=None) -> Tensor:
+        r"""
+        Out-of-sample covariance matrix.
+
+        .. note::
+            A centered and normalized covariance matrix is a correlation matrix.
+
+        .. warning::
+            Not implemented.
+        """
+        raise NotImplementedError
+
     def forward(self, x, representation="dual") -> Tensor:
         """
         Passes datapoints through the kernel.

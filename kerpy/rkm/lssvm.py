@@ -29,7 +29,7 @@ class lssvm(level):
         self._reset_hidden()
         self._reset_weight()
 
-    def _solve_primal(self, sample: T, target: T) -> None:
+    def _solve_primal(self, target=None) -> None:
         C = self.kernel.C
         phi = self.kernel.phi_sample
         dev = C.device
@@ -57,7 +57,7 @@ class lssvm(level):
         self.weight = weight
         self.bias = bias
 
-    def _solve_dual(self, sample: T, target: T) -> None:
+    def _solve_dual(self, target=None) -> None:
         K = self.kernel.K
         dev = K.device
         dim_output = target.shape[1]

@@ -28,11 +28,17 @@ class level(view, metaclass=ABCMeta):
     ####################################################################################################################
 
     @abstractmethod
-    def _solve_primal(self, sample: T, target: T) -> None:
+    def _solve_primal(self, target=None) -> None:
+        r"""
+        Solves the dual formulation on the sample.
+        """
         pass
 
     @abstractmethod
-    def _solve_dual(self, sample: T, target: T) -> None:
+    def _solve_dual(self, target=None) -> None:
+        r"""
+        Solves the primal formulation on the sample.
+        """
         pass
 
     def solve(self, sample=None, target=None, representation=None) -> None:
@@ -76,7 +82,7 @@ class level(view, metaclass=ABCMeta):
         switcher = {"primal": self._solve_primal,
                     "dual": self._solve_dual}
         fun = switcher.get(representation)
-        return fun(sample=sample, target=target)
+        return fun(target=target)
 
     ####################################################################################################################
 
