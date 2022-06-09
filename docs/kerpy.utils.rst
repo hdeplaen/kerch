@@ -1,45 +1,45 @@
-rkm.utils package
+kerpy.utils package
 =================
 
 Submodules
 ----------
 
-rkm.utils.arch module
+kerpy.utils.arch module
 ---------------------
 
-.. automodule:: rkm.utils.arch
+.. automodule:: kerpy.utils.arch
    :members:
    :undoc-members:
    :show-inheritance:
 
-rkm.utils.cast module
+kerpy.utils.cast module
 ---------------------
 
-.. automodule:: rkm.utils.cast
+.. automodule:: kerpy.utils.cast
    :members:
    :undoc-members:
    :show-inheritance:
 
-rkm.utils.decorators module
+kerpy.utils.decorators module
 ---------------------------
 
-.. automodule:: rkm.utils.decorators
+.. automodule:: kerpy.utils.decorators
    :members:
    :undoc-members:
    :show-inheritance:
 
-rkm.utils.math module
+kerpy.utils.math module
 ---------------------
 
-.. automodule:: rkm.utils.math
+.. automodule:: kerpy.utils.math
    :members:
    :undoc-members:
    :show-inheritance:
 
-rkm.utils.type module
+kerpy.utils.type module
 ---------------------
 
-.. automodule:: rkm.utils.type
+.. automodule:: kerpy.utils.type
    :members:
    :undoc-members:
    :show-inheritance:
@@ -47,7 +47,7 @@ rkm.utils.type module
 Module contents
 ---------------
 
-.. automodule:: rkm.utils
+.. automodule:: kerpy.utils
    :members:
    :undoc-members:
    :show-inheritance:

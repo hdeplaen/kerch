@@ -18,7 +18,7 @@ import kerpy
 
 # -- Project information -----------------------------------------------------
 
-project = 'RKM'
+project = 'kerpy'
 copyright = '2022, KU Leuven'
 author = 'HENRI DE PLAEN'
 

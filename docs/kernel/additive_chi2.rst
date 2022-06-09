@@ -2,7 +2,7 @@
 Additive Chi Squared Kernel
 ===========================
 
-.. autoclass:: rkm.kernel.additive_chi2
+.. autoclass:: kerpy.kernel.additive_chi2
    :members:
    :inherited-members: Module
    :undoc-members:

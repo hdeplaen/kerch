@@ -2,7 +2,7 @@
 Laplacian Kernel
 ================
 
-.. autoclass:: rkm.kernel.laplacian
+.. autoclass:: kerpy.kernel.laplacian
    :members:
    :inherited-members: Module
    :undoc-members:

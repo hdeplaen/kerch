@@ -5,7 +5,7 @@ import logging
 kp.set_log_level(logging.DEBUG)
 
 k = kp.kernel.factory(type='rbf')
-l = kp.model.lssvm(kernel=k, representation="primal")
+l = kp.model.LSSVM(kernel=k, representation="dual")
 
 X = np.random.randn(10,4)
 y = np.random.randn(10,2)

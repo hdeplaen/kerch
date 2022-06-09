@@ -2,10 +2,10 @@ import torch
 from torch import Tensor as T
 
 from .level import level
-from .. import utils
+from kerpy import utils
 
 
-class lssvm(level):
+class kpca(level):
     r"""
     Kernel Principal Component Analaysis.
     """
@@ -13,7 +13,7 @@ class lssvm(level):
     @utils.extend_docstring(level)
     @utils.kwargs_decorator({})
     def __init__(self, **kwargs):
-        super(lssvm, self).__init__(**kwargs)
+        super(kpca, self).__init__(**kwargs)
 
     def _solve_primal(self, sample: T, target: T) -> None:
         pass
@@ -26,6 +26,6 @@ class lssvm(level):
         # KPCA models don't require the target to be defined. This is verified.
         if target is not None:
             self._log.warning("The target value is discarded when fitting a KPCA model.")
-        return super(lssvm, self).solve(sample=sample,
+        return super(kpca, self).solve(sample=sample,
                                         target=None,
                                         representation=representation)

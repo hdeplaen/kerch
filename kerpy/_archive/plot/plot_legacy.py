@@ -54,11 +54,11 @@ class plot():
         self.yy = yy
 
     def _two_dim(self):
-        sigma = self.mdl.model['hilbert'].model['expkernel'].sigma_trainable.data
-        bias = self.mdl.model['hilbert'].model['lin'].bias.data
-        alpha = self.mdl.model['hilbert'].model['lin'].weight
+        sigma = self.mdl.Model['hilbert'].Model['expkernel'].sigma_trainable.data
+        bias = self.mdl.Model['hilbert'].Model['lin'].bias.data
+        alpha = self.mdl.Model['hilbert'].Model['lin'].weight
         alpha = alpha.detach().cpu().numpy().squeeze()
-        p = self.mdl.model['hilbert'].model[self.mdl.kernel_type].param
+        p = self.mdl.Model['hilbert'].Model[self.mdl.kernel_type].param
         p = p.detach().cpu().numpy()
         p1 = p[0, :]
         p2 = p[1, :]
@@ -96,10 +96,10 @@ class plot():
             self.ims_two_dim.append(new_im)
 
     def _digits(self):
-        alpha = self.mdl.model['hilbert'].model['lin'].weight
+        alpha = self.mdl.Model['hilbert'].Model['lin'].weight
         alpha = alpha.detach().numpy().squeeze()
 
-        p = self.mdl.model['hilbert'].model["converkel"].param
+        p = self.mdl.Model['hilbert'].Model["converkel"].param
         p = p.detach().numpy()
 
         num_row = 3
@@ -118,7 +118,7 @@ class plot():
         # plt.show()
 
     def _histogram(self):
-        alpha = self.mdl.model['hilbert'].model['lin'].weight
+        alpha = self.mdl.Model['hilbert'].Model['lin'].weight
         alpha = alpha.detach().cpu().numpy().squeeze()
 
         plt.rc('text', usetex=True)

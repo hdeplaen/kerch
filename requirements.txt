@@ -3,6 +3,5 @@ numpy
 pyyaml
 tqdm
 nested_dict
-tensorboard
-torchvision
 logging
+ray

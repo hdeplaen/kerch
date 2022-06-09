@@ -10,9 +10,9 @@ Abstract RKM view class.
 import torch
 from torch import Tensor
 
-from .. import utils
-from ..kernel import factory, base
-from .._sample import _sample
+from kerpy import utils
+from kerpy.kernel import factory, base
+from kerpy._sample import _sample
 
 
 @utils.extend_docstring(_sample)

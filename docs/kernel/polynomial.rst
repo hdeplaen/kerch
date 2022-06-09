@@ -5,7 +5,7 @@ Polynomial Kernel
 Class
 =====
 
-.. autoclass:: rkm.kernel.polynomial
+.. autoclass:: kerpy.kernel.polynomial
    :members:
    :inherited-members: Module
    :undoc-members:
@@ -22,7 +22,7 @@ Sine
 .. plot::
     :include-source:
 
-    import rkm
+    import kerpy
     import numpy as np
     from matplotlib import pyplot as plt
 
@@ -30,7 +30,7 @@ Sine
     plt.figure(0)
     plt.plot(x)
 
-    k = rkm.kernel.polynomial(sample=x, degree=2)
+    k = kerpy.kernel.polynomial(sample=x, degree=2)
     plt.figure(1)
     plt.imshow(k.K)
     plt.colorbar()

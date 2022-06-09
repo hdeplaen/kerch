@@ -6,7 +6,7 @@ Hat Kernel
 Class
 =====
 
-.. autoclass:: rkm.kernel.hat
+.. autoclass:: kerpy.kernel.hat
    :members:
    :inherited-members: Module
    :undoc-members:
@@ -23,10 +23,10 @@ Linear (Time)
 .. plot::
     :include-source:
 
-    import rkm
+    import kerpy
     from matplotlib import pyplot as plt
 
-    k = rkm.kernel.hat(sample=range(10), lag=3)
+    k = kerpy.kernel.hat(sample=range(10), lag=3)
     plt.imshow(k.K)
     plt.colorbar()
     plt.title("Hat with lag " + str(k.lag))

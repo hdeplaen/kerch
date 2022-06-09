@@ -5,7 +5,7 @@ RBF Kernel
 Class
 =====
 
-.. autoclass:: rkm.kernel.rbf
+.. autoclass:: kerpy.kernel.rbf
    :members:
    :inherited-members: Module
    :undoc-members:
@@ -21,7 +21,7 @@ Sine
 .. plot::
     :include-source:
 
-    import rkm
+    import kerpy
     import numpy as np
     from matplotlib import pyplot as plt
 
@@ -29,7 +29,7 @@ Sine
     plt.figure(0)
     plt.plot(x)
 
-    k = rkm.kernel.rbf(sample=x)
+    k = kerpy.kernel.rbf(sample=x)
 
     plt.figure(1)
     plt.imshow(k.K)
@@ -49,10 +49,10 @@ Time
 .. plot::
     :include-source:
 
-    import rkm
+    import kerpy
     from matplotlib import pyplot as plt
 
-    k = rkm.kernel.rbf(sample=range(10), sigma=3)
+    k = kerpy.kernel.rbf(sample=range(10), sigma=3)
 
     plt.imshow(k.K)
     plt.colorbar()

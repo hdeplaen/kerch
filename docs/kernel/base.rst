@@ -2,7 +2,7 @@
 Base Kernel
 ===========
 
-.. autoclass:: rkm.kernel.base
+.. autoclass:: kerpy.kernel.base
    :members:
    :inherited-members: Module
    :undoc-members:

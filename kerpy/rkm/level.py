@@ -3,7 +3,7 @@ from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
 
 from .view import view
-from .. import utils
+from kerpy import utils
 
 
 class level(view, metaclass=ABCMeta):
