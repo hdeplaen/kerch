@@ -96,13 +96,6 @@ class view(_sample):
                                           requires_grad=self._weight.requires_grad)
 
     @property
-    def dim_output(self):
-        r"""
-        Output dimension
-        """
-        return self._dim_output
-
-    @property
     def bias(self) -> Tensor:
         if self._bias.nelement() != 0:
             return self._bias.data

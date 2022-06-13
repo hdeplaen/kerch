@@ -14,6 +14,17 @@ class kpca(level):
     @utils.kwargs_decorator({})
     def __init__(self, **kwargs):
         super(kpca, self).__init__(**kwargs)
+        self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
+                                        requires_grad=False)
+
+    @property
+    def vals(self) -> T:
+        return self._vals.data
+
+    @vals.setter
+    def vals(self, val):
+        val = utils.castf(val, tensor=False, dev=self._vals.device)
+        self._vals.data = val
 
     def _solve_primal(self,target: T=None) -> None:
         pass
@@ -27,7 +38,6 @@ class kpca(level):
 
         self.hidden = h
         self.vals = v
-
 
     def solve(self, sample=None, target=None, representation=None) -> None:
         # KPCA models don't require the target to be defined. This is verified.

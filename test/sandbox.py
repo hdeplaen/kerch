@@ -2,8 +2,6 @@ import kerpy as kp
 import numpy as np
 import logging
 
-kp.set_log_level(logging.INFO)
-
 # l = kp.model.LSSVM(kernel_type="rbf", representation="dual")
 #
 # X = np.random.randn(10,4)
@@ -13,8 +11,6 @@ kp.set_log_level(logging.INFO)
 # l.hyperopt({"sigma", "gamma"})
 
 
-
-k = kp.kernel.rbf()
-l = kp.rkm.kpca(kernel=k, sample=range(10), dim_output=5)
-l.solve()
+l = kp.rkm.kpca(type='rbf', dim_output=5)
+l.solve(range(100))
 print(l)
