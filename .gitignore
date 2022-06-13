@@ -1,6 +1,7 @@
 .idea/
-kerpy/__pycache__/
 docs/_build/
 /build/
 /kerpy.egg-info/
 /dist/
+*__pycache__*
+*.pyc
