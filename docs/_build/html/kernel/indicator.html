@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indicator Kernel &mdash; kerch v0.2 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hat Kernel" href="hat.html" />
+    <link rel="prev" title="Implicit Network-based Kernel" href="implicit_nn.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kernel Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#examples">Examples</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#different-kernels">Different Kernels</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#generic-kernels">Generic Kernels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#network-based-kernels">Network-based kernels</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#time-kernels">Time Kernels</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Indicator Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hat.html">Hat Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rbf.html">RBF Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#vision-kernels">Vision Kernels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#abstract-kernels">Abstract Kernels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Kernel Module</a> &raquo;</li>
+      <li>Indicator Kernel</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/kernel/indicator.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="indicator-kernel">
+<h1>Indicator Kernel<a class="headerlink" href="#indicator-kernel" title="Permalink to this heading"></a></h1>
+<section id="class">
+<h2>Class<a class="headerlink" href="#class" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="kerch.kernel.indicator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span class="sig-name descname"><span class="pre">indicator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.indicator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="implicit.html#kerch.kernel.implicit" title="kerch.kernel.implicit.implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit</span></code></a></p>
+<p>Indicator kernel.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}k(x,y) = \left\{
+\begin{array}
+g\gamma &amp; \text{ if } |x-y|=0, \\
+1 &amp; \text{ if } 0 &lt; |x-y| \leq p, \\
+0 &amp; \text{ otherwise.}
+\end{array}
+\right.\end{split}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the default value for <span class="math notranslate nohighlight">\(\gamma\)</span> is used and the <span class="math notranslate nohighlight">\(p\)</span> is to be trained, their two values will be
+linked.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Depending on the choice of <span class="math notranslate nohighlight">\(\gamma\)</span>, the kernel may not be positive semi-definite. The default value
+however ensures it, as long as the inputs are integers. If they are not, this may get more complicated.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For this type of kernel, the input dimension of the datapoints <cite>dim_input</cite> must be 1.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lag</strong> (<em>double</em><em>, </em><em>optional</em>) – Lag parameter <span class="math notranslate nohighlight">\(p\)</span>., defaults to 1.</p></li>
+<li><p><strong>gamma</strong> (<em>double</em><em>, </em><em>optional</em>) – Identity value <span class="math notranslate nohighlight">\(\gamma\)</span> of the kernel. If <cite>None</cite>, the value will be <span class="math notranslate nohighlight">\(\gamma = 2p+1\)</span> to
+ensure positive semi-definiteness., defaults to <cite>None</cite></p></li>
+<li><p><strong>lag_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradient of the lag <span class="math notranslate nohighlight">\(p\)</span> is to be computed. If so, a graph is computed
+and the lag can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
+<li><p><strong>gamma_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradient of the <span class="math notranslate nohighlight">\(\gamma\)</span> is to be computed. If so, a graph is computed
+and the <span class="math notranslate nohighlight">\(\gamma\)</span> can be updated. <cite>False</cite> just leads to a static computation., this value will be tied to the
+evolution of the lag <span class="math notranslate nohighlight">\(p\)</span>., defaults to <cite>False</cite></p></li>
+<li><p><strong>center</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if any implicit feature or kernel is must be centered, <cite>False</cite> otherwise. The center
+is always performed relative to a statistic on the sample., defaults to <cite>False</cite></p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if any implicit feature or kernel is must be normalized, <cite>False</cite> otherwise. The center
+is always performed relative to a statistic on the sample., defaults to <cite>False</cite></p></li>
+<li><p><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
+be given relative to these samples., defaults to <cite>None</cite></p></li>
+<li><p><strong>sample_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
+computed and the sample can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
+<li><p><strong>num_sample</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of sample points. This parameter is neglected if <cite>sample</cite> is not <cite>None</cite> and overwritten by
+the number of points contained in sample., defaults to 1</p></li>
+<li><p><strong>dim_input</strong> (<em>int</em><em>, </em><em>optional</em>) – Dimension of each sample point. This parameter is neglected if <cite>sample</cite> is not <cite>None</cite> and
+overwritten by the dimension of the sample points., defaults to 1</p></li>
+<li><p><strong>idx_sample</strong> (<em>float</em><em>, </em><em>optional</em>) – Initializes the indices of the samples to be updated. All indices are considered if both
+<cite>idx_stochastic</cite> and <cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite></p></li>
+<li><p><strong>prop_sample</strong> – Instead of giving indices, specifying a proportion of the original sample set is also
+possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
+such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>. All indices are considered if both <cite>idx_stochastic</cite> and
+<cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.K">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.indicator.K" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#kerch.kernel.indicator.k" title="kerch.kernel.indicator.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
+It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+called.</p>
+<div class="math notranslate nohighlight">
+\[K_{ij} = k(x_i,x_j).\]</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.c">
+<span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.indicator.c" title="Permalink to this definition"></a></dt>
+<dd><p>Out-of-sample covariance matrix.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A centered and normalized covariance matrix is a correlation matrix.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Not implemented.</p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.center">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.indicator.center" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates if the kernel has to be centered. Changing this value leads to a recomputation of the statistics.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.current_sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.indicator.current_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the sample that is currently used in the computations and for the normalizing and centering statistics
+if relevant.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.dim_input">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_input</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.indicator.dim_input" title="Permalink to this definition"></a></dt>
+<dd><p>Dimension of each datapoint.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.indicator.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Passes datapoints through the kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>,</em><em>dim_input</em><em>)</em>) – Datapoints to be passed through the kernel.</p></li>
+<li><p><strong>representation</strong> (<em>str</em><em>, </em><em>optional</em>) – Chosen representation. If <cite>dual</cite>, an out-of-sample kernel matrix is returned. If
+<cite>primal</cite> is specified, it returns the explicit feature map., defaults to <cite>dual</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Out-of-sample kernel matrix or explicit feature map depending on <cite>representation</cite>.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>RepresentationError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.gamma">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gamma</span></span><a class="headerlink" href="#kerch.kernel.indicator.gamma" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.get_log_level">
+<span class="sig-name descname"><span class="pre">get_log_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.kernel.indicator.get_log_level" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the log level used by this object.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.hparams">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams</span></span><a class="headerlink" href="#kerch.kernel.indicator.hparams" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.indicator.idx" title="Permalink to this definition"></a></dt>
+<dd><p>Indices used when performing various operations. This is only relevant in the case of stochastic training.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.init_sample">
+<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.indicator.init_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes the sample set (and the stochastic indices).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample</strong> (<em>Tensor</em><em>, </em><em>optional</em>) – Sample points used for the various computations. When an out-of-sample computation is asked, it
+will be given relative to these samples. In case of overwriting a current sample, <cite>num_sample</cite> and
+<cite>dim_input</cite> are also overwritten. If <cite>None</cite> is specified, the sample dataset will be initialized according
+to <cite>num_sample</cite> and <cite>dim_input</cite> specified during the construction. If a previous sample set has been used,
+it will keep the same dimension by consequence. A last case occurs when <cite>sample</cite> is of the class
+<cite>torch.nn.Parameter</cite>: the sample will then use those values and they can thus be shared with the module
+calling this method., defaults to <cite>None</cite></p></li>
+<li><p><strong>idx_sample</strong> (<em>int</em><em>[</em><em>]</em><em>, </em><em>optional</em>) – Initializes the indices of the samples to be updated. All indices are considered if both
+<cite>idx_sample</cite> and <cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite></p></li>
+<li><p><strong>prop_sample</strong> – Instead of giving indices, specifying a proportion of the original sample set is also
+possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
+such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_sample</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>. All indices are considered if both <cite>idx_sample</cite> and
+<cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.k">
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.indicator.k" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
+<div class="math notranslate nohighlight">
+\[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
+<p>with <span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^N\)</span> the out-of-sample points (<cite>x</cite>) and <span class="math notranslate nohighlight">\(\{y_i\}_{j=1}^N\)</span> the sample points
+(<cite>y</cite>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the case of centered kernels, this computation is more expensive as it requires to center according to
+the sample dataset, which implies computing a statistic on the out-of-sample kernel matrix and thus
+also computing it.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>N</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p></li>
+<li><p><strong>y</strong> (<em>Tensor</em><em>(</em><em>M</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (second dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p></li>
+<li><p><strong>center</strong> (<em>bool</em><em>, </em><em>optional</em>) – Returns if the matrix has to be centered or not. If None, then the default value used during
+construction is used., defaults to None</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Returns if the matrix has to be normalized or not. If None, then the default value used during
+construction is used., defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Kernel matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tensor(N,M)</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>PrimalError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.lag">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lag</span></span><a class="headerlink" href="#kerch.kernel.indicator.lag" title="Permalink to this definition"></a></dt>
+<dd><p>Lah <span class="math notranslate nohighlight">\(p\)</span> of the kernel.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.lag_trainable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lag_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.indicator.lag_trainable" title="Permalink to this definition"></a></dt>
+<dd><p>Boolean indicating if the lag <span class="math notranslate nohighlight">\(p\)</span> is trainable.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.normalize">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.indicator.normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.num_idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.indicator.num_idx" title="Permalink to this definition"></a></dt>
+<dd><p>Number of selected indices when performing various operations. This is only relevant in the case of stochastic
+training.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.num_sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.indicator.num_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Number of datapoints in the sample set.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.params">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#kerch.kernel.indicator.params" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionnary containing the parameters and their values. This can be relevant for monitoring.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.indicator.sample" title="Permalink to this definition"></a></dt>
+<dd><p>Sample dataset.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.sample_trainable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.indicator.sample_trainable" title="Permalink to this definition"></a></dt>
+<dd><p>Boolean if the sample dataset can be trained.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.set_log_level">
+<span class="sig-name descname"><span class="pre">set_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.kernel.indicator.set_log_level" title="Permalink to this definition"></a></dt>
+<dd><p>Sets a specific log level to this object. It serves as a way to use specific log level for a specific class,
+different than the current general KerPy log level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>level</strong> – If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current general KerPy log level will be used (WARNING if not
+specified otherwise)., defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>type</strong> – int, optional</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.stochastic">
+<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.indicator.stochastic" title="Permalink to this definition"></a></dt>
+<dd><p>Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
+case of stochastic training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idx</strong> (<em>int</em><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the sample subset relative to the original sample set., defaults to <cite>None</cite></p></li>
+<li><p><strong>prop</strong> (<em>double</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
+possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
+such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>., defaults to <cite>None</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>If <cite>None</cite> is specified for both <cite>idx_stochastic</cite> and <cite>prop_stochastic</cite>, all samples are used and the subset equals the
+original sample set. This is also the default behavior if this function is never called, nor the parameters
+specified during initialization.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Both <cite>idx_stochastic</cite> and <cite>prop_stochastic</cite> cannot be filled together as conflict would arise.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.indicator.train" title="Permalink to this definition"></a></dt>
+<dd><p>Activates the training mode, which disables the gradients computation and disables stochasticity. For the
+gradients and other things, we refer to the <cite>torch.nn.Module</cite> documentation. For the stochastic part, when put
+in evaluation mode (<cite>False</cite>), all the sample points are used for the computations, regardless of
+the previously specified indices.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.indicator.update_sample">
+<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.indicator.update_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the sample set. In contradiction to <cite>init_samples</cite>, this only updates the values of the sample and sets
+the gradients of the updated values to zero if relevant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_values</strong> (<em>Tensor</em>) – Values given to the updated samples.</p></li>
+<li><p><strong>idx_sample</strong> (<em>int</em><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the samples to be updated. All indices are considered if <cite>None</cite>., defaults to
+<cite>None</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<section id="linear-time">
+<h3>Linear (Time)<a class="headerlink" href="#linear-time" title="Permalink to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">indicator</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">lag</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Indicator with lag &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">lag</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../kernel/indicator-1.py">Source code</a>, <a class="reference external" href="../kernel/indicator-1.png">png</a>, <a class="reference external" href="../kernel/indicator-1.hires.png">hires.png</a>, <a class="reference external" href="../kernel/indicator-1.pdf">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../_images/indicator-1.png" class="plot-directive" src="../_images/indicator-1.png" />
+</figure>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="implicit_nn.html" class="btn btn-neutral float-left" title="Implicit Network-based Kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hat.html" class="btn btn-neutral float-right" title="Hat Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, KU Leuven.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
