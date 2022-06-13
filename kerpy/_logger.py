@@ -20,10 +20,15 @@ _kerpy_handler.setFormatter(_kerpy_format)
 class _logger(metaclass=ABCMeta):
     @abstractmethod
     @utils.kwargs_decorator({
-        "log_level": None
+        "log_level": None,
+        "name": None
     })
     def __init__(self, **kwargs):
-        self._log = logging.getLogger(name=self.__class__.__name__)
+        name = kwargs["name"]
+        if name is not None:
+            self._log = logging.getLogger(name=name)
+        else:
+            self._log = logging.getLogger(name=self.__class__.__name__)
         self._log.addHandler(_kerpy_handler)
         self.set_log_level(kwargs["log_level"])
 
@@ -66,10 +71,10 @@ def set_log_level(level: int):
     """
     _GLOBALS["LOG_LEVEL"] = level
 
-
-
 def get_log_level() -> str:
     r"""
     Returns the logging level of the toolbox.
     """
     return logging.getLevelName(_GLOBALS["LOG_LEVEL"])
+
+main_logger = _logger("kerpy")
