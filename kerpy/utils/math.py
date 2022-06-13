@@ -14,15 +14,15 @@ def eigs(A, k=None, B=None, psd=True):
     except:
         if psd:
             if B is None:
-                _, s, v = torch.svd(A)
+                v, s, _ = torch.svd(A)
             else:
-                _, s, v = torch.svd(torch.linalg.inv(B) @ A)
+                v, s, _ = torch.svd(torch.linalg.inv(B) @ A)
             _GLOBAL_LOGGER._log.info('Using SVD for eigendecomposition.')
         else:
             if B is None:
-                _, s, v = torch.linalg.eig(A)
+                s, v = torch.linalg.eig(A)
             else:
-                _, s, v = torch.linalg.eig(torch.linalg.inv(B) @ A)
+                s, v = torch.linalg.eig(torch.linalg.inv(B) @ A)
             _GLOBAL_LOGGER._log.info('Using classical (EIG) eigendecomposition.')
         v = v[:, 0:k]  # eigenvectors are vertical components of v
         s = s[:k]
