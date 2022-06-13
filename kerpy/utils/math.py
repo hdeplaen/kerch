@@ -1,6 +1,7 @@
 import torch
 from .._logger import _GLOBAL_LOGGER
 
+
 def eigs(A, k=None, B=None, psd=True):
     assert A is not None, 'Cannot decompose an empty matrix.'
     k1, k2 = A.shape
@@ -14,9 +15,9 @@ def eigs(A, k=None, B=None, psd=True):
     except:
         if psd:
             if B is None:
-                v, s, _ = torch.svd(A)
+                _, s, v = torch.svd(A)
             else:
-                v, s, _ = torch.svd(torch.linalg.inv(B) @ A)
+                _, s, v = torch.svd(torch.linalg.inv(B) @ A)
             _GLOBAL_LOGGER._log.info('Using SVD for eigendecomposition.')
         else:
             if B is None:
