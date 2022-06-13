@@ -51,7 +51,7 @@ class _logger(metaclass=ABCMeta):
         """
         return self._log.level
 
-_GLOBAL_LOGGER = _logger(name="general")
+_GLOBAL_LOGGER = _logger(name="global")
 
 def set_log_level(level: int):
     r"""
