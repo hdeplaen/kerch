@@ -2,7 +2,7 @@
 Implicit Kernel
 ===============
 
-.. autoclass:: kerpy.kernel.implicit
+.. autoclass:: kerch.kernel.implicit
    :members:
    :inherited-members: Module
    :undoc-members:

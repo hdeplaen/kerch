@@ -13,17 +13,17 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
-import kerpy
+import kerch
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'kerpy'
+project = 'kerch'
 copyright = '2022, KU Leuven'
 author = 'HENRI DE PLAEN'
 
 # The full version, including alpha/beta/rc tags
-release = kerpy.__version__
+release = kerch.__version__
 
 
 # -- General configuration ---------------------------------------------------

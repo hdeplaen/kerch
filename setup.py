@@ -16,17 +16,17 @@ with open("LICENSE", "r", encoding="utf-8") as fh:
     license = fh.read()
 
 setuptools.setup(
-    name='kerpy',
+    name='kerch',
     version='0.2',
     author='HENRI DE PLAEN',
     author_email='henri.deplaen@esat.kuleuven.be',
-    description='Python for Kernel Methods',
+    description='Kernel Methods on PyTorch',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/hdeplaen/rkm',
+    url='https://github.com/hdeplaen/kerch',
     project_urls = {
-        "Documentation": "https://hdeplaen.github.io/rkm",
-        "Bug Tracker": "https://github.com/hdeplaen/rkm/issues",
+        "Documentation": "https://hdeplaen.github.io/kerch",
+        "Bug Tracker": "https://github.com/hdeplaen/kerch/issues",
         "E-DUALITY": "https://www.esat.kuleuven.be/stadius/E/",
         "ESAT-STADIUS": "https://www.esat.kuleuven.be/stadius/"
     },

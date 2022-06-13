@@ -2,7 +2,7 @@
 Sigmoid Kernel
 ==============
 
-.. autoclass:: kerpy.kernel.sigmoid
+.. autoclass:: kerch.kernel.sigmoid
    :members:
    :inherited-members: Module
    :undoc-members:

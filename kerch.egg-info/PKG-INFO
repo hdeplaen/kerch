@@ -1,0 +1,113 @@
+Metadata-Version: 2.1
+Name: kerch
+Version: 0.2
+Summary: Python for Kernel Methods
+Home-page: https://github.com/hdeplaen/rkm
+Author: HENRI DE PLAEN
+Author-email: henri.deplaen@esat.kuleuven.be
+License: MIT License
+        
+        Copyright (c) 2022 HENRI DE PLAEN
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Documentation, https://hdeplaen.github.io/rkm
+Project-URL: Bug Tracker, https://github.com/hdeplaen/rkm/issues
+Project-URL: E-DUALITY, https://www.esat.kuleuven.be/stadius/E/
+Project-URL: ESAT-STADIUS, https://www.esat.kuleuven.be/stadius/
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: GPU :: NVIDIA CUDA
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# KerPy
+[![PyPI version](https://badge.fury.io/py/kerpy.svg)](https://badge.fury.io/py/kerpy)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+KerPy is a Python package meant for various kernel methods, and in particular Deep Restricted Kernel Machines. You can natively perform SVMs, LS-SVMs, (K)PCA with various kernels, automatic centering, out-of-sample, etc.
+
+The package is built on PyTorch and supports GPU acceleration.
+
+<!-- toc -->
+
+[//]: # (* [Examples]&#40;#examples&#41;)
+
+[//]: # (  - [KPCA]&#40;#kernel-principal-component-analysis&#41;)
+
+[//]: # (  - [Large-scale LS-SVM]&#40;#training-a-large-scale-least-squares-support-vector-machine&#41;)
+
+[//]: # (  - [Deep RKM]&#40;#deep-restricted-kernel-machine&#41;)
+
+[//]: # (  - [Recurrent RKM]&#40;#recurrent-restricted-kernel-machines&#41;)
+* [Installation](#installation)
+  - [PIP](#pip)
+  - [From source](#from-source)
+* [Acknowledgements](#acknowledgements)
+* [Resources](#resources)
+* [License](#license)
+
+[//]: # (## Examples)
+
+[//]: # ()
+[//]: # (### Kernel Principal Component Analysis)
+
+[//]: # (Example to come...)
+
+[//]: # (### Training a large-scale Least-Squares Support Vector Machine)
+
+[//]: # (Example to come...)
+
+[//]: # (### Deep Restricted Kernel Machine)
+
+[//]: # (Example to come...)
+
+[//]: # (### Recurrent Restricted Kernel Machines )
+
+[//]: # (Example to come...)
+
+## Installation
+As for now, there are two ways to install the package.
+
+### PIP
+Using pip, it suffices to run `pip install kerpy`. Just rerun this command with the suffix `--upgrade` to upgrade the package to its newest version.
+
+### From source
+You can also install the package directly from the GitHub repository.
+```
+git clone --recursive https://github.com/hdeplaen/kerpy
+cd kerpy
+python setup.py install
+```
+
+## Resources
+
+* [Documentation](https://hdeplaen.github.io/kerpy/)
+* [Bug Tracker](https://github.com/hdeplaen/kerpyissues)
+* [E-DUALITY](https://www.esat.kuleuven.be/stadius/E/): ERC Adv. Grant website.
+* [ESAT-STADIUS](https://www.esat.kuleuven.be/stadius/): KU Leuven, Department of Electrical Engineering (ESAT), STADIUS Center for
+    Dynamical Systems, Signal Processing and Data Analytics.
+
+## Contributors
+The contributors and acknowledgements can be found in the [CONRIBUTORS](CONTRIBUTORS) file.
+
+## License
+RKM has a MIT license, as found in the [LICENSE](LICENSE) file.

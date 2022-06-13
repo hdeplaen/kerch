@@ -25,14 +25,14 @@ implicit), using eigendocomposition. Among other things, this can serve as a sol
 kernel matrices of implicitly defined kernels.
 
 The general structure of the module is based around an abstract kernel class `base`, of which
-`kerpy.kernle.implicit` and `explicit` inherit. All other kernels inherit of one of these two at the exception
+`kerch.kernle.implicit` and `explicit` inherit. All other kernels inherit of one of these two at the exception
 of `polynomial` which directly inherits `base` as it has a primal formulation and a dual
 formulation which can be computed otherwise than with an inner product of the explicit feature map.
 
 Kernel Factory
 --------------
 
-.. autofunction:: kerpy.kernel.factory
+.. autofunction:: kerch.kernel.factory
 
 Examples
 ========
@@ -40,14 +40,14 @@ Examples
 .. plot::
     :include-source:
 
-    import kerpy
+    import kerch
     import numpy as np
     from matplotlib import pyplot as plt
 
     sample = np.sin(np.arange(0,15) / np.pi) + .1
     oos = np.sin(np.arange(15,30) / np.pi) + .1
 
-    k = kerpy.kernel.factory(type="polynomial", sample=sample, center=True, normalize=True)
+    k = kerch.kernel.factory(type="polynomial", sample=sample, center=True, normalize=True)
 
     fig, axs = plt.subplots(2,2)
 

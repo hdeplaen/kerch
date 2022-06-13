@@ -5,7 +5,7 @@ Linear Kernel
 Class
 =====
 
-.. autoclass:: kerpy.kernel.linear
+.. autoclass:: kerch.kernel.linear
    :members:
    :inherited-members: Module
    :undoc-members:
@@ -24,7 +24,7 @@ Sine
 .. plot::
     :include-source:
 
-    import kerpy
+    import kerch
     import numpy as np
     from matplotlib import pyplot as plt
 
@@ -32,7 +32,7 @@ Sine
     plt.figure(0)
     plt.plot(x)
 
-    k = kerpy.kernel.linear(sample=x)
+    k = kerch.kernel.linear(sample=x)
     plt.figure(1)
     plt.imshow(k.K)
     plt.colorbar()

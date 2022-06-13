@@ -2,7 +2,7 @@
 Nystrom Kernel
 ==============
 
-.. autoclass:: kerpy.kernel.nystrom
+.. autoclass:: kerch.kernel.nystrom
    :members:
    :inherited-members: Module
    :undoc-members:

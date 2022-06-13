@@ -2,7 +2,7 @@
 Exponential Kernel
 ==================
 
-.. autoclass:: kerpy.kernel.exponential
+.. autoclass:: kerch.kernel.exponential
    :members:
    :inherited-members: Module
    :undoc-members:

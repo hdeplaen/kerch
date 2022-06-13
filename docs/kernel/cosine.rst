@@ -6,7 +6,7 @@ Class
 =====
 
 
-.. autoclass:: kerpy.kernel.cosine
+.. autoclass:: kerch.kernel.cosine
    :members:
    :inherited-members: Module
    :undoc-members:
@@ -23,7 +23,7 @@ Sine
 .. plot::
     :include-source:
 
-    import kerpy
+    import kerch
     import numpy as np
     from matplotlib import pyplot as plt
 
@@ -31,7 +31,7 @@ Sine
     plt.figure(0)
     plt.plot(x)
 
-    k = kerpy.kernel.cosine(sample=x, center=True)
+    k = kerch.kernel.cosine(sample=x, center=True)
     plt.figure(1)
     plt.imshow(k.K)
     plt.colorbar()

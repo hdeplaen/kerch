@@ -1,4 +1,4 @@
-import kerpy as kp
+import kerch as kp
 
 ## DATASET
 tr_set, _, _, _ = kp.dataset.factory("two_moons",
