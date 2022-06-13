@@ -21,23 +21,47 @@ The package is built on PyTorch and supports GPU acceleration.
 
 
 ### Training and plotting an LS-SVM
-```python
-import kerch as kp
 
-tr_set, _, _, _ = kp.dataset.factory("two_moons",   # which dataset
-                                     tr_size=250)   # training size
-mdl = kp.model.LSSVM(type="rbf",                    # kernel type
+This is done by first instantiating a model, setting its dataset, searching for the hyperparameters, fitting with those 
+parameters and plotting. The implementation can be found [here](examples/lssvm-tuning.py).
+
+```python
+mdl = kerch.model.LSSVM(type="rbf",                 # kernel type
                      representation="dual")         # initiate model
-mdl.set_data_prop(data=tr_set[0],                   # data
-                  labels=tr_set[1],                 # corresponding labels
+mdl.set_data_prop(data=data,                        # data
+                  labels=labels,                    # corresponding labels
                   proportions=[1, 0, 0])            # initiate dataset
 mdl.hyperopt({"gamma", "sigma"},                    # define which parameters to tune
              max_evals=500,                         # define how many trials
              k=10)                                  # 10-fold cross-validation
 mdl.fit()                                           # fit the optimal parameters found
-kp.plot.plot_model(mdl)                             # plot the model using the built-in method
+kerch.plot.plot_model(mdl)                          # plot the model using the built-in method
 
 ```
+![The final fitted LS-SVM](docs/_build/html/examples-1.png)
+
+
+
+### Out-of-sample kernels with normalization and centering
+The factory class alows for the fast instantiation of various implemented kernels. Centering and normalization are 
+options to choose from and the out-of-sample will also satisfy these properties, based on statistics relative ti the 
+sample. You can easily use numpy arrays ore even python builtins such as `range()`. An implementation can be found 
+[here](examples/kernel.py)
+```python
+sample = np.sin(np.arange(0,15) / np.pi) + .1
+oos = np.sin(np.arange(15,30) / np.pi) + .1
+
+k = kerch.kernel.factory(type="polynomial", sample=sample, center=True, normalize=True)
+
+k.K   # = k.k()
+k.k(y=oos)
+k.k(x=oos)
+k.k(x=oos, y=oos)
+
+```
+
+![A centered and normalized kernel with out-of-sample parts](docs/_build/html/examples-2.png)
+
 
 ## Installation
 As for now, there are two ways to install the package.

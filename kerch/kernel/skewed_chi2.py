@@ -22,9 +22,11 @@ class skewed_chi2(implicit):
     .. math::
         k(x,y) = \prod_i \frac{2\sqrt(x_i+c) \sqrt(y_i+c)}{x_i + y_i + 2c}.
 
+
     :param c: Free parameter :math:`c`., defaults to 0.
     :param c_trainable: `True` if the gradient of :math:`c` is to be computed. If so, a graph is computed
         and :math:`c` can be updated. `False` just leads to a static computation., defaults to `False`
+
     """
 
     @utils.kwargs_decorator(

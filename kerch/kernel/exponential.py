@@ -88,10 +88,10 @@ class exponential(implicit, metaclass=ABCMeta):
         """
         if isinstance(self._sigma, torch.nn.Parameter):
             return self._sigma.data.cpu().numpy()
-        elif not self._empty_sample:
+        elif self._sigma is None and not self._empty_sample:
             self._compute_K()
             return self.sigma
-        return None
+        return self._sigma
 
     @sigma.setter
     def sigma(self, val):

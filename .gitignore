@@ -1,7 +1,6 @@
 .idea/
-docs/_build/
 /build/
-/kerpy.egg-info/
+/kerch.egg-info/
 /dist/
 *__pycache__*
 *.pyc

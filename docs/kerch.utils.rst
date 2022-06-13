@@ -1,11 +1,11 @@
 kerch.utils package
-=================
+===================
 
 Submodules
 ----------
 
 kerch.utils.arch module
----------------------
+-----------------------
 
 .. automodule:: kerch.utils.arch
    :members:
@@ -13,7 +13,7 @@ kerch.utils.arch module
    :show-inheritance:
 
 kerch.utils.cast module
----------------------
+-----------------------
 
 .. automodule:: kerch.utils.cast
    :members:
@@ -21,7 +21,7 @@ kerch.utils.cast module
    :show-inheritance:
 
 kerch.utils.decorators module
----------------------------
+-----------------------------
 
 .. automodule:: kerch.utils.decorators
    :members:
@@ -29,7 +29,7 @@ kerch.utils.decorators module
    :show-inheritance:
 
 kerch.utils.math module
----------------------
+-----------------------
 
 .. automodule:: kerch.utils.math
    :members:
@@ -37,7 +37,7 @@ kerch.utils.math module
    :show-inheritance:
 
 kerch.utils.type module
----------------------
+-----------------------
 
 .. automodule:: kerch.utils.type
    :members:
