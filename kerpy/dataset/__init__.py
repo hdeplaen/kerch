@@ -208,7 +208,7 @@ def generate_dataset(fun, tr_size, val_size, test_size, tot_data, test_data):
 
     return (tr_input, tr_target), (val_input, val_target), (test_input, test_target), info
 
-def factory(name, tr_size=0, val_size=0, test_size=0):
+def factory(name, tr_size=100, val_size=0, test_size=0):
     datasets = {"gaussians": (gaussians, None, None),
                 "spiral": (spiral, None, None),
                 "two_moons": (two_moons, None, None),

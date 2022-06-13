@@ -20,8 +20,10 @@ def gpu_available() -> bool:
 
 
 # IMPORTS
-from . import kernel
-from . import model
-from . import rkm
+from . import kernel    # ok (tested & documented)
+from . import model     # alpha
+from . import rkm       # beta
+from . import dataset   # alpha
+from . import plot      # alpha
 from ._logger import set_log_level, get_log_level, _GLOBAL_LOGGER
 from .utils import set_ftype, set_itype

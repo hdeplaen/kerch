@@ -59,7 +59,7 @@ class level(view, metaclass=ABCMeta):
         # set the sample to input (always works for the underlying kernel)
         if sample is not None:
             self._log.info("Setting the sample to the provided input. Possibly overwriting a previous one.")
-            self.init_sample(sample, idx_sample=self.idx) # keeping the stochastic state if set.
+            self.init_sample(sample) # keeping the stochastic state if set.
 
         # verify that the sample has been initialized
         try:

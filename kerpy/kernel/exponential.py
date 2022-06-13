@@ -19,7 +19,7 @@ from .implicit import implicit, base
 class exponential(implicit, metaclass=ABCMeta):
     r"""
     :param sigma: Bandwidth :math:`\sigma` of the kernel. If `None`, the value is filled by a heuristic on
-        the sample dataset: 7/10th of the median of the pairwise distances. Computing the heuristic on the full sample
+        the sample dataset: 3/10th of the median of the pairwise distances. Computing the heuristic on the full sample
         dataset can be expensive and `idx_sample` or `prop_sample` could be specified to only compute it on a subset
         only., defaults to `None`.
     :param sigma_trainable: `True` if the gradient of the bandwidth is to be computed. If so, a graph is computed
@@ -129,9 +129,9 @@ class exponential(implicit, metaclass=ABCMeta):
 
         # define sigma if not set by the user
         if self._sigma is None:
-            sigma = .7 * torch.median(D)
+            sigma = .3 * torch.median(D)
             self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
-            self._log.info(f"Bandwidth sigma not provided and assigned by a heuristic (sigma={self.sigma}).")
+            self._log.warning(f"Bandwidth sigma not provided and assigned by a heuristic (sigma={self.sigma}).")
 
         fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(D, -fact))

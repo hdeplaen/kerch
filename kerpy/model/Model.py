@@ -10,7 +10,7 @@ from .. import utils
 class Model(_dataholder, _module, metaclass=ABCMeta):
     @abstractmethod
     @utils.kwargs_decorator({
-        "loss": torch.nn.MSELoss(),
+        "loss": torch.nn.MSELoss(reduction='sum'),
         "log_level": logging.ERROR
     })
     def __init__(self, **kwargs):
@@ -35,26 +35,25 @@ class Model(_dataholder, _module, metaclass=ABCMeta):
         else:
             loss = 0.
             if self._validation_data is not None:
-                self.info("The validation set is not used for k-fold cross-validation, "
+                self._log.info("The validation set is not used for k-fold cross-validation, "
                           "only the training set is divided.")
             for fold in range(k):
-                data_list, labels_list = _dataholder._get_fold(prop=prop)
+                data_list, labels_list = self._get_fold(prop=prop)
                 self.fit(data_list[0], labels_list[0])
                 loss += self.error(data_list[1], labels_list[1])
             return loss/k
 
-    def hyperopt(self, params, k:int=0, max_evals=1000):
+    def hyperopt(self, params, k:int=0, max_evals=1000, log_range=1):
         r"""
         Optimizes the hyperparameters of the model based on a random grid search.
         """
 
         # we only import the packages in hyperopt
-        from hyperopt import hp, fmin, tpe, STATUS_OK
+        import hyperopt
         from math import log
         import copy
 
         _KERNEL_IDENTIFIER = "__KERNEL__ "
-        _PARAM_LOG_RANGE = 3
 
         ## OBJECTIVE FUNCTION
         def objective(*args,**kwargs):
@@ -66,25 +65,26 @@ class Model(_dataholder, _module, metaclass=ABCMeta):
                 else:
                     model.__setattr__(key, value)
             return {'loss': model.validate(k=k),
-                    'status': STATUS_OK}
+                    'status': hyperopt.STATUS_OK}
 
         ## PARAMETER SPACE
         def _add_range(key, base_value):
             if type(base_value)==bool:
-                return hp.choice([True, False])
+                return hyperopt.hp.choice([True, False])
             else:
-                return hp.loguniform(key, base_value - _PARAM_LOG_RANGE,
-                                    base_value + _PARAM_LOG_RANGE)
+                base_value = log(base_value)
+                return hyperopt.hp.loguniform(key, base_value - log_range,
+                                    base_value + log_range)
 
 
         hp_params = {}
         for key in params:
             try: # first see if this is a parameter of the model
-                base_value = log(getattr(self, key))
+                base_value = getattr(self, key)
                 hp_params.update({key: _add_range(key, base_value)})
             except AttributeError:
                 try: # if not, this may be a parameter of the kernel
-                    base_value = log(getattr(self.kernel, key))
+                    base_value = getattr(self.kernel, key)
                     kernel_key = _KERNEL_IDENTIFIER + key
                     hp_params.update({kernel_key: _add_range(kernel_key, base_value)})
                 except AttributeError:
@@ -100,22 +100,22 @@ class Model(_dataholder, _module, metaclass=ABCMeta):
         # avoid printing everything multiple times during all the searches
         import logging
         _OLD_LEVEL = self._log.level
-        # _OLD_LEVEL_KERNEL = self.kernel._log.level
         self._log.setLevel(logging.ERROR)
-        # self.kernel._log.setLevel(logging.ERROR)
 
-        best = fmin(objective, space=hp_params, algo=tpe.suggest, max_evals=max_evals)
+        best = hyperopt.fmin(objective,
+                             space=hp_params,
+                             algo=hyperopt.rand.suggest,
+                             max_evals=max_evals)
 
         # reset the log levels
         self.set_log_level(_OLD_LEVEL)
-        # self.kernel.set_log_level(_OLD_LEVEL_KERNEL)
 
         # set the fond values
         for key, value in best.items():
             if key.startswith(_KERNEL_IDENTIFIER):
                 kernel_key = key.split()[1]
                 self.kernel.__setattr__(kernel_key, value)
-                self._log.info(f"The new kernel value for {kernel_key} is {value}.")
+                self._log.warning(f"Kernel value for {kernel_key} is set to optimal value {value}.")
             else:
                 self.__setattr__(key, value)
-                self._log.info(f"The new model value for {key} is {value}.")
+                self._log.warning(f"Model value for {key} is set to optimal value {value}.")

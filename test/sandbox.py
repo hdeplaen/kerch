@@ -1,16 +1,14 @@
 import kerpy as kp
-import numpy as np
-import logging
 
-# l = kp.model.LSSVM(kernel_type="rbf", representation="dual")
-#
-# X = np.random.randn(10,4)
-# y = np.random.randn(10,1)
-#
-# l.set_data_prop(X, y, proportions=[.8, .2, 0])
-# l.hyperopt({"sigma", "gamma"})
+## DATASET
+tr_set, _, _, _ = kp.dataset.factory("two_moons")           # get the dataset
+X, y = tr_set                                               # get data and labels
 
+## MODEL & TRAINING
+mdl = kp.model.LSSVM(type="rbf", representation="dual")     # initiate model
+mdl.set_data_prop(X, y, proportions=[.8, .2, 0])            # initiate dataset
+mdl.hyperopt({"sigma", "gamma"}, max_evals=1000)            # find optimal hyper-parameters
+mdl.fit()                                                   # fit the optimal parameters found
 
-l = kp.rkm.kpca(type='rbf', dim_output=5)
-l.solve(range(100))
-print(l)
+## PLOT
+kp.plot.plot_model(mdl)                                     # plot the model using the built-in method
