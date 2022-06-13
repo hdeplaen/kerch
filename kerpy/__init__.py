@@ -22,5 +22,6 @@ def gpu_available() -> bool:
 # IMPORTS
 from . import kernel
 from . import model
+from . import rkm
 from ._logger import set_log_level, get_log_level
 from .utils import set_ftype, set_itype

@@ -23,9 +23,10 @@ class kpca(level):
             self._dim_output = self.num_idx
 
         K = self.kernel.K
-        _, v = utils.eigs(K, k=self.dim_output, psd=True)
+        v, h = utils.eigs(K, k=self.dim_output, psd=True)
 
-        self.hidden = v
+        self.hidden = h
+        self.vals = v
 
 
     def solve(self, sample=None, target=None, representation=None) -> None:

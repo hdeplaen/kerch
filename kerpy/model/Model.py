@@ -30,7 +30,7 @@ class Model(_dataholder, _module, metaclass=ABCMeta):
 
     def validate(self, k:int=0, prop:float=.2):
         if k==0:
-            self.fit()
+            self.fit(self._training_data, self._training_labels)
             return self.error(self._validation_data, self._validation_labels)
         else:
             loss = 0.
@@ -89,7 +89,7 @@ class Model(_dataholder, _module, metaclass=ABCMeta):
                     hp_params.update({kernel_key: _add_range(kernel_key, base_value)})
                 except AttributeError:
                     self._log.warning(f"Cannot optimize parameter {key} as it appears to not exist in this "
-                                      f"model, neither in its kernel component.")
+                                      f"model, neither in its kernel component if it has one.")
 
         if k==0:
             self._log.info("Using a classical validation scheme.")
@@ -100,15 +100,15 @@ class Model(_dataholder, _module, metaclass=ABCMeta):
         # avoid printing everything multiple times during all the searches
         import logging
         _OLD_LEVEL = self._log.level
-        _OLD_LEVEL_KERNEL = self.kernel._log.level
+        # _OLD_LEVEL_KERNEL = self.kernel._log.level
         self._log.setLevel(logging.ERROR)
-        self.kernel._log.setLevel(logging.ERROR)
+        # self.kernel._log.setLevel(logging.ERROR)
 
         best = fmin(objective, space=hp_params, algo=tpe.suggest, max_evals=max_evals)
 
         # reset the log levels
         self.set_log_level(_OLD_LEVEL)
-        self.kernel.set_log_level(_OLD_LEVEL_KERNEL)
+        # self.kernel.set_log_level(_OLD_LEVEL_KERNEL)
 
         # set the fond values
         for key, value in best.items():

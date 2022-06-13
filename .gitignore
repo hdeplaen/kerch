@@ -2,5 +2,5 @@
 kerpy/__pycache__/
 docs/_build/
 /build/
-/rkm.egg-info/
+/kerpy.egg-info/
 /dist/

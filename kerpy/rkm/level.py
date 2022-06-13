@@ -69,11 +69,12 @@ class level(view, metaclass=ABCMeta):
             return
 
         # verify that the output has the same dimensions
-        target = utils.castf(target)
-        same_dim = sample.shape[0] == target.shape[0]
-        if not same_dim:
-            self._log.error("The number of sample points is not consistent with the output dimensions")
-            return
+        if target is not None:
+            target = utils.castf(target)
+            same_dim = sample.shape[0] == target.shape[0]
+            if not same_dim:
+                self._log.error("The number of sample points is not consistent with the output dimensions")
+                return
 
         # check the representation is correct and set it to the default level value if None
         representation = utils.check_representation(representation, default=self._representation, cls=self)

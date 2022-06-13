@@ -3,5 +3,4 @@ numpy
 pyyaml
 tqdm
 nested_dict
-logging
 hyperopt

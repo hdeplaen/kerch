@@ -4,10 +4,17 @@ import logging
 
 kp.set_log_level(logging.INFO)
 
-l = kp.model.LSSVM(kernel_type="rbf", representation="dual")
+# l = kp.model.LSSVM(kernel_type="rbf", representation="dual")
+#
+# X = np.random.randn(10,4)
+# y = np.random.randn(10,1)
+#
+# l.set_data_prop(X, y, proportions=[.8, .2, 0])
+# l.hyperopt({"sigma", "gamma"})
 
-X = np.random.randn(10,4)
-y = np.random.randn(10,1)
 
-l.set_data_prop(X, y, proportions=[.8, .2, 0])
-l.hyperopt({"sigma", "gamma"})
+
+k = kp.kernel.rbf()
+l = kp.rkm.kpca(kernel=k, sample=range(10), dim_output=5)
+l.solve()
+print(l)

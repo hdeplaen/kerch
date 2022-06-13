@@ -42,7 +42,7 @@ class view(_sample):
         A view is made of a kernel and primal or dual variables. This second part is handled by the daughter classes.
         """
         super(view, self).__init__(**kwargs)
-        self._dim_output = None
+        self._dim_output = kwargs["dim_output"]
 
         # INITIATE
         self._param_trainable = kwargs["param_trainable"]

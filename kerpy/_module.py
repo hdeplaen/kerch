@@ -16,5 +16,12 @@ class _module(_logger,
     def __init__(self, **kwargs):
         # for some obscure reason, calling the super init does not lead to the call of both classes.
         # by consequence, we make the calls manually to each parents
-        _logger.__init__(self, **kwargs)
         torch.nn.Module.__init__(self)
+        _logger.__init__(self, **kwargs)
+
+    def set_log_level(self, level: int=None) -> int:
+        level = super(_module, self).set_log_level(level)
+        for child in self.children():
+            if isinstance(child, _logger):
+                child.set_log_level(level)
+        return level

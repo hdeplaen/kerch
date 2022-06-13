@@ -4,6 +4,7 @@ import numpy as np
 
 from . import utils
 from ._logger import _logger
+from ._sample import _sample
 
 class _dataholder(_logger):
 
@@ -28,6 +29,10 @@ class _dataholder(_logger):
         self._validation_labels = utils.castf(validation_labels)
         self._testing_data = utils.castf(testing_data)
         self._testing_labels = utils.castf(testing_labels)
+
+        # not necessary:
+        # if isinstance(self, _sample):
+        #     self.init_sample(self._training_data)
 
     def set_data_prop(self, data=None, labels=None, proportions=None) -> None:
         r"""

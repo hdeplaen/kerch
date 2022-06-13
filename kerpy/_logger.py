@@ -27,12 +27,24 @@ class _logger(metaclass=ABCMeta):
         self._log.addHandler(_kerpy_handler)
         self.set_log_level(kwargs["log_level"])
 
-    def set_log_level(self, level: int=None):
+    def set_log_level(self, level: int=None) -> int:
+        r"""
+        Sets a specific log level to this object. It serves as a way to use specific log level for a specific class,
+        different than the current general KerPy log level.
+
+        :param level: If the value is ``None``, the current general KerPy log level will be used (WARNING if not
+            specified otherwise)., defaults to ``None``.
+        :param type: int, optional
+        """
         if level is None:
             level = _GLOBALS["LOG_LEVEL"]
         self._log.setLevel(level)
+        return level
 
     def get_log_level(self) -> int:
+        r"""
+        Returns the log level used by this object.
+        """
         return self._log.level
 
 def set_log_level(level: int):
@@ -53,6 +65,7 @@ def set_log_level(level: int):
 
     """
     _GLOBALS["LOG_LEVEL"] = level
+
 
 
 def get_log_level() -> str:
