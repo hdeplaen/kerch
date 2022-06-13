@@ -18,7 +18,6 @@ _kerpy_handler = logging.StreamHandler()
 _kerpy_handler.setFormatter(_kerpy_format)
 
 class _logger(metaclass=ABCMeta):
-    @abstractmethod
     @utils.kwargs_decorator({
         "log_level": None,
         "name": None
@@ -52,6 +51,8 @@ class _logger(metaclass=ABCMeta):
         """
         return self._log.level
 
+_GLOBAL_LOGGER = _logger(name="general")
+
 def set_log_level(level: int):
     r"""
     Sets the logging level of the toolbox. The best is to use a value of the logging module.
@@ -70,6 +71,7 @@ def set_log_level(level: int):
 
     """
     _GLOBALS["LOG_LEVEL"] = level
+    _GLOBAL_LOGGER.set_log_level(level)
 
 def get_log_level() -> str:
     r"""
@@ -77,4 +79,3 @@ def get_log_level() -> str:
     """
     return logging.getLevelName(_GLOBALS["LOG_LEVEL"])
 
-main_logger = _logger("kerpy")
