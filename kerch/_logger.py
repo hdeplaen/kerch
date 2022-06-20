@@ -37,10 +37,10 @@ class _logger(metaclass=ABCMeta):
 
     def set_log_level(self, level: int=None) -> int:
         r"""
-        Sets a specific log level to this object. It serves as a way to use specific log level for a specific class,
-        different than the current general KerPy log level.
+        Sets a specific log Level to this object. It serves as a way to use specific log Level for a specific class,
+        different than the current general KerPy log Level.
 
-        :param level: If the value is ``None``, the current general KerPy log level will be used (WARNING if not
+        :param level: If the value is ``None``, the current general KerPy log Level will be used (WARNING if not
             specified otherwise)., defaults to ``None``.
         :param type: int, optional
         """
@@ -51,7 +51,7 @@ class _logger(metaclass=ABCMeta):
 
     def get_log_level(self) -> int:
         r"""
-        Returns the log level used by this object.
+        Returns the log Level used by this object.
         """
         return self._log.level
 
@@ -72,7 +72,7 @@ _GLOBAL_LOGGER = _logger(name="global")
 
 def set_log_level(level: int):
     r"""
-    Sets the logging level of the toolbox. The best is to use a value of the logging module.
+    Sets the logging Level of the toolbox. The best is to use a value of the logging module.
     For example
 
     .. code-block::
@@ -92,7 +92,7 @@ def set_log_level(level: int):
 
 def get_log_level() -> str:
     r"""
-    Returns the logging level of the toolbox.
+    Returns the logging Level of the toolbox.
     """
     return logging.getLevelName(_GLOBALS["LOG_LEVEL"])
 

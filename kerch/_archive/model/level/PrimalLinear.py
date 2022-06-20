@@ -1,5 +1,5 @@
 """
-Primal linear class for a RKM level.
+Primal linear class for a RKM Level.
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN

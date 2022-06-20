@@ -1,19 +1,19 @@
 import torch
 from torch import Tensor as T
 
-from .level import level
+from .level import Level
 from kerch import utils
 
 
-class kpca(level):
+class KPCA(Level):
     r"""
     Kernel Principal Component Analysis.
     """
 
-    @utils.extend_docstring(level)
+    @utils.extend_docstring(Level)
     @utils.kwargs_decorator({})
     def __init__(self, **kwargs):
-        super(kpca, self).__init__(**kwargs)
+        super(KPCA, self).__init__(**kwargs)
         self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                         requires_grad=False)
 
@@ -43,6 +43,9 @@ class kpca(level):
         # KPCA models don't require the target to be defined. This is verified.
         if target is not None:
             self._log.warning("The target value is discarded when fitting a KPCA model.")
-        return super(kpca, self).solve(sample=sample,
-                                        target=None,
-                                        representation=representation)
+        return super(KPCA, self).solve(sample=sample,
+                                       target=None,
+                                       representation=representation)
+
+    def interpolate(self):
+        pass

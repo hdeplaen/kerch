@@ -1,5 +1,5 @@
 """
-Abstract RKM level class.
+Abstract RKM Level class.
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -30,7 +30,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
 
         :param representation: "primal" or "dual" representation (default "dual").
         :param init_kernels: number of support vectors / kernel to be instantiated.
-        :param type: Type of level ("hard" or "soft").
+        :param type: Type of Level ("hard" or "soft").
         :param live_update: Live update of the value of the kernel (default True).
         """
         super(Level, self).__init__()

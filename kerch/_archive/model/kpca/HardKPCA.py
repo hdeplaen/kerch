@@ -1,5 +1,5 @@
 """
-Hard KPCA level
+Hard KPCA Level
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -16,7 +16,7 @@ class HardKPCA(mdl.kpca.KPCA):
         self.__eta = 0.
 
     def __str__(self):
-        return f"Hard KPCA level with {self._model['kernel'].__str__()} {super(HardKPCA, self).__str__()}."
+        return f"Hard KPCA Level with {self._model['kernel'].__str__()} {super(HardKPCA, self).__str__()}."
 
     @property
     def hparams(self):

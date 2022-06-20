@@ -1,5 +1,5 @@
 """
-KPCA level
+KPCA Level
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -25,7 +25,7 @@ class KPCA(Level, metaclass=ABCMeta):
         :param centering: True if input and kernel are centered (False by default).
         """
         super(KPCA, self).__init__(**kwargs)
-        assert self._classifier is False, "No formulation exists for a KPCA classifier level."
+        assert self._classifier is False, "No formulation exists for a KPCA classifier Level."
 
         self._generate_representation(**kwargs)
 

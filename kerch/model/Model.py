@@ -43,7 +43,7 @@ class Model(_dataholder, _module, metaclass=ABCMeta):
                 loss += self.error(data_list[1], labels_list[1])
             return loss/k
 
-    def hyperopt(self, params, k:int=0, max_evals=1000, log_range=1):
+    def hyperopt(self, params, k:int=0, max_evals=1000, log_range=2):
         r"""
         Optimizes the hyperparameters of the model based on a random grid search.
         """

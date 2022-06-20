@@ -2,11 +2,11 @@ import torch
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
 
-from .View import View
+from .view import View
 from kerch import utils
 
 
-class level(View, metaclass=ABCMeta):
+class Level(View, metaclass=ABCMeta):
     r"""
     :param eta: :math:`\eta`., defaults to 1.
     :param representation: Chosen representation, "primal" or "dual"., defaults to "dual".
@@ -21,7 +21,7 @@ class level(View, metaclass=ABCMeta):
         "representation": "dual"
     })
     def __init__(self, **kwargs):
-        super(level, self).__init__(**kwargs)
+        super(Level, self).__init__(**kwargs)
         self.eta = kwargs["eta"]
         self._representation = utils.check_representation(kwargs["representation"], cls=self)
 
@@ -76,7 +76,7 @@ class level(View, metaclass=ABCMeta):
                 self._log.error("The number of sample points is not consistent with the output dimensions")
                 return
 
-        # check the representation is correct and set it to the default level value if None
+        # check the representation is correct and set it to the default Level value if None
         representation = utils.check_representation(representation, default=self._representation, cls=self)
 
         # execute the corresponding fitting

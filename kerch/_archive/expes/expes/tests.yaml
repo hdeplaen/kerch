@@ -26,7 +26,7 @@ kpca:
   level:
     size_in: 2
     plot: True
-    type: "kpca"
+    type: "KPCA"
     gamma: .5
     representation: "dual"
     points_trainable: False

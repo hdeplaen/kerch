@@ -69,14 +69,14 @@ ion:
     testing: 116
   level1:
     size_out: 10
-    type: "kpca"
+    type: "KPCA"
     kernel:
       kernel_type: "rbf"
       sigma_trainable: True
       sigma: 6.
   level2:
     size_out: 10
-    type: "kpca"
+    type: "KPCA"
     kernel:
       kernel_type: "rbf"
       sigma_trainable: True
@@ -113,14 +113,14 @@ bld:
     testing: 114
   level1:
     size_out: 10
-    type: "kpca"
+    type: "KPCA"
     kernel:
       kernel_type: "rbf"
       sigma_trainable: True
       sigma: 2
   level2:
     size_out: 10
-    type: "kpca"
+    type: "KPCA"
     kernel:
       kernel_type: "rbf"
       sigma_trainable: True
@@ -145,14 +145,14 @@ adult:
     testing: 500
   level1:
     size_out: 20
-    type: "kpca"
+    type: "KPCA"
     kernel:
       kernel_type: "rbf"
       sigma_trainable: True
       sigma: 7
   level2:
     size_out: 10
-    type: "kpca"
+    type: "KPCA"
     kernel:
       kernel_type: "rbf"
       sigma_trainable: True

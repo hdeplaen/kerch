@@ -1,16 +1,16 @@
 import torch
 from torch import Tensor as T
 
-from .level import level
+from .level import Level
 from .. import utils
 
 
-class lssvm(level):
+class lssvm(Level):
     r"""
     Least squares support vector machine.
     """
 
-    @utils.extend_docstring(level)
+    @utils.extend_docstring(Level)
     @utils.kwargs_decorator({
         "gamma": 1.
     })

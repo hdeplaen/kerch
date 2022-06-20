@@ -1,5 +1,5 @@
 """
-Dual linear class for a RKM level.
+Dual linear class for a RKM Level.
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN

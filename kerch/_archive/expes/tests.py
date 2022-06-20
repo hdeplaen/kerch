@@ -51,7 +51,7 @@ class TestLevels(unittest.TestCase):
         out_soft = soft.learn(x, y, **learn_params)
 
         # TEST
-        if type == 'kpca':
+        if type == 'KPCA':
             out_soft = np.abs(out_soft)
             out_hard = np.abs(out_hard)
         error = np.mean(out_soft - out_hard)
@@ -60,15 +60,15 @@ class TestLevels(unittest.TestCase):
 
     def test_primal_kpca(self):
         # print('PRIMAL KPCA')
-        self._test_prototype(type="kpca", representation="primal", kernel="linear")
-        # self._test_prototype(type="kpca", representation="primal", kernel="polynomial") # NOT IMPLEMENTED
+        self._test_prototype(type="KPCA", representation="primal", kernel="linear")
+        # self._test_prototype(type="KPCA", representation="primal", kernel="polynomial") # NOT IMPLEMENTED
 
     def test_dual_kpca(self):
         # print('DUAL KPCA')
-        self._test_prototype(type="kpca", representation="dual", kernel="linear", lr=0.001)
-        self._test_prototype(type="kpca", representation="dual", kernel="rbf", lr=0.01)
-        # self._test_prototype(type="kpca", representation="dual", kernel="polynomial") # ERROR
-        # self._test_prototype(type="kpca", representation="dual", kernel="sigmoid", lr=0.001)
+        self._test_prototype(type="KPCA", representation="dual", kernel="linear", lr=0.001)
+        self._test_prototype(type="KPCA", representation="dual", kernel="rbf", lr=0.01)
+        # self._test_prototype(type="KPCA", representation="dual", kernel="polynomial") # ERROR
+        # self._test_prototype(type="KPCA", representation="dual", kernel="sigmoid", lr=0.001)
 
     def test_primal_lssvm(self):
         # print('PRIMAL LSSVM')

@@ -12,7 +12,7 @@ pima_indians:
     size_in: 8
     size_out: 10
     plot: True
-    type: "kpca"
+    type: "KPCA"
     constraint: "soft"
     representation: "dual"
     points_trainable: False
@@ -28,7 +28,7 @@ pima_indians:
     size_in: 10
     size_out: 10
     plot: True
-    type: "kpca"
+    type: "KPCA"
     representation: "dual"
     points_trainable: False
     aggregate: False

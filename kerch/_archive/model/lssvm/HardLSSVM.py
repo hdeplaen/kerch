@@ -1,5 +1,5 @@
 """
-Hard LS-SVM abstract level
+Hard LS-SVM abstract Level
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -16,7 +16,7 @@ class HardLSSVM(LSSVM):
         # self._eta = 0.
 
     def __str__(self):
-        return f"Hard LS-SVM level with {self.kernel.__str__()} {super(HardLSSVM, self).__str__()}."
+        return f"Hard LS-SVM Level with {self.kernel.__str__()} {super(HardLSSVM, self).__str__()}."
 
     @property
     def hparams(self):

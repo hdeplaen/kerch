@@ -1,5 +1,5 @@
 """
-LS-SVM abstract level
+LS-SVM abstract Level
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -122,7 +122,7 @@ class LSSVM(Level, metaclass=ABCMeta):
         return l, x_tilde
 
     def solve(self, x, y=None):
-        assert y is not None, "Tensor y is unspecified. This is not allowed for a LSSVM level."
+        assert y is not None, "Tensor y is unspecified. This is not allowed for a LSSVM Level."
         switcher = {'primal': lambda: self.primal(x, y),
                     'dual': lambda: self.dual(x, y)}
 

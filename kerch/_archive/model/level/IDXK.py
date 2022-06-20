@@ -74,11 +74,11 @@ class IDXK():
             self.new()
 
     def reduce(self, idxs):
-        assert not self._general, 'Only implemented for level-wise stochasticity.'
+        assert not self._general, 'Only implemented for Level-wise stochasticity.'
         num = idxs.len(0)
         self._num_kernels -= num
 
     def merge(self, idxs):
-        assert not self._general, 'Only implemented for level-wise stochasticity.'
+        assert not self._general, 'Only implemented for Level-wise stochasticity.'
         self.reduce(idxs)
 

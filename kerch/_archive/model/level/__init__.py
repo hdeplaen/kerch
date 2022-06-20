@@ -1,5 +1,5 @@
 """
-Abstract RKM level class.
+Abstract RKM Level class.
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -7,5 +7,5 @@ Abstract RKM level class.
 @date: March 2021
 """
 
-# import kerpy._src.level.Linear as Linear
-# import kerpy._src.level.Level as Level
+# import kerpy._src.Level.Linear as Linear
+# import kerpy._src.Level.Level as Level

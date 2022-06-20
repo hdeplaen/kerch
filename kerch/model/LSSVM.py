@@ -4,6 +4,7 @@ from .Model import Model
 class LSSVM(lssvm, Model):
     def __init__(self, **kwargs):
             super(LSSVM, self).__init__(**kwargs)
+            # Model.__init__(self, **kwargs)
             self.kernel.set_log_level()
 
     def fit(self, data=None, labels=None) -> None:

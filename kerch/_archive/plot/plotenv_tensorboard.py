@@ -34,7 +34,7 @@ class plotenv_tensorboard(plotenv_parent.plotenv_parent):
         hparams_dict = self.opt.hparams
         for num in range(self.model.num_levels):
             name = f"LEVEL{num}"
-            level = self.model.level(num)
+            level = self.model.Level(num)
             level_dict = {name + str(key): val for key, val in level.hparams.items()}
             hparams_dict = {**hparams_dict, **level_dict}
 
@@ -47,7 +47,7 @@ class plotenv_tensorboard(plotenv_parent.plotenv_parent):
             w.add_scalar("Early Stopping", es, global_step=iter)
 
             for num in range(self.model.num_levels):
-                level = self.model.level(num)
+                level = self.model.Level(num)
                 w.add_scalars("Level Losses", {f"LEVEL{num}": level.last_loss}, global_step=iter)
                 for (name, dict) in invert_dict(f"LEVEL{num}", level.kernel.params):
                     w.add_scalars(name, dict, global_step=iter)

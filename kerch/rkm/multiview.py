@@ -6,10 +6,9 @@ from collections import OrderedDict
 import torch
 from torch import Tensor as T
 
-from kerch import utils
-from kerch.rkm import View
-from kerch._stochastic import _stochastic
-from kerch.utils import MultiViewError
+from .. import utils
+from .view import View
+from .._stochastic import _stochastic
 
 
 @utils.extend_docstring(_stochastic)
@@ -17,17 +16,6 @@ class MultiView(_stochastic):
     r"""
     TODO
     """
-
-    def __new__(cls, *args, **kwargs):
-        if len(args)==0:
-            return View(**kwargs)
-        elif len(args)==1:
-            if isinstance(args[0], View):
-                return args[0]
-            else:
-                return View(**args[0])
-        else:
-            return super(MultiView, cls).__new__(cls)
 
     @utils.kwargs_decorator({
         "dim_output": None,
@@ -66,8 +54,8 @@ class MultiView(_stochastic):
             view.hidden = self.hidden_as_param
         elif isinstance(view, dict):
             view = View(**{**view,
-                               "dim_output": self._dim_output,
-                               "hidden": self.hidden_as_param})
+                           "dim_output": self._dim_output,
+                           "hidden": self.hidden_as_param})
         else:
             self._log.error(f"View {view} could not be added as it is nor a view object nor a dictionnary of "
                             f"parameters")

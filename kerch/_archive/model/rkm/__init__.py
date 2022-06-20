@@ -329,7 +329,7 @@ class RKM(torch.nn.Module):
     def append_level(self, type, **kwargs):
         """
 
-        :param type: 'lssvm' or 'kpca'
+        :param type: 'lssvm' or 'KPCA'
         :param constraint: 'hard' or 'soft'
         :param kwargs: layer parameters
         """
@@ -345,10 +345,10 @@ class RKM(torch.nn.Module):
         # TO DO: make switchers cleaner with proper NameError
         switcher2 = {"soft": SoftKPCA.SoftKPCA, "hard": HardKPCA.HardKPCA}
         switcher3 = {"soft": SoftLSSVM.SoftLSSVM, "hard": HardLSSVM.HardLSSVM}
-        switcher1 = {"kpca": switcher2, "lssvm": switcher3}
+        switcher1 = {"KPCA": switcher2, "lssvm": switcher3}
 
-        level = switcher1.get(type, "Invalid level type (kpca/lssvm)"). \
-            get(kwargs["constraint"], "Invalid level constraint (soft/hard)")(device=self.device, **kwargs)
+        level = switcher1.get(type, "Invalid Level type (KPCA/lssvm)"). \
+            get(kwargs["constraint"], "Invalid Level constraint (soft/hard)")(device=self.device, **kwargs)
 
         euclidean, slow, stiefel = level.get_params(slow_names='sigma')
         self._euclidean.extend(euclidean)

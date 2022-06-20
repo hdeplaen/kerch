@@ -1,5 +1,5 @@
 """
-Soft KPCA level
+Soft KPCA Level
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -14,7 +14,7 @@ class SoftKPCA(mdl.kpca.KPCA):
         super(SoftKPCA, self).__init__(**kwargs)
 
     def __str__(self):
-        return f"Soft KPCA level with {self._model['kernel'].__str__()} {super(SoftKPCA, self).__str__()}."
+        return f"Soft KPCA Level with {self._model['kernel'].__str__()} {super(SoftKPCA, self).__str__()}."
 
     @property
     def hparams(self):

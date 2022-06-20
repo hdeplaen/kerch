@@ -42,7 +42,7 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
         hparams_dict = self.opt.hparams
         for num in range(self.model.num_levels):
             name = f"LEVEL{num}"
-            level = self.model.level(num)
+            level = self.model.Level(num)
             level_dict = {name + str(key): val for key, val in level.hparams.items()}
             hparams_dict = {**hparams_dict, **level_dict}
 
@@ -53,8 +53,8 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
         self.run.log({"Early Stopping": es}, step=iter)
 
         for num in range(self.model.num_levels):
-            level = self.model.level(num)
-            self.run.log({f"LEVEL{num} Loss": level.last_loss}, step=iter) # level losses
+            level = self.model.Level(num)
+            self.run.log({f"LEVEL{num} Loss": level.last_loss}, step=iter) # Level losses
             dict =  add_dict(f"LEVEL{num}", level.kernel.params)
             wandb.log(dict, step=iter)
             if isinstance(level, kpca.KPCA):
@@ -73,10 +73,10 @@ class plotenv_wandb(plotenv_parent.plotenv_parent):
 
     def kpca(self, num, level, iter):
         if isinstance(level.linear, DualLinear):
-            # P = level.linear.alpha
+            # P = Level.linear.alpha
             K = level.kernel.dmatrix()
         elif isinstance(level.linear, PrimalLinear):
-            # P = level.linear.weight
+            # P = Level.linear.weight
             K, _ = level.kernel.pmatrix()
         else:
             K = []

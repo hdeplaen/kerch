@@ -1,5 +1,5 @@
 """
-Soft LS-SVM abstract level
+Soft LS-SVM abstract Level
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -18,7 +18,7 @@ class SoftLSSVM(lssvm.LSSVM):
         self._stochastic = kwargs["stochastic"]
 
     def __str__(self):
-        return f"Soft LS-SVM level with {self._model['kernel'].__str__()} {super(SoftLSSVM, self).__str__()}."
+        return f"Soft LS-SVM Level with {self._model['kernel'].__str__()} {super(SoftLSSVM, self).__str__()}."
 
     @property
     def hparams(self):

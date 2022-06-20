@@ -1,5 +1,5 @@
 """
-Abstract linear class for a RKM level.
+Abstract linear class for a RKM Level.
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
