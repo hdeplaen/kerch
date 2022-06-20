@@ -74,7 +74,7 @@ class SGDG(Optimizer):
                 if p.grad is None:
                     continue
 
-                unity,_ = unit(p.data.view(p.size()[0],-1))
+                unity,_ = unit(p.data.View(p.size()[0], -1))
                 if stiefel and unity.size()[0] <= unity.size()[1]:
                     
                     weight_decay = group['weight_decay']
@@ -85,7 +85,7 @@ class SGDG(Optimizer):
                     if rand_num==1:
                         unity = qr_retraction(unity)
                     
-                    g = p.grad.data.view(p.size()[0],-1)
+                    g = p.grad.data.View(p.size()[0], -1)
                        
                     
                     lr = group['lr']
@@ -109,7 +109,7 @@ class SGDG(Optimizer):
                     p_new = Cayley_loop(unity.t(), W, V, alpha)
                     V_new = torch.mm(W, unity.t()) # n-by-p
 #                     check_identity(p_new.t())
-                    p.data.copy_(p_new.view(p.size()))
+                    p.data.copy_(p_new.View(p.size()))
                     V.copy_(V_new)               
 
                 else:
@@ -206,13 +206,13 @@ class AdamG(Optimizer):
                 beta2 = group['beta2']
                 epsilon = group['epsilon']
 
-                unity,_ = unit(p.data.view(p.size()[0],-1))
+                unity,_ = unit(p.data.View(p.size()[0], -1))
                 if stiefel and unity.size()[0] <= unity.size()[1]:
                     rand_num = random.randint(1,101)
                     if rand_num==1:
                         unity = qr_retraction(unity)
                         
-                    g = p.grad.data.view(p.size()[0],-1)
+                    g = p.grad.data.View(p.size()[0], -1)
 
                     param_state = self.state[p]
                     if 'm_buffer' not in param_state:
@@ -248,7 +248,7 @@ class AdamG(Optimizer):
                     
                     p_new = Cayley_loop(unity.t(), W, mnew, -alpha)
 
-                    p.data.copy_(p_new.view(p.size()))
+                    p.data.copy_(p_new.View(p.size()))
                     mnew = torch.matmul(W, unity.t()) * vnew_hat.add(epsilon).sqrt() * (1 - beta1_power)
                     m.copy_(mnew)
                     v.copy_(vnew)

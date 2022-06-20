@@ -2,8 +2,8 @@ import kerch
 import numpy as np
 from matplotlib import pyplot as plt
 
-sample = np.sin(np.arange(0,15) / np.pi) + .1
-oos = np.sin(np.arange(15,30) / np.pi) + .1
+sample = np.sin(np.arange(0,15) / np.pi) + .1       # sample
+oos = np.sin(np.arange(15,30) / np.pi) + .1         # out-of-sample
 
 k = kerch.kernel.factory(type="polynomial", sample=sample, center=True, normalize=True)
 

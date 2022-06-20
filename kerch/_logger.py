@@ -11,7 +11,7 @@ from abc import ABCMeta, abstractmethod
 
 from . import _GLOBALS, utils
 
-_LOGGING_FORMAT = "KerPy %(levelname)s [%(name)s]: %(message)s"
+_LOGGING_FORMAT = "PyKer %(levelname)s [%(name)s]: %(message)s"
 
 _kerpy_format = logging.Formatter(_LOGGING_FORMAT)
 _kerpy_handler = logging.StreamHandler()
@@ -23,11 +23,15 @@ class _logger(metaclass=ABCMeta):
         "name": None
     })
     def __init__(self, **kwargs):
-        name = kwargs["name"]
-        if name is not None:
-            self._log = logging.getLogger(name=name)
+        self._name = kwargs["name"]
+        class_name = self.__class__.__name__
+        if self._name is not None and class_name is not "_logger":
+            log_name = self._name + ' ' + class_name
+        elif self._name is not None:
+            log_name = self._name
         else:
-            self._log = logging.getLogger(name=self.__class__.__name__)
+            log_name = class_name
+        self._log = logging.getLogger(name=log_name)
         self._log.addHandler(_kerpy_handler)
         self.set_log_level(kwargs["log_level"])
 
@@ -50,6 +54,19 @@ class _logger(metaclass=ABCMeta):
         Returns the log level used by this object.
         """
         return self._log.level
+
+    @property
+    def name(self):
+        r"""
+        Name of the module. This is relevant in some applications
+        """
+        if self._name is not None:
+            return self._name
+        raise AttributeError
+
+    @name.setter
+    def name(self, val:str):
+        self._log.error("The name cannot be changed after initialization.")
 
 _GLOBAL_LOGGER = _logger(name="global")
 

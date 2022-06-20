@@ -44,5 +44,5 @@ class laplacian(exponential):
         y = y.T[:, None, :]
 
         diff = x - y
-        D = torch.sum(diff * diff, dim=0, keepdim=True)
+        D = torch.sum(diff * diff, dim=0, keepdim=False)
         return torch.sqrt(D)

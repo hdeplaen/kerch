@@ -2,11 +2,11 @@ import torch
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
 
-from .view import view
+from .View import View
 from kerch import utils
 
 
-class level(view, metaclass=ABCMeta):
+class level(View, metaclass=ABCMeta):
     r"""
     :param eta: :math:`\eta`., defaults to 1.
     :param representation: Chosen representation, "primal" or "dual"., defaults to "dual".
@@ -15,7 +15,7 @@ class level(view, metaclass=ABCMeta):
     :type representation: str, optional
     """
 
-    @utils.extend_docstring(view)
+    @utils.extend_docstring(View)
     @utils.kwargs_decorator({
         "eta": 1.,
         "representation": "dual"

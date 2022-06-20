@@ -42,3 +42,10 @@ class RepresentationError(KerPyError):
     def __init__(self, *args, **kwargs):
         self.message = "Unrecognized or unspecified representation (must be primal or dual)."
         super(RepresentationError, self).__init__(*args, **kwargs)
+
+
+class MultiViewError(KerPyError):
+    def __init__(self, *args, **kwargs):
+        self.message = "Primal operations are not defined a multi-view context. You must ask them for the different " \
+                       "views separately, if it exists for it."
+        super(MultiViewError, self).__init__(*args, **kwargs)

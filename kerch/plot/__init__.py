@@ -39,7 +39,7 @@ def plot_model(mdl:Model, dims=None):
     # PLOTS
     cmap = plt.get_cmap('RdYlGn')
     plt.scatter(x, y, s=5, c=cmap(255*(t==1.)))
-    plt.contourf(x_grid, y_grid, eval_grid.view(x_grid.shape), cmap=cmap, alpha=.5)
+    plt.contourf(x_grid, y_grid, eval_grid.View(x_grid.shape), cmap=cmap, alpha=.5)
     plt.xlabel('Dimension 1')
     plt.ylabel('Dimension 2')
     plt.title(mdl.__class__.__name__)

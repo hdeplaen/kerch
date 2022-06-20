@@ -136,7 +136,7 @@ class exponential(implicit, metaclass=ABCMeta):
         fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(D, -fact))
 
-        return output.squeeze(0)
+        return output
 
     def _implicit_self(self, x=None):
         if x is None:

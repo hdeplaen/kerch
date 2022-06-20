@@ -1,5 +1,5 @@
 """
-Abstract RKM view class.
+Abstract RKM View class.
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -16,9 +16,9 @@ from kerch._sample import _sample
 
 
 @utils.extend_docstring(_sample)
-class view(_sample):
+class View(_sample):
     r"""
-    :param kernel: Initiates a view based on an existing kernel object. If the value is not `None`, all other
+    :param kernel: Initiates a View based on an existing kernel object. If the value is not `None`, all other
         parameters are neglected and inherited from the provided kernel., default to `None`
     :param bias: Bias
     :param bias_trainable: defaults to `False`
@@ -35,13 +35,14 @@ class view(_sample):
         "bias_trainable": False,
         "hidden": None,
         "weight": None,
-        "param_trainable": False
+        "param_trainable": False,
+        "kappa": 1.
     })
     def __init__(self, **kwargs):
         """
-        A view is made of a kernel and primal or dual variables. This second part is handled by the daughter classes.
+        A View is made of a kernel and primal or dual variables. This second part is handled by the daughter classes.
         """
-        super(view, self).__init__(**kwargs)
+        super(View, self).__init__(**kwargs)
         self._dim_output = kwargs["dim_output"]
 
         # INITIATE
@@ -58,6 +59,8 @@ class view(_sample):
         elif hidden is None:
             self.weight = weight
 
+        self._kappa = kwargs["kappa"]
+
         # BIAS
         self._bias_trainable = kwargs["bias_trainable"]
         self._requires_bias = kwargs["bias"]
@@ -72,7 +75,7 @@ class view(_sample):
                                       "sample": self.sample_as_param,
                                       "idx_sample": self.idx})
         elif isinstance(kernel, base):
-            self._log.info("Initiating view based on existing kernel and overwriting its sample.")
+            self._log.info("Initiating View based on existing kernel and overwriting its sample.")
             self._kernel = kernel
             self._kernel.init_sample(sample=self.sample_as_param,
                                      idx_sample=self.idx)
@@ -94,6 +97,14 @@ class view(_sample):
     def _reset_weight(self) -> None:
         self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                           requires_grad=self._weight.requires_grad)
+
+    @property
+    def kappa(self) -> float:
+        return self._kappa
+
+    @kappa.setter
+    def kappa(self, val:float):
+        self._kappa = val
 
     @property
     def bias(self) -> Tensor:
@@ -145,13 +156,14 @@ class view(_sample):
 
     @dim_output.setter
     def dim_output(self, val: int):
-        self._log.error("This value cannot be set. Change the hidden property, or the weights "
-                        "property if applicable.")
+        self._dim_output = val
+        self._reset_weight()
+        self._reset_hidden()
 
     @property
     def kernel(self) -> base:
         r"""
-        The kernel used by the model or view.
+        The kernel used by the model or View.
         """
         return self._kernel
 
@@ -160,7 +172,7 @@ class view(_sample):
         For some obscure reason, this does not work as a setter (@kernel.setter).
         TODO: find out why and solve
         """
-        self._log.info("Updating view based on an external kernel and overwriting its sample.")
+        self._log.info("Updating View based on an external kernel and overwriting its sample.")
         self._kernel = val
         self._kernel.init_sample(sample=self.sample_as_param,
                                  idx_sample=self.idx)
@@ -227,7 +239,7 @@ class view(_sample):
     @property
     def _hidden_exists(self) -> bool:
         r"""
-        Returns if this view has hidden variables attached to it.
+        Returns if this View has hidden variables attached to it.
         """
         return self._hidden.nelement() != 0
 
@@ -278,10 +290,10 @@ class view(_sample):
     ## MATHS
 
     def phi(self, x=None) -> Tensor:
-        return self.kernel.phi(x)
+        return self.kappa * self.kernel.phi(x)
 
     def k(self, x=None) -> Tensor:
-        return self._kernel.k(x)
+        return self.kappa * self._kernel.k(x)
 
     def h(self, x=None) -> Tensor:
         if x is None:
@@ -326,7 +338,7 @@ class view(_sample):
 
     @property
     def K(self) -> Tensor:
-        return self._kernel.K
+        return self.kappa * self._kernel.K
 
     @property
     def H(self) -> Tensor:
@@ -346,6 +358,6 @@ class view(_sample):
 
     def forward(self, x=None, representation="dual"):
         if self._bias_exists:
-            return self.phiw(x, representation) + self._bias[:, None]
+            return self.phiw(x, representation) + self.kappa * self._bias[:, None]
         else:
             return self.phiw(x, representation)

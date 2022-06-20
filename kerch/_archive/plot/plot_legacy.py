@@ -65,7 +65,7 @@ class plot():
 
         ## SURFACE PLOT
         surf = self.mdl.forward(self.grid)
-        surf = surf.view(self.xx.shape).detach().cpu().numpy()
+        surf = surf.View(self.xx.shape).detach().cpu().numpy()
         cmap = plt.get_cmap('RdYlGn')
 
         # TITLE

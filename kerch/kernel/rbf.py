@@ -40,4 +40,4 @@ class rbf(exponential):
         y = y.T[:, None, :]
 
         diff = x - y
-        return torch.sum(diff * diff, dim=0, keepdim=True)
+        return torch.sum(diff * diff, dim=0, keepdim=False)

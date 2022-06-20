@@ -19,6 +19,7 @@ class _module(_logger,
         torch.nn.Module.__init__(self)
         _logger.__init__(self, **kwargs)
 
+
     def set_log_level(self, level: int=None) -> int:
         level = super(_module, self).set_log_level(level)
         for child in self.children():
