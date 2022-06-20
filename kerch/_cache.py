@@ -13,7 +13,7 @@ class _cache(_module,
              metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, **kwargs):
-        super(_cache, self).__init__()
+        super(_cache, self).__init__(**kwargs)
 
         # we initiate the cache
         self._reset()
