@@ -183,6 +183,7 @@ class View(_sample):
     def hidden(self) -> Tensor:
         if self._hidden_exists:
             return self._hidden.data[self.idx, :]
+        raise AttributeError
 
     def update_hidden(self, val: Tensor, idx_sample=None) -> None:
         # first verify the existence of the hidden values before updating them.

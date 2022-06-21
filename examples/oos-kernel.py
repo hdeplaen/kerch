@@ -26,3 +26,4 @@ for ax in axs.flat:
     ax.set_yticks([])
 
 fig.colorbar(im, ax=axs.ravel().tolist())
+plt.show()

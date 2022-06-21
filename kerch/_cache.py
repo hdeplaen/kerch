@@ -31,3 +31,9 @@ class _cache(_module,
         # will be on the same support as the rest of the module as created by its parameters.
         self._log.debug("The cache is resetted.")
         self._cache = {}
+
+    def reset(self, children=False):
+        self._reset()
+        for cache in self.children():
+            if isinstance(cache, _cache):
+                cache.reset(children=children)

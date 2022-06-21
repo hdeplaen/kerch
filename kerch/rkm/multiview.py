@@ -27,7 +27,7 @@ class MultiView(_stochastic):
         super(MultiView, self).__init__(**kwargs)
         self._dim_output = kwargs["dim_output"]
         self._views = OrderedDict()
-        self._num_views = 0
+        self._views_num = 0
 
         self._log.debug("The output dimension, the sample and the hidden variables of each View will be overwritten "
                         "by the general value passed as an argument, possibly with None.")
@@ -66,14 +66,13 @@ class MultiView(_stochastic):
         elif view.num_sample is not None and self._num_total is None:
             self._num_total = view.num_sample
 
-        # append to dict
+        # append to dict and meta variables for the views
         try:
             self._views[view.name] = view
         except AttributeError:
-            name = str(len(self._views))
+            name = str(self._views_num)
             self._views[name] = view
-
-        self._num_views += 1
+        self._views_num += 1
 
     def _reset_hidden(self) -> None:
         for view in self._views:
@@ -109,7 +108,7 @@ class MultiView(_stochastic):
 
     @property
     def num_views(self) -> int:
-        return self._num_views
+        return self._views_num
 
     ## HIDDEN
 
@@ -159,7 +158,7 @@ class MultiView(_stochastic):
 
             self._num_h, self._dim_output = self._hidden.shape
 
-            for view in self._views:
+            for _, view in self._views.items():
                 view.hidden = self.hidden_as_param
         else:
             self._log.info("The hidden value is unset.")
@@ -190,7 +189,7 @@ class MultiView(_stochastic):
 
     def k(self, x=None) -> T:
         k = self.view(0).k(x)
-        for num in range(1, self._num_views):
+        for num in range(1, self._views_num):
             k += self.view(num).k(x)
         return k
 
@@ -206,7 +205,7 @@ class MultiView(_stochastic):
     @property
     def K(self) -> T:
         k = self.view(0).K
-        for num in range(1, self._num_views):
+        for num in range(1, self._views_num):
             k += self.view(num).K
         return k
 
