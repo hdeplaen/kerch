@@ -213,8 +213,11 @@ class base(_sample, metaclass=ABCMeta):
         if normalize is None:
             normalize = self._normalize
 
-        if self._compute_C() is None:
-            return None
+        # check is statistics are available if required
+        if center or normalize or x is None:
+            if self._compute_C() is None:
+                self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
+                raise Exception
 
         x = utils.castf(x)
         phi = self._explicit(x)
@@ -270,54 +273,59 @@ class base(_sample, metaclass=ABCMeta):
         x = utils.castf(x)
         y = utils.castf(y)
 
+        # if any computation on the sample is required
+        if center or normalize or x is None or y is None:
+            if implicit and self._compute_C() is None:
+                self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
+                raise Exception
+            elif not implicit and self._compute_K() is None:
+                self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
+                raise Exception
+
+        # now that we know that the sample prerequisites are met, we can compute the OOS.
         if implicit:
-            if self._compute_C() is None:
-                return None
             phi_sample = self.phi(y, center, normalize)
             phi_oos = self.phi(x, center, normalize)
             return phi_oos @ phi_sample.T
         else:
-            if self._compute_K() is None:
-                return None
+            K = self._implicit(x, y)
+            if center:
+                if x is not None:
+                    K_x_sample = self._implicit(x)
+                    m_x_sample = torch.mean(K_x_sample, dim=1, keepdim=True)
+                else:
+                    m_x_sample = self._cache["K_mean"]
 
-        K = self._implicit(x, y)
-        if center:
-            if x is not None:
-                K_x_sample = self._implicit(x)
-                m_x_sample = torch.mean(K_x_sample, dim=1, keepdim=True)
-            else:
-                m_x_sample = self._cache["K_mean"]
+                if y is not None:
+                    K_y_sample = self._implicit(y)
+                    m_y_sample = torch.mean(K_y_sample, dim=1, keepdim=True)
+                else:
+                    m_y_sample = self._cache["K_mean"]
 
-            if y is not None:
-                K_y_sample = self._implicit(y)
-                m_y_sample = torch.mean(K_y_sample, dim=1, keepdim=True)
-            else:
-                m_y_sample = self._cache["K_mean"]
+                K = K - m_x_sample \
+                    - m_y_sample.T \
+                    + self._cache["K_mean_tot"]
+            if normalize:
+                if x is None:
+                    n_x = self._cache["K_norm"]
+                else:
+                    diag_K_x = self._implicit_self(x)[:, None]
+                    if center:
+                        diag_K_x = diag_K_x - 2 * m_x_sample + self._cache["K_mean_tot"]
+                    n_x = torch.sqrt(diag_K_x)
 
-            K = K - m_x_sample \
-                - m_y_sample.T \
-                + self._cache["K_mean_tot"]
-        if normalize:
-            if x is None:
-                n_x = self._cache["K_norm"]
-            else:
-                diag_K_x = self._implicit_self(x)[:, None]
-                if center:
-                    diag_K_x = diag_K_x - 2 * m_x_sample + self._cache["K_mean_tot"]
-                n_x = torch.sqrt(diag_K_x)
+                if y is None:
+                    n_y = self._cache["K_norm"]
+                else:
+                    diag_K_y = self._implicit_self(y)[:, None]
+                    if center:
+                        diag_K_y = diag_K_y - 2 * m_y_sample + self._cache["K_mean_tot"]
+                    n_y = torch.sqrt(diag_K_y)
 
-            if y is None:
-                n_y = self._cache["K_norm"]
-            else:
-                diag_K_y = self._implicit_self(y)[:, None]
-                if center:
-                    diag_K_y = diag_K_y - 2 * m_y_sample + self._cache["K_mean_tot"]
-                n_y = torch.sqrt(diag_K_y)
+                K_norm = n_x * n_y.T
+                K = K / torch.clamp(K_norm, min=self._eps)
 
-            K_norm = n_x * n_y.T
-            K = K / torch.clamp(K_norm, min=self._eps)
-
-        return K
+            return K
 
     def c(self, x=None, y=None, center=None, normalize=None) -> Tensor:
         r"""
@@ -325,11 +333,9 @@ class base(_sample, metaclass=ABCMeta):
 
         .. note::
             A centered and normalized covariance matrix is a correlation matrix.
-
-        .. warning::
-            Not implemented.
         """
-        raise NotImplementedError
+        return self.phi(x, center=center, normalize=normalize).T \
+               @ self.phi(y, center=center, normalize=normalize)
 
     def forward(self, x, representation="dual") -> Tensor:
         """

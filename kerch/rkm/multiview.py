@@ -20,6 +20,7 @@ class MultiView(_stochastic):
     @utils.kwargs_decorator({
         "dim_output": None,
         "hidden": None,
+        "weight": None,
         "param_trainable": False,
         "prop": None
     })
@@ -27,17 +28,24 @@ class MultiView(_stochastic):
         super(MultiView, self).__init__(**kwargs)
         self._dim_output = kwargs["dim_output"]
         self._views = OrderedDict()
-        self._views_num = 0
+        self._num_views = 0
 
         self._log.debug("The output dimension, the sample and the hidden variables of each View will be overwritten "
                         "by the general value passed as an argument, possibly with None.")
 
         # HIDDEN
         self._param_trainable = kwargs["param_trainable"]
+        weight = kwargs["weight"]
         hidden = kwargs["hidden"]
         self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE), self._param_trainable)
-        if hidden is not None:
+        self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE), self._param_trainable)
+        if weight is not None and hidden is not None:
+            self._log.info("Both the hidden and the weight are set. Priority is given to the hidden values.")
             self.hidden = hidden
+        elif weight is None:
+            self.hidden = hidden
+        elif hidden is None:
+            self.weight = weight
 
         # append the views
         for view in views:
@@ -50,7 +58,7 @@ class MultiView(_stochastic):
         Adds a view
         """
         if isinstance(view, View):
-            view.dim_output = None
+            view.dim_output = self._dim_output
             view.hidden = self.hidden_as_param
         elif isinstance(view, dict):
             view = View(**{**view,
@@ -70,9 +78,9 @@ class MultiView(_stochastic):
         try:
             self._views[view.name] = view
         except AttributeError:
-            name = str(self._views_num)
+            name = str(self._num_views)
             self._views[name] = view
-        self._views_num += 1
+        self._num_views += 1
 
     def _reset_hidden(self) -> None:
         for view in self._views:
@@ -81,6 +89,21 @@ class MultiView(_stochastic):
     def _reset_weight(self) -> None:
         for view in self._views:
             view._reset_weight()
+
+    @property
+    def dims_input(self) -> list:
+        dims = []
+        for num in range(self._num_views):
+            dims.append(self.view(num).dim_input)
+        return dims
+
+    @property
+    def dim_input(self) -> int:
+        return sum(self.dims_input)
+
+    @dim_input.setter
+    def dim_input(self, val: int):
+        self._log.info('This value cannot be set and depends on the different views.')
 
     @property
     def dim_output(self) -> int:
@@ -108,7 +131,7 @@ class MultiView(_stochastic):
 
     @property
     def num_views(self) -> int:
-        return self._views_num
+        return self._num_views
 
     ## HIDDEN
 
@@ -181,17 +204,55 @@ class MultiView(_stochastic):
         return self._hidden.nelement() != 0
 
     ## WEIGHT
+    @property
+    def weight(self) -> T:
+        return self.weight_as_param.data
+
+    @property
+    def weight_as_param(self) -> torch.nn.Parameter:
+        if self._weight_exists:
+            return self._weight
+        self._log.debug("No weight has been initialized yet.")
+
+    @weight.setter
+    def weight(self, val):
+        if val is not None:
+            assert val.shape[0] == self.dim_input, f'The feature dimensions do not match: ' \
+                                                   f'got {val.shape[0]}, need {self.dim_input}.'
+            previous_dim = 0
+            for num in range(self.num_views):
+                dim = self.dims_input[num]
+                self.view(num).weight = val[previous_dim:previous_dim + dim, :]
+                previous_dim += dim
+        else:
+            self._log.info("The weight is unset.")
+            for num in range(self.num_views):
+                self.view(num).weight = None
+
+    @property
+    def _weight_exists(self) -> bool:
+        return self._weight.nelement() != 0
+
     def _update_weight_from_hidden(self):
         for view in self._views:
             view._update_weight_from_hidden()
 
     ## MATHS
-
     def k(self, x=None) -> T:
         k = self.view(0).k(x)
-        for num in range(1, self._views_num):
+        for num in range(1, self._num_views):
             k += self.view(num).k(x)
         return k
+
+    def phi(self, x=None):
+        phi = self.view(0).phi(x)
+        for num in range(1, self._num_views):
+            phi = torch.cat((phi, self.view(num).phi(x)), dim=1)
+        return phi
+
+    def c(self, x=None) -> T:
+        phi = self.phi(x)
+        return phi.T @ phi
 
     def h(self, x=None) -> T:
         if x is None:
@@ -205,9 +266,14 @@ class MultiView(_stochastic):
     @property
     def K(self) -> T:
         k = self.view(0).K
-        for num in range(1, self._views_num):
+        for num in range(1, self._num_views):
             k += self.view(num).K
         return k
+
+    @property
+    def C(self) -> T:
+        # TODO: can probably be optimized
+        return self.c()
 
     @property
     def H(self) -> T:

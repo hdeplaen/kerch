@@ -7,7 +7,7 @@ lssvm:
     stochastic: .6
     size_in: 2
     plot: True
-    type: "lssvm"
+    type: "LSSVM"
     gamma: .5
     representation: "dual"
     points_trainable: False

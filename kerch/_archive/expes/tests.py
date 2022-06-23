@@ -72,27 +72,27 @@ class TestLevels(unittest.TestCase):
 
     def test_primal_lssvm(self):
         # print('PRIMAL LSSVM')
-        self._test_prototype(type="lssvm", representation="primal", kernel="linear", lr=0.05)
-        # self._test_prototype(type="lssvm", representation="primal", kernel="polynomial")
+        self._test_prototype(type="LSSVM", representation="primal", kernel="linear", lr=0.05)
+        # self._test_prototype(type="LSSVM", representation="primal", kernel="polynomial")
 
     def test_dual_lssvm(self):
         # print('DUAL LSSVM')
-        self._test_prototype(type="lssvm", representation="dual", kernel="linear", lr=0.001)
-        self._test_prototype(type="lssvm", representation="dual", kernel="rbf", lr=0.1)
-        # self._test_prototype(type="lssvm", representation="dual", kernel="polynomial")
-        # self._test_prototype(type="lssvm", representation="dual", kernel="sigmoid", lr=0.05)
+        self._test_prototype(type="LSSVM", representation="dual", kernel="linear", lr=0.001)
+        self._test_prototype(type="LSSVM", representation="dual", kernel="rbf", lr=0.1)
+        # self._test_prototype(type="LSSVM", representation="dual", kernel="polynomial")
+        # self._test_prototype(type="LSSVM", representation="dual", kernel="sigmoid", lr=0.05)
 
     def test_primal_lssvm_classifier(self):
         # print('PRIMAL LSSVM CLASSIFIER')
-        self._test_prototype(type="lssvm", representation="primal", kernel="linear", classifier=True, lr=0.01)
-        # self._test_prototype(type="lssvm", representation="primal", kernel="polynomial", classifier=True)
+        self._test_prototype(type="LSSVM", representation="primal", kernel="linear", classifier=True, lr=0.01)
+        # self._test_prototype(type="LSSVM", representation="primal", kernel="polynomial", classifier=True)
 
     def test_dual_lssvm_classifier(self):
         # print('DUAL LSSVM CLASSIFIER')
-        self._test_prototype(type="lssvm", representation="dual", kernel="linear", classifier=True, lr=0.001)
-        self._test_prototype(type="lssvm", representation="dual", kernel="rbf", classifier=True, lr=0.1)
-        # self._test_prototype(type="lssvm", representation="dual", kernel="polynomial", classifier=True)
-        # self._test_prototype(type="lssvm", representation="dual", kernel="sigmoid", classifier=True, lr=0.002)
+        self._test_prototype(type="LSSVM", representation="dual", kernel="linear", classifier=True, lr=0.001)
+        self._test_prototype(type="LSSVM", representation="dual", kernel="rbf", classifier=True, lr=0.1)
+        # self._test_prototype(type="LSSVM", representation="dual", kernel="polynomial", classifier=True)
+        # self._test_prototype(type="LSSVM", representation="dual", kernel="sigmoid", classifier=True, lr=0.002)
 
 class Suites():
     @staticmethod

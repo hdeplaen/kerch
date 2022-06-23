@@ -8,7 +8,7 @@ pid:
     testing: 255
   level1:
     size_out: 1
-    type: "lssvm"
+    type: "LSSVM"
     constraint: 'soft'
     classifier: True
     gamma: 0.4
@@ -41,7 +41,7 @@ pid2:
     constraint: "hard"
     gamma: .01
     size_out: 1
-    type: "lssvm"
+    type: "LSSVM"
     classifier: False
     kernel:
       kernel_type: "rbf"
@@ -83,7 +83,7 @@ ion:
       sigma: 3.
   level3:
     size_out: 1
-    type: "lssvm"
+    type: "LSSVM"
     classifier: False
     kernel:
       kernel_type: "rbf"
@@ -126,7 +126,7 @@ bld:
       sigma_trainable: True
   level3:
     size_out: 1
-    type: "lssvm"
+    type: "LSSVM"
     kernel:
       kernel_type: "rbf"
       sigma_trainable: True
@@ -158,7 +158,7 @@ adult:
       sigma_trainable: True
   level3:
     size_out: 1
-    type: "lssvm"
+    type: "LSSVM"
     kernel:
       kernel_type: "rbf"
       sigma_trainable: False

@@ -5,7 +5,7 @@ from .level import Level
 from .. import utils
 
 
-class lssvm(Level):
+class LSSVM(Level):
     r"""
     Least squares support vector machine.
     """
@@ -15,7 +15,7 @@ class lssvm(Level):
         "gamma": 1.
     })
     def __init__(self, **kwargs):
-        super(lssvm, self).__init__(**kwargs)
+        super(LSSVM, self).__init__(**kwargs)
         self._gamma = torch.nn.Parameter(torch.tensor(kwargs["gamma"], dtype=utils.FTYPE))
 
     @property
@@ -98,6 +98,6 @@ class lssvm(Level):
         if target is None:
             self._log.error("The target value should be provided when fitting an LS-SVM.")
             raise ValueError
-        return super(lssvm, self).solve(sample=sample,
+        return super(LSSVM, self).solve(sample=sample,
                                         target=target,
                                         representation=representation)

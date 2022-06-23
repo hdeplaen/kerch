@@ -168,7 +168,7 @@ class _sample(_stochastic,          # manager stochastic indices
 
         if sample is None:
             self._log.debug("Initializing new sample with the sample dimensions.")
-            if self._num_total is None and self.dim_input is None:
+            if self._num_total is None or self.dim_input is None:
                 self._log.info(
                     'The sample cannot be initialized because no sample dataset has been provided nor the '
                     'sample dimensions have been initialized yet.')

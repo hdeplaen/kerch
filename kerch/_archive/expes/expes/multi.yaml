@@ -43,7 +43,7 @@ pima_indians:
     size_in: 10
     size_out: 1
     plot: True
-    type: "lssvm"
+    type: "LSSVM"
     gamma: 1.
     representation: "dual"
     points_trainable: False

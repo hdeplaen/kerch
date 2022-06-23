@@ -26,14 +26,21 @@ class KPCA(Level):
         val = utils.castf(val, tensor=False, dev=self._vals.device)
         self._vals.data = val
 
-    def _solve_primal(self,target: T=None) -> None:
-        pass
+    def _solve_primal(self, target: T = None) -> None:
+        if self.dim_output is None:
+            self._dim_output = self.num_idx
+
+        C = self.C
+        v, w = utils.eigs(C, k=self.dim_output, psd=True)
+
+        self.weight = w
+        self.vals = v
 
     def _solve_dual(self,target: T=None) -> None:
         if self.dim_output is None:
             self._dim_output = self.num_idx
 
-        K = self.kernel.K
+        K = self.K
         v, h = utils.eigs(K, k=self.dim_output, psd=True)
 
         self.hidden = h

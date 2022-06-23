@@ -40,7 +40,14 @@ class MVKPCA(MVLevel):
         self.vals = v
 
     def _solve_primal(self) -> None:
-        raise NotImplementedError
+        if self.dim_output is None:
+            self._dim_output = self.dim_input
+
+        C = self.C
+        v, w = utils.eigs(C, k=self.dim_output, psd=True)
+
+        self.weight = w
+        self.vals = v
 
     ####################################################################
 
@@ -51,6 +58,8 @@ class MVKPCA(MVLevel):
 
     def predict(self, inputs: dict, lr: float = .001, tot_iter: int = 50) -> dict:
         assert isinstance(inputs, dict), "The input must be a dictionary containing the values to predict."
+
+        from matplotlib import pyplot as plt
 
         K_base = 0.
         num_predict = None
@@ -74,7 +83,7 @@ class MVKPCA(MVLevel):
             self._log.warning('Nothing to predict.')
             return {}
 
-        # get projector and reconstruction error
+        # # get projector and reconstruction error
         dev = K_base.device
         P = self.hidden @ self.hidden.T
         I = torch.eye(self.num_idx, self.num_idx, dtype=utils.FTYPE, device=dev)
@@ -89,12 +98,17 @@ class MVKPCA(MVLevel):
         params = {}
         for key in to_do:
             v = self.view(key)
+            # x = torch.zeros(num_predict, v.dim_input, dtype=utils.FTYPE, device=dev, requires_grad=True)
             x = torch.tensor(v.sample[idx, :], dtype=utils.FTYPE, device=dev, requires_grad=True)
             params[key] = x
 
+        plt.figure(5)
+        plt.plot(inputs['time'], x.data)
+        plt.show()
+
         # update K based on the current parameters values
         def update_K(K_base, params):
-            K = K_base
+            K = K_base.clone()
             for key, p in params.items():
                 K += self.view(key).k(p)
             return K
@@ -106,7 +120,7 @@ class MVKPCA(MVLevel):
         K = KT + KX
         PK = torch.einsum('ij,ikl->jkl', R, K)  # (s, mx, mt)
         f = torch.sum(PK ** 2, dim=0)  # (mx, mt)
-        from matplotlib import pyplot as plt
+        f = f / torch.norm(f, dim=0)
         plt.imshow(torch.flipud(torch.log(f)))
         plt.show()
         idx_min = torch.argmin(f, dim=0)
@@ -119,7 +133,8 @@ class MVKPCA(MVLevel):
         for _ in bar:
             K = update_K(K_base, params)  # (m,n)
             RK = K @ R  # (m,n)
-            loss = torch.sum(RK ** 2)  # TODO: CANNOT DO THAT
+            del K
+            loss = torch.sum(RK ** 2)
             loss.backward(retain_graph=True)
             bar.set_description(f"{loss:1.2e}")
             with torch.no_grad():
