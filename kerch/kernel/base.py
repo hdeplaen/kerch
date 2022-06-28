@@ -59,11 +59,19 @@ class base(_sample, metaclass=ABCMeta):
         return self.__str__()
 
     @property
-    def params(self):
+    def params(self) -> dict:
         r"""
         Dictionnary containing the parameters and their values. This can be relevant for monitoring.
         """
         return {}
+
+    @property
+    @abstractmethod
+    def dim_feature(self) -> int:
+        r"""
+        Returns the dimension of the explicit feature map if it exists.
+        """
+        pass
 
     @property
     def center(self) -> bool:

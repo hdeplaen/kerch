@@ -83,12 +83,16 @@ class nystrom(explicit):
         """
         Dimension of the explicit feature map.
         """
-        return self._dim.cpu().numpy()
+        return self._dim.cpu().numpy().item(0)
 
     @dim.setter
     def dim(self, val):
         self._dim = utils.casti(val)
         self._reset()
+
+    @property
+    def dim_feature(self) -> int:
+        return self.dim
 
     def __str__(self):
         return "Feature kernel"

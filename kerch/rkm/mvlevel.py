@@ -25,6 +25,12 @@ class MVLevel(MultiView, metaclass=ABCMeta):
         self.eta = kwargs["eta"]
         self._representation = utils.check_representation(kwargs["representation"], cls=self)
 
+    @property
+    def _I_primal(self) -> T:
+        if "I_primal" not in self._cache:
+            self._cache["I_primal"] = torch.eye(self.dim_feature, dtype=utils.FTYPE)
+        return self._cache["I_primal"]
+
     ####################################################################################################################
 
     @abstractmethod

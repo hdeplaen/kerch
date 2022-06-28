@@ -91,19 +91,15 @@ class MultiView(_stochastic):
             view._reset_weight()
 
     @property
-    def dims_input(self) -> list:
+    def dims_feature(self) -> list:
         dims = []
         for num in range(self._num_views):
-            dims.append(self.view(num).dim_input)
+            dims.append(self.view(num).kernel.dim_feature)
         return dims
 
     @property
-    def dim_input(self) -> int:
-        return sum(self.dims_input)
-
-    @dim_input.setter
-    def dim_input(self, val: int):
-        self._log.info('This value cannot be set and depends on the different views.')
+    def dim_feature(self) -> int:
+        return sum(self.dims_feature)
 
     @property
     def dim_output(self) -> int:
@@ -210,18 +206,19 @@ class MultiView(_stochastic):
 
     @property
     def weight_as_param(self) -> torch.nn.Parameter:
-        if self._weight_exists:
-            return self._weight
-        self._log.debug("No weight has been initialized yet.")
+        weight = self.view(0).weight_as_param
+        for num in range(1, self.num_views):
+            weight = torch.cat((weight, self.view(num).weight_as_param), dim=0)
+        return weight
 
     @weight.setter
     def weight(self, val):
         if val is not None:
-            assert val.shape[0] == self.dim_input, f'The feature dimensions do not match: ' \
-                                                   f'got {val.shape[0]}, need {self.dim_input}.'
+            assert val.shape[0] == self.dim_feature, f'The feature dimensions do not match: ' \
+                                                     f'got {val.shape[0]}, need {self.dim_input}.'
             previous_dim = 0
             for num in range(self.num_views):
-                dim = self.dims_input[num]
+                dim = self.dims_feature[num]
                 self.view(num).weight = val[previous_dim:previous_dim + dim, :]
                 previous_dim += dim
         else:
@@ -239,19 +236,41 @@ class MultiView(_stochastic):
 
     ## MATHS
     def k(self, x=None) -> T:
-        k = self.view(0).k(x)
-        for num in range(1, self._num_views):
-            k += self.view(num).k(x)
+        if not isinstance(x, dict):
+            k = self.view(0).k(x)
+            for num in range(1, self._num_views):
+                k += self.view(num).k(x)
+        else:
+            items = list(x.items())
+            key, value = items[0]
+            k = self.view(key).k(value)
+            for num in range(1, len(items)):
+                key, value = items[num]
+                k += self.view(key).k(value)
         return k
 
-    def phi(self, x=None):
-        phi = self.view(0).phi(x)
-        for num in range(1, self._num_views):
-            phi = torch.cat((phi, self.view(num).phi(x)), dim=1)
+    def phi(self, x=None, features=None):
+        # this returns classical phi
+        if not isinstance(x, dict):
+            phi = self.view(0).phi(x)
+            for num in range(1, self._num_views):
+                phi = torch.cat((phi, self.view(num).phi(x)), dim=1)
+        # if different x values have to be used for specific views
+        else:
+            if features is None:
+                features = []
+            items = list(x.items())
+            key, value = items[0]
+            phi = self.view(key).phi(value)
+            for num in range(1, len(items)):
+                key, value = items[num]
+                phi = torch.cat((phi, self.view(key).phi(value)), dim=1)
+            for feat in features:
+                phi = torch.cat((phi, feat), dim=1)
         return phi
 
-    def c(self, x=None) -> T:
-        phi = self.phi(x)
+    def c(self, x=None, features: list = None) -> T:
+        phi = self.phi(x, features=features)
         return phi.T @ phi
 
     def h(self, x=None) -> T:

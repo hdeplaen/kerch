@@ -148,6 +148,10 @@ class View(_sample):
         return self._bias.nelement() != 0
 
     @property
+    def dim_feature(self) -> int:
+        return self.kernel.dim_feature
+
+    @property
     def dim_output(self) -> int:
         r"""
         Output dimension

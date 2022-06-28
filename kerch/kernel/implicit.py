@@ -9,6 +9,7 @@ File containing the RBF kernel class.
 
 from .. import utils
 from .base import base
+import math
 
 from abc import ABCMeta, abstractmethod
 
@@ -25,6 +26,10 @@ class implicit(base, metaclass=ABCMeta):
 
     def __str__(self):
         return f"Implicit kernel."
+
+    @property
+    def dim_feature(self) -> int:
+        raise utils.PrimalError
 
     @abstractmethod
     def _implicit(self, x=None, y=None):
