@@ -11,28 +11,29 @@ from abc import ABCMeta, abstractmethod
 
 from . import _GLOBALS, utils
 
-_LOGGING_FORMAT = "PyKer %(levelname)s [%(name)s]: %(message)s"
+_LOGGING_FORMAT = "Kerch %(levelname)s [%(name)s]: %(message)s"
 
-_kerpy_format = logging.Formatter(_LOGGING_FORMAT)
-_kerpy_handler = logging.StreamHandler()
-_kerpy_handler.setFormatter(_kerpy_format)
+_kerch_format = logging.Formatter(_LOGGING_FORMAT)
+_kerch_handler = logging.StreamHandler()
+_kerch_handler.setFormatter(_kerch_format)
 
-class _logger(metaclass=ABCMeta):
+
+class _Logger(metaclass=ABCMeta):
     @utils.kwargs_decorator({
         "log_level": None,
         "name": None
     })
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         self._name = kwargs["name"]
         class_name = self.__class__.__name__
-        if self._name is not None and class_name is not "_logger":
+        if self._name is not None and class_name is not "_Logger":
             log_name = self._name + ' ' + class_name
         elif self._name is not None:
             log_name = self._name
         else:
             log_name = class_name
         self._log = logging.getLogger(name=log_name)
-        self._log.addHandler(_kerpy_handler)
+        self._log.addHandler(_kerch_handler)
         self.set_log_level(kwargs["log_level"])
 
     def set_log_level(self, level: int=None) -> int:
@@ -68,7 +69,8 @@ class _logger(metaclass=ABCMeta):
     def name(self, val:str):
         self._log.error("The name cannot be changed after initialization.")
 
-_GLOBAL_LOGGER = _logger(name="global")
+
+_GLOBAL_LOGGER = _Logger(name="global")
 
 def set_log_level(level: int):
     r"""
@@ -76,10 +78,10 @@ def set_log_level(level: int):
     For example
 
     .. code-block::
-        import kerpy
+        import kerch
         import logging
 
-        kerpy.set_log_level(logging.DEBUG)
+        kerch.set_log_level(logging.DEBUG)
 
 
     .. note::

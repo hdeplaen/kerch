@@ -2,20 +2,20 @@ import torch
 import logging
 from abc import ABCMeta, abstractmethod
 
-
-from .._module import _module
-from .._dataholder import _dataholder
+from .._module import _Module
+from .._dataholder import _DataHolder
 from .. import utils
 
-class Model(_dataholder, _module, metaclass=ABCMeta):
+
+class Model(_DataHolder, _Module, metaclass=ABCMeta):
     @abstractmethod
     @utils.kwargs_decorator({
         "loss": torch.nn.MSELoss(reduction='sum'),
         "log_level": logging.ERROR
     })
     def __init__(self, **kwargs):
-        _module.__init__(self, **kwargs)
-        _dataholder.__init__(self, **kwargs)
+        _Module.__init__(self, **kwargs)
+        _DataHolder.__init__(self, **kwargs)
         self._loss = kwargs["loss"]
         self.set_log_level()
 

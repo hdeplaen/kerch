@@ -13,15 +13,15 @@ from abc import ABCMeta, abstractmethod
 from torch import Tensor
 
 from . import utils
-from ._cache import _cache
-from ._logger import _logger
+from ._cache import _Cache
+from ._logger import _Logger
 
 
-class _stochastic(_cache,                   # creates a transportable cache (e.g. for GPU)
+class _Stochastic(_Cache,  # creates a transportable cache (e.g. for GPU)
                   metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, **kwargs):
-        super(_stochastic, self).__init__(**kwargs)
+        super(_Stochastic, self).__init__(**kwargs)
         self._num_total = None
         self._idx_stochastic = None
 
@@ -99,5 +99,5 @@ class _stochastic(_cache,                   # creates a transportable cache (e.g
             self._idx_stochastic = self._all_idx
 
         for stochastic_module in self.children():
-            if isinstance(stochastic_module, _stochastic):
+            if isinstance(stochastic_module, _Stochastic):
                 stochastic_module.stochastic(idx=self._idx_stochastic)

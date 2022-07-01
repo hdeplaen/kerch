@@ -8,15 +8,15 @@ from abc import ABCMeta, abstractmethod
 from torch import Tensor
 
 from . import utils
-from ._cache import _cache
-from ._logger import _logger
-from ._stochastic import _stochastic
+from ._cache import _Cache
+from ._logger import _Logger
+from ._stochastic import _Stochastic
 
 
-@utils.extend_docstring(_stochastic)
-class _sample(_stochastic,          # manager stochastic indices
-              _cache,               # creates a transportable cache (e.g. for GPU)
-              _logger,              # allows logging actions and errors
+@utils.extend_docstring(_Stochastic)
+class _Sample(_Stochastic,  # manager stochastic indices
+              _Cache,  # creates a transportable cache (e.g. for GPU)
+              _Logger,  # allows logging actions and errors
               metaclass=ABCMeta):
     r"""
     :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
@@ -53,7 +53,7 @@ class _sample(_stochastic,          # manager stochastic indices
         "idx_sample": None,
         "prop_sample": None})
     def __init__(self, **kwargs):
-        super(_sample, self).__init__(**kwargs)
+        super(_Sample, self).__init__(**kwargs)
 
         sample = kwargs["sample"]
         if sample is not None:
@@ -190,7 +190,7 @@ class _sample(_stochastic,          # manager stochastic indices
                                               requires_grad=self._sample_trainable)
 
         for sample_module in self.children():
-            if isinstance(sample_module, _sample):
+            if isinstance(sample_module, _Sample):
                 sample_module.init_sample(self.sample_as_param)
 
         self.stochastic(idx=idx_sample, prop=prop_sample)

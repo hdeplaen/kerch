@@ -1,45 +1,19 @@
-import torch
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
 
+from ._level import _Level
 from .view import View
 from kerch import utils
 
 
-class Level(View, metaclass=ABCMeta):
-    r"""
-    :param eta: :math:`\eta`., defaults to 1.
-    :param representation: Chosen representation, "primal" or "dual"., defaults to "dual".
+class Level(_Level, View, metaclass=ABCMeta):
 
-    :type eta: double, optional
-    :type representation: str, optional
-    """
-
+    @utils.extend_docstring(_Level)
     @utils.extend_docstring(View)
-    @utils.kwargs_decorator({
-        "eta": 1.,
-        "representation": "dual"
-    })
-    def __init__(self, **kwargs):
-        super(Level, self).__init__(**kwargs)
-        self.eta = kwargs["eta"]
-        self._representation = utils.check_representation(kwargs["representation"], cls=self)
+    def __init__(self, *args, **kwargs):
+        super(Level, self).__init__(*args, **kwargs)
 
     ####################################################################################################################
-
-    @abstractmethod
-    def _solve_primal(self, target=None) -> None:
-        r"""
-        Solves the dual formulation on the sample.
-        """
-        pass
-
-    @abstractmethod
-    def _solve_dual(self, target=None) -> None:
-        r"""
-        Solves the primal formulation on the sample.
-        """
-        pass
 
     def solve(self, sample=None, target=None, representation=None) -> None:
         r"""
@@ -55,18 +29,10 @@ class Level(View, metaclass=ABCMeta):
         :type representation: str, optional
         """
 
-        self._log.debug("The fitting is always done on the full sample dataset, regardless of the stochastic state.")
         # set the sample to input (always works for the underlying kernel)
         if sample is not None:
             self._log.info("Setting the sample to the provided input. Possibly overwriting a previous one.")
-            self.init_sample(sample) # keeping the stochastic state if set.
-
-        # verify that the sample has been initialized
-        try:
-            sample = self.sample
-        except AttributeError:
-            self._log.error("Cannot perform fitting as no input has been provided nor a sample already exists")
-            return
+            self.init_sample(sample)  # keeping the stochastic state if set.
 
         # verify that the output has the same dimensions
         if target is not None:
@@ -76,14 +42,10 @@ class Level(View, metaclass=ABCMeta):
                 self._log.error("The number of sample points is not consistent with the output dimensions")
                 return
 
-        # check the representation is correct and set it to the default Level value if None
-        representation = utils.check_representation(representation, default=self._representation, cls=self)
-
-        # execute the corresponding fitting
-        switcher = {"primal": self._solve_primal,
-                    "dual": self._solve_dual}
-        fun = switcher.get(representation)
-        return fun(target=target)
+        # solve model
+        return super(Level, self).solve(sample=sample,
+                                        target=target,
+                                        representation=representation)
 
     ####################################################################################################################
 

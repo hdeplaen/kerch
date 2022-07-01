@@ -3,75 +3,24 @@ from tqdm import trange
 from torch import Tensor as T
 
 from .mvlevel import MVLevel
+from ._kpca import _KPCA
 from kerch import utils
 
 
-class MVKPCA(MVLevel):
+class MVKPCA(_KPCA, MVLevel):
     r"""
     Multi-View Kernel Principal Component Analysis.
     """
 
+    @utils.extend_docstring(_KPCA)
     @utils.extend_docstring(MVLevel)
-    @utils.kwargs_decorator({})
     def __init__(self, *args, **kwargs):
         super(MVKPCA, self).__init__(*args, **kwargs)
-        self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
-                                        requires_grad=False)
 
-    def __repr__(self):
-        return "Multi-View KPCA" + super(MVKPCA, self).__repr__()
-
-    @property
-    def vals(self) -> T:
-        return self._vals.data
-
-    @vals.setter
-    def vals(self, val):
-        val = utils.castf(val, tensor=False, dev=self._vals.device)
-        self._vals.data = val
-
-    ###################################################################
-
-    def _solve_dual(self) -> None:
-        if self.dim_output is None:
-            self._dim_output = self.num_idx
-
-        K = self.K
-        v, h = utils.eigs(K, k=self.dim_output, psd=True)
-
-        self.hidden = h
-        self.vals = v
-
-    def _solve_primal(self) -> None:
-        if self.dim_output is None:
-            self._dim_output = self.dim_input
-
-        C = self.C
-        v, w = utils.eigs(C, k=self.dim_output, psd=True)
-
-        self.weight = w
-        self.vals = v
+    def __str__(self):
+        return "multi-view KPCA" + MVLevel.__str__(self)
 
     ####################################################################
-
-    def _primal_obj(self, x=None) -> T:
-        P = self.weight @ self.weight.T  # primal projector
-        R = self._I_primal - P  # reconstruction
-        C = self.c(x)  # covariance
-        return torch.norm(R * C)  # reconstruction error on the covariance
-
-    def _dual_obj(self, x=None) -> T:
-        P = self.hidden @ self.hidden.T  # dual projector
-        R = self._I_dual - P  # reconstruction
-        K = self.k(x)  # kernel matrix
-        return torch.norm(R * K)  # reconstruction error on the kernel
-
-    ####################################################################
-
-    def generate(self, h=None):
-        if h is None:
-            raise NotImplementedError
-        raise NotImplementedError
 
     def predict_proj(self, inputs: dict, method='closed'):
         r"""

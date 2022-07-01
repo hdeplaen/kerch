@@ -40,7 +40,8 @@ def casti(x, dev=None):
 
     return x.squeeze()
 
-def check_representation(representation: str=None, default: str=None, cls=None):
+
+def check_representation(representation: str = None, default: str = None, cls=None):
     if representation is None and default is not None:
         representation = default
 
@@ -48,3 +49,7 @@ def check_representation(representation: str=None, default: str=None, cls=None):
     if representation not in valid:
         raise RepresentationError(cls)
     return representation
+
+
+def capitalize_only_first(val: str) -> str:
+    return val[0].upper() + val[1:]

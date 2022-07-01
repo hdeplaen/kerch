@@ -7,7 +7,7 @@ Source code for the RKM toolbox.
 @date: March 2021
 """
 from abc import ABCMeta, abstractmethod
-from .._logger import _logger
+from .._logger import _Logger
 
 
 class KerPyError(Exception, metaclass=ABCMeta):
@@ -18,7 +18,7 @@ class KerPyError(Exception, metaclass=ABCMeta):
         if hasattr(self, 'message'):
             msg = self.message
 
-        if isinstance(cls, _logger):
+        if isinstance(cls, _Logger):
             cls._log.error(msg)
             msg = "[" + cls.__class__.__name__ + "] " + msg
 

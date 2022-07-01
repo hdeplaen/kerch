@@ -13,11 +13,11 @@ from abc import ABCMeta, abstractmethod
 from torch import Tensor
 
 from .. import utils
-from .._sample import _sample
+from .._sample import _Sample
 
 
-@utils.extend_docstring(_sample)
-class base(_sample, metaclass=ABCMeta):
+@utils.extend_docstring(_Sample)
+class base(_Sample, metaclass=ABCMeta):
     r"""
     :param center: `True` if any implicit feature or kernel is must be centered, `False` otherwise. The center
         is always performed relative to a statistic on the sample., defaults to `False`
@@ -105,17 +105,17 @@ class base(_sample, metaclass=ABCMeta):
     # def merge(self, idxs):
     #     raise NotImplementedError
     #     # # suppress added up kernel
-    #     # self._sample = (self._sample.gather(dim=0, index=idxs[:, 1]) +
-    #     #                 self._sample.gather(dim=0, index=idxs[:, 0])) / 2
+    #     # self._Sample = (self._Sample.gather(dim=0, index=idxs[:, 1]) +
+    #     #                 self._Sample.gather(dim=0, index=idxs[:, 0])) / 2
     #
     #     self.dmatrix()
     #     # suppress added up kernel entries in the kernel matrix
-    #     self._cache["K"].gather(dim=0, index=idxs[:, 1], out=self._cache["K"])
-    #     self._cache["K"].gather(dim=1, index=idxs[:, 1], out=self._cache["K"])
+    #     self._Cache["K"].gather(dim=0, index=idxs[:, 1], out=self._Cache["K"])
+    #     self._Cache["K"].gather(dim=1, index=idxs[:, 1], out=self._Cache["K"])
     #
     # def reduce(self, idxs):
     #     raise NotImplementedError
-    #     self._sample.gather(dim=0, index=idxs, out=self._sample)
+    #     self._Sample.gather(dim=0, index=idxs, out=self._Sample)
 
     ###################################################################################################
     ################################### MATHS ARE HERE ################################################

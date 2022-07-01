@@ -6,14 +6,14 @@ which can also be ported like torch.nn.Parameters are, on GPU for example.
 import torch
 from abc import ABCMeta, abstractmethod
 
-from ._module import _module
+from ._module import _Module
 
 
-class _cache(_module,
+class _Cache(_Module,
              metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, **kwargs):
-        super(_cache, self).__init__(**kwargs)
+        super(_Cache, self).__init__(**kwargs)
 
         # we initiate the cache
         self._reset()
@@ -24,7 +24,7 @@ class _cache(_module,
         with torch.no_grad():
             for _, cache_entry in self._cache.items():
                 cache_entry.data = fn(cache_entry)
-        return super(_cache, self)._apply(fn)
+        return super(_Cache, self)._apply(fn)
 
     def _reset(self):
         # this just resets the cache and makes it empty. If refilled, the new elements
@@ -35,5 +35,5 @@ class _cache(_module,
     def reset(self, children=False):
         self._reset()
         for cache in self.children():
-            if isinstance(cache, _cache):
+            if isinstance(cache, _Cache):
                 cache.reset(children=children)

@@ -3,13 +3,13 @@ from torch import Tensor as T
 import numpy as np
 
 from . import utils
-from ._logger import _logger
-from ._sample import _sample
+from ._logger import _Logger
 
-class _dataholder(_logger):
+
+class _DataHolder(_Logger):
 
     def __init__(self, **kwargs):
-        super(_dataholder, self).__init__(**kwargs)
+        super(_DataHolder, self).__init__(**kwargs)
         self._training_data = None
         self._training_labels = None
         self._validation_data = None
@@ -31,7 +31,7 @@ class _dataholder(_logger):
         self._testing_labels = utils.castf(testing_labels)
 
         # not necessary:
-        # if isinstance(self, _sample):
+        # if isinstance(self, _Sample):
         #     self.init_sample(self._training_data)
 
     def set_data_prop(self, data=None, labels=None, proportions=None) -> None:
@@ -44,7 +44,7 @@ class _dataholder(_logger):
             assert len(proportions)==3, 'The proportions should contain 3 elements (training, validation and test). ' \
                                         'Please fill 0 if you do not want the create on of these sets'
 
-        data_list, labels_list = _dataholder._split_data(data, labels, proportions)
+        data_list, labels_list = _DataHolder._split_data(data, labels, proportions)
 
         self.set_data(training_data=data_list[0], training_labels=labels_list[0],
                       validation_data=data_list[1], validation_labels=labels_list[1],
@@ -57,7 +57,7 @@ class _dataholder(_logger):
         Sets the different datasets based on a training and a test set only. A validation set can be created from
         the training set based on some proportion.
         """
-        data_list, labels_list = _dataholder._split_data_two(training_data, training_labels, prop=validation_prop)
+        data_list, labels_list = _DataHolder._split_data_two(training_data, training_labels, prop=validation_prop)
         training_data, validation_data = data_list
         training_labels, validation_labels = labels_list
 
@@ -66,7 +66,7 @@ class _dataholder(_logger):
                       testing_data, testing_labels)
 
     def _get_fold(self, prop:float=.2):
-        return _dataholder._split_data_two(self._training_data, self._training_labels, prop=prop)
+        return _DataHolder._split_data_two(self._training_data, self._training_labels, prop=prop)
 
     def _get_default_data(self, data=None, labels=None):
         if data is None:
@@ -111,4 +111,4 @@ class _dataholder(_logger):
 
     @staticmethod
     def _split_data_two(data, labels=None, prop:float=.2):
-        return _dataholder._split_data(data, labels, props=[1. - prop, prop])
+        return _DataHolder._split_data(data, labels, props=[1. - prop, prop])
