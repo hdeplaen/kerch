@@ -4,3 +4,4 @@ from .type import *
 from .doc import *
 from .math import *
 from .errors import *
+from .tensor import *

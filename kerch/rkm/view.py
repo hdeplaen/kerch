@@ -9,6 +9,7 @@ Abstract RKM View class.
 
 import torch
 from torch import Tensor
+from math import sqrt
 
 from kerch import utils
 from kerch.kernel import factory, base
@@ -60,6 +61,7 @@ class View(_sample):
             self.weight = weight
 
         self._kappa = kwargs["kappa"]
+        self._kappa_sqrt = sqrt(self._kappa)
 
         # BIAS
         self._bias_trainable = kwargs["bias_trainable"]
@@ -295,7 +297,7 @@ class View(_sample):
     ## MATHS
 
     def phi(self, x=None) -> Tensor:
-        return self.kappa * self.kernel.phi(x)
+        return self._kappa_sqrt * self.kernel.phi(x)
 
     def k(self, x=None) -> Tensor:
         return self.kappa * self._kernel.k(x)

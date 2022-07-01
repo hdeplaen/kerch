@@ -53,6 +53,12 @@ class MultiView(_stochastic):
 
         self.stochastic(prop=kwargs["prop"])
 
+    def __repr__(self):
+        repr = ""
+        for key, val in self.views.items():
+            repr += "\n\t* " + key + ": " + val.__repr__()
+        return repr
+
     def _add_view(self, view) -> None:
         """
         Adds a view
@@ -209,6 +215,14 @@ class MultiView(_stochastic):
         weight = self.view(0).weight_as_param
         for num in range(1, self.num_views):
             weight = torch.cat((weight, self.view(num).weight_as_param), dim=0)
+        return weight
+
+    def weight_from_views(self, views: list) -> torch.nn.Parameter:
+        views = list(views)
+        assert len(views) > 0, 'The number of views must be at least equal to one.'
+        weight = self.view(views[0]).weight_as_param
+        for num in range(1, len(views)):
+            weight = torch.cat((weight, self.view(views[num]).weight_as_param), dim=0)
         return weight
 
     @weight.setter
