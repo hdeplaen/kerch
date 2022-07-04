@@ -9,7 +9,6 @@ File containing the RBF kernel class.
 
 import torch
 
-
 from abc import ABCMeta, abstractmethod
 from .. import utils
 from .implicit import implicit, base
@@ -44,7 +43,9 @@ class exponential(implicit, metaclass=ABCMeta):
             self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
 
     def __str__(self):
-        return f"Exponential kernel (sigma: {str(self.sigma)})"
+        if self._sigma is None:
+            return f"exponential kernel (sigma undefined)"
+        return f"exponential kernel (sigma: {str(self.sigma)})"
 
     @property
     def normalize(self) -> bool:
@@ -143,3 +144,8 @@ class exponential(implicit, metaclass=ABCMeta):
             x = self.current_sample
 
         return torch.ones(x.shape[0], dtype=utils.FTYPE, device=x.device)
+
+    def _slow_parameters(self, recurse=True):
+        if self._sigma is not None:
+            yield self._sigma
+        yield from super(exponential, self)._slow_parameters(recurse)

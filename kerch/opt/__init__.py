@@ -10,7 +10,9 @@ Custom optimizer for RKMs
 import torch
 from .cayley import cayley_stiefel_optimizer
 
-import kerch
+from .. import utils
+from .._module import _Module
+
 
 class Optimizer():
     @staticmethod
@@ -21,14 +23,14 @@ class Optimizer():
                 out.append(p)
         return out
 
-    @kerch.kwargs_decorator({"lr": 5e-3, "kernel_rate": 1.})
-    def __init__(self, euclidean_params, slow_params, stiefel_params, type="sgd", **kwargs):
+    @utils.kwargs_decorator({"lr": 5e-3, "kernel_rate": 1.})
+    def __init__(self, mdl: _Module, type="sgd", **kwargs):
         self._kwargs = kwargs
         self._type = type
 
-        euclidean_params = Optimizer.param_state(euclidean_params)
-        slow_params = Optimizer.param_state(slow_params)
-        stiefel_params = Optimizer.param_state(stiefel_params)
+        euclidean_params = Optimizer.param_state(mdl.manifold_parameters(type='euclidean'))
+        slow_params = Optimizer.param_state(mdl.manifold_parameters(type='slow'))
+        stiefel_params = Optimizer.param_state(mdl.manifold_parameters(type='stiefel'))
 
         self._dict = []
         self._opt = None
@@ -59,7 +61,6 @@ class Optimizer():
     @property
     def requires_grad(self):
         return self._requires_grad
-
 
     @property
     def type(self):

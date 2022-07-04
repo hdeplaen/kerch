@@ -8,6 +8,7 @@ File containing the abstract kernel classes.
 """
 
 import torch
+from typing import Iterator
 
 from abc import ABCMeta, abstractmethod
 from torch import Tensor
@@ -404,3 +405,4 @@ class base(_Sample, metaclass=ABCMeta):
         called.
         """
         return self._compute_C()[1]
+

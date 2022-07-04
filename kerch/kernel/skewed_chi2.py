@@ -76,3 +76,7 @@ class skewed_chi2(implicit):
         output = torch.prod(2 * prod / sum, dim=0, keepdim=True)
 
         return output.squeeze(0)
+
+    def _slow_parameters(self, recurse=True):
+        yield self._c
+        yield from super(skewed_chi2, self)._slow_parameters(recurse)

@@ -85,3 +85,7 @@ class polynomial(base):
     def _explicit(self, x=None):
         assert (self.degree % 1) == 0, 'Explicit formulation is only possible for degrees that are natural numbers.'
         raise NotImplementedError
+
+    def _slow_parameters(self, recurse=True):
+        yield self._degree
+        yield from super(polynomial, self)._slow_parameters(recurse)

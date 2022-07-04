@@ -34,7 +34,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
         "dim_output": None,
         "hidden": None,
         "weight": None,
-        "param_trainable": False,
+        "param_trainable": True,
     })
     def __init__(self, *args, **kwargs):
         """

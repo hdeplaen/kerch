@@ -1,5 +1,6 @@
 import torch
 from torch import Tensor as T
+from abc import ABCMeta, abstractmethod
 
 from ._level import _Level
 from kerch import utils
@@ -30,7 +31,7 @@ class _KPCA(_Level):
 
     def _solve_primal(self, target: T = None) -> None:
         if self.dim_output is None:
-            self._dim_output = self.num_idx
+            self._dim_output = self.dim_feature
 
         C = self.C
         v, w = utils.eigs(C, k=self.dim_output, psd=True)
@@ -48,6 +49,15 @@ class _KPCA(_Level):
         self.hidden = h
         self.vals = v
 
+    def solve(self, sample=None, target=None, representation=None) -> None:
+        # KPCA models don't require the target to be defined. This is verified.
+        if target is not None:
+            self._log.warning("The target value is discarded when fitting a KPCA model.")
+        return _Level.solve(self,
+                            sample=sample,
+                            target=None,
+                            representation=representation)
+
     ######################################################################################
 
     def _primal_obj(self, x=None) -> T:
@@ -64,11 +74,27 @@ class _KPCA(_Level):
 
     ######################################################################################
 
-    def solve(self, sample=None, target=None, representation=None) -> None:
-        # KPCA models don't require the target to be defined. This is verified.
-        if target is not None:
-            self._log.warning("The target value is discarded when fitting a KPCA model.")
-        return _Level.solve(self,
-                            sample=sample,
-                            target=None,
-                            representation=representation)
+    def _stiefel_parameters(self, recurse=True):
+        super(_KPCA, self)._stiefel_parameters(recurse)
+        if self._representation == 'primal':
+            if self._weight_exists:
+                yield self.weight_as_param
+        else:
+            if self._hidden_exists:
+                yield self.hidden_as_param
+
+    def reconstruction_error(self, representation=None):
+        representation = utils.check_representation(representation, self._representation, self)
+        if representation == 'primal':
+            I = self._I_primal
+            U = self.weight
+            M = self.C
+        else:
+            I = self._I_dual
+            U = self.hidden
+            M = self.K
+        return torch.norm((I - U @ U.T) @ M) ** 2
+
+    @abstractmethod
+    def reconstruct(self, x=None, representation=None):
+        pass

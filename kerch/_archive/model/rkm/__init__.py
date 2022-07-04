@@ -13,7 +13,7 @@ from tqdm import trange
 import kerch
 from kerch.utils import process_y
 import kerch._archive.model.level.IDXK as IDXK
-import kerch._archive.model.opt as Optimizer
+import kerch.opt as Optimizer
 import kerch._archive.model.lssvm.SoftLSSVM as SoftLSSVM
 import kerch._archive.model.lssvm.HardLSSVM as HardLSSVM
 import kerch._archive.model.kpca.SoftKPCA as SoftKPCA

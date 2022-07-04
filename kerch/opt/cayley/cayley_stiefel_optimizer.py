@@ -74,7 +74,7 @@ class SGDG(Optimizer):
                 if p.grad is None:
                     continue
 
-                unity,_ = unit(p.data.View(p.size()[0], -1))
+                unity, _ = unit(p.data.view(p.size()[0], -1))
                 if stiefel and unity.size()[0] <= unity.size()[1]:
                     
                     weight_decay = group['weight_decay']

@@ -45,6 +45,7 @@ class MultiView(_View):
         """
         Adds a view
         """
+        # get or create the view
         if isinstance(view, View):
             view.dim_output = self._dim_output
             view.hidden = self.hidden_as_param
@@ -57,6 +58,7 @@ class MultiView(_View):
                             f"parameters")
             return
 
+        # verify the consistency of the new view with the previous ones if relevant
         if view.num_sample is not None and self._num_total is not None:
             assert view.num_sample == self._num_total, 'Inconsistency in the sample sizes of the initialized views.'
         elif view.num_sample is not None and self._num_total is None:
@@ -64,10 +66,11 @@ class MultiView(_View):
 
         # append to dict and meta variables for the views
         try:
-            self._views[view.name] = view
+            name = view.name
         except AttributeError:
             name = str(self._num_views)
-            self._views[name] = view
+        self._views[name] = view
+        self.add_module(name, view)
         self._num_views += 1
 
     def _reset_hidden(self) -> None:
@@ -75,7 +78,7 @@ class MultiView(_View):
             view.hidden = self._reset_hidden()
 
     def _reset_weight(self) -> None:
-        for view in self._views:
+        for view in self._views.values():
             view._reset_weight()
 
     ##################################################################"
@@ -92,10 +95,13 @@ class MultiView(_View):
 
     ## VIEWS
     def view(self, id) -> View:
-        if isinstance(id, int):
-            return list(self._views.items())[id][1]
-        elif isinstance(id, str):
-            return self._views[id]
+        try:
+            if isinstance(id, int):
+                return list(self._views.values())[id]
+            elif isinstance(id, str):
+                return self._views[id]
+        except NameError:
+            raise NameError('The requested view does not exist.')
 
     @property
     def views(self) -> OrderedDict:

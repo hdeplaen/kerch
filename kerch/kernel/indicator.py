@@ -143,3 +143,8 @@ class indicator(implicit):
         output[diff == 0] = self._gamma
 
         return output
+
+    def _slow_parameters(self, recurse=True):
+        yield self._lag
+        yield self._gamma
+        yield from super(indicator, self)._slow_parameters(recurse)

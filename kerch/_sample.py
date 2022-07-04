@@ -6,6 +6,7 @@ import torch
 
 from abc import ABCMeta, abstractmethod
 from torch import Tensor
+import traceback
 
 from . import utils
 from ._cache import _Cache
@@ -216,7 +217,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
         # use all indices if unspecified
         if idx_sample is None:
-            idx_sample = self._all_idx()
+            idx_sample = self._all_idx
 
         # check consistency of indices
         assert len(idx_sample) == sample_values.shape[0], f"Number of sample values ({sample_values.shape[0]}) and " \
@@ -228,3 +229,8 @@ class _Sample(_Stochastic,  # manager stochastic indices
         # zeroing relevant gradient if relevant
         if self._sample_trainable:
             self._sample.grad.data[idx_sample, :].zero_()
+
+    def _euclidean_parameters(self, recurse=True):
+        if not self._empty_sample:
+            yield self.sample_as_param
+        yield from super(_Sample, self)._euclidean_parameters(recurse)

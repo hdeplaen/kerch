@@ -158,3 +158,33 @@ class MVKPCA(_KPCA, MVLevel):
             bar.set_description(f"{loss:1.2e}")
 
         return inputs
+
+    def reconstruct(self, x=None, representation=None):
+        representation = utils.check_representation(representation, self._representation, self)
+        if isinstance(x, dict):
+            out = dict()
+            for key, value in x.items():
+                v = self.view(key)
+                phi = v.phi(value)
+                U = v.weight_as_param
+                R = U @ U.T
+                out[key] = phi @ R
+            if len(out) == 1:
+                out = list(out.values())[0]
+        elif isinstance(x, list):
+            out = list()
+            for key in x:
+                v = self.view(key)
+                phi = v.phi()
+                U = v.weight_as_param
+                R = U @ U.T
+                out.append(phi @ R)
+        elif isinstance(x, str):
+            v = self.view(x)
+            phi = v.phi()
+            U = v.weight_as_param
+            R = U @ U.T
+            out = phi @ R
+        else:
+            raise TypeError('Input x must be a dictionary, a list or a string.')
+        return out

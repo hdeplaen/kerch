@@ -13,7 +13,21 @@ x = fun(t)
 #####################
 
 mdl = kerch.rkm.MVKPCA({"name": "space", "type": "linear", "sample": x},
-                       {"name": "time", "type": "linear", "sample": t, "sigma": 1.},
-                       representation='primal')
+                       {"name": "time", "type": "rbf", "sample": t, "sigma": 1.},
+                       representation='dual')
 
 mdl.solve()
+
+print('euclidean')
+for p in mdl.manifold_parameters():
+    print(p)
+
+print('stiefel')
+for p in mdl.manifold_parameters(type='stiefel'):
+    print(p)
+
+print('slow')
+for p in mdl.manifold_parameters(type='slow'):
+    print(p)
+
+pass

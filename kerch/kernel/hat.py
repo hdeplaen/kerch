@@ -92,10 +92,14 @@ class hat(implicit):
         x = x.T[:, :, None]
         y = y.T[:, None, :]
 
-        diff = (x-y).squeeze()
+        diff = (x - y).squeeze()
         assert len(diff.shape) == 2, 'Hat kernel is only defined for 1-dimensional entries.'
 
         output = self._lag + 1 - torch.abs(diff)
         output = self._relu(output)
 
         return output
+
+    def _slow_parameters(self, recurse=True):
+        yield self._lag
+        yield from super(hat, self)._slow_parameters(recurse)

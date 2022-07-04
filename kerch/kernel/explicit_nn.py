@@ -39,7 +39,7 @@ class explicit_nn(explicit):
         :param kernels_trainable: True if support vectors / kernel are trainable (default False)
         """
         super(explicit_nn, self).__init__(**kwargs)
-        self._network = kwargs["network"]
+        self._network: torch.nn.Module = kwargs["network"]
         assert self._network is not None, "Network module must be specified."
 
     def __str__(self):
@@ -51,3 +51,7 @@ class explicit_nn(explicit):
     def _explicit(self, x=None):
         x = super(explicit_nn, self)._explicit(x)
         return self._network(x)
+
+    def _euclidean_parameters(self, recurse=True):
+        yield from self._network.parameters()
+        super(explicit_nn, self)._euclidean_parameters(recurse)

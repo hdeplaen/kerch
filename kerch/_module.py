@@ -3,6 +3,7 @@ Abstract class defining a general module in the toolbox.
 """
 
 import torch
+from typing import Iterator
 from abc import ABCMeta, abstractmethod
 
 from ._logger import _Logger
@@ -29,3 +30,33 @@ class _Module(_Logger,
             if isinstance(child, _Logger):
                 child.set_log_level(level)
         return level
+
+    def _euclidean_parameters(self, recurse=True):
+        if recurse:
+            for module in self.children():
+                if isinstance(module, _Module):
+                    yield from module._euclidean_parameters(recurse)
+
+    def _stiefel_parameters(self, recurse=True):
+        if recurse:
+            for module in self.children():
+                if isinstance(module, _Module):
+                    yield from module._stiefel_parameters(recurse)
+
+    def _slow_parameters(self, recurse=True):
+        if recurse:
+            for module in self.children():
+                if isinstance(module, _Module):
+                    yield from module._slow_parameters(recurse)
+
+    def manifold_parameters(self, recurse=True, type='euclidean') -> Iterator[torch.nn.Parameter]:
+        switcher = {'euclidean': self._euclidean_parameters,
+                    'stiefel': self._stiefel_parameters,
+                    'slow': self._slow_parameters}
+        gen = switcher.get(type, 'Invalid manifold type.')
+
+        memo = set()
+        for p in gen(recurse=recurse):
+            if p not in memo:
+                memo.add(p)
+                yield p

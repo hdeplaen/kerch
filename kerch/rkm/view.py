@@ -181,7 +181,7 @@ class View(_View, _Sample):
                 else:
                     self._weight.data = val
                     # zeroing the gradients if relevant
-                    if self._param_trainable:
+                    if self._param_trainable and self._weight.grad is not None:
                         self._weight.grad.data.zero_()
 
                 self._dim_output = self._weight.shape[1]
