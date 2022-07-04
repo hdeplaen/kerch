@@ -84,34 +84,18 @@ class _View(_Stochastic, metaclass=ABCMeta):
         self._reset_weight()
         self._reset_hidden()
 
-    @property
-    def kernel(self) -> base:
-        r"""
-        The kernel used by the model or View.
-        """
-        return self._kernel
-
-    def set_kernel(self, val: base):
-        r"""
-        For some obscure reason, this does not work as a setter (@kernel.setter).
-        TODO: find out why and solve
-        """
-        self._log.info("Updating View based on an external kernel and overwriting its sample.")
-        self._kernel = val
-        self._kernel.init_sample(sample=self.sample_as_param,
-                                 idx_sample=self.idx)
-
     ##################################################################################################################
     ## HIDDEN
 
     @property
     def hidden(self) -> Tensor:
         if self._hidden_exists:
-            return self._hidden.data[self.idx, :]
-        raise AttributeError
+            return self.hidden_as_param.data[self.idx, :]
 
     def update_hidden(self, val: Tensor, idx_sample=None) -> None:
         # first verify the existence of the hidden values before updating them.
+        assert not self._attached, 'This operation cannot be performed on an attached view, please ' \
+                                   'perform it on the mothe multi-view.'
         if not self._hidden_exists:
             self._log.warning("Could not update hidden values as these do not exist. "
                               "Please set the values for hidden first.")
@@ -133,6 +117,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
     @hidden.setter
     def hidden(self, val):
         # sets the parameter to an existing one
+        assert not self._attached, 'This operation cannot be performed on an attached view, please ' \
+                                   'perform it on the mothe multi-view.'
         if val is not None:
             if isinstance(val, torch.nn.Parameter):
                 self._hidden = val
@@ -153,11 +139,14 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
     @property
     def hidden_trainable(self) -> bool:
+        assert not self._attached, 'This operation is irrelevant on an attached view.'
         return self._param_trainable
 
     @hidden_trainable.setter
     def hidden_trainable(self, val: bool):
         # changes the possibility of training the hidden values through backpropagation
+        assert not self._attached, 'This operation cannot be performed on an attached view, please ' \
+                                   'perform it on the mothe multi-view.'
         self._param_trainable = val
         self._hidden.requires_grad = self._param_trainable
 
@@ -201,6 +190,10 @@ class _View(_Stochastic, metaclass=ABCMeta):
     @abstractmethod
     def k(self, x=None) -> Tensor:
         pass
+
+    @property
+    def _attached(self) -> bool:
+        return False
 
     def c(self, x=None) -> Tensor:
         phi = self.phi(x)

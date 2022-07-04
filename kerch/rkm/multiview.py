@@ -73,6 +73,18 @@ class MultiView(_View):
         self.add_module(name, view)
         self._num_views += 1
 
+        # attach the view
+        assert not view._empty_sample, 'Multi-view is currently only implemented with the sample already given at ' \
+                                       'initialization.'
+        if self.num_views == 1:
+            previous_dim = 0
+        else:
+            previous_dim = self.dims_feature[self.num_views-2]
+
+        dim = view.dim_feature
+        mask = torch.tensor(range(previous_dim, previous_dim + dim), dtype=torch.LongInt)
+        view.attach(self, mask)
+
     def _reset_hidden(self) -> None:
         for view in self._views:
             view.hidden = self._reset_hidden()

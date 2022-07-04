@@ -11,6 +11,7 @@ import torch
 from torch import Tensor
 from math import sqrt
 
+import kerch.rkm
 from kerch import utils
 from kerch.kernel import factory, base
 from kerch._sample import _Sample
@@ -45,6 +46,7 @@ class View(_View, _Sample):
         # KAPPA
         self._kappa = kwargs["kappa"]
         self._kappa_sqrt = sqrt(self._kappa)
+        self._mask = None
 
         # BIAS
         self._bias_trainable = kwargs["bias_trainable"]
@@ -164,42 +166,68 @@ class View(_View, _Sample):
     @property
     def weight_as_param(self) -> torch.nn.Parameter:
         if self._weight_exists:
+            if self._attached:
+                return torch.index_select(self._weight, dim=0, index=self._mask)
             return self._weight
         self._log.debug("No weight has been initialized yet.")
-        raise AttributeError
 
     @weight.setter
     def weight(self, val):
-        if val is not None:
-            # sets the parameter to an existing one
-            if isinstance(val, torch.nn.Parameter):
-                self._weight = val
-            else:  # sets the value to a new one
-                val = utils.castf(val, tensor=False, dev=self._weight.device)
-                if self._weight_exists:
-                    self._weight = torch.nn.Parameter(val, requires_grad=self._param_trainable)
-                else:
-                    self._weight.data = val
-                    # zeroing the gradients if relevant
-                    if self._param_trainable and self._weight.grad is not None:
-                        self._weight.grad.data.zero_()
-
-                self._dim_output = self._weight.shape[1]
-            self._reset_hidden()
+        if self._attached:
+            self._weight = val
         else:
-            self._log.info("The weight is unset.")
+            if val is not None:
+                # sets the parameter to an existing one
+                if isinstance(val, torch.nn.Parameter):
+                    self._weight = val
+                else:  # sets the value to a new one
+                    val = utils.castf(val, tensor=False, dev=self._weight.device)
+                    if self._weight_exists:
+                        self._weight.data = val
+                        # zeroing the gradients if relevant
+                        if self._param_trainable and self._weight.grad is not None:
+                            self._weight.grad.data.zero_()
+                        else:
+                            self._weight = torch.nn.Parameter(val, requires_grad=self._param_trainable)
+
+                    self._dim_output = self._weight.shape[1]
+                self._reset_hidden()
+            else:
+                self._log.info("The weight is unset.")
 
     @property
     def _weight_exists(self) -> bool:
         return self._weight.nelement() != 0
 
     def _update_weight_from_hidden(self):
+        assert not self._attached, 'The view must be detached from a multi-view to perform this operation'
         if self._hidden_exists:
             # will return a PrimalError if not available
             self.weight = self.Phi.T @ self.H
             self._log.debug("Setting the weight based on the hidden values.")
         else:
             self._log.info("The weight cannot based on the hidden values as these are unset.")
+
+    ## ATTACH TO MULTIVIEW
+    @property
+    def _attached(self):
+        return self._mask is None
+
+    def detach(self):
+        self._log.debug("The view is detached.")
+        self._mask = None
+        if self._weight_exists:
+            self._weight = self.weight_as_param.copy()
+        if self._hidden_exists:
+            self._hidden = self.hidden_as_param.copy()
+
+    def attach(self, mv: kerch.rkm.MultiView, mask: torch.LongTensor):
+        self._log.debug("The view is attached.")
+        self._mask = mask
+        if mv._weight_exists:
+            self._weight = mv.weight_as_param
+        if mv._hidden_exists:
+            self._hidden = mv.hidden_as_param
 
     ## MATHS
 
