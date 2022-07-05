@@ -88,13 +88,13 @@ class _KPCA(_Level):
         representation = utils.check_representation(representation, self._representation, self)
         if representation == 'primal':
             I = self._I_primal
-            U = self.weight
+            U = self._weight # transposed compared to weight
             M = self.C
         else:
             I = self._I_dual
-            U = self.hidden
+            U = self._hidden # transposed compared to hidden
             M = self.K
-        return torch.norm((I - U @ U.T) @ M)
+        return torch.norm((I - U.T @ U) @ M)
 
     def rkm_loss(self, representation=None) -> T:
         raise NotImplementedError
