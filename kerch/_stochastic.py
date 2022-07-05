@@ -20,8 +20,8 @@ from ._logger import _Logger
 class _Stochastic(_Cache,  # creates a transportable cache (e.g. for GPU)
                   metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, **kwargs):
-        super(_Stochastic, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(_Stochastic, self).__init__(*args, **kwargs)
         self._num_total = None
         self._idx_stochastic = None
 

@@ -20,7 +20,7 @@ class _KPCA(_Level):
 
     @property
     def vals(self) -> T:
-        return self._vals.data
+        return self._vals
 
     @vals.setter
     def vals(self, val):
@@ -75,15 +75,16 @@ class _KPCA(_Level):
     ######################################################################################
 
     def _stiefel_parameters(self, recurse=True):
+        # the stiefel optimizer requires the first dimension to be the number of eigenvectors
         super(_KPCA, self)._stiefel_parameters(recurse)
         if self._representation == 'primal':
             if self._weight_exists:
-                yield self.weight_as_param
+                yield self._weight
         else:
             if self._hidden_exists:
-                yield self.hidden_as_param
+                yield self._hidden
 
-    def reconstruction_error(self, representation=None):
+    def classic_loss(self, representation=None) -> T:
         representation = utils.check_representation(representation, self._representation, self)
         if representation == 'primal':
             I = self._I_primal
@@ -93,8 +94,26 @@ class _KPCA(_Level):
             I = self._I_dual
             U = self.hidden
             M = self.K
-        return torch.norm((I - U @ U.T) @ M) ** 2
+        return torch.norm((I - U @ U.T) @ M)
+
+    def rkm_loss(self, representation=None) -> T:
+        raise NotImplementedError
 
     @abstractmethod
     def reconstruct(self, x=None, representation=None):
         pass
+
+    ####################################################################################################################
+
+    @utils.kwargs_decorator({
+        "representation": None
+    })
+    def fit(self, **kwargs):
+        representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
+        if representation == "primal":
+            if self.dim_output is None:
+                self._dim_output = self.dim_feature
+        else:
+            if self.dim_output is None:
+                self._dim_output = self.num_idx
+        super(_KPCA, self).fit(**kwargs)

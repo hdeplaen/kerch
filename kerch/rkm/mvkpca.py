@@ -18,7 +18,7 @@ class MVKPCA(_KPCA, MVLevel):
         super(MVKPCA, self).__init__(*args, **kwargs)
 
     def __str__(self):
-        return "multi-view KPCA" + MVLevel.__str__(self)
+        return "multi-view KPCA(" + MVLevel.__str__(self) + "\n)"
 
     ####################################################################
 
@@ -161,6 +161,8 @@ class MVKPCA(_KPCA, MVLevel):
 
     def reconstruct(self, x=None, representation=None):
         representation = utils.check_representation(representation, self._representation, self)
+        assert representation == "primal", NotImplementedError
+
         if isinstance(x, dict):
             out = dict()
             for key, value in x.items():
@@ -182,7 +184,7 @@ class MVKPCA(_KPCA, MVLevel):
         elif isinstance(x, str):
             v = self.view(x)
             phi = v.phi()
-            U = v.weight_as_param
+            U = v.weight
             R = U @ U.T
             out = phi @ R
         else:

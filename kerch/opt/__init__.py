@@ -8,7 +8,7 @@ Custom optimizer for RKMs
 """
 
 import torch
-from .cayley import cayley_stiefel_optimizer
+from .stiefel import stiefel_optimizer
 
 from .. import utils
 from .._module import _Module
@@ -54,8 +54,8 @@ class Optimizer():
             self._requires_grad = True
 
         if self._dict:
-            opt_switcher = {"sgd": cayley_stiefel_optimizer.SGDG,
-                            "adam": cayley_stiefel_optimizer.AdamG}
+            opt_switcher = {"sgd": stiefel_optimizer.SGDG,
+                            "adam": stiefel_optimizer.AdamG}
             self._opt = opt_switcher.get(type, "Incorrect optimizer type.")(self._dict)
 
     @property

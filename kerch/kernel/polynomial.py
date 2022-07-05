@@ -45,6 +45,10 @@ class polynomial(base):
         return f"polynomial kernel of order {self.degree}."
 
     @property
+    def dim_feature(self) -> int:
+        raise NotImplementedError
+
+    @property
     def degree(self):
         r"""
         Degree of the polynomial.

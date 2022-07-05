@@ -73,10 +73,7 @@ class nystrom(explicit):
 
         self._dim = kwargs["dim"]
         if self._dim is None:
-            self._dim = self._num_total
-
-        assert self._dim <= self._num_total, 'Cannot construct an explicit feature map of greater dimension than ' \
-                                              'the number of sample points.'
+            self.dim = self._num_total
 
     @property
     def dim(self):
@@ -87,11 +84,16 @@ class nystrom(explicit):
 
     @dim.setter
     def dim(self, val):
+        if self._num_total is not None:
+            assert val <= self._num_total, 'Cannot construct an explicit feature map of greater dimension than ' \
+                                           'the number of sample points.'
         self._dim = utils.casti(val)
         self._reset()
 
     @property
     def dim_feature(self) -> int:
+        if self._dim is None:
+            self._compute_decomposition()
         return self.dim
 
     def __str__(self):
@@ -108,10 +110,13 @@ class nystrom(explicit):
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         super(nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
         if self._base_kernel is not None:
-            self._base_kernel.init_sample(sample=self.sample_as_param, idx_sample=self.idx)
+            self._base_kernel.init_sample(sample=self.sample, idx_sample=self.idx)
 
     def _compute_decomposition(self):
         if "H" not in self._cache:
+            if self._dim is None:
+                self.dim = self._num_total
+
             K = self._base_kernel.K
             lambdas, H = utils.eigs(K, k=self._dim)
 

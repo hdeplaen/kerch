@@ -2,6 +2,7 @@
 Abstract class for multi-View representations.
 """
 from collections import OrderedDict
+from typing import Iterator, List, Union, Tuple
 
 import torch
 from torch import Tensor as T
@@ -37,8 +38,8 @@ class MultiView(_View):
 
     def __str__(self):
         repr = ""
-        for key, val in self.views.items():
-            repr += "\n\t* " + key + ": " + val.__repr__()
+        for key, val in self.named_views:
+            repr += "\n\t " + key + ": " + val.__str__()
         return repr
 
     def _add_view(self, view) -> None:
@@ -52,7 +53,7 @@ class MultiView(_View):
         elif isinstance(view, dict):
             view = View(**{**view,
                            "dim_output": self._dim_output,
-                           "hidden": self.hidden_as_param})
+                           "hidden": self.hidden})
         else:
             self._log.error(f"View {view} could not be added as it is nor a view object nor a dictionnary of "
                             f"parameters")
@@ -73,21 +74,10 @@ class MultiView(_View):
         self.add_module(name, view)
         self._num_views += 1
 
-        # attach the view
-        assert not view._empty_sample, 'Multi-view is currently only implemented with the sample already given at ' \
-                                       'initialization.'
-        if self.num_views == 1:
-            previous_dim = 0
-        else:
-            previous_dim = self.dims_feature[self.num_views-2]
-
-        dim = view.dim_feature
-        mask = torch.tensor(range(previous_dim, previous_dim + dim), dtype=torch.LongInt)
-        view.attach(self, mask)
-
     def _reset_hidden(self) -> None:
-        for view in self._views:
-            view.hidden = self._reset_hidden()
+        super(MultiView, self)._reset_hidden()
+        for v in self.views:
+            v.hidden = self.hidden
 
     def _reset_weight(self) -> None:
         for view in self._views.values():
@@ -95,10 +85,10 @@ class MultiView(_View):
 
     ##################################################################"
     @property
-    def dims_feature(self) -> list:
+    def dims_feature(self) -> List[int]:
         dims = []
-        for num in range(self._num_views):
-            dims.append(self.view(num).kernel.dim_feature)
+        for v in self.views:
+            dims.append(v.dim_feature)
         return dims
 
     @property
@@ -116,38 +106,29 @@ class MultiView(_View):
             raise NameError('The requested view does not exist.')
 
     @property
-    def views(self) -> OrderedDict:
-        return self._views
+    def views(self) -> Iterator[View]:
+        for v in self._views.values():
+            yield v
+
+    @property
+    def named_views(self) -> Iterator[Tuple[str, View]]:
+        for n, v in self._views.items():
+            yield n, v
 
     @property
     def num_views(self) -> int:
         return self._num_views
 
     ######################################################################
-    def update_hidden(self, val: T, idx_sample=None) -> None:
-        super(MultiView, self).update_hidden(val, idx_sample)
-        for view in self._views:
-            view.hidden = self.hidden_as_param
-
     ## WEIGHT
     @property
-    def weight(self) -> T:
-        return super(MultiView, self).weight
+    def weights(self) -> Iterator[torch.nn.Parameter]:
+        for v in self.views:
+            yield v.weight
 
     @property
-    def weight_as_param(self) -> torch.nn.Parameter:
-        weight = self.view(0).weight_as_param
-        for num in range(1, self.num_views):
-            weight = torch.cat((weight, self.view(num).weight_as_param), dim=0)
-        return weight
-
-    def weight_from_views(self, views: list) -> torch.nn.Parameter:
-        views = list(views)
-        assert len(views) > 0, 'The number of views must be at least equal to one.'
-        weight = self.view(views[0]).weight_as_param
-        for num in range(1, len(views)):
-            weight = torch.cat((weight, self.view(views[num]).weight_as_param), dim=0)
-        return weight
+    def weight(self) -> T:
+        return torch.cat(list(self.weights), dim=0)
 
     @weight.setter
     def weight(self, val):
@@ -155,80 +136,53 @@ class MultiView(_View):
             assert val.shape[0] == self.dim_feature, f'The feature dimensions do not match: ' \
                                                      f'got {val.shape[0]}, need {self.dim_input}.'
             previous_dim = 0
-            for num in range(self.num_views):
-                dim = self.dims_feature[num]
-                self.view(num).weight = val[previous_dim:previous_dim + dim, :]
+            for v in self.views:
+                dim = v.dim_feature
+                v.weight = val[previous_dim:previous_dim + dim, :]
                 previous_dim += dim
         else:
-            self._log.info("The weight is unset.")
-            for num in range(self.num_views):
-                self.view(num).weight = None
-
-    @property
-    def _weight_exists(self) -> bool:
-        try:
-            return self.weight.nelement() != 0
-        except:
-            return False
+            self._log.info("The weight is now unset.")
+            for v in self.views:
+                v.weight = None
 
     def _update_weight_from_hidden(self):
-        for view in self._views:
-            view._update_weight_from_hidden()
+        for v in self._views:
+            v._update_weight_from_hidden()
 
-    ## MATHS
-    def phi(self, x=None, features=None):
-        # this returns classical phi
-        if not isinstance(x, dict):
-            phi = self.view(0).phi(x)
-            for num in range(1, self._num_views):
-                phi = torch.cat((phi, self.view(num).phi(x)), dim=1)
-        # if different x values have to be used for specific views
+    def phis(self, x=None) -> Iterator[T]:
+        if isinstance(x, T) or isinstance(x, torch.nn.Parameter) or x is None:
+            for v in self.views:
+                yield v.phi(x)
+        elif isinstance(x, dict):
+            for key, value in x.items():
+                yield self.view(key).phi(value)
         else:
-            if features is None:
-                features = []
-            items = list(x.items())
-            key, value = items[0]
-            phi = self.view(key).phi(value)
-            for num in range(1, len(items)):
-                key, value = items[num]
-                phi = torch.cat((phi, self.view(key).phi(value)), dim=1)
-            for feat in features:
-                phi = torch.cat((phi, feat), dim=1)
-        return phi
+            raise NotImplementedError
+
+    def phi(self, x=None) -> T:
+        return torch.cat(list(self.phis(x)), dim=1)
+
+    def ks(self, x=None) -> Iterator[T]:
+        if isinstance(x, T) or isinstance(x, torch.nn.Parameter):
+            for v in self.views:
+                yield v.k(x)
+        elif isinstance(x, dict):
+            for key, value in x.items():
+                yield self.view(key).k(value)
+        else:
+            raise NotImplementedError
 
     def k(self, x=None) -> T:
-        if not isinstance(x, dict):
-            k = self.view(0).k(x)
-            for num in range(1, self._num_views):
-                k += self.view(num).k(x)
-        else:
-            items = list(x.items())
-            key, value = items[0]
-            k = self.view(key).k(value)
-            for num in range(1, len(items)):
-                key, value = items[num]
-                k += self.view(key).k(value)
-        return k
+        return sum(self.ks(x))
 
-    def c(self, x=None, features: list = None) -> T:
-        phi = self.phi(x, features=features)
-        return phi.T @ phi
-
-    def h(self, x=None) -> T:
-        if x is None:
-            if self._hidden_exists:
-                return self._hidden[self.idx, :]
-            else:
-                self._log.warning("No hidden values exist or have been initialized.")
-                raise utils.DualError(self)
-        raise NotImplementedError
+    @property
+    def Ks(self) -> T:
+        for v in self.views:
+            yield v.K
 
     @property
     def K(self) -> T:
-        k = self.view(0).K
-        for num in range(1, self._num_views):
-            k += self.view(num).K
-        return k
+        return sum(self.Ks)
 
     def forward(self, x=None, representation="dual"):
         raise NotImplementedError

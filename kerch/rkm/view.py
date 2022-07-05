@@ -54,17 +54,18 @@ class View(_View, _Sample):
         self._bias = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                         requires_grad=self._bias_trainable)
 
+
         # KERNEL INIT
         # always share sample with kernel
         kernel = kwargs["kernel"]
         if kernel is None:
             self._kernel = factory(**{**kwargs,
-                                      "sample": self.sample_as_param,
+                                      "sample": self.sample,
                                       "idx_sample": self.idx})
         elif isinstance(kernel, base):
             self._log.info("Initiating View based on existing kernel and overwriting its sample.")
             self._kernel = kernel
-            self._kernel.init_sample(sample=self.sample_as_param,
+            self._kernel.init_sample(sample=self.sample,
                                      idx_sample=self.idx)
         else:
             raise TypeError("Argument kernel is not of the kernel class.")
@@ -74,12 +75,9 @@ class View(_View, _Sample):
     def __str__(self):
         return "view with " + str(self._kernel)
 
-    def _reset_hidden(self) -> None:
-        self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
-                                          requires_grad=self._hidden.requires_grad)
-
     def _reset_weight(self) -> None:
-        self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
+        self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE,
+                                                      device=self._weight.device),
                                           requires_grad=self._weight.requires_grad)
 
     @property
@@ -93,7 +91,7 @@ class View(_View, _Sample):
     @property
     def bias(self) -> Tensor:
         if self._bias.nelement() != 0:
-            return self._bias.data
+            return self._bias
         self._log.debug("No bias has been initialized yet.")
 
     @bias.setter
@@ -150,57 +148,39 @@ class View(_View, _Sample):
         """
         self._log.info("Updating View based on an external kernel and overwriting its sample.")
         self._kernel = val
-        self._kernel.init_sample(sample=self.sample_as_param,
+        self._kernel.init_sample(sample=self.sample,
                                  idx_sample=self.idx)
 
     #########################################################################
-    def update_hidden(self, val: Tensor, idx_sample=None) -> None:
-        super(View, self).update_hidden(val, idx_sample)
-        self._reset_weight()
-
     ## WEIGHT
     @property
-    def weight(self) -> Tensor:
-        return super(View, self).weight
-
-    @property
-    def weight_as_param(self) -> torch.nn.Parameter:
+    def weight(self) -> torch.nn.Parameter:
         if self._weight_exists:
-            if self._attached:
-                return torch.index_select(self._weight, dim=0, index=self._mask)
-            return self._weight
+            return self._weight.T
         self._log.debug("No weight has been initialized yet.")
 
     @weight.setter
     def weight(self, val):
-        if self._attached:
-            self._weight = val
+        if val is not None:
+            # sets the parameter to an existing one
+            if isinstance(val, torch.nn.Parameter):
+                self._weight = val
+            else:  # sets the value to a new one
+                val = utils.castf(val, tensor=False, dev=self._weight.device)
+                if self._weight_exists:
+                    self._weight.data = val.T
+                    # zeroing the gradients if relevant
+                    if self._param_trainable and self._weight.grad is not None:
+                        self._weight.grad.data.zero_()
+                else:
+                    self._weight = torch.nn.Parameter(val.T, requires_grad=self._param_trainable)
+
+                self._dim_output = self._weight.shape[0]
+            self._reset_hidden()
         else:
-            if val is not None:
-                # sets the parameter to an existing one
-                if isinstance(val, torch.nn.Parameter):
-                    self._weight = val
-                else:  # sets the value to a new one
-                    val = utils.castf(val, tensor=False, dev=self._weight.device)
-                    if self._weight_exists:
-                        self._weight.data = val
-                        # zeroing the gradients if relevant
-                        if self._param_trainable and self._weight.grad is not None:
-                            self._weight.grad.data.zero_()
-                        else:
-                            self._weight = torch.nn.Parameter(val, requires_grad=self._param_trainable)
-
-                    self._dim_output = self._weight.shape[1]
-                self._reset_hidden()
-            else:
-                self._log.info("The weight is unset.")
-
-    @property
-    def _weight_exists(self) -> bool:
-        return self._weight.nelement() != 0
+            self._log.info("The weight is unset.")
 
     def _update_weight_from_hidden(self):
-        assert not self._attached, 'The view must be detached from a multi-view to perform this operation'
         if self._hidden_exists:
             # will return a PrimalError if not available
             self.weight = self.Phi.T @ self.H
@@ -208,43 +188,17 @@ class View(_View, _Sample):
         else:
             self._log.info("The weight cannot based on the hidden values as these are unset.")
 
-    ## ATTACH TO MULTIVIEW
-    @property
-    def _attached(self):
-        return self._mask is None
-
-    def detach(self):
-        self._log.debug("The view is detached.")
-        self._mask = None
-        if self._weight_exists:
-            self._weight = self.weight_as_param.copy()
-        if self._hidden_exists:
-            self._hidden = self.hidden_as_param.copy()
-
-    def attach(self, mv: kerch.rkm.MultiView, mask: torch.LongTensor):
-        self._log.debug("The view is attached.")
-        self._mask = mask
-        if mv._weight_exists:
-            self._weight = mv.weight_as_param
-        if mv._hidden_exists:
-            self._hidden = mv.hidden_as_param
-
     ## MATHS
 
     def phi(self, x=None) -> Tensor:
         return self._kappa_sqrt * self.kernel.phi(x)
 
     def k(self, x=None) -> Tensor:
-        return self.kappa * self._kernel.k(x)
+        return self.kappa * self.kernel.k(x)
 
-    def h(self, x=None) -> Tensor:
-        if x is None:
-            if self._hidden_exists:
-                return self._hidden[self.idx, :]
-            else:
-                self._log.warning("No hidden values exist or have been initialized.")
-                raise utils.DualError(self)
-        raise NotImplementedError
+    @property
+    def K(self) -> Tensor:
+        return self.kappa * self.kernel.K
 
     def forward(self, x=None, representation="dual"):
         if self._bias_exists:

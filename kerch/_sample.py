@@ -109,21 +109,17 @@ class _Sample(_Stochastic,  # manager stochastic indices
             self.init_sample()
 
     @property
-    def sample(self) -> Tensor:
+    def sample(self) -> torch.nn.Parameter:
         r"""
         Sample dataset.
         """
-        return self._sample.data
+        return self._sample
 
     @sample.setter
     def sample(self, val):
         assert val is not None, "Cannot assign the sample to None. Please use init_sample() if you want to " \
                                 "re-initialize it."
         self.init_sample(val)
-
-    @property
-    def sample_as_param(self) -> torch.nn.Parameter:
-        return self._sample
 
     @property
     def sample_trainable(self) -> bool:
@@ -192,7 +188,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
         for sample_module in self.children():
             if isinstance(sample_module, _Sample):
-                sample_module.init_sample(self.sample_as_param)
+                sample_module.init_sample(self.sample)
 
         self.stochastic(idx=idx_sample, prop=prop_sample)
 
@@ -232,5 +228,5 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
     def _euclidean_parameters(self, recurse=True):
         if not self._empty_sample:
-            yield self.sample_as_param
+            yield self.sample
         yield from super(_Sample, self)._euclidean_parameters(recurse)

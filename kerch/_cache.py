@@ -12,8 +12,8 @@ from ._module import _Module
 class _Cache(_Module,
              metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, **kwargs):
-        super(_Cache, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(_Cache, self).__init__(*args, **kwargs)
 
         # we initiate the cache
         self._reset()

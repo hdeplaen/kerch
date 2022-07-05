@@ -15,11 +15,11 @@ class _Module(_Logger,
               object,
               metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         # for some obscure reason, calling the super init does not lead to the call of both classes.
         # by consequence, we make the calls manually to each parents
         torch.nn.Module.__init__(self)
-        _Logger.__init__(self, **kwargs)
+        _Logger.__init__(self, *args, **kwargs)
 
     def __repr__(self):
         return capitalize_only_first(self.__str__())

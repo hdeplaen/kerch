@@ -19,3 +19,16 @@ class KPCA(_KPCA, Level):
 
     def __str__(self):
         return "KPCA with " + Level.__str__(self)
+
+    def reconstruct(self, x=None, representation=None):
+        representation = utils.check_representation(representation, self._representation, self)
+        if representation == 'primal':
+            phi = self.phi(x)
+            U = self.weight
+            R = U @ U.T
+            return phi @ R
+        else:
+            K = self.k(x)
+            H = self.hidden
+            R = H @ H.T
+            return K @ R

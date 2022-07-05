@@ -33,6 +33,10 @@ class linear(explicit):
     def __str__(self):
         return "linear kernel"
 
+    @property
+    def dim_feature(self) -> int:
+        return self.dim_input
+
     def hparams(self):
         return {"Kernel": "Linear", **super(linear, self).hparams}
 

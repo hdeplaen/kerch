@@ -8,6 +8,7 @@ import unittest
 import torch
 import kerch
 
+kerch.set_log_level(40)  # only print errors
 unittest.TestCase.__str__ = lambda x: ""
 
 class TestKernels(unittest.TestCase):
@@ -144,6 +145,5 @@ class TestKernels(unittest.TestCase):
             self.assertIsInstance(k.K, torch.Tensor, msg=type_name)
 
 if __name__ == '__main__':
-    kerch.set_log_level(40) # only print errors
     suite = unittest.TestLoader().loadTestsFromTestCase(TestKernels)
     unittest.TextTestRunner(verbosity=2).run(suite)

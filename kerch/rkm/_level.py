@@ -2,6 +2,7 @@ import torch
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
 
+import kerch.opt
 from ._view import _View
 from kerch import utils
 
@@ -82,5 +83,54 @@ class _Level(_View, metaclass=ABCMeta):
     ####################################################################################################################
 
     @abstractmethod
-    def loss(self, representation=None) -> T:
+    def rkm_loss(self, representation=None) -> T:
         pass
+
+    @abstractmethod
+    def classic_loss(self, representation=None) -> T:
+        pass
+
+    @utils.kwargs_decorator({
+        "representation": None,
+        "loss": "classic",
+        "maxiter": 1000,
+        "verbose": True
+    })
+    def optimize(self, **kwargs) -> None:
+        # GET THE LOSS TO MINIMIZE
+        representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
+        loss_switcher = {"classic": self.classic_loss,
+                         "rkm": self.rkm_loss}
+        loss_handler = loss_switcher.get(kwargs["loss"], 'Invalid loss type')
+        loss = lambda: loss_handler(representation)
+
+        # PRELIMINARIES
+        self.init_parameters(representation)
+        opt = kerch.opt.Optimizer(self, **kwargs)
+
+        # TRAINING LOOP
+        verbose = kwargs["verbose"]
+        maxiter = kwargs["maxiter"]
+        if verbose:
+            from tqdm import trange
+            bar = trange(maxiter)
+        else:
+            bar = range(maxiter)
+        for epoch in bar:
+            l = loss()
+            opt.zero_grad()
+            l.backward()
+            opt.step()
+
+            if epoch % 50 == 0 and verbose:
+                bar.set_description(f"loss: {l}")
+
+    ####################################################################################################################
+
+    @utils.kwargs_decorator({
+        "method": "solve",
+    })
+    def fit(self, **kwargs):
+        switcher = {"exact": self.solve,
+                    "optimize": self.optimize}
+        switcher.get(kwargs["method"], 'Invalid method type (must be solve or optimize')(**kwargs)

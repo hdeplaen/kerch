@@ -11,6 +11,7 @@ import torch
 from torch import Tensor
 from math import sqrt
 from abc import ABCMeta, abstractmethod
+from typing import Union
 
 from kerch import utils
 from kerch.kernel import factory, base
@@ -57,13 +58,31 @@ class _View(_Stochastic, metaclass=ABCMeta):
         elif hidden is None:
             self.weight = weight
 
-    @abstractmethod
     def _reset_hidden(self) -> None:
-        pass
+        self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE,
+                                                      device=self._hidden.device),
+                                          requires_grad=self._hidden.requires_grad)
 
     @abstractmethod
     def _reset_weight(self) -> None:
         pass
+
+    def _init_hidden(self) -> None:
+        assert self._num_total is not None, "No dataset has been initialized yet."
+        assert self._dim_output is not None, "No output dimension has been provided."
+        self.hidden = torch.nn.init.orthogonal_(torch.empty((self._num_total, self.dim_output),
+                                                            dtype=utils.FTYPE, device=self._hidden.device))
+
+    def _init_weight(self) -> None:
+        assert self._dim_output is not None, "No output dimension has been provided."
+        self.weight = torch.nn.init.orthogonal_(torch.empty((self.dim_feature, self.dim_output),
+                                                            dtype=utils.FTYPE, device=self._weight.device))
+
+    def init_parameters(self, representation=None) -> None:
+        representation = utils.check_representation(representation, self._representation, cls=self)
+        switcher = {"primal": self._init_weight,
+                    "dual": self._init_hidden}
+        switcher.get(representation)()
 
     ################################################################"
     @property
@@ -90,12 +109,11 @@ class _View(_Stochastic, metaclass=ABCMeta):
     @property
     def hidden(self) -> Tensor:
         if self._hidden_exists:
-            return self.hidden_as_param.data[self.idx, :]
+            return self._hidden.T[self.idx, :]
+        self._log.debug("No hidden values have been initialized yet.")
 
     def update_hidden(self, val: Tensor, idx_sample=None) -> None:
         # first verify the existence of the hidden values before updating them.
-        assert not self._attached, 'This operation cannot be performed on an attached view, please ' \
-                                   'perform it on the mothe multi-view.'
         if not self._hidden_exists:
             self._log.warning("Could not update hidden values as these do not exist. "
                               "Please set the values for hidden first.")
@@ -103,50 +121,38 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
         if idx_sample is None:
             idx_sample = self._all_sample()
-        self._hidden.data[idx_sample, :] = val.data
-
-    @property
-    def hidden_as_param(self) -> torch.nn.Parameter:
-        r"""
-        The hidden values as a torch.nn.Parameter
-        """
-        if self._hidden_exists:
-            return self._hidden
-        self._log.debug("No hidden values have been initialized yet.")
+        self._hidden.data.T[idx_sample, :] = val.data
+        self._reset_weight()
 
     @hidden.setter
     def hidden(self, val):
         # sets the parameter to an existing one
-        assert not self._attached, 'This operation cannot be performed on an attached view, please ' \
-                                   'perform it on the mothe multi-view.'
         if val is not None:
             if isinstance(val, torch.nn.Parameter):
                 self._hidden = val
-            else:  # sets the value to a new one
-                val = utils.castf(val, tensor=False, dev=self._hidden.device)
-                if self._hidden_exists == 0:
-                    self._hidden = torch.nn.Parameter(val, requires_grad=self._param_trainable)
-                else:
-                    self._hidden.data = val
-                    # zeroing the gradients if relevant
-                    if self._param_trainable:
-                        self._hidden.grad.data.zero_()
-
                 self._num_h, self._dim_output = self._hidden.shape
+            else:  # sets the value to a new one
+                # to work on the stiefel manifold, the parameters are required to have the number of components as
+                # as first dimension
+                val = utils.castf(val, tensor=False, dev=self._hidden.device)
+                self._hidden.data = val.T
+
+                # zeroing the gradients if relevant
+                if self._param_trainable and self._hidden.grad is not None:
+                    self._hidden.grad.data.zero_()
+
+                self._dim_output, self._num_h = self._hidden.shape
                 self._reset_weight()
         else:
             self._log.info("The hidden value is unset.")
 
     @property
     def hidden_trainable(self) -> bool:
-        assert not self._attached, 'This operation is irrelevant on an attached view.'
         return self._param_trainable
 
     @hidden_trainable.setter
     def hidden_trainable(self, val: bool):
         # changes the possibility of training the hidden values through backpropagation
-        assert not self._attached, 'This operation cannot be performed on an attached view, please ' \
-                                   'perform it on the mothe multi-view.'
         self._param_trainable = val
         self._hidden.requires_grad = self._param_trainable
 
@@ -159,12 +165,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
     ## WEIGHT
     @property
-    def weight(self) -> Tensor:
-        return self.weight_as_param.data
-
-    @property
     @abstractmethod
-    def weight_as_param(self) -> torch.nn.Parameter:
+    def weight(self) -> torch.nn.Parameter:
         pass
 
     @weight.setter
@@ -173,9 +175,11 @@ class _View(_Stochastic, metaclass=ABCMeta):
         pass
 
     @property
-    @abstractmethod
     def _weight_exists(self) -> bool:
-        pass
+        try:
+            return self._weight.nelement() != 0
+        except AttributeError:
+            return False
 
     @abstractmethod
     def _update_weight_from_hidden(self):
@@ -191,15 +195,11 @@ class _View(_Stochastic, metaclass=ABCMeta):
     def k(self, x=None) -> Tensor:
         pass
 
-    @property
-    def _attached(self) -> bool:
-        return False
-
     def c(self, x=None) -> Tensor:
         phi = self.phi(x)
         return phi.T @ phi
 
-    def h(self, x=None) -> Tensor:
+    def h(self, x=None) -> Union[Tensor, torch.nn.Parameter]:
         if x is None:
             if self._hidden_exists:
                 return self._hidden[self.idx, :]
@@ -208,13 +208,13 @@ class _View(_Stochastic, metaclass=ABCMeta):
                 raise utils.DualError(self)
         raise NotImplementedError
 
-    def w(self, x=None) -> Tensor:
+    def w(self, x=None) -> Union[Tensor, torch.nn.Parameter]:
         if not self._weight_exists and self._hidden_exists:
             self._update_weight_from_hidden()
 
         if x is None:
             if self._weight_exists:
-                return self._weight
+                return self.weight
             else:
                 raise utils.PrimalError
         raise NotImplementedError
@@ -224,7 +224,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
             return self.phi(x) @ self.W
 
         def dual(x):
-            return self._kernel.k(x) @ self.H
+            return self.kernel.k(x) @ self.H
 
         switcher = {"primal": primal,
                     "dual": dual}
@@ -238,19 +238,20 @@ class _View(_Stochastic, metaclass=ABCMeta):
         return self.phi()
 
     @property
+    @abstractmethod
     def K(self) -> Tensor:
-        return self.kappa * self._kernel.K
+        pass
 
     @property
     def C(self) -> Tensor:
         return self.c()
 
     @property
-    def H(self) -> Tensor:
+    def H(self) -> Union[Tensor, torch.nn.Parameter]:
         return self.h()
 
     @property
-    def W(self) -> Tensor:
+    def W(self) -> Union[Tensor, torch.nn.Parameter]:
         return self.w()
 
     @property
