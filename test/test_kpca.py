@@ -12,13 +12,13 @@ kerch.set_log_level(40)  # only print errors
 unittest.TestCase.__str__ = lambda x: ""
 
 
-class TestRKM(unittest.TestCase):
+class TestKPCA(unittest.TestCase):
     r"""
     These tests verify the consistency of the computations of the kernels.
     """
 
     def __init__(self, *args, **kwargs):
-        super(TestRKM, self).__init__(*args, **kwargs)
+        super(TestKPCA, self).__init__(*args, **kwargs)
 
         self.NUM_DATA = 10
         self.DIM_INPUT = 6
@@ -38,7 +38,7 @@ class TestRKM(unittest.TestCase):
 
     def test_primal_kpca(self):
         """
-        Verifies if a primal principal component analysis can be computed and reconstructed."
+        The primal principal component analysis can be computed and reconstructed."
         """
         for type in self.primal_types:
             mdl = kerch.rkm.KPCA(type=type,
@@ -52,7 +52,7 @@ class TestRKM(unittest.TestCase):
 
     def test_dual_kpca(self):
         """
-        Verifies if a dual principal component analysis can be computed and reconstructed."
+        The dual principal component analysis can be computed and reconstructed."
         """
         for type in self.dual_types:
             mdl = kerch.rkm.KPCA(type=type,
@@ -65,15 +65,47 @@ class TestRKM(unittest.TestCase):
             self.assertLess(torch.norm(diff).detach().numpy(), self.NUM_DATA / self.DIM_FEATURE, 0)
 
     def test_primal_train(self):
+        """
+        Optimizing leads to the same solution as performing eigendecomposition in primal.
+        """
         for type in self.primal_types:
-            mdl = kerch.rkm.KPCA(type=type,
+            mdl1 = kerch.rkm.KPCA(type=type,
                                  sample=self.x,
                                  representation="primal",
                                  dim_output=self.DIM_FEATURE)
-            mdl.fit(method="optimize", verbose=True)
-            pass
+            mdl1.fit(method="optimize", verbose=False, lr=5.e-2, maxiter=50)
+            ##
+            mdl2 = kerch.rkm.KPCA(type=type,
+                                 sample=self.x,
+                                 representation="primal",
+                                 dim_output=self.DIM_FEATURE)
+            mdl2.solve()
+            ##
+            self.assertAlmostEqual(mdl1.relative_variance.detach().numpy(),
+                                   mdl2.relative_variance.detach().numpy(),
+                                   places=1)
 
+    def test_dual_train(self):
+        """
+        Optimizing leads to the same solution as performing eigendecomposition in dual.
+        """
+        for type in self.dual_types:
+            mdl1 = kerch.rkm.KPCA(type=type,
+                                 sample=self.x,
+                                 representation="dual",
+                                 dim_output=self.DIM_FEATURE)
+            mdl1.fit(method="optimize", verbose=False, lr=5.e-2, maxiter=50)
+            ##
+            mdl2 = kerch.rkm.KPCA(type=type,
+                                 sample=self.x,
+                                 representation="dual",
+                                 dim_output=self.DIM_FEATURE)
+            mdl2.solve()
+            ##
+            self.assertAlmostEqual(mdl1.relative_variance.detach().numpy(),
+                                   mdl2.relative_variance.detach().numpy(),
+                                   places=1)
 
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestRKM)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestKPCA)
     unittest.TextTestRunner(verbosity=2).run(suite)

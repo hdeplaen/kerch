@@ -9,6 +9,15 @@ _GLOBALS = {"PLOT_ENV": None,
             "LOG_LEVEL": 30,  # this corresponds to logging.WARNING
             }
 
+# IMPORTS
+from . import kernel    # ok (tested & documented)
+from . import rkm  # beta
+from . import model  # alpha
+# from . import dataset  # alpha
+from . import plot  # alpha
+from . import opt  # alpha
+from ._logger import set_log_level, get_log_level, _GLOBAL_LOGGER
+from .utils import set_ftype, set_itype, FTYPE, ITYPE
 
 # CHECK FUNCTIONALITIES
 def gpu_available() -> bool:
@@ -16,15 +25,7 @@ def gpu_available() -> bool:
     Returns whether GPU-enhanced computation is possible on this machine.
     """
     import torch.cuda
-    return torch.cuda.is_available()
-
-
-# IMPORTS
-from . import kernel    # ok (tested & documented)
-from . import rkm  # beta
-from . import model  # alpha
-from . import dataset  # alpha
-from . import plot  # alpha
-from . import opt  # alpha
-from ._logger import set_log_level, get_log_level, _GLOBAL_LOGGER
-from .utils import set_ftype, set_itype, FTYPE, ITYPE
+    if torch.cuda.is_available():
+        _GLOBAL_LOGGER.info("Using CUDA version " + torch.version.cuda)
+        return True
+    return False

@@ -93,7 +93,7 @@ class _Level(_View, metaclass=ABCMeta):
     @utils.kwargs_decorator({
         "representation": None,
         "loss": "classic",
-        "maxiter": 1000,
+        "maxiter": 10000,
         "verbose": True
     })
     def optimize(self, **kwargs) -> None:

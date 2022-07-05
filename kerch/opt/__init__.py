@@ -23,7 +23,7 @@ class Optimizer():
                 out.append(p)
         return out
 
-    @utils.kwargs_decorator({"lr": 5e-3, "kernel_rate": 1.})
+    @utils.kwargs_decorator({"lr": 1e-3, "kernel_rate": 1.})
     def __init__(self, mdl: _Module, type="sgd", **kwargs):
         self._kwargs = kwargs
         self._type = type

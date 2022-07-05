@@ -20,12 +20,55 @@ class _KPCA(_Level):
 
     @property
     def vals(self) -> T:
+        r"""
+        Eigenvalues of the model. The model has to be fitted for these values to exist.
+        """
         return self._vals
 
     @vals.setter
     def vals(self, val):
         val = utils.castf(val, tensor=False, dev=self._vals.device)
         self._vals.data = val
+
+    @property
+    def total_variance(self) -> T:
+        r"""
+        Total variance contained in the feature map. In primal formulation,
+        this is given by :math:`\DeclareMathOperator{\tr}{tr}\tr(C)`, where :math:`C = \sum\phi(x)\phi(x)^\top` is
+        the covariance matrix on the sample. In dual, this is given by :math:`\DeclareMathOperator{\tr}{tr}\tr(K)`,
+        where :math:`K_{ij} = k(x_i,x_j)` is the kernel matrix on the sample.
+
+        .. warning::
+            For this value to strictly be interpreted as a variance, the corresponding kernel (or feature map)
+            has to be normalized. In that case however, the total variance will amount to the dimension of the feature
+            map in primal and the number of datapoints in dual.
+        """
+        if "_total_variance" not in self._cache:
+            if self._representation == 'primal':
+                self._cache["_total_variance"] = torch.trace(self.C)
+            else:
+                self._cache["_total_variance"] = torch.trace(self.K)
+        return self._cache["_total_variance"]
+
+    @property
+    def model_variance(self) -> T:
+        r"""
+        Total variance learnt by the model given by the sum of the eigenvalues.
+
+        .. warning::
+            For this value to strictly be interpreted as a variance, the corresponding kernel (or feature map)
+            has to be normalized. We refer to the remark of ``total_variance``.
+        """
+        return torch.sum(self.vals)
+
+    @property
+    def relative_variance(self) -> T:
+        r"""
+        Relative variance learnt by the model given by ```model_variance``/``relative_variance``.
+        This number is always comprised between 0 and 1 and avoids any considerations on normalization.
+        """
+        return self.model_variance / self.total_variance
+
 
     ######################################################################################
 
@@ -49,7 +92,12 @@ class _KPCA(_Level):
         self.hidden = h
         self.vals = v
 
+    @utils.extend_docstring(_Level.solve)
     def solve(self, sample=None, target=None, representation=None) -> None:
+        r"""
+        Solves the model by decomposing the kernel matrix or the covariance matrix in principal components
+        (eigendecomposition).
+        """
         # KPCA models don't require the target to be defined. This is verified.
         if target is not None:
             self._log.warning("The target value is discarded when fitting a KPCA model.")
@@ -64,13 +112,13 @@ class _KPCA(_Level):
         P = self.weight @ self.weight.T  # primal projector
         R = self._I_primal - P  # reconstruction
         C = self.c(x)  # covariance
-        return torch.norm(R * C)  # reconstruction error on the covariance
+        return torch.trace(R * C)  # reconstruction error on the covariance
 
     def _dual_obj(self, x=None) -> T:
         P = self.hidden @ self.hidden.T  # dual projector
         R = self._I_dual - P  # reconstruction
         K = self.k(x)  # kernel matrix
-        return torch.norm(R * K)  # reconstruction error on the kernel
+        return torch.trace(R * K)  # reconstruction error on the kernel
 
     ######################################################################################
 
@@ -85,6 +133,9 @@ class _KPCA(_Level):
                 yield self._hidden
 
     def classic_loss(self, representation=None) -> T:
+        r"""
+        Reconstruction error on the sample.
+        """
         representation = utils.check_representation(representation, self._representation, self)
         if representation == 'primal':
             I = self._I_primal
@@ -94,7 +145,7 @@ class _KPCA(_Level):
             I = self._I_dual
             U = self._hidden # transposed compared to hidden
             M = self.K
-        return torch.norm((I - U.T @ U) @ M)
+        return torch.trace(M) - torch.trace(U.T @ U @ M)
 
     def rkm_loss(self, representation=None) -> T:
         raise NotImplementedError
@@ -104,6 +155,14 @@ class _KPCA(_Level):
         pass
 
     ####################################################################################################################
+
+    def optimize(self, **kwargs) -> None:
+        super(_KPCA, self).optimize(**kwargs)
+        representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
+        if representation == 'primal':
+            self.vals = torch.diag(self.weight.T @ self.C @ self.weight)
+        else:
+            self.vals = torch.diag(self.hidden.T @ self.K @ self.hidden)
 
     @utils.kwargs_decorator({
         "representation": None
