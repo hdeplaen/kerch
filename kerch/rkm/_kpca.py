@@ -1,6 +1,7 @@
 import torch
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
+from typing import Union
 
 from ._level import _Level
 from kerch import utils
@@ -30,13 +31,16 @@ class _KPCA(_Level):
         val = utils.castf(val, tensor=False, dev=self._vals.device)
         self._vals.data = val
 
-    @property
-    def total_variance(self) -> T:
+    def total_variance(self, as_tensor=False, normalize=True) -> Union[float, T]:
         r"""
         Total variance contained in the feature map. In primal formulation,
         this is given by :math:`\DeclareMathOperator{\tr}{tr}\tr(C)`, where :math:`C = \sum\phi(x)\phi(x)^\top` is
         the covariance matrix on the sample. In dual, this is given by :math:`\DeclareMathOperator{\tr}{tr}\tr(K)`,
         where :math:`K_{ij} = k(x_i,x_j)` is the kernel matrix on the sample.
+
+        :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
+            to ``False``
+        :type as_tensor: bool, optional
 
         .. warning::
             For this value to strictly be interpreted as a variance, the corresponding kernel (or feature map)
@@ -48,27 +52,46 @@ class _KPCA(_Level):
                 self._cache["_total_variance"] = torch.trace(self.C)
             else:
                 self._cache["_total_variance"] = torch.trace(self.K)
-        return self._cache["_total_variance"]
+        var = self._cache["_total_variance"]
+        if normalize:
+            var /= self.num_idx
+        if as_tensor:
+            return var
+        return var.detach().cpu().numpy()
 
-    @property
-    def model_variance(self) -> T:
+    def model_variance(self, as_tensor=False, normalize=True) -> Union[float, T]:
         r"""
         Total variance learnt by the model given by the sum of the eigenvalues.
+
+        :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
+            to ``False``
+        :type as_tensor: bool, optional
 
         .. warning::
             For this value to strictly be interpreted as a variance, the corresponding kernel (or feature map)
             has to be normalized. We refer to the remark of ``total_variance``.
         """
-        return torch.sum(self.vals)
+        var = torch.sum(self.vals)
+        if normalize:
+            var /= self.num_idx
+        if as_tensor:
+            return var
+        return var.detach().cpu().numpy()
 
-    @property
-    def relative_variance(self) -> T:
+    def relative_variance(self, as_tensor=False) -> Union[float, T]:
         r"""
         Relative variance learnt by the model given by ```model_variance``/``relative_variance``.
         This number is always comprised between 0 and 1 and avoids any considerations on normalization.
-        """
-        return self.model_variance / self.total_variance
 
+        :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
+            to ``False``
+        :type as_tensor: bool, optional
+        """
+        var = self.model_variance(as_tensor=True, normalize=False) / \
+              self.total_variance(as_tensor=False, normalize=False)
+        if as_tensor:
+            return var
+        return var.detach().cpu().numpy()
 
     ######################################################################################
 
@@ -93,7 +116,7 @@ class _KPCA(_Level):
         self.vals = v
 
     @utils.extend_docstring(_Level.solve)
-    def solve(self, sample=None, target=None, representation=None) -> None:
+    def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
         r"""
         Solves the model by decomposing the kernel matrix or the covariance matrix in principal components
         (eigendecomposition).
@@ -138,11 +161,9 @@ class _KPCA(_Level):
         """
         representation = utils.check_representation(representation, self._representation, self)
         if representation == 'primal':
-            I = self._I_primal
             U = self._weight # transposed compared to weight
             M = self.C
         else:
-            I = self._I_dual
             U = self._hidden # transposed compared to hidden
             M = self.K
         return torch.trace(M) - torch.trace(U.T @ U @ M)
@@ -168,11 +189,10 @@ class _KPCA(_Level):
         "representation": None
     })
     def fit(self, **kwargs):
-        representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
-        if representation == "primal":
-            if self.dim_output is None:
+        if self.dim_output is None:
+            representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
+            if representation == "primal":
                 self._dim_output = self.dim_feature
-        else:
-            if self.dim_output is None:
+            else:
                 self._dim_output = self.num_idx
         super(_KPCA, self).fit(**kwargs)

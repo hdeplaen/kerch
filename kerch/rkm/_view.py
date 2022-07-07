@@ -58,6 +58,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
         elif hidden is None:
             self.weight = weight
 
+        self._attached_weight = None
+
     def _reset_hidden(self) -> None:
         self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE,
                                                       device=self._hidden.device),
@@ -79,6 +81,10 @@ class _View(_Stochastic, metaclass=ABCMeta):
                                                             dtype=utils.FTYPE, device=self._weight.device))
 
     def init_parameters(self, representation=None) -> None:
+        """
+        Initializes the model parameters: the weight in primal and the hidden values in dual.
+        This is suitable for gradient-based training.
+        """
         representation = utils.check_representation(representation, self._representation, cls=self)
         switcher = {"primal": self._init_weight,
                     "dual": self._init_hidden}
@@ -88,12 +94,15 @@ class _View(_Stochastic, metaclass=ABCMeta):
     @property
     @abstractmethod
     def dim_feature(self) -> int:
+        """
+        Dimension of the explicit feature map if relevant.
+        """
         pass
 
     @property
     def dim_output(self) -> int:
         r"""
-        Output dimension
+        Output dimension.
         """
         return self._dim_output
 
@@ -108,6 +117,9 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
     @property
     def hidden(self) -> Tensor:
+        """
+        Hidden values.
+        """
         if self._hidden_exists:
             return self._hidden.T[self.idx, :]
         self._log.debug("No hidden values have been initialized yet.")
@@ -148,6 +160,9 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
     @property
     def hidden_trainable(self) -> bool:
+        """
+        Returns whether the hidden variables are trainable (a gradient can be computed on it).
+        """
         return self._param_trainable
 
     @hidden_trainable.setter
@@ -163,16 +178,62 @@ class _View(_Stochastic, metaclass=ABCMeta):
         """
         return self._hidden.nelement() != 0
 
+    ## ATTACH
+    @property
+    def attached(self) -> bool:
+        r"""
+        Boolean indicating whether the view is attached to another multiview.
+        """
+        return self._attached_weight is not None
+
+    def attach_to(self, weight_fn) -> None:
+        self._log.debug(self.__repr__() + " is attached to a multi-view.")
+        assert not self.attached, 'Cannot attach a view which is already attached'
+        self._attached_weight = weight_fn
+
+    def detach(self) -> None:
+        self._log.debug(self.__repr__() + ' is now detached.')
+        w = self.weight
+        self._attached = False
+        self.weight = w
+
     ## WEIGHT
     @property
-    @abstractmethod
-    def weight(self) -> torch.nn.Parameter:
-        pass
+    def weight(self) -> Tensor:
+        r"""
+        Weight.
+        """
+        if self.attached:
+            return self._attached_weight()
+        else:
+            if self._weight_exists:
+                return self._weight.T
+            self._log.debug("No weight has been initialized yet.")
 
     @weight.setter
-    @abstractmethod
     def weight(self, val):
-        pass
+        if self.attached:
+            raise Exception("Cannot assign value of an attached view. Please change the value of the mother class "
+                            "instead.")
+        else:
+            if val is not None:
+                # sets the parameter to an existing one
+                if isinstance(val, torch.nn.Parameter):
+                    self._weight = val
+                else:  # sets the value to a new one
+                    val = utils.castf(val, tensor=False, dev=self._weight.device)
+                    if self._weight_exists:
+                        self._weight.data = val.T
+                        # zeroing the gradients if relevant
+                        if self._param_trainable and self._weight.grad is not None:
+                            self._weight.grad.data.zero_()
+                    else:
+                        self._weight = torch.nn.Parameter(val.T, requires_grad=self._param_trainable)
+
+                    self._dim_output = self._weight.shape[0]
+                self._reset_hidden()
+            else:
+                self._log.info("The weight is unset.")
 
     @property
     def _weight_exists(self) -> bool:

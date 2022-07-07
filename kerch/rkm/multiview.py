@@ -32,7 +32,7 @@ class MultiView(_View):
 
         # append the views
         for view in views:
-            self._add_view(view)
+            self.attach_view(view)
 
         self.stochastic(prop=kwargs["prop"])
 
@@ -42,7 +42,7 @@ class MultiView(_View):
             repr += "\n\t " + key + ": " + val.__str__()
         return repr
 
-    def _add_view(self, view) -> None:
+    def attach_view(self, view) -> None:
         """
         Adds a view
         """
@@ -71,7 +71,12 @@ class MultiView(_View):
         except AttributeError:
             name = str(self._num_views)
         self._views[name] = view
-        self.add_module(name, view)
+
+        # attach it to this view
+        current_num = self.num_views
+        view.attach_to(lambda: self._weight_from_view(current_num))
+
+        # add a view to the count
         self._num_views += 1
 
     def _reset_hidden(self) -> None:
@@ -86,10 +91,21 @@ class MultiView(_View):
     ##################################################################"
     @property
     def dims_feature(self) -> List[int]:
+        """
+        List containing the feature dimension of each view.
+        """
         dims = []
         for v in self.views:
             dims.append(v.dim_feature)
         return dims
+
+    @property
+    def dims_feature_cumulative(self) -> List[int]:
+        """
+        List containing the cumulative feature dimensions of each view with the previus ones.
+        """
+        import numpy
+        return list(numpy.cumsum(self.dims_feature))
 
     @property
     def dim_feature(self) -> int:
@@ -119,47 +135,48 @@ class MultiView(_View):
     def num_views(self) -> int:
         return self._num_views
 
+    ## ATTACH
+    def detach_all(self) -> None:
+        r"""
+        Detaches all the views.
+        """
+        for v in self.views:
+            v.detach()
+
     ######################################################################
     ## WEIGHT
-    @property
-    def weights(self) -> Iterator[torch.nn.Parameter]:
-        for v in self.views:
-            yield v.weight
-
-    @property
-    def weight(self) -> T:
-        return torch.cat(list(self.weights), dim=0)
-
-    @weight.setter
-    def weight(self, val):
-        if val is not None:
-            assert val.shape[0] == self.dim_feature, f'The feature dimensions do not match: ' \
-                                                     f'got {val.shape[0]}, need {self.dim_input}.'
-            previous_dim = 0
-            for v in self.views:
-                dim = v.dim_feature
-                v.weight = val[previous_dim:previous_dim + dim, :]
-                previous_dim += dim
+    def _weight_from_view(self, id: int) -> T:
+        dim = self.dims_feature_cumulative
+        if id == 0:
+            return self.weight[:dim[0], :]
         else:
-            self._log.info("The weight is now unset.")
-            for v in self.views:
-                v.weight = None
+            return self.weight[dim[id - 1]:dim[id], :]
 
     def _update_weight_from_hidden(self):
         for v in self._views:
             v._update_weight_from_hidden()
 
-    def phis(self, x=None) -> Iterator[T]:
+    ## MATH
+    def phis(self, x: Union[T, torch.nn.Parameter, dict, list, str, None] = None) -> Iterator[T]:
+        # the first cases arises when x contains a value. all views then use that value.
         if isinstance(x, T) or isinstance(x, torch.nn.Parameter) or x is None:
             for v in self.views:
                 yield v.phi(x)
+        # a dictionary, containing a different value for each view
         elif isinstance(x, dict):
             for key, value in x.items():
                 yield self.view(key).phi(value)
+        # a list leads to the default (sample) values for each view
+        elif isinstance(x, list):
+            for key in x:
+                yield self.view(key).phi()
+        # a last case arises when just a string is passed
+        elif isinstance(x, str):
+            yield self.view(x).phi()
         else:
             raise NotImplementedError
 
-    def phi(self, x=None) -> T:
+    def phi(self, x: Union[T, torch.nn.Parameter, dict, list, str, None] = None) -> T:
         return torch.cat(list(self.phis(x)), dim=1)
 
     def ks(self, x=None) -> Iterator[T]:

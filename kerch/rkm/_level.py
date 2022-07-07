@@ -54,7 +54,7 @@ class _Level(_View, metaclass=ABCMeta):
         """
         pass
 
-    def solve(self, sample=None, target=None, representation=None) -> None:
+    def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
         r"""
         Fits the model according to the input ``sample`` and output ``target``. Many models have both a primal and
         a dual formulation to be fitted.
@@ -128,7 +128,7 @@ class _Level(_View, metaclass=ABCMeta):
     ####################################################################################################################
 
     @utils.kwargs_decorator({
-        "method": "solve",
+        "method": "exact",
     })
     def fit(self, **kwargs):
         switcher = {"exact": self.solve,

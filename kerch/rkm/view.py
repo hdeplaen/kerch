@@ -153,33 +153,6 @@ class View(_View, _Sample):
 
     #########################################################################
     ## WEIGHT
-    @property
-    def weight(self) -> torch.nn.Parameter:
-        if self._weight_exists:
-            return self._weight.T
-        self._log.debug("No weight has been initialized yet.")
-
-    @weight.setter
-    def weight(self, val):
-        if val is not None:
-            # sets the parameter to an existing one
-            if isinstance(val, torch.nn.Parameter):
-                self._weight = val
-            else:  # sets the value to a new one
-                val = utils.castf(val, tensor=False, dev=self._weight.device)
-                if self._weight_exists:
-                    self._weight.data = val.T
-                    # zeroing the gradients if relevant
-                    if self._param_trainable and self._weight.grad is not None:
-                        self._weight.grad.data.zero_()
-                else:
-                    self._weight = torch.nn.Parameter(val.T, requires_grad=self._param_trainable)
-
-                self._dim_output = self._weight.shape[0]
-            self._reset_hidden()
-        else:
-            self._log.info("The weight is unset.")
-
     def _update_weight_from_hidden(self):
         if self._hidden_exists:
             # will return a PrimalError if not available
