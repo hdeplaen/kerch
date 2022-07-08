@@ -53,17 +53,22 @@ class MVKPCA(_KPCA, MVLevel):
         for key, _ in self.named_views:
             if key in inputs:
                 value = inputs[key]
+                if value is None:
+                    num_elements = self.view(key).num_idx
+                else:
+                    num_elements = value.shape[0]
                 # verify consistency of number of datapoints across the various views.
                 if num_predict is None:
-                    num_predict = value.shape[0]
+                    num_predict = num_elements
                 else:
-                    assert num_predict == value.shape[0], f"Inconsistent number of datapoints to predict across the " \
-                                                          f"different views: {num_predict} and {value.shape[0]}."
+                    assert num_predict == num_elements, f"Inconsistent number of datapoints to predict across the " \
+                                                        f"different views: {num_predict} and {value.shape[0]}."
             else:
                 to_predict.append(key)
 
         assert num_predict is not None, 'Nothing to predict.'
-        sqrt_vals = torch.sqrt(self.vals)
+
+        # sqrt_vals = torch.sqrt(self.vals)
 
         def _closed_form(u, v, phi):
             self._log.debug('Using the closed form prediction. Faster but potentially unstable if components assigned '

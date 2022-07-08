@@ -84,7 +84,6 @@ enc2, dec2 = Encoder2(), Decoder2()
 mdl = kerch.rkm.MVKPCA({"name": "space", "type": "explicit_nn", "network": enc1},
                        {"name": "time", "type": "explicit_nn", "network": enc2},
                        dim_output=DIM_KPCA, representation='primal')
-mdl.to('cuda')
 
 ########################################################################################################################
 # TRAINING LOOP
@@ -109,17 +108,18 @@ def _iter(x, t):
     mdl.view('space').update_sample(x)
     mdl.view('time').update_sample(t)
     loss1 = mdl.classic_loss()
-    loss2 = mse(x, dec1.forward(mdl.reconstruct('space')))
-    loss3 = mse(t, dec2.forward(mdl.reconstruct('time')))
+    loss2 = mse(x, dec1.forward(mdl.predict_proj({'space': None})))
+    loss3 = mse(t, dec2.forward(mdl.predict_proj({'time': None})))
     loss = loss1 + loss2 + loss3
     loss.backward()
     return loss, loss1, loss2, loss3
 
 
 # loop
-bar = trange(5000)
+bar = trange(50000)
 for iter in bar:
     x, t = _gen_data()
+    opt.zero_grad()
     loss, a, b, c = _iter(x, t)
     opt.step()
     if iter % 50 == 0:
