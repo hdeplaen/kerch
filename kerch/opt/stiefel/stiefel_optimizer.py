@@ -1,7 +1,4 @@
-"""
-Original Source: Optimization on Stiefel Manifold via Cayley Transform
-https://github.com/JunLi-Galios/Optimization-on-Stiefel-Manifold-via-Cayley-Transform
-"""
+# from .optimizer import Optimizer, required
 import torch
 from torch.optim.optimizer import Optimizer, required
 import numpy as np
@@ -16,7 +13,7 @@ from .gutils import gpt2
 from .gutils import Cayley_loop
 from .gutils import qr_retraction
 from .gutils import check_identity
-from .utils_cayley import matrix_norm_one
+from .utils import matrix_norm_one
 import random
 
 import pdb
@@ -81,6 +78,7 @@ class SGDG(Optimizer):
         for group in self.param_groups:
             momentum = group['momentum']
             stiefel = group['stiefel']
+            weight_decay = group['weight_decay']
                            
             for p in group['params']:
                 if p.grad is None:
@@ -140,7 +138,8 @@ class SGDG(Optimizer):
                         else:
                             d_p = buf
 
-                    p.data.add_(-group['lr'], d_p)
+                    # p.data.add_(-group['lr'], d_p)
+                    p.data.add_(d_p, alpha=-group['lr'])
 
         return loss
 

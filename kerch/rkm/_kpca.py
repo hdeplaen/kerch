@@ -189,10 +189,11 @@ class _KPCA(_Level):
         "representation": None
     })
     def fit(self, **kwargs):
-        if self.dim_output is None:
-            representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
-            if representation == "primal":
-                self._dim_output = self.dim_feature
-            else:
-                self._dim_output = self.num_idx
-        super(_KPCA, self).fit(**kwargs)
+        if not self.attached:
+            if self.dim_output is None:
+                representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
+                if representation == "primal":
+                    self._dim_output = self.dim_feature
+                else:
+                    self._dim_output = self.num_idx
+            super(_KPCA, self).fit(**kwargs)

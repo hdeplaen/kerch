@@ -1,7 +1,3 @@
-"""
-Original Source: Optimization on Stiefel Manifold via Cayley Transform
-https://github.com/JunLi-Galios/Optimization-on-Stiefel-Manifold-via-Cayley-Transform
-"""
 import torch
 
 def norm(v, dim=1):

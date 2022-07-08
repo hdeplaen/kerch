@@ -71,6 +71,7 @@ class MultiView(_View):
         except AttributeError:
             name = str(self._num_views)
         self._views[name] = view
+        self.add_module(name, view)
 
         # attach it to this view
         current_num = self.num_views
@@ -135,6 +136,10 @@ class MultiView(_View):
     def num_views(self) -> int:
         return self._num_views
 
+    def views_by_name(self, names: List[str]) -> Iterator[View]:
+        for n in names:
+            yield self.view(n)
+
     ## ATTACH
     def detach_all(self) -> None:
         r"""
@@ -143,8 +148,11 @@ class MultiView(_View):
         for v in self.views:
             v.detach()
 
-    ######################################################################
     ## WEIGHT
+    def weights_by_name(self, names: List[str]):
+        weights = [v.weight for v in self.views_by_name(names)]
+        return torch.cat(weights, dim=0)
+
     def _weight_from_view(self, id: int) -> T:
         dim = self.dims_feature_cumulative
         if id == 0:

@@ -2,8 +2,9 @@ import kerch
 import torch
 from logging import INFO
 from tqdm import trange
+from matplotlib import pyplot as plt
 
-kerch.set_log_level(INFO)
+# kerch.set_log_level(INFO)
 
 DIM_FEATURES = 10
 DIM_KPCA = 5
@@ -107,25 +108,34 @@ opt = kerch.opt.Optimizer(mdl)
 def _iter(x, t):
     mdl.view('space').update_sample(x)
     mdl.view('time').update_sample(t)
-    loss1 = mdl.reconstruction_error()
+    loss1 = mdl.classic_loss()
     loss2 = mse(x, dec1.forward(mdl.reconstruct('space')))
     loss3 = mse(t, dec2.forward(mdl.reconstruct('time')))
     loss = loss1 + loss2 + loss3
     loss.backward()
-    return loss
+    return loss, loss1, loss2, loss3
 
 
 # loop
 bar = trange(5000)
 for iter in bar:
     x, t = _gen_data()
-    loss = _iter(x, t)
+    loss, a, b, c = _iter(x, t)
     opt.step()
-    bar.set_description(str(loss.detach().cpu()))
-    if iter % 1000 == 0:
-        pass
+    if iter % 50 == 0:
+        bar.set_description(f"loss: {loss.detach().cpu():1.2e},"
+                            f"kpca: {a.detach().cpu():1.2e},"
+                            f"ae-space: {b.detach().cpu():1.2e},"
+                            f"ae-time: {c.detach().cpu():1.2e}")
 
 ########################################################################################################################
 # RESULTS
 
-pass
+x, t = _gen_data()  # test
+t, idx = torch.sort(t)
+x = x[idx]
+x_pred = dec1.forward(mdl.reconstruct({'time': t})).detach()
+
+plt.plot(t, x_pred, label='prediction')
+plt.plot(t, x, label='real')
+plt.show()

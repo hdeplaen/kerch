@@ -50,7 +50,7 @@ class MVKPCA(_KPCA, MVLevel):
         """
         num_predict = None
         to_predict = []
-        for key in self.views:
+        for key, _ in self.named_views:
             if key in inputs:
                 value = inputs[key]
                 # verify consistency of number of datapoints across the various views.
@@ -63,13 +63,15 @@ class MVKPCA(_KPCA, MVLevel):
                 to_predict.append(key)
 
         assert num_predict is not None, 'Nothing to predict.'
+        sqrt_vals = torch.sqrt(self.vals)
 
         def _closed_form(u, v, phi):
             self._log.debug('Using the closed form prediction. Faster but potentially unstable if components assigned '
                             'with too small eigenvalues are used.')
-            Proj = v @ v.T
-            Inv = torch.linalg.pinv(utils.eye_like(Proj) - Proj)
-            return phi @ u @ v.T @ Inv
+            Proj = v.T @ v
+            Recon = torch.linalg.pinv(utils.eye_like(Proj) - Proj)
+            # Inv = torch.diag(1 / sqrt_vals) @ Recon @ torch.diag(sqrt_vals)
+            return phi @ u @ Recon @ v.T
 
         def _iter_fixed(u, v, phi):
             self._log.debug(
@@ -90,8 +92,8 @@ class MVKPCA(_KPCA, MVLevel):
             return psi
 
         phi = self.phi(inputs)
-        u = self.weight_from_views(list(inputs.keys()))
-        v = self.weight_from_views(to_predict)
+        u = self.weights_by_name(list(inputs.keys()))
+        v = self.weights_by_name(to_predict)
 
         switcher = {'closed': _closed_form,
                     'iter': _iter_fixed}
@@ -168,7 +170,7 @@ class MVKPCA(_KPCA, MVLevel):
             for key, value in x.items():
                 v = self.view(key)
                 phi = v.phi(value)
-                U = v.weight_as_param
+                U = v.weight
                 R = U @ U.T
                 out[key] = phi @ R
             if len(out) == 1:
@@ -178,7 +180,7 @@ class MVKPCA(_KPCA, MVLevel):
             for key in x:
                 v = self.view(key)
                 phi = v.phi()
-                U = v.weight_as_param
+                U = v.weight
                 R = U @ U.T
                 out.append(phi @ R)
         elif isinstance(x, str):
