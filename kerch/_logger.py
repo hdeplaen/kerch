@@ -26,7 +26,7 @@ class _Logger(metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
         self._name = kwargs["name"]
         class_name = self.__class__.__name__
-        if self._name is not None and class_name is not "_Logger":
+        if self._name is not None and class_name != "_Logger":
             log_name = self._name + ' ' + class_name
         elif self._name is not None:
             log_name = self._name
@@ -36,7 +36,7 @@ class _Logger(metaclass=ABCMeta):
         self._log.addHandler(_kerch_handler)
         self.set_log_level(kwargs["log_level"])
 
-    def set_log_level(self, level: int=None) -> int:
+    def set_log_level(self, level: int = None) -> int:
         r"""
         Sets a specific log Level to this object. It serves as a way to use specific log Level for a specific class,
         different than the current general KerPy log Level.
@@ -66,11 +66,12 @@ class _Logger(metaclass=ABCMeta):
         raise AttributeError
 
     @name.setter
-    def name(self, val:str):
+    def name(self, val: str):
         self._log.error("The name cannot be changed after initialization.")
 
 
 _GLOBAL_LOGGER = _Logger(name="global")
+
 
 def set_log_level(level: int):
     r"""
@@ -92,9 +93,9 @@ def set_log_level(level: int):
     _GLOBALS["LOG_LEVEL"] = level
     _GLOBAL_LOGGER.set_log_level(level)
 
+
 def get_log_level() -> str:
     r"""
     Returns the logging Level of the toolbox.
     """
     return logging.getLevelName(_GLOBALS["LOG_LEVEL"])
-

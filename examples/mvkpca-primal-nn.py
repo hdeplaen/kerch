@@ -7,8 +7,8 @@ from matplotlib import pyplot as plt
 # kerch.set_log_level(INFO)
 
 DIM_FEATURES = 10
-DIM_KPCA = 5
-BATCH_SIZE = 100
+DIM_KPCA = 8
+BATCH_SIZE = 800
 
 
 ########################################################################################################################
@@ -81,15 +81,15 @@ enc2, dec2 = Encoder2(), Decoder2()
 ########################################################################################################################
 # MV-KPCA
 
-mdl = kerch.rkm.MVKPCA({"name": "space", "type": "explicit_nn", "network": enc1},
-                       {"name": "time", "type": "explicit_nn", "network": enc2},
+mdl = kerch.rkm.MVKPCA({"name": "space", "type": "explicit_nn", "center": True, "network": enc1},
+                       {"name": "time", "type": "linear", "center": True},
                        dim_output=DIM_KPCA, representation='primal')
 
 ########################################################################################################################
 # TRAINING LOOP
 # DATA
 def _gen_data():
-    t = 8 * torch.rand(BATCH_SIZE, dtype=kerch.FTYPE) - 4
+    t = 2 * torch.rand(BATCH_SIZE, dtype=kerch.FTYPE) - 1
     x = torch.sin(t)
     return x, t
 
@@ -108,11 +108,11 @@ def _iter(x, t):
     mdl.view('space').update_sample(x)
     mdl.view('time').update_sample(t)
     loss1 = mdl.classic_loss()
-    loss2 = mse(x, dec1.forward(mdl.predict_proj({'space': None})))
-    loss3 = mse(t, dec2.forward(mdl.predict_proj({'time': None})))
-    loss = loss1 + loss2 + loss3
-    loss.backward()
-    return loss, loss1, loss2, loss3
+    loss2 = mse(x, dec1.forward(mdl.predict_sample('space')))
+    # loss3 = mse(t, dec2.forward(mdl.predict_sample('time')))
+    loss = loss1 + loss2  # + loss3
+    loss.backward(retain_graph=True)
+    return loss, loss1, loss2  # , loss3
 
 
 # loop
@@ -120,13 +120,12 @@ bar = trange(50000)
 for iter in bar:
     x, t = _gen_data()
     opt.zero_grad()
-    loss, a, b, c = _iter(x, t)
+    loss, a, b = _iter(x, t)
     opt.step()
     if iter % 50 == 0:
         bar.set_description(f"loss: {loss.detach().cpu():1.2e},"
                             f"kpca: {a.detach().cpu():1.2e},"
-                            f"ae-space: {b.detach().cpu():1.2e},"
-                            f"ae-time: {c.detach().cpu():1.2e}")
+                            f"ae-space: {b.detach().cpu():1.2e}")
 
 ########################################################################################################################
 # RESULTS

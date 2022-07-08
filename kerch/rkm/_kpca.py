@@ -161,19 +161,18 @@ class _KPCA(_Level):
         """
         representation = utils.check_representation(representation, self._representation, self)
         if representation == 'primal':
-            U = self._weight # transposed compared to weight
+            U = self._weight  # transposed compared to weight
             M = self.C
         else:
-            U = self._hidden # transposed compared to hidden
+            U = self._hidden  # transposed compared to hidden
             M = self.K
-        return torch.trace(M) - torch.trace(U.T @ U @ M)
+        loss = torch.trace(M) - torch.trace(U.T @ U @ M)
+        if loss < 0:
+            pass
+        return loss
 
     def rkm_loss(self, representation=None) -> T:
         raise NotImplementedError
-
-    @abstractmethod
-    def reconstruct(self, x=None, representation=None):
-        pass
 
     ####################################################################################################################
 

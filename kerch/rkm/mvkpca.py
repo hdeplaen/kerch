@@ -1,6 +1,7 @@
 import torch
 from tqdm import trange
 from torch import Tensor as T
+from typing import List, Union
 
 from .mvlevel import MVLevel
 from ._kpca import _KPCA
@@ -20,91 +21,80 @@ class MVKPCA(_KPCA, MVLevel):
     def __str__(self):
         return "multi-view KPCA(" + MVLevel.__str__(self) + "\n)"
 
-    ####################################################################
+    ## MATH
 
-    def predict_proj(self, inputs: dict, method='closed'):
+    def _phi_predict(self, weight_predict: T, weight_known: T, phi_known: T) -> T:
+        r"""
+        .. math::
+            \Psi = \Phi U \left( I - VV^\top\right)^{-1} V,
+
+        where :math:`\Phi` are the concatenated feature maps of the different given input views (N x sum dims),
+        :math:`U` the corresponding weights (sum dims x s) and :math:`V` the weights of the views to be predicted
+        (sum dims x s).
+        """
+        Proj = weight_predict.T @ weight_predict
+        Recon = torch.linalg.inv(utils.eye_like(Proj) - Proj)
+        return phi_known @ weight_known @ Recon @ weight_predict.T
+
+    ##########################################################################
+
+    def predict_oos(self, known: dict) -> T:
         r"""
         Predicts the feature map of the views not specified in the inputs, based on the values specified in the
         inputs.
 
-        The closed form method uses
-
-        .. math::
-            \Psi = \Phi U V^\top \left( I - VV^\top\right)^{-1},
-
-
-        whereas the fixed point iteration uses
-
-        .. math::
-            H_{k+1} = \Phi U + \Psi_k V,
-            \Psi_{k+1} = H_{k+1} V^\top.
-
-
-        :param inputs: Dictionnary of the inputs to be used for the prediction.
-        :param method: Type of method used: ``'closed'`` for the closed-form solution or ``'iter'`` for the fixed
-            point iteration., defaults to ``'closed'``
-        :type inputs: dict
-        :type method: str, optional
-        :return: Predictions for the views not specified in the inputs.
-        :rtype: Tensor (will become a dict in a later version)
+        :param known: Dictionary of the inputs where the key is the view identifier (``str`` or ``int``) and the
+            values the inputs to the views.
+        :type known: dict
+        :return:
+        :rtype: Tensor
         """
-        num_predict = None
+        # CONSISTENCY
+        num_points_known = None
         to_predict = []
         for key, _ in self.named_views:
-            if key in inputs:
-                value = inputs[key]
-                if value is None:
-                    num_elements = self.view(key).num_idx
+            if key in known:
+                value = known[key]
+                # verify consistency of number of datapoints across the various provided inputs for the views.
+                if num_points_known is None:
+                    num_points_known = value.shape[0]
                 else:
-                    num_elements = value.shape[0]
-                # verify consistency of number of datapoints across the various views.
-                if num_predict is None:
-                    num_predict = num_elements
-                else:
-                    assert num_predict == num_elements, f"Inconsistent number of datapoints to predict across the " \
-                                                        f"different views: {num_predict} and {value.shape[0]}."
+                    assert num_points_known == value.shape[
+                        0], f"Inconsistent number of datapoints to predict across the " \
+                            f"different views: {num_points_known} and {value.shape[0]}."
             else:
                 to_predict.append(key)
+        assert num_points_known is not None, 'Nothing to predict.'
 
-        assert num_predict is not None, 'Nothing to predict.'
+        # PREDICTION
+        phi_known = self.phi(known)
+        weight_known = self.weights_by_name(list(known.keys()))
+        weight_predict = self.weights_by_name(to_predict)
+        return self._phi_predict(weight_predict, weight_known, phi_known)
 
-        # sqrt_vals = torch.sqrt(self.vals)
+    def predict_sample(self, names: Union[str, List[str]]) -> T:
+        r"""
+        Predicts the values explicit feature map of the views in the names list, based on the other views,
+        not mentioned.
 
-        def _closed_form(u, v, phi):
-            self._log.debug('Using the closed form prediction. Faster but potentially unstable if components assigned '
-                            'with too small eigenvalues are used.')
-            Proj = v.T @ v
-            Recon = torch.linalg.pinv(utils.eye_like(Proj) - Proj)
-            # Inv = torch.diag(1 / sqrt_vals) @ Recon @ torch.diag(sqrt_vals)
-            return phi @ u @ Recon @ v.T
+        :param names: Names of the views to be predicted, based on the non-listed ones.
+        :type names: List[str]
+        """
+        assert self._representation == 'primal', utils.PrimalError
+        # construct two lists:
+        #   known: the views not in name that are serving as base,
+        #   unknown: the views that are to be predicted (names).
+        if isinstance(names, str):
+            names = [names]
+        known = []
+        for key, _ in self.named_views:
+            if key not in names:
+                known.append(key)
 
-        def _iter_fixed(u, v, phi):
-            self._log.debug(
-                '[BETA]. Using the fixed point iteration prediction scheme. This is more stable than the closed '
-                'form solution, but may be very slow. Please prefer the closed form method if no '
-                'components of too small values are used.')
-            h_update = lambda psi: (phi @ u + psi @ v)
-            psi_update = lambda h: h @ v.T
-
-            dim = 0
-            for key in to_predict:
-                dim += self.view(key).dim_feature
-
-            psi = torch.zeros((num_predict, dim), dtype=utils.FTYPE)
-            for _ in range(1000):
-                h = h_update(psi)
-                psi = psi_update(h)
-            return psi
-
-        phi = self.phi(inputs)
-        u = self.weights_by_name(list(inputs.keys()))
-        v = self.weights_by_name(to_predict)
-
-        switcher = {'closed': _closed_form,
-                    'iter': _iter_fixed}
-        psi = switcher.get(method, "Unknown method")(u, v, phi)
-        # TODO: format sol in dictionary (and change doc)
-        return psi
+        phi_known = self.phi(known)
+        weight_known = self.weights_by_name(known)
+        weight_predict = self.weights_by_name(names)
+        return self._phi_predict(weight_predict, weight_known, phi_known)
 
     def predict_opt(self, inputs: dict, representation='dual', lr: float = .001, tot_iter: int = 500) -> dict:
         # initiate parameters
@@ -165,35 +155,3 @@ class MVKPCA(_KPCA, MVLevel):
             bar.set_description(f"{loss:1.2e}")
 
         return inputs
-
-    def reconstruct(self, x=None, representation=None):
-        representation = utils.check_representation(representation, self._representation, self)
-        assert representation == "primal", NotImplementedError
-
-        if isinstance(x, dict):
-            out = dict()
-            for key, value in x.items():
-                v = self.view(key)
-                phi = v.phi(value)
-                U = v.weight
-                R = U @ U.T
-                out[key] = phi @ R
-            if len(out) == 1:
-                out = list(out.values())[0]
-        elif isinstance(x, list):
-            out = list()
-            for key in x:
-                v = self.view(key)
-                phi = v.phi()
-                U = v.weight
-                R = U @ U.T
-                out.append(phi @ R)
-        elif isinstance(x, str):
-            v = self.view(x)
-            phi = v.phi()
-            U = v.weight
-            R = U @ U.T
-            out = phi @ R
-        else:
-            raise TypeError('Input x must be a dictionary, a list or a string.')
-        return out
