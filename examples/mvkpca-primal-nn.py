@@ -84,7 +84,7 @@ enc2, dec2 = Encoder2(), Decoder2()
 mdl = kerch.rkm.MVKPCA({"name": "space", "type": "explicit_nn", "network": enc1},
                        {"name": "time", "type": "explicit_nn", "network": enc2},
                        dim_output=DIM_KPCA, representation='primal')
-
+mdl.to('cuda')
 
 ########################################################################################################################
 # TRAINING LOOP
