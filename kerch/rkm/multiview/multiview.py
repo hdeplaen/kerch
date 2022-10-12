@@ -7,10 +7,10 @@ from typing import Iterator, List, Union, Tuple
 import torch
 from torch import Tensor as T
 
-from .. import utils
-from ._view import _View
-from .view import View
-from .._stochastic import _Stochastic
+from kerch import utils
+from kerch.rkm._view import _View
+from kerch.rkm.view import View
+from kerch._stochastic import _Stochastic
 
 
 @utils.extend_docstring(_Stochastic)

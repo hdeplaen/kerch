@@ -12,17 +12,20 @@ max_t = 5
 t = np.linspace(min_t, max_t, 20)
 x = fun(t)
 
-mdl = kerch.rkm.MVKPCA({"name": "space", "type": "nystrom", "base_type": "rbf", "sample": x},
-                       {"name": "time", "type": "nystrom", "base_type": "rbf", "sample": t},
-                       dim_output=18)
+mdl = kerch.rkm.MVKPCA({"name": "space", "type": "nystrom", "base_type": "rbf", "center": False, "sample": x},
+                       {"name": "time", "type": "nystrom", "base_type": "rbf", "center": False, "sample": t},
+                       dim_output=25)
 
 mdl.solve(representation='primal')
 # mdl.solve()
 
 test = (max_t - min_t) * np.random.rand(100) + min_t
 test = np.sort(test)
-x_pred = mdl.predict_proj({"time": t}, method='closed').detach()
+x_pred = mdl.predict_oos({"time": t}).detach()
 x_real = mdl.view('space').phi(x).detach()
+
+import torch
+res = torch.norm(x_pred - x_real)
 
 from matplotlib import pyplot as plt
 
@@ -30,9 +33,11 @@ plt.figure()
 plt.bar(range(len(mdl.vals)), mdl.vals)
 plt.show()
 
-plt.scatter(x_pred[:, 2], x_pred[:, 1], c='r')
-plt.scatter(x_real[:, 2], x_real[:, 1], c='b')
-plt.show()
+plt.figure()
+for num in range(1,20):
+    plt.scatter(x_pred[0:num, 0], x_pred[0:num, 1], c='r')
+    plt.scatter(x_real[0:num, 0], x_real[0:num, 1], c='b')
+    plt.show()
 
 # plt.figure()
 # plt.scatter(x_real[:, 2], x_real[:, 1], c='b')

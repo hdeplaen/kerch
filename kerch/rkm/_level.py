@@ -28,12 +28,20 @@ class _Level(_View, metaclass=ABCMeta):
 
     @property
     def _I_primal(self) -> T:
+        r"""
+            To avoid multiple reinitializations, certainly when working on GPU, the value is stored in memory the first
+            time it is called, to be re-used later."
+        """
         if "I_primal" not in self._cache:
             self._cache["I_primal"] = torch.eye(self.dim_feature, dtype=utils.FTYPE)
         return self._cache["I_primal"]
 
     @property
     def _I_dual(self) -> T:
+        r"""
+                To avoid multiple reinitializations, certainly when working on GPU, the value is stored in memory the first
+                time it is called, to be re-used later."
+        """
         if "I_dual" not in self._cache:
             self._cache["I_dual"] = torch.eye(self.num_idx, dtype=utils.FTYPE)
         return self._cache["I_dual"]
@@ -41,20 +49,20 @@ class _Level(_View, metaclass=ABCMeta):
     ####################################################################################################################
 
     @abstractmethod
-    def _solve_primal(self, target=None) -> None:
+    def _solve_primal(self) -> None:
         r"""
         Solves the dual formulation on the sample.
         """
         pass
 
     @abstractmethod
-    def _solve_dual(self, target=None) -> None:
+    def _solve_dual(self) -> None:
         r"""
         Solves the primal formulation on the sample.
         """
         pass
 
-    def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
+    def solve(self, sample=None, targets=None, representation=None, **kwargs) -> None:
         r"""
         Fits the model according to the input ``sample`` and output ``target``. Many models have both a primal and
         a dual formulation to be fitted.
@@ -63,8 +71,13 @@ class _Level(_View, metaclass=ABCMeta):
         :type representation: str, optional
         """
 
-        self._log.debug("The fitting is always done on the full sample dataset, regardless of the stochastic state.")
+        # self._log.debug("The fitting is always done on the full sample dataset, regardless of the stochastic state.")
         # set the sample to input (always works for the underlying kernel)
+
+        if sample is not None:
+            self.init_sample(sample)
+        if targets is not None:
+            self.targets = targets
 
         # verify that the sample has been initialized
         if self._num_total is None:
@@ -82,13 +95,13 @@ class _Level(_View, metaclass=ABCMeta):
 
     ####################################################################################################################
 
-    @abstractmethod
-    def rkm_loss(self, representation=None) -> T:
-        pass
-
-    @abstractmethod
-    def classic_loss(self, representation=None) -> T:
-        pass
+    @utils.kwargs_decorator({
+        "method": "exact",
+    })
+    def fit(self, **kwargs):
+        switcher = {"exact": self.solve,
+                    "optimize": self.optimize}
+        switcher.get(kwargs["method"], 'Invalid method type (must be solve or optimize')(**kwargs)
 
     @utils.kwargs_decorator({
         "representation": None,
@@ -97,12 +110,7 @@ class _Level(_View, metaclass=ABCMeta):
         "verbose": True
     })
     def optimize(self, **kwargs) -> None:
-        # GET THE LOSS TO MINIMIZE
         representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
-        loss_switcher = {"classic": self.classic_loss,
-                         "rkm": self.rkm_loss}
-        loss_handler = loss_switcher.get(kwargs["loss"], 'Invalid loss type')
-        loss = lambda: loss_handler(representation)
 
         # PRELIMINARIES
         self.init_parameters(representation)
@@ -117,20 +125,23 @@ class _Level(_View, metaclass=ABCMeta):
         else:
             bar = range(maxiter)
         for epoch in bar:
-            l = loss()
+            l = self.loss()
             opt.zero_grad()
             l.backward()
             opt.step()
+            self.after_step()
 
             if epoch % 50 == 0 and verbose:
                 bar.set_description(f"loss: {l}")
 
     ####################################################################################################################
 
-    @utils.kwargs_decorator({
-        "method": "exact",
-    })
-    def fit(self, **kwargs):
-        switcher = {"exact": self.solve,
-                    "optimize": self.optimize}
-        switcher.get(kwargs["method"], 'Invalid method type (must be solve or optimize')(**kwargs)
+    @abstractmethod
+    def loss(self, representation=None) -> T:
+        pass
+
+    def after_step(self) -> None:
+        r"""
+            Perform after-step operations, for example a projection of the parameters onto some manifold.
+        """
+        pass

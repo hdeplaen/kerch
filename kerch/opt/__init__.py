@@ -23,7 +23,10 @@ class Optimizer():
                 out.append(p)
         return out
 
-    @utils.kwargs_decorator({"lr": 5e-4, "kernel_rate": 1.})
+    @utils.kwargs_decorator({"stiefel_lr": 1.e-4,
+                             "euclidean_lr": 1.e-4,
+                             "slow_lr": 1.e-4
+                             })
     def __init__(self, mdl: _Module, type="sgd", **kwargs):
         self._kwargs = kwargs
         self._type = type
@@ -37,20 +40,19 @@ class Optimizer():
         self._requires_grad = False
 
         if len(euclidean_params) > 0:
-            dict_euclidean = {'params': euclidean_params, 'stiefel': False}
-            self._dict.append({**dict_euclidean, **kwargs})
+            dict_euclidean = {'params': euclidean_params, 'stiefel': False, 'lr': kwargs['euclidean_lr']}
+            self._dict.append({**kwargs, **dict_euclidean})
             self._requires_grad = True
 
         if len(slow_params) > 0:
-            dict_slow = {'params': slow_params, 'stiefel': False, 'lr': kwargs['lr'] / 1}
-            dict_slow = {**dict_slow, **kwargs}
-            dict_slow['lr'] = dict_slow['lr'] * self._kwargs["kernel_rate"]
+            dict_slow = {'params': slow_params, 'stiefel': False, 'lr': kwargs['slow_lr']}
+            dict_slow = {**kwargs, **dict_slow}
             self._dict.append(dict_slow)
             self._requires_grad = True
 
         if len(stiefel_params) > 0:
-            dict_stiefel = {'params': stiefel_params, 'stiefel': True}
-            self._dict.append({**dict_stiefel, **kwargs})
+            dict_stiefel = {'params': stiefel_params, 'stiefel': True, 'lr': kwargs['stiefel_lr']}
+            self._dict.append({**kwargs, **dict_stiefel})
             self._requires_grad = True
 
         if self._dict:

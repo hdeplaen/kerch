@@ -1,4 +1,7 @@
-# from .optimizer import Optimizer, required
+"""
+Original Source: Optimization on Stiefel Manifold via Cayley Transform
+https://github.com/JunLi-Galios/Optimization-on-Stiefel-Manifold-via-Cayley-Transform
+"""
 import torch
 from torch.optim.optimizer import Optimizer, required
 import numpy as np
@@ -13,7 +16,7 @@ from .gutils import gpt2
 from .gutils import Cayley_loop
 from .gutils import qr_retraction
 from .gutils import check_identity
-from .utils import matrix_norm_one
+from .utils_cayley import matrix_norm_one
 import random
 
 import pdb
@@ -118,7 +121,7 @@ class SGDG(Optimizer):
                     
                     p_new = Cayley_loop(unity.t(), W, V, alpha)
                     V_new = torch.mm(W, unity.t()) # n-by-p
-                    # check_identity(p_new.t())
+#                     check_identity(p_new.t())
                     p.data.copy_(p_new.view(p.size()))
                     V.copy_(V_new)               
 
@@ -138,8 +141,7 @@ class SGDG(Optimizer):
                         else:
                             d_p = buf
 
-                    # p.data.add_(-group['lr'], d_p)
-                    p.data.add_(d_p, alpha=-group['lr'])
+                    p.data.add_(d_p, -group['lr'])
 
         return loss
 

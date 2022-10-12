@@ -95,7 +95,7 @@ class _KPCA(_Level):
 
     ######################################################################################
 
-    def _solve_primal(self, target: T = None) -> None:
+    def _solve_primal(self) -> None:
         if self.dim_output is None:
             self._dim_output = self.dim_feature
 
@@ -105,7 +105,7 @@ class _KPCA(_Level):
         self.weight = w
         self.vals = v
 
-    def _solve_dual(self, target: T = None) -> None:
+    def _solve_dual(self) -> None:
         if self.dim_output is None:
             self._dim_output = self.num_idx
 
@@ -155,29 +155,10 @@ class _KPCA(_Level):
             if self._hidden_exists:
                 yield self._hidden
 
-    def classic_loss(self, representation=None) -> T:
-        r"""
-        Reconstruction error on the sample.
-        """
-        representation = utils.check_representation(representation, self._representation, self)
-        if representation == 'primal':
-            U = self._weight  # transposed compared to weight
-            M = self.C
-        else:
-            U = self._hidden  # transposed compared to hidden
-            M = self.K
-        loss = torch.trace(M) - torch.trace(U.T @ U @ M)
-        if loss < 0:
-            pass
-        return loss
-
-    def rkm_loss(self, representation=None) -> T:
-        raise NotImplementedError
-
-    ####################################################################################################################
-
     def optimize(self, **kwargs) -> None:
         super(_KPCA, self).optimize(**kwargs)
+
+        # once the optimization is done, the eigenvalues still have to be defined
         representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
         if representation == 'primal':
             self.vals = torch.diag(self.weight.T @ self.C @ self.weight)
@@ -196,3 +177,21 @@ class _KPCA(_Level):
                 else:
                     self._dim_output = self.num_idx
             super(_KPCA, self).fit(**kwargs)
+
+    ####################################################################################################################
+
+    def loss(self, representation=None) -> T:
+        r"""
+        Reconstruction error on the sample.
+        """
+        representation = utils.check_representation(representation, self._representation, self)
+        if representation == 'primal':
+            U = self._weight # transposed compared to weight
+            M = self.C
+        else:
+            U = self._hidden  # transposed compared to hidden
+            M = self.K
+        loss = torch.trace(M) - torch.trace(U.T @ U @ M)
+        return loss
+
+

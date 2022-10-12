@@ -15,7 +15,7 @@ class Level(_Level, View, metaclass=ABCMeta):
 
     ####################################################################################################################
 
-    def solve(self, sample=None, target=None, representation=None) -> None:
+    def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
         r"""
         Fits the model according to the input ``sample`` and output ``target``. Many models have both a primal and
         a dual formulation to be fitted.
@@ -36,7 +36,7 @@ class Level(_Level, View, metaclass=ABCMeta):
 
         # verify that the output has the same dimensions
         if target is not None:
-            target = utils.castf(target)
+            target = utils.castf(target, tensor=True)
             same_dim = sample.shape[0] == target.shape[0]
             if not same_dim:
                 self._log.error("The number of sample points is not consistent with the output dimensions")
@@ -45,9 +45,11 @@ class Level(_Level, View, metaclass=ABCMeta):
         # solve model
         return super(Level, self).solve(sample=sample,
                                         target=target,
-                                        representation=representation)
+                                        representation=representation,
+                                        **kwargs)
 
     ####################################################################################################################
 
+    @abstractmethod
     def loss(self, representation=None) -> T:
-        raise NotImplementedError
+        pass

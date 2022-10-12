@@ -92,15 +92,17 @@ class nystrom(explicit):
 
     @property
     def dim_feature(self) -> int:
-        if self._dim is None:
-            self._compute_decomposition()
+        self._compute_decomposition()
         return self.dim
 
     def __str__(self):
-        return "Feature kernel"
+        return "Nystrom kernel"
 
     @property
     def base_kernel(self):
+        r"""
+            Kernel on which Nystrom performs the decomposition.
+        """
         assert self._base_kernel is not None, 'Base kernel has not been defined yet.'
         return self._base_kernel
 
@@ -114,6 +116,8 @@ class nystrom(explicit):
 
     def _compute_decomposition(self):
         if "H" not in self._cache:
+            self._log.info("Computing eigendecomposition for Nystrom kernel.")
+
             if self._dim is None:
                 self.dim = self._num_total
 

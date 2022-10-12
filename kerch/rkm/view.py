@@ -70,6 +70,8 @@ class View(_View, _Sample):
         else:
             raise TypeError("Argument kernel is not of the kernel class.")
 
+
+
         self._log.debug("View initialized with " + str(self._kernel))
 
     def __str__(self):
@@ -173,7 +175,8 @@ class View(_View, _Sample):
     def K(self) -> Tensor:
         return self.kappa * self.kernel.K
 
-    def forward(self, x=None, representation="dual"):
+    def forward(self, x=None, representation=None):
+        representation = utils.check_representation(representation, default=self._representation)
         if self._bias_exists:
             return self.phiw(x, representation) + self._kappa_sqrt * self._bias[:, None]
         else:

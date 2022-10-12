@@ -1,3 +1,7 @@
+"""
+Original Source: Optimization on Stiefel Manifold via Cayley Transform
+https://github.com/JunLi-Galios/Optimization-on-Stiefel-Manifold-via-Cayley-Transform
+"""
 import torch
 
 def norm(v, dim=1):
@@ -67,15 +71,14 @@ def qr_retraction(tan_vec): # tan_vec, p-by-n, p <= n
 def Cayley_loop(X, W, tan_vec, t): # 
     [n, p] = X.size()
     Y = X + t * tan_vec
-    for i in range(20):
+    for i in range(5):
         Y = X + t * torch.matmul(W, 0.5*(X+Y))
 
     return Y.t()
 
 def check_identity(X):#n-by-p
     n,p = X.size()
-    # res = torch.eye(p).cuda() - torch.mm(X.t(), X)
-    res = torch.eye(p) - torch.mm(X.t(), X)
+    res = torch.eye(p).cuda() - torch.mm(X.t(), X)
     print('n={0}, p={1}, res norm={2}'.format(n, p ,torch.norm(res)))
 
 def stiefel_transport(y, g): # y,g p-by-n, p <= n, project g onto the tangent space of y      

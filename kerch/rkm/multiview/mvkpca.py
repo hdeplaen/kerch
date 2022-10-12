@@ -4,7 +4,7 @@ from torch import Tensor as T
 from typing import List, Union
 
 from .mvlevel import MVLevel
-from ._kpca import _KPCA
+from kerch.rkm._kpca import _KPCA
 from kerch import utils
 
 
@@ -32,9 +32,17 @@ class MVKPCA(_KPCA, MVLevel):
         :math:`U` the corresponding weights (sum dims x s) and :math:`V` the weights of the views to be predicted
         (sum dims x s).
         """
-        Proj = weight_predict.T @ weight_predict
+        vals_sqrt = torch.sqrt(self.vals)
+        vals_sqrt_inv = torch.diag(1 / vals_sqrt)
+        vals_sqrt_id = torch.diag(vals_sqrt)
+
+        Proj = vals_sqrt_id @ weight_predict.T @ weight_predict @ vals_sqrt_inv
         Recon = torch.linalg.inv(utils.eye_like(Proj) - Proj)
-        return phi_known @ weight_known @ Recon @ weight_predict.T
+        return phi_known @ weight_known @ vals_sqrt_inv @ Recon @ vals_sqrt_id @ weight_predict.T
+
+        # Proj = weight_predict.T @ weight_predict
+        # Recon = torch.linalg.inv(utils.eye_like(Proj) - Proj)
+        # return phi_known @ weight_known @ Recon @ weight_predict.T
 
     ##########################################################################
 

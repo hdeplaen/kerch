@@ -17,6 +17,10 @@ class LSSVM(Level):
     def __init__(self, **kwargs):
         super(LSSVM, self).__init__(**kwargs)
         self._gamma = torch.nn.Parameter(torch.tensor(kwargs["gamma"], dtype=utils.FTYPE))
+        self._mse_loss = torch.nn.MSELoss(reduction='mean')
+
+    def __str__(self):
+        return "LSSVM with " + Level.__str__(self)
 
     @property
     def gamma(self) -> float:
@@ -29,7 +33,11 @@ class LSSVM(Level):
         self._reset_hidden()
         self._reset_weight()
 
-    def _solve_primal(self, target=None) -> None:
+    def _center_h(self):
+        if self._hidden_exists:
+            self._hidden.data -= torch.mean(self._hidden.data, dim=1)
+
+    def _solve_primal(self) -> None:
         C = self.kernel.C
         phi = self.kernel.phi_sample
         dev = C.device
@@ -43,8 +51,8 @@ class LSSVM(Level):
                          device=dev)
 
         P = torch.sum(phi, dim=0, keepdim=True)
-        S = torch.sum(target, dim=0, keepdim=True)
-        Y = phi.t() @ target
+        S = torch.sum(self.current_targets, dim=0, keepdim=True)
+        Y = phi.t() @ self.current_targets
 
         A = torch.cat((torch.cat((C + (1 / self._gamma) * I, P.t()), dim=1),
                        torch.cat((P, N), dim=1)), dim=0)
@@ -57,10 +65,9 @@ class LSSVM(Level):
         self.weight = weight
         self.bias = bias
 
-    def _solve_dual(self, target=None) -> None:
+    def _solve_dual(self) -> None:
         K = self.kernel.K
         dev = K.device
-        dim_output = target.shape[1]
 
         I = torch.eye(self.num_sample,
                       dtype=utils.FTYPE,
@@ -70,16 +77,16 @@ class LSSVM(Level):
                           dtype=utils.FTYPE,
                           device=dev)
 
-        Zero = torch.zeros((1,1),
-                            dtype=utils.FTYPE,
-                            device=dev)
+        Zero = torch.zeros((1, 1),
+                           dtype=utils.FTYPE,
+                           device=dev)
 
-        Zeros = torch.zeros((1,dim_output),
+        Zeros = torch.zeros((1, self.dim_output),
                             dtype=utils.FTYPE,
                             device=dev)
 
         N1 = Ones
-        N2 = target
+        N2 = self.current_targets
 
         A = torch.cat((torch.cat((K + (1 / self._gamma) * I, N1), dim=1),
                        torch.cat((N1.t(), Zero), dim=1)), dim=0)
@@ -92,12 +99,36 @@ class LSSVM(Level):
         self.hidden = hidden
         self.bias = bias
 
+    def _euclidean_parameters(self, recurse=True):
+        super(LSSVM, self)._euclidean_parameters(recurse)
+        if self._representation == 'primal':
+            if self._weight_exists:
+                yield self._weight
+        else:
+            if self._hidden_exists:
+                yield self._hidden
 
-    def solve(self, sample=None, target=None, representation=None) -> None:
+    def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
         # LS-SVMs require the target value to be defined. This is verified.
-        if target is None:
-            self._log.error("The target value should be provided when fitting an LS-SVM.")
-            raise ValueError
         return super(LSSVM, self).solve(sample=sample,
                                         target=target,
-                                        representation=representation)
+                                        representation=representation,
+                                        **kwargs)
+
+    def loss(self, representation=None) -> T:
+        representation = utils.check_representation(representation, self._representation, self)
+        pred = self.forward(representation=representation)
+        mse_loss = self._mse_loss(pred, self.current_targets)
+        if representation == 'primal':
+            weight = self.weight
+            reg_loss = torch.trace(weight.T @ weight)
+            # replace by einsum to avoid unnecessary computations
+            # torch.einsum('ij,ji',weight, weight)
+        else:
+            hidden = self.hidden
+            reg_loss = torch.trace(hidden.T @ self.K @ hidden)
+            # torch.einsum('ji,jk,ki',hidden,self.K,hidden)
+        return reg_loss / self.num_idx + self.gamma * mse_loss
+
+    def after_step(self) -> None:
+        self._center_h()
