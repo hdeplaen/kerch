@@ -88,14 +88,28 @@ class _View(_Stochastic, metaclass=ABCMeta):
         self.weight = torch.nn.init.orthogonal_(torch.empty((self.dim_feature, self.dim_output),
                                                             dtype=utils.FTYPE, device=self._weight.device))
 
-    def init_parameters(self, representation=None) -> None:
+    def init_parameters(self, representation=None, overwrite=True) -> None:
         """
         Initializes the model parameters: the weight in primal and the hidden values in dual.
         This is suitable for gradient-based training.
+
+        :param representation: 'primal' or 'dual'
+        :param overwrite: Does not initialize already initialized parameters if False., defaults to True
+        :type representation: str, optional
+        :type overwrite: bool, optional
         """
         representation = utils.check_representation(representation, self._representation, cls=self)
-        switcher = {"primal": self._init_weight,
-                    "dual": self._init_hidden}
+
+        def init_weight():
+            if overwrite or not self._weight_exists:
+                self._init_weight()
+
+        def init_hidden():
+            if overwrite or not self._hidden_exists:
+                self._init_hidden()
+
+        switcher = {"primal": init_weight,
+                    "dual": init_hidden}
         switcher.get(representation)()
 
     ################################################################"

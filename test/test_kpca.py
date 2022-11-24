@@ -48,9 +48,8 @@ class TestKPCA(unittest.TestCase):
                                  representation="primal",
                                  dim_output=self.DIM_FEATURE)
             mdl.solve()
-            recon = mdl.reconstruct(self.x)
-            diff = (recon - mdl.Phi)
-            self.assertLess(torch.norm(diff).detach().numpy(), self.NUM_DATA / self.DIM_FEATURE, 0)
+            var = mdl.relative_variance()
+            self.assertLess(self.DIM_FEATURE / self.NUM_DATA, var)
 
     def test_dual(self):
         """
@@ -62,9 +61,8 @@ class TestKPCA(unittest.TestCase):
                                  representation="dual",
                                  dim_output=self.DIM_FEATURE)
             mdl.solve()
-            recon = mdl.reconstruct(self.x)
-            diff = (recon - mdl.K)
-            self.assertLess(torch.norm(diff).detach().numpy(), self.NUM_DATA / self.DIM_FEATURE, 0)
+            var = mdl.relative_variance()
+            self.assertLess(self.DIM_FEATURE/self.NUM_DATA, var)
 
     def test_primal_train(self):
         """
@@ -75,18 +73,18 @@ class TestKPCA(unittest.TestCase):
                                   sample=self.x,
                                   representation="primal",
                                   dim_output=self.DIM_FEATURE)
-            mdl1.fit(method="optimize", verbose=False, lr=2.e-3, maxiter=1000)
-            var1 = mdl1.model_variance()
+            mdl1.fit(method="optimize", verbose=False, stiefel_lr=5.e-3, maxiter=500)
+            var1 = mdl1.relative_variance()
             ##
             mdl2 = kerch.rkm.KPCA(type=type,
                                   sample=self.x,
                                   representation="primal",
                                   dim_output=self.DIM_FEATURE)
             mdl2.solve()
-            var2 = mdl2.model_variance()
+            var2 = mdl2.relative_variance()
             ##
             self.assertLess(var1, var2)
-            self.assertAlmostEqual(var1, var2, places=0)
+            self.assertAlmostEqual(var1, var2, places=1)
 
     def test_dual_train(self):
         """
@@ -97,18 +95,18 @@ class TestKPCA(unittest.TestCase):
                                   sample=self.x,
                                   representation="dual",
                                   dim_output=self.DIM_FEATURE)
-            mdl1.fit(method="optimize", verbose=True, lr=2.e-3, maxiter=1000)
-            var1 = mdl1.model_variance()
+            mdl1.fit(method="optimize", verbose=False, stiefel_lr=5.e-3, maxiter=500)
+            var1 = mdl1.relative_variance()
             ##
             mdl2 = kerch.rkm.KPCA(type=type,
                                   sample=self.x,
                                   representation="dual",
                                   dim_output=self.DIM_FEATURE)
             mdl2.solve()
-            var2 = mdl2.model_variance()
+            var2 = mdl2.relative_variance()
             ##
             self.assertLess(var1, var2)
-            self.assertAlmostEqual(var1, var2, places=0)
+            self.assertAlmostEqual(var1, var2, places=1)
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestKPCA)

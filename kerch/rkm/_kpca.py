@@ -87,11 +87,9 @@ class _KPCA(_Level):
             to ``False``
         :type as_tensor: bool, optional
         """
-        var = self.model_variance(as_tensor=True, normalize=False) / \
-              self.total_variance(as_tensor=False, normalize=False)
-        if as_tensor:
-            return var
-        return var.detach().cpu().numpy()
+        var = self.model_variance(as_tensor=as_tensor, normalize=False) / \
+              self.total_variance(as_tensor=as_tensor, normalize=False)
+        return var
 
     ######################################################################################
 
@@ -186,10 +184,10 @@ class _KPCA(_Level):
         """
         representation = utils.check_representation(representation, self._representation, self)
         if representation == 'primal':
-            U = self._weight # transposed compared to weight
+            U = self._weight    # transposed compared to weight
             M = self.C
         else:
-            U = self._hidden  # transposed compared to hidden
+            U = self._hidden    # transposed compared to hidden
             M = self.K
         loss = torch.trace(M) - torch.trace(U.T @ U @ M)
         return loss

@@ -113,7 +113,7 @@ class _Level(_View, metaclass=ABCMeta):
         representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
 
         # PRELIMINARIES
-        self.init_parameters(representation)
+        self.init_parameters(representation, overwrite=False)
         opt = kerch.opt.Optimizer(self, **kwargs)
 
         # TRAINING LOOP
