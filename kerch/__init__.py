@@ -1,8 +1,8 @@
-__version__ = "v0.2"
+__version__ = "0.2.1"
 __author__ = "HENRI DE PLAEN"
 __credits__ = "KU Leuven"
 __status__ = "alpha"
-__date__ = "June 2022"
+__date__ = "November 2022"
 
 # GLOBAL MODULE-WIDE VARIABLES
 _GLOBALS = {"PLOT_ENV": None,

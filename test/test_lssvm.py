@@ -39,9 +39,9 @@ class TestLSSVM(unittest.TestCase):
         """
         for type in self.primal_types:
             mdl = kerch.rkm.LSSVM(type=type,
-                                 sample=self.x,
+                                  sample=self.x,
                                   targets=self.y,
-                                 representation="primal")
+                                  representation="primal")
             mdl.solve()
             recon = mdl.forward(self.x)
             kerch.plot.classifier_level(mdl)

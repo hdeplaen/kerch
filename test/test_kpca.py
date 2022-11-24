@@ -72,9 +72,9 @@ class TestKPCA(unittest.TestCase):
         """
         for type in self.primal_types:
             mdl1 = kerch.rkm.KPCA(type=type,
-                                 sample=self.x,
-                                 representation="primal",
-                                 dim_output=self.DIM_FEATURE)
+                                  sample=self.x,
+                                  representation="primal",
+                                  dim_output=self.DIM_FEATURE)
             mdl1.fit(method="optimize", verbose=False, lr=2.e-3, maxiter=1000)
             var1 = mdl1.model_variance()
             ##
@@ -94,9 +94,9 @@ class TestKPCA(unittest.TestCase):
         """
         for type in self.dual_types:
             mdl1 = kerch.rkm.KPCA(type=type,
-                                 sample=self.x,
-                                 representation="dual",
-                                 dim_output=self.DIM_FEATURE)
+                                  sample=self.x,
+                                  representation="dual",
+                                  dim_output=self.DIM_FEATURE)
             mdl1.fit(method="optimize", verbose=True, lr=2.e-3, maxiter=1000)
             var1 = mdl1.model_variance()
             ##

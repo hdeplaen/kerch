@@ -2,7 +2,7 @@ import kerch
 
 ## DATASET
 tr_set, _, _, _ = kerch.dataset.factory("two_moons",
-                                     tr_size=250)           # get the dataset
+                                        tr_size=250)           # get the dataset
 X, y = tr_set                                               # get data and labels
 
 ## MODEL & TRAINING
