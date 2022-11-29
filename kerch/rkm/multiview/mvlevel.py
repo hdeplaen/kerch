@@ -2,7 +2,7 @@ from torch import Tensor as T
 from abc import ABCMeta
 
 from kerch.rkm._level import _Level
-from kerch.rkm.multiview import MultiView
+from .multiview import MultiView
 from kerch import utils
 
 

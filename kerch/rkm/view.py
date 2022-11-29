@@ -35,7 +35,8 @@ class View(_View, _Sample):
         "kernel": None,
         "bias": False,
         "bias_trainable": False,
-        "kappa": 1.
+        "kappa": 1.,
+        "targets" : None
     })
     def __init__(self, *args, **kwargs):
         """
@@ -69,6 +70,13 @@ class View(_View, _Sample):
                                      idx_sample=self.idx)
         else:
             raise TypeError("Argument kernel is not of the kernel class.")
+
+        # TARGETS
+        targets = kwargs["targets"]
+        targets = utils.castf(targets, tensor=True)
+        if self._dim_output is None and targets is not None:
+            self._dim_output = targets.shape[1]
+        self.targets = targets
 
 
 
@@ -130,6 +138,39 @@ class View(_View, _Sample):
     @property
     def _bias_exists(self) -> bool:
         return self._bias.nelement() != 0
+
+    ####################################################################################################################
+    ## TARGETS
+
+    @property
+    def targets(self) -> Tensor:
+        r"""
+            Targets to be matched to.
+        """
+        if self._targets is None:
+            self._log.warning("Empty target values.")
+        return self._targets
+
+    @targets.setter
+    def targets(self, val):
+        val = utils.castf(val, dev=self._sample.device, tensor=True)
+        if val is None:
+            self._log.debug("Targets set to empty values.")
+        else:
+            assert self.dim_output == val.shape[1], f"The shape of the given target {val.shape[1]} does not match the" \
+                                                    f" required one {self.dim_output}."
+            assert self.num_sample == val.shape[0], f"The number of target points {val.shape[0]} does not match the " \
+                                                    f"required one {self.dim_input}."
+        self._targets = torch.nn.Parameter(val)
+
+    @property
+    def current_targets(self) -> Tensor:
+        r"""
+            Returns the targets that are currently used in the computations and for the normalizing and centering
+            statistics if relevant.
+        """
+        return self.targets[self.idx, :]
+
 
     ########################################################################
     @property

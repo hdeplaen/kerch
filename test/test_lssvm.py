@@ -10,6 +10,7 @@ import kerch
 kerch.set_log_level(40)  # only print errors
 unittest.TestCase.__str__ = lambda x: ""
 
+#TODO: stochastic learning not working. check why.
 
 class TestLSSVM(unittest.TestCase):
     r"""
@@ -43,7 +44,6 @@ class TestLSSVM(unittest.TestCase):
                                   targets=self.y,
                                   representation="primal")
             mdl.solve()
-            recon = mdl.forward(self.x)
             kerch.plot.classifier_level(mdl)
 
     def test_dual(self):
@@ -68,7 +68,7 @@ class TestLSSVM(unittest.TestCase):
                                    sample=self.x,
                                    targets=self.y,
                                    representation="primal")
-            mdl1.fit(method="optimize", verbose=False, lr=1.e-3, maxiter=1000)
+            mdl1.fit(method="optimize", verbose=False, euclidean_lr=1.e-3, maxiter=100)
             kerch.plot.classifier_level(mdl1)
             # ##
             # mdl2 = kerch.rkm.LSSVM(type=type,
@@ -79,28 +79,6 @@ class TestLSSVM(unittest.TestCase):
             # ##
             # self.assertLess(var1, var2)
             # self.assertAlmostEqual(var1, var2, places=0)
-
-    # def test_dual_train(self):
-    #     """
-    #     Optimizing leads to the same solution as performing eigendecomposition in dual.
-    #     """
-    #     for type in self.dual_types:
-    #         mdl1 = kerch.rkm.KPCA(type=type,
-    #                              sample=self.x,
-    #                              representation="dual",
-    #                              dim_output=self.DIM_FEATURE)
-    #         mdl1.fit(method="optimize", verbose=True, lr=2.e-3, maxiter=1000)
-    #         var1 = mdl1.model_variance()
-    #         ##
-    #         mdl2 = kerch.rkm.KPCA(type=type,
-    #                               sample=self.x,
-    #                               representation="dual",
-    #                               dim_output=self.DIM_FEATURE)
-    #         mdl2.solve()
-    #         var2 = mdl2.model_variance()
-    #         ##
-    #         self.assertLess(var1, var2)
-    #         self.assertAlmostEqual(var1, var2, places=0)
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestKPCA)

@@ -136,8 +136,8 @@ class nystrom(explicit):
             sum_small = torch.sum(idx_small)
             if sum_small > 0:
                 self._log.warning(
-                    f"{sum_small} very small (or negative) eigenvalues are detected on {self._dim}."
-                    f"To avoid numerical instability, these values are pruned."
+                    f"{sum_small} very small or negative eigenvalues are detected on {self._dim}. "
+                    f"To avoid numerical instability, these values are pruned. "
                     f"The new explicit dimension is now {self._dim - sum_small}.")
                 keep_idx = torch.logical_not(idx_small)
                 lambdas = lambdas[keep_idx]

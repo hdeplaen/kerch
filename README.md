@@ -88,4 +88,4 @@ pip install -e .
 The contributors and acknowledgements can be found in the [CONRIBUTORS](CONTRIBUTORS) file.
 
 ## License
-RKM has a MIT license, as found in the [LICENSE](LICENSE) file.
+Kerch has a MIT license, as found in the [LICENSE](LICENSE) file.

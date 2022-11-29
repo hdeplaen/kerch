@@ -35,8 +35,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
         "dim_output": None,
         "hidden": None,
         "weight": None,
-        "param_trainable": True,
-        "targets": None
+        "param_trainable": True
     })
     def __init__(self, *args, **kwargs):
         """
@@ -47,11 +46,6 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
         weight = kwargs["weight"]
         hidden = kwargs["hidden"]
-        targets = kwargs["targets"]
-        targets = utils.castf(targets, tensor=True)
-
-        if self._dim_output is None and targets is not None:
-            self._dim_output = targets.shape[1]
 
         # INITIATE
         self._param_trainable = kwargs["param_trainable"]
@@ -64,7 +58,6 @@ class _View(_Stochastic, metaclass=ABCMeta):
             self.hidden = hidden
         elif hidden is None:
             self.weight = weight
-        self.targets = targets
 
         self._attached_weight = None
 
@@ -199,38 +192,6 @@ class _View(_Stochastic, metaclass=ABCMeta):
         Returns if this View has hidden variables attached to it.
         """
         return self._hidden.nelement() != 0
-
-    ####################################################################################################################
-    ## TARGETS
-
-    @property
-    def targets(self) -> Tensor:
-        r"""
-            Targets to be matched to.
-        """
-        if self._targets is None:
-            self._log.warning("Empty target values.")
-        return self._targets
-
-    @targets.setter
-    def targets(self, val):
-        val = utils.castf(val, dev=self._sample.device, tensor=True)
-        if val is None:
-            self._log.debug("Targets set to empty values.")
-        else:
-            assert self.dim_output == val.shape[1], f"The shape of the given target {val.shape[1]} does not match the" \
-                                                    f" required one {self.dim_output}."
-            assert self.num_sample == val.shape[0], f"The number of target points {val.shape[0]} does not match the " \
-                                                    f"required one {self.dim_input}."
-        self._targets = torch.nn.Parameter(val)
-
-    @property
-    def current_targets(self) -> Tensor:
-        r"""
-            Returns the targets that are currently used in the computations and for the normalizing and centering
-            statistics if relevant.
-        """
-        return self.targets[self.idx, :]
 
     ####################################################################################################################
     ## ATTACH

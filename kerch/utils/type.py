@@ -2,7 +2,7 @@ import torch
 import logging
 
 FTYPE = torch.float64
-ITYPE = torch.uint8
+ITYPE = torch.int16
 
 def set_ftype(type):
     FTYPE = type

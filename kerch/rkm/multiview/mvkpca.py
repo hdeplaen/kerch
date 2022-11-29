@@ -32,13 +32,26 @@ class MVKPCA(_KPCA, MVLevel):
         :math:`U` the corresponding weights (sum dims x s) and :math:`V` the weights of the views to be predicted
         (sum dims x s).
         """
-        vals_sqrt = torch.sqrt(self.vals)
-        vals_sqrt_inv = torch.diag(1 / vals_sqrt)
-        vals_sqrt_id = torch.diag(vals_sqrt)
+        # TECHNIQUE 1
+        # weight_predict_pinv = torch.pinverse(weight_predict)
+        # WL = (weight_known @ torch.diag(self.vals)).unsqueeze(0)
+        # phi_phi_weight_known = torch.einsum('ni,nj,jk->nik', phi_known, phi_known, weight_known)
+        # norm_known = torch.einsum('ni,ni->n', phi_known, phi_known)
+        # predicted_unnormed = torch.einsum('ni,nik,kl->nl',phi_known,WL-phi_phi_weight_known,weight_predict_pinv)
+        # return predicted_unnormed / norm_known.unsqueeze(1)
 
-        Proj = vals_sqrt_id @ weight_predict.T @ weight_predict @ vals_sqrt_inv
-        Recon = torch.linalg.inv(utils.eye_like(Proj) - Proj)
-        return phi_known @ weight_known @ vals_sqrt_inv @ Recon @ vals_sqrt_id @ weight_predict.T
+        # TECNHINQUE 2
+        # vals_sqrt = torch.sqrt(self.vals)
+        # vals_sqrt_inv = torch.diag(1 / vals_sqrt)
+        # vals_sqrt_id = torch.diag(vals_sqrt)
+        # Proj = vals_sqrt_id @ weight_predict.T @ weight_predict @ vals_sqrt_inv
+        # Recon = torch.linalg.inv(utils.eye_like(Proj) - Proj)
+        # return phi_known @ weight_known @ vals_sqrt_inv @ Recon @ vals_sqrt_id @ weight_predict.T
+
+        # TECNHIQUE 3
+        weight_known_norm = torch.sum((weight_known ** 2), dim=0, keepdim=True)
+        weight_known_normed = weight_known / weight_known_norm
+        return phi_known @ weight_known_normed @ weight_predict.T
 
         # Proj = weight_predict.T @ weight_predict
         # Recon = torch.linalg.inv(utils.eye_like(Proj) - Proj)
@@ -67,9 +80,9 @@ class MVKPCA(_KPCA, MVLevel):
                 if num_points_known is None:
                     num_points_known = value.shape[0]
                 else:
-                    assert num_points_known == value.shape[
-                        0], f"Inconsistent number of datapoints to predict across the " \
-                            f"different views: {num_points_known} and {value.shape[0]}."
+                    assert num_points_known == value.shape[0], \
+                        f"Inconsistent number of datapoints to predict across the " \
+                        f"different views: {num_points_known} and {value.shape[0]}."
             else:
                 to_predict.append(key)
         assert num_points_known is not None, 'Nothing to predict.'
@@ -102,6 +115,7 @@ class MVKPCA(_KPCA, MVLevel):
         phi_known = self.phi(known)
         weight_known = self.weights_by_name(known)
         weight_predict = self.weights_by_name(names)
+        # return self._phi_predict(weight_predict, weight_known, phi_known)
         return self._phi_predict(weight_predict, weight_known, phi_known)
 
     def predict_opt(self, inputs: dict, representation='dual', lr: float = .001, tot_iter: int = 500) -> dict:

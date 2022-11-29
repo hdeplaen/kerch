@@ -11,7 +11,7 @@ from abc import ABCMeta, abstractmethod
 
 from . import _GLOBALS, utils
 
-_LOGGING_FORMAT = "Kerch %(levelname)s [%(name)s]: %(message)s (%(pathname)s:%(lineno)d)"
+_LOGGING_FORMAT = "Kerch %(levelname)s [%(name)s]: %(message)s [%(pathname)s:%(lineno)d]"
 
 _kerch_format = logging.Formatter(_LOGGING_FORMAT)
 _kerch_handler = logging.StreamHandler()
