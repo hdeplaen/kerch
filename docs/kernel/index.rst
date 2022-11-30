@@ -86,6 +86,7 @@ Generic Kernels
     polynomial
     cosine
     sigmoid
+    rff
     nystrom
 
 Network-based kernels

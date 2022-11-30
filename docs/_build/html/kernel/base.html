@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Base Kernel &mdash; kerch v0.2 documentation</title>
+  <title>Base Kernel &mdash; kerch 0.2.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
@@ -94,7 +94,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="kerch.kernel.base">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span class="sig-name descname"><span class="pre">base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.base" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_sample</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Sample</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -145,10 +145,6 @@ called.</p>
 <p class="admonition-title">Note</p>
 <p>A centered and normalized covariance matrix is a correlation matrix.</p>
 </div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Not implemented.</p>
-</div>
 </dd></dl>
 
 <dl class="py property">
@@ -162,6 +158,12 @@ called.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.base.current_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the sample that is currently used in the computations and for the normalizing and centering statistics
 if relevant.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.base.dim_feature">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_feature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.base.dim_feature" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the dimension of the explicit feature map if it exists.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -194,7 +196,7 @@ if relevant.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.base.get_log_level">
 <span class="sig-name descname"><span class="pre">get_log_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.kernel.base.get_log_level" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the log level used by this object.</p>
+<dd><p>Returns the log Level used by this object.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -265,6 +267,17 @@ construction is used., defaults to None</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.base.manifold_parameters">
+<span class="sig-name descname"><span class="pre">manifold_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euclidean'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Parameter</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.base.manifold_parameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.base.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#kerch.kernel.base.name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the module. This is relevant in some applications</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.base.normalize">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.base.normalize" title="Permalink to this definition"></a></dt>
@@ -286,7 +299,7 @@ training.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.base.params">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#kerch.kernel.base.params" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#kerch.kernel.base.params" title="Permalink to this definition"></a></dt>
 <dd><p>Dictionnary containing the parameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
 
@@ -320,16 +333,16 @@ It is loaded from memory if already computed and unchanged since then, to avoid 
 called.</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.kernel.base.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.base.sample" title="Permalink to this definition"></a></dt>
-<dd><p>Sample dataset.</p>
-</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.base.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.base.reset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.kernel.base.sample_as_param">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_as_param</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.kernel.base.sample_as_param" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="kerch.kernel.base.sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.kernel.base.sample" title="Permalink to this definition"></a></dt>
+<dd><p>Sample dataset.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.base.sample_trainable">
@@ -340,12 +353,12 @@ called.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.base.set_log_level">
 <span class="sig-name descname"><span class="pre">set_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.kernel.base.set_log_level" title="Permalink to this definition"></a></dt>
-<dd><p>Sets a specific log level to this object. It serves as a way to use specific log level for a specific class,
-different than the current general KerPy log level.</p>
+<dd><p>Sets a specific log Level to this object. It serves as a way to use specific log Level for a specific class,
+different than the current general KerPy log Level.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>level</strong> – If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current general KerPy log level will be used (WARNING if not
+<li><p><strong>level</strong> – If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current general KerPy log Level will be used (WARNING if not
 specified otherwise)., defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 <li><p><strong>type</strong> – int, optional</p></li>
 </ul>

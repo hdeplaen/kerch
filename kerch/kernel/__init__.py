@@ -4,6 +4,7 @@ from .explicit import explicit
 from .exponential import exponential
 from .linear import linear
 from .rbf import rbf
+from .rff import rff
 from .laplacian import laplacian
 from .cosine import cosine
 from .hat import hat
