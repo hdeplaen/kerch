@@ -41,7 +41,7 @@ class rff(explicit):
     :type num_weights: int, optional
     :param weights: Explicit values for the weights may be provided instead of automatically sampling them with the
         provided `num_weights`., defaults to `None`.
-    :type weights: array, numpy.array, torch.Tensor, torch.nn.Parameter..., optional
+    :type weights: Tensor(num_weights, dim_input), optional
     :param weights_trainable: Specifies if the weights are to be considered as trainable parameters during
         backpropagation., default to `False`.
     :type weights_trainable: bool, optional

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Random Fourier Features Kernel &mdash; kerch 0.2.1 documentation</title>
+  <title>Random Fourier Features Kernel &mdash; kerch 0.2.2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
@@ -119,7 +119,7 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num_weights</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of weights <span class="math notranslate nohighlight">\(d\)</span> sampled for the RFF., defaults to 1.</p></li>
-<li><p><strong>weights</strong> (<em>array</em><em>, </em><em>numpy.array</em><em>, </em><em>torch.Tensor</em><em>, </em><em>torch.nn.Parameter</em><em>...</em><em>, </em><em>optional</em>) – Explicit values for the weights may be provided instead of automatically sampling them with the
+<li><p><strong>weights</strong> (<em>Tensor</em><em>(</em><em>num_weights</em><em>, </em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Explicit values for the weights may be provided instead of automatically sampling them with the
 provided <cite>num_weights</cite>., defaults to <cite>None</cite>.</p></li>
 <li><p><strong>weights_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – Specifies if the weights are to be considered as trainable parameters during
 backpropagation., default to <cite>False</cite>.</p></li>
