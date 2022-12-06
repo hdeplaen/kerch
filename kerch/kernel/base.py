@@ -142,7 +142,7 @@ class base(_Sample, metaclass=ABCMeta):
             x = self.current_sample
         return x
 
-    def _compute_K(self, implicit=False):
+    def _implicit_statistics(self, implicit=False, center=None, normalize=None):
         """
         Computes the dual matrix, also known as the kernel matrix.
         Its size is len(idx_kernels) * len(idx_kernels).
@@ -154,6 +154,14 @@ class base(_Sample, metaclass=ABCMeta):
             self._log.warning('No sample dataset. Please assign a sample dataset or specify the dimensions of the '
                               'sample dataset to initialize random values before computing kernel values.')
             return None
+
+        if center is None: center = self._center
+        if normalize is None: normalize = self._normalize
+
+        if implicit:
+            phi = self.phi()
+            self._cache["K"] = phi @ phi.T
+
 
         if "K" not in self._cache:
             self._log.debug("Computing kernel matrix and dual statistics.")
@@ -177,7 +185,7 @@ class base(_Sample, metaclass=ABCMeta):
 
         return self._cache["K"]
 
-    def _compute_C(self):
+    def _explicit_statistics(self):
         """
         Computes the primal matrix, i.e. correlation between the different outputs.
         Its size is output * output.
@@ -222,11 +230,20 @@ class base(_Sample, metaclass=ABCMeta):
         if normalize is None:
             normalize = self._normalize
 
+        # TODO
+        if center and not self._center:
+            raise NotImplementedError
+        if normalize and not self._normalize:
+            raise NotImplementedError
+
         # check is statistics are available if required
         if center or normalize or x is None:
-            if self._compute_C() is None:
+            if self._explicit_statistics() is None:
                 self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
                 raise Exception
+
+        if x is None and center == self._center and normalize == self._normalize:
+            return self._explicit_statistics()[1]
 
         x = utils.castf(x)
         phi = self._explicit(x)
@@ -279,15 +296,21 @@ class base(_Sample, metaclass=ABCMeta):
         if normalize is None:
             normalize = self._normalize
 
+        # TODO
+        if center and not self._center:
+            raise NotImplementedError
+        if normalize and not self._normalize:
+            raise NotImplementedError
+
         x = utils.castf(x)
         y = utils.castf(y)
 
         # if any computation on the sample is required
         if center or normalize or x is None or y is None:
-            if implicit and self._compute_C() is None:
+            if implicit and self._explicit_statistics() is None:
                 self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
                 raise Exception
-            elif not implicit and self._compute_K() is None:
+            elif not implicit and self._implicit_statistics(implicit) is None:
                 self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
                 raise Exception
 
@@ -384,7 +407,8 @@ class base(_Sample, metaclass=ABCMeta):
         .. math::
             K_{ij} = k(x_i,x_j).
         """
-        return self._compute_K()
+        self._implicit_statistics()
+        return self._cache["K"]
 
     @property
     def C(self) -> Tensor:
@@ -394,15 +418,14 @@ class base(_Sample, metaclass=ABCMeta):
         .. math::
             C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.
         """
-        return self._compute_C()[0]
+        return self._explicit_statistics()[0]
 
     @property
-    def phi_sample(self) -> Tensor:
+    def Phi(self) -> Tensor:
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling
         :py:func:`phi()`, but faster.
         It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
         called.
         """
-        return self._compute_C()[1]
-
+        return self._explicit_statistics()[1]

@@ -32,15 +32,23 @@ class explicit_nn(explicit):
     """
 
     @utils.kwargs_decorator(
-        {"network": None, "kernels_trainable": False})
+        {"encoder": None,
+         "decoder": None,
+         "kernels_trainable": False})
     def __init__(self, **kwargs):
         """
-        :param network: torch.nn.Module explicit kernel
+        :param encoder: torch.nn.Module explicit kernel
         :param kernels_trainable: True if support vectors / kernel are trainable (default False)
         """
         super(explicit_nn, self).__init__(**kwargs)
-        self._network: torch.nn.Module = kwargs["network"]
-        assert self._network is not None, "Network module must be specified."
+
+        self._encoder: torch.nn.Module = kwargs["encoder"]
+        assert self._encoder is not None, "Encoder module must be specified."
+        assert isinstance(self._encoder, torch.nn.Module), "Encoder must be an instance of torch.nn.Module."
+
+        self._decoder: torch.nn.Module = kwargs["decoder"]
+        assert isinstance(self._decoder, torch.nn.Module) or self._decoder is None, "If specified, the decoder must " \
+                                                                                    "be an instance of torch.nn.Module."
 
     def __str__(self):
         return "explicit kernel"
@@ -48,10 +56,28 @@ class explicit_nn(explicit):
     def hparams(self):
         return {"Kernel": "Explicit", **super(explicit_nn, self).hparams}
 
+    @property
+    def encoder(self) -> torch.nn.Module:
+        return self._encoder
+
+    @property
+    def decoder(self) -> torch.nn.Module:
+        return self._decoder
+
     def _explicit(self, x=None):
         x = super(explicit_nn, self)._explicit(x)
-        return self._network(x)
+        return self._encoder(x)
 
     def _euclidean_parameters(self, recurse=True):
-        yield from self._network.parameters()
+        yield from self._encoder.parameters()
+        if self._decoder is not None:
+            yield self._decoder.parameters()
         super(explicit_nn, self)._euclidean_parameters(recurse)
+
+    def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:
+        if self._decoder is None:
+            self._log.error("No decoder provided for pseudo-inversion of a neural-network based "
+                            "explicit feature map.")
+            raise Exception
+        phi = super(explicit_nn, self).phi_pinv(phi, centered, normalized)
+        return self._decoder(phi)

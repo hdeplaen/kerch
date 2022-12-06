@@ -16,28 +16,26 @@ from .explicit import explicit, base
 
 
 @utils.extend_docstring(explicit)
-class rff(explicit):
+class random_features(explicit):
     r"""
-    Random Fourier Features kernel.
+    Random Features kernel.
 
     .. math::
-        \phi(x) = \frac{1}{\sqrt{d}} \left(\begin{array}{cc}
-            \cos(w_1^{\top}x) \\
+        \phi(x) = \frac{1}{\sqrt{d}} \left(\begin{array}{c}
+            \sigma(w_1^{\top}x) \\
+            \sigma(w_2^{\top}x) \\
             \vdots \\
-            \cos(w_d^{\top}x) \\
-            \sin(w_1^{\top}x) \\
-            \vdots \\
-            \sin(w_d^{\top}x) \\
+            \sigma(w_d^{\top}x) \\
         \end{array}\right)
 
-    with :math:`w_1, \ldots, w_d \sim \mathcal{N}(0,I_{\texttt{dim_input}})` and :math:`\texttt{dim_feature} = 2d`.
+    with :math:`w_1, \ldots, w_d \sim \mathcal{N}(0,I_{\texttt{dim_input}})` and :math:`\texttt{dim_feature} = d`.
 
-    In the limit of :math:`d \rightarrow +\infty`, we recover the RBF kernel with unity bandwidth :math:`\sigma = 1`:
+    .. note::
+        Provided :math:`d \geq \texttt{dim_input}`, the map guarantees :math:`x = \phi^\dag \circ \phi \circ x`.
+        The opposite :math:`d \leq \texttt{dim_input}` guarantees :math:`x = \phi \circ \phi^\dag \circ x`. The
+        bijection is guaranteed if :math:`d = \texttt{dim_input}`.
 
-    .. math::
-        k(x,y) = \phi(x)^{\top}\phi(y) = \exp\left( -\frac{1}{2}\lVert x-y \rVert_2^2 \right)
-
-    :param num_weights: Number of weights :math:`d` sampled for the RFF., defaults to 1.
+    :param num_weights: Number of weights :math:`d` sampled for the Random Features kernel., defaults to 1.
     :type num_weights: int, optional
     :param weights: Explicit values for the weights may be provided instead of automatically sampling them with the
         provided `num_weights`., defaults to `None`.
@@ -45,7 +43,6 @@ class rff(explicit):
     :param weights_trainable: Specifies if the weights are to be considered as trainable parameters during
         backpropagation., default to `False`.
     :type weights_trainable: bool, optional
-
     """
 
     @utils.kwargs_decorator(
@@ -53,7 +50,7 @@ class rff(explicit):
          "weights": None,
          "weights_trainable": False})
     def __init__(self, **kwargs):
-        super(rff, self).__init__(**kwargs)
+        super(random_features, self).__init__(**kwargs)
         self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                            kwargs["weights_trainable"])
 
@@ -127,12 +124,12 @@ class rff(explicit):
     @property
     def dim_feature(self) -> int:
         r"""
-        Dimension of the explicit feature map :math:`\texttt{dim_feature} = 2d`.
+        Dimension of the explicit feature map :math:`\texttt{dim_feature} = d`.
         """
-        return 2 * self.num_weights
+        return self.num_weights
 
     def __str__(self):
-        return "RFF kernel"
+        return "Random Features kernel"
 
     @property
     def params(self):
@@ -140,19 +137,16 @@ class rff(explicit):
 
     @property
     def hparams(self):
-        return {"Kernel": "Random Fourier Features", **super(rff, self).hparams}
+        return {"Kernel": "Random Features", **super(random_features, self).hparams}
 
     def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:
-        phi = super(rff, self).phi_pinv(phi=phi, centered=centered, normalized=normalized)
+        phi = super(random_features, self).phi_pinv(phi=phi, centered=centered, normalized=normalized)
         phi = phi * sqrt(self.num_weights)
-        weights_pinv = .5 * torch.linalg.pinv(self.weights).T
-        return torch.acos(phi[:, :self.num_weights]) @ weights_pinv + \
-               torch.asin(phi[:, self.num_weights:]) @ weights_pinv
-
+        weights_pinv = torch.linalg.pinv(self.weights).T
+        return torch.special.logit(phi, eps=1.e-8) @ weights_pinv
 
     def _explicit(self, x=None):
-        x = super(rff, self)._explicit(x)
+        x = super(random_features, self)._explicit(x)
         wx = x @ self.weights.T
         dim_inv_sqrt = 1 / sqrt(self.num_weights)
-        return dim_inv_sqrt * torch.cat((torch.cos(wx),
-                                         torch.sin(wx)), dim=1)
+        return dim_inv_sqrt * torch.sigmoid(wx)

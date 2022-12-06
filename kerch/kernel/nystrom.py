@@ -160,3 +160,6 @@ class nystrom(explicit):
 
         Ky = self._base_kernel.k(x)
         return Ky @ self._cache["H"] @ torch.diag(1 / self._cache["lambdas_sqrt"])
+
+    def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:
+        raise NotImplementedError

@@ -16,4 +16,5 @@ from .explicit_nn import explicit_nn
 from .implicit_nn import implicit_nn
 from .additive_chi2 import additive_chi2
 from .skewed_chi2 import skewed_chi2
+from .random_features import random_features
 from .factory import factory

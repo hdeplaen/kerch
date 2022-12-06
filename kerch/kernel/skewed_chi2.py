@@ -20,50 +20,50 @@ class skewed_chi2(implicit):
     Skewed Chi Squared kernel. Often used in computer vision.
 
     .. math::
-        k(x,y) = \prod_i \frac{2\sqrt(x_i+c) \sqrt(y_i+c)}{x_i + y_i + 2c}.
+        k(x,y) = \prod_i \frac{2\sqrt(x_i+p) \sqrt(y_i+p)}{x_i + y_i + 2}.
 
 
-    :param c: Free parameter :math:`c`., defaults to 0.
-    :param c_trainable: `True` if the gradient of :math:`c` is to be computed. If so, a graph is computed
-        and :math:`c` can be updated. `False` just leads to a static computation., defaults to `False`
+    :param p: Free parameter :math:`p`., defaults to 0.
+    :param p_trainable: `True` if the gradient of :math:`p` is to be computed. If so, a graph is computed
+        and :math:`p` can be updated. `False` just leads to a static computation., defaults to `False`
 
     """
 
     @utils.kwargs_decorator(
-        {"c": 0., "c_trainable": False})
+        {"p": 0., "p_trainable": False})
     def __init__(self, **kwargs):
-        self._c = kwargs["c"]
+        self._p = kwargs["p"]
         super(skewed_chi2, self).__init__(**kwargs)
 
-        self._c_trainable = kwargs["c_trainable"]
-        self._c = torch.nn.Parameter(
-            torch.tensor(self._c, dtype=utils.FTYPE),
-            requires_grad=self._c_trainable)
-
-    def __str__(self):
-        return f"RBF kernel (c: {self.c})."
+        self._p_trainable = kwargs["p_trainable"]
+        self._p = torch.nn.Parameter(
+            torch.tensor(self._p, dtype=utils.FTYPE),
+            requires_grad=self._p_trainable)
 
     @property
-    def c(self) -> float:
+    def p(self) -> float:
         r"""
-        Parameter :math:``c` of the kernel.
+        Parameter :math:``p` of the kernel.
         """
-        if isinstance(self._c, torch.nn.Parameter):
-            return self._c.data.cpu().numpy()
-        return self._c
+        if isinstance(self._p, torch.nn.Parameter):
+            return self._p.data.cpu().numpy().astype(float)
+        return self._p
 
-    @c.setter
-    def c(self, val):
+    @p.setter
+    def p(self, val):
         self._reset()
-        self._c.data = utils.castf(val, tensor=False, dev=self._c.device)
+        self._p.data = utils.castf(val, tensor=False, dev=self._p.device)
+
+    def __str__(self):
+        return f"Skewed Chi Squared kernel (p: {self.p})."
 
     @property
     def params(self):
-        return {'c': self.c}
+        return {'p': self.p}
 
     @property
     def hparams(self):
-        return {"Kernel": "Skewed Chi Squred", "Trainable c": self._c_trainable, **super(skewed_chi2, self).hparams}
+        return {"Kernel": "Skewed Chi Squred", "Trainable p": self._p_trainable, **super(skewed_chi2, self).hparams}
 
     def _implicit(self, x=None, y=None):
         x, y = super(skewed_chi2, self)._implicit(x, y)
@@ -71,12 +71,12 @@ class skewed_chi2(implicit):
         x = x.T[:, :, None]
         y = y.T[:, None, :]
 
-        prod = torch.sqrt(x + self.c) * torch.sqrt(y + self.c)
-        sum = torch.clamp(x + y + 2 * self.c, min=self._eps)
+        prod = torch.sqrt(x + self._p) * torch.sqrt(y + self._p)
+        sum = torch.clamp(x + y + 2 * self._p, min=self._eps)
         output = torch.prod(2 * prod / sum, dim=0, keepdim=True)
 
         return output.squeeze(0)
 
     def _slow_parameters(self, recurse=True):
-        yield self._c
+        yield self._p
         yield from super(skewed_chi2, self)._slow_parameters(recurse)

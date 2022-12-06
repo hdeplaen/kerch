@@ -52,7 +52,7 @@ class implicit_nn(implicit):
         raise NotImplementedError
 
         # x, y = super(ImplicitKernel, self)._implicit(x, y)
-        # return self._network(x, y)
+        # return self._encoder(x, y)
 
     def _euclidean_parameters(self, recurse=True):
         yield from self._network.parameters()

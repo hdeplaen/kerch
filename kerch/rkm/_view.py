@@ -274,7 +274,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
     def c(self, x=None) -> Tensor:
         phi = self.phi(x)
-        return phi.T @ phi
+        return phi.T @ phi / self.num_idx
 
     def h(self, x=None) -> Union[Tensor, torch.nn.Parameter]:
         if x is None:

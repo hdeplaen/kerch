@@ -72,7 +72,7 @@ class polynomial(base):
     @degree_trainable.setter
     def degree_trainable(self, val: bool):
         self._degree_trainable = val
-        self.degree.requires_grad = self._degree_trainable
+        self._degree.requires_grad = self._degree_trainable
 
     @property
     def params(self):
@@ -84,7 +84,7 @@ class polynomial(base):
 
     def _implicit(self, x=None, y=None):
         x, y = super(polynomial, self)._implicit(x, y)
-        return (x @ y.T + 1) ** self.degree
+        return (x @ y.T + 1) ** self._degree
 
     def _explicit(self, x=None):
         assert (self.degree % 1) == 0, 'Explicit formulation is only possible for degrees that are natural numbers.'

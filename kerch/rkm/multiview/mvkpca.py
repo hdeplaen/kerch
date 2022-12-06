@@ -3,6 +3,7 @@ from tqdm import trange
 from torch import Tensor as T
 from typing import List, Union
 
+import kerch.utils
 from .mvlevel import MVLevel
 from kerch.rkm._kpca import _KPCA
 from kerch import utils
@@ -49,13 +50,39 @@ class MVKPCA(_KPCA, MVLevel):
         # return phi_known @ weight_known @ vals_sqrt_inv @ Recon @ vals_sqrt_id @ weight_predict.T
 
         # TECNHIQUE 3
-        weight_known_norm = torch.sum((weight_known ** 2), dim=0, keepdim=True)
-        weight_known_normed = weight_known / weight_known_norm
-        return phi_known @ weight_known_normed @ weight_predict.T
+        # weight_known_norm = torch.sum((weight_known ** 2), dim=0, keepdim=True)
+        # weight_known_normed = weight_known / weight_known_norm
+        # return phi_known @ weight_known_normed @ weight_predict.T
 
+        # TECHNIQUE 4
+        Inv = torch.linalg.inv(torch.diag(self.vals) - weight_predict.T @ weight_predict)
+        return phi_known @ weight_known @ Inv @ weight_predict.T
+
+        # TECNHIQUE 5
         # Proj = weight_predict.T @ weight_predict
         # Recon = torch.linalg.inv(utils.eye_like(Proj) - Proj)
         # return phi_known @ weight_known @ Recon @ weight_predict.T
+
+        # TECNHIQUE 6
+        # all = torch.empty((0, weight_predict.shape[0]))
+        #
+        # Binv = torch.pinverse(weight_predict.T)
+        # Lambda = torch.diag(self.vals)
+        # M2 = Lambda @ weight_predict.T @ weight_predict - \
+        #         weight_known.T @ weight_known @ Lambda
+        #
+        # def one_at_a_time(phi_known_loc):
+        #     phi_known_loc = phi_known_loc.unsqueeze(0)
+        #     M = weight_known.T @ phi_known_loc.T @ phi_known_loc @ weight_known + M2
+        #     C_predict = Binv @ M @ Binv.T
+        #     val, phi = kerch.utils.eigs(C_predict, k=1, psd=True)
+        #     return phi.T / torch.sqrt(val)
+        #
+        # for idx in range(phi_known.shape[0]):
+        #     all = torch.cat((all, one_at_a_time(phi_known[idx,:])), dim=0)
+        #
+        # return all
+
 
     ##########################################################################
 

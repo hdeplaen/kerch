@@ -90,7 +90,7 @@ class exponential(implicit, metaclass=ABCMeta):
         if isinstance(self._sigma, torch.nn.Parameter):
             return self._sigma.data.cpu().numpy()
         elif self._sigma is None and not self._empty_sample:
-            self._compute_K()
+            self._implicit_statistics()
             return self.sigma
         return self._sigma
 
