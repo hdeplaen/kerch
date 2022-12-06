@@ -4,17 +4,20 @@ from logging import DEBUG, INFO, WARNING
 import torch
 from matplotlib import pyplot as plt
 
+from ray import tune
+
 # PRELIMINARIES --------------------------------------------------------------------------------------------
 kerch.set_log_level(WARNING)
 torch.random.manual_seed(42)
-NUM_POINTS = 5000
-NUM_WEIGHTS = 150
-DIM_OUTPUT = 10000
+NUM_POINTS = 1000
+NUM_WEIGHTS = 750
+DIM_OUTPUT = 6
 SPLIT_RATIO = 0.8
+DEV = torch.device('cuda')
 
 # DATA -----------------------------------------------------------------------------------------------------
-x = torch.tensor(np.linspace(-10, 10, NUM_POINTS)).unsqueeze(1)
-y = torch.tensor(np.sinc(x))
+x = torch.tensor(np.linspace(-10, 10, NUM_POINTS), device=DEV).unsqueeze(1)
+y = torch.tensor(torch.sin(x))
 
 rand_idx = torch.randperm(x.shape[0])
 train_len = int(len(rand_idx) * (1 - SPLIT_RATIO))
@@ -28,9 +31,10 @@ test_x = x[rand_idx[train_len:], :]
 test_y = y[rand_idx[train_len:], :]
 
 # MODEL
-mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": "random_features", "num_weights": NUM_POINTS, "center": False, "sample": train_y},
-                       {"name": "time", "type": "random_features", "num_weights": NUM_POINTS, "center": False, "normalize": False, "sample": train_x},
+mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": "random_features", "num_weights": NUM_WEIGHTS, "center": False, "sample": train_y},
+                       {"name": "time", "type": "random_features", "num_weights": NUM_WEIGHTS, "center": False, "normalize": False, "sample": train_x},
                        center=False, dim_output=DIM_OUTPUT)
+mdl.to(DEV)
 mdl.solve(representation='primal')
 
 
@@ -51,11 +55,11 @@ phi_x_tilde_test, idx = torch.sort(test_x, dim=0)
 phi_y_tilde_test = test_yp[idx, :]
 
 plt.figure()
-plt.plot(x.squeeze(), y.squeeze(), 'k--', label='Original function', lw=1)
-plt.plot(phi_x.squeeze(), phi_y.squeeze(), 'kx', label='Train set', lw=1)
-plt.plot(phi_x_tilde_train.squeeze(), phi_y_tilde_train.squeeze(), 'b+',
+plt.plot(x.cpu().squeeze(), y.cpu().squeeze(), 'k--', label='Original function', lw=1)
+plt.plot(phi_x.cpu().squeeze(), phi_y.cpu().squeeze(), 'kx', label='Train set', lw=1)
+plt.plot(phi_x_tilde_train.cpu().squeeze(), phi_y_tilde_train.cpu().squeeze(), 'b+',
          label='Pred on train_set', lw=1)
-plt.plot(phi_x_tilde_test.squeeze(), phi_y_tilde_test.squeeze(), 'r*',
+plt.plot(phi_x_tilde_test.cpu().squeeze(), phi_y_tilde_test.cpu().squeeze(), 'r*',
          label='Pred on test_set', lw=1)
 plt.title('RKM primal')
 plt.legend()
