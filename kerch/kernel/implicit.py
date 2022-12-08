@@ -28,6 +28,10 @@ class implicit(base, metaclass=ABCMeta):
         return f"Implicit kernel."
 
     @property
+    def explicit(self) -> bool:
+        return False
+
+    @property
     def dim_feature(self) -> int:
         raise utils.PrimalError
 

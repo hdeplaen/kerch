@@ -1,0 +1,1006 @@
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_setup.py:_flush():68] Configure stats pid to 1530544
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_setup.py:_flush():68] Loading settings from /volume1/scratch/hdeplaen/Kerch/examples/wandb/settings
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True'}
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': 'examples/mvkpca-predict.py', 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_init.py:_log_setup():476] Logging user logs to /volume1/scratch/hdeplaen/Kerch/examples/wandb/run-20221206_180400-30polptp/logs/debug.log
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_init.py:_log_setup():477] Logging internal logs to /volume1/scratch/hdeplaen/Kerch/examples/wandb/run-20221206_180400-30polptp/logs/debug-internal.log
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {}
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:00,587 INFO    MainThread:1530544 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:00,588 INFO    MainThread:1530544 [backend.py:_multiprocessing_setup():102] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2022-12-06 18:04:00,589 INFO    MainThread:1530544 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:00,590 INFO    MainThread:1530544 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:00,594 INFO    MainThread:1530544 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:01,438 INFO    MainThread:1530544 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:01,483 INFO    MainThread:1530544 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:01,483 INFO    MainThread:1530544 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:06,491 INFO    MainThread:1530544 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:06,491 INFO    MainThread:1530544 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:06,491 INFO    MainThread:1530544 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:06,491 INFO    MainThread:1530544 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:06,491 INFO    MainThread:1530544 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:11,216 INFO    MainThread:1531405 [wandb_setup.py:_flush():68] Configure stats pid to 1531405
+2022-12-06 18:04:11,216 INFO    MainThread:1531405 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:11,216 INFO    MainThread:1531405 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00000_0_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-10/wandb/settings
+2022-12-06 18:04:11,216 WARNING MainThread:1531405 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:11,216 INFO    MainThread:1531405 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:11,216 WARNING MainThread:1531405 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:11,216 INFO    MainThread:1531405 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:11,216 INFO    MainThread:1531405 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00000_0_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-10/wandb/run-20221206_180411-002bc_00000/logs/debug.log
+2022-12-06 18:04:11,217 INFO    MainThread:1531405 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00000_0_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-10/wandb/run-20221206_180411-002bc_00000/logs/debug-internal.log
+2022-12-06 18:04:11,217 INFO    MainThread:1531405 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:11,217 INFO    MainThread:1531405 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 1.0}
+2022-12-06 18:04:11,217 INFO    MainThread:1531405 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:11,217 INFO    MainThread:1531405 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:11,219 INFO    MainThread:1531405 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:11,223 INFO    MainThread:1531405 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:11,224 INFO    MainThread:1531405 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,167 INFO    MainThread:1531405 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:12,187 INFO    MainThread:1531527 [wandb_setup.py:_flush():68] Configure stats pid to 1531527
+2022-12-06 18:04:12,187 INFO    MainThread:1531527 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,187 INFO    MainThread:1531527 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00001_1_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,187 WARNING MainThread:1531527 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,188 INFO    MainThread:1531527 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,188 WARNING MainThread:1531527 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,188 INFO    MainThread:1531527 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,188 INFO    MainThread:1531527 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00001_1_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00001/logs/debug.log
+2022-12-06 18:04:12,188 INFO    MainThread:1531527 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00001_1_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00001/logs/debug-internal.log
+2022-12-06 18:04:12,188 INFO    MainThread:1531527 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,188 INFO    MainThread:1531527 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 1.0}
+2022-12-06 18:04:12,188 INFO    MainThread:1531527 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,188 INFO    MainThread:1531527 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,219 INFO    MainThread:1531527 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,244 INFO    MainThread:1531557 [wandb_setup.py:_flush():68] Configure stats pid to 1531557
+2022-12-06 18:04:12,244 INFO    MainThread:1531557 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,245 INFO    MainThread:1531557 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00002_2_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,245 WARNING MainThread:1531557 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,245 INFO    MainThread:1531557 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,245 WARNING MainThread:1531557 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,245 INFO    MainThread:1531557 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,245 INFO    MainThread:1531557 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00002_2_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00002/logs/debug.log
+2022-12-06 18:04:12,245 INFO    MainThread:1531557 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00002_2_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00002/logs/debug-internal.log
+2022-12-06 18:04:12,245 INFO    MainThread:1531557 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,245 INFO    MainThread:1531557 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 1.0}
+2022-12-06 18:04:12,246 INFO    MainThread:1531557 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,246 INFO    MainThread:1531557 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,247 INFO    MainThread:1531527 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,253 INFO    MainThread:1531557 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,255 INFO    MainThread:1531527 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,297 INFO    MainThread:1531557 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,299 INFO    MainThread:1531405 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:12,299 INFO    MainThread:1531405 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:12,302 INFO    MainThread:1531557 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,311 INFO    MainThread:1531646 [wandb_setup.py:_flush():68] Configure stats pid to 1531646
+2022-12-06 18:04:12,312 INFO    MainThread:1531646 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,312 INFO    MainThread:1531646 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00005_5_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,312 WARNING MainThread:1531646 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,312 INFO    MainThread:1531646 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,312 WARNING MainThread:1531646 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,312 INFO    MainThread:1531646 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,312 INFO    MainThread:1531646 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00005_5_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00005/logs/debug.log
+2022-12-06 18:04:12,312 INFO    MainThread:1531646 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00005_5_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00005/logs/debug-internal.log
+2022-12-06 18:04:12,312 INFO    MainThread:1531646 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,313 INFO    MainThread:1531646 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 1.0}
+2022-12-06 18:04:12,313 INFO    MainThread:1531646 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,313 INFO    MainThread:1531646 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,322 INFO    MainThread:1531646 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,329 INFO    MainThread:1531616 [wandb_setup.py:_flush():68] Configure stats pid to 1531616
+2022-12-06 18:04:12,329 INFO    MainThread:1531646 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,329 INFO    MainThread:1531616 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,329 INFO    MainThread:1531616 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00004_4_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,329 WARNING MainThread:1531616 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,329 INFO    MainThread:1531616 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,329 WARNING MainThread:1531616 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,329 INFO    MainThread:1531616 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,329 INFO    MainThread:1531616 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00004_4_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00004/logs/debug.log
+2022-12-06 18:04:12,329 INFO    MainThread:1531616 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00004_4_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00004/logs/debug-internal.log
+2022-12-06 18:04:12,330 INFO    MainThread:1531616 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,330 INFO    MainThread:1531616 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 1.0}
+2022-12-06 18:04:12,330 INFO    MainThread:1531616 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,330 INFO    MainThread:1531616 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,336 INFO    MainThread:1531646 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,337 INFO    MainThread:1531616 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,350 INFO    MainThread:1531616 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,354 INFO    MainThread:1531676 [wandb_setup.py:_flush():68] Configure stats pid to 1531676
+2022-12-06 18:04:12,354 INFO    MainThread:1531676 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,354 INFO    MainThread:1531676 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00006_6_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,354 WARNING MainThread:1531676 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,354 INFO    MainThread:1531676 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,354 WARNING MainThread:1531676 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,354 INFO    MainThread:1531676 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,354 INFO    MainThread:1531676 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00006_6_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00006/logs/debug.log
+2022-12-06 18:04:12,354 INFO    MainThread:1531676 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00006_6_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00006/logs/debug-internal.log
+2022-12-06 18:04:12,355 INFO    MainThread:1531706 [wandb_setup.py:_flush():68] Configure stats pid to 1531706
+2022-12-06 18:04:12,355 INFO    MainThread:1531706 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,355 INFO    MainThread:1531676 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,355 INFO    MainThread:1531706 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00007_7_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,355 WARNING MainThread:1531706 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,355 INFO    MainThread:1531676 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 1.0}
+2022-12-06 18:04:12,355 INFO    MainThread:1531706 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,355 WARNING MainThread:1531706 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,355 INFO    MainThread:1531676 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,355 INFO    MainThread:1531706 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,355 INFO    MainThread:1531676 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,355 INFO    MainThread:1531706 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00007_7_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00007/logs/debug.log
+2022-12-06 18:04:12,355 INFO    MainThread:1531706 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00007_7_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00007/logs/debug-internal.log
+2022-12-06 18:04:12,355 INFO    MainThread:1531706 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,355 INFO    MainThread:1531706 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 2.0}
+2022-12-06 18:04:12,356 INFO    MainThread:1531706 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,356 INFO    MainThread:1531706 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,360 INFO    MainThread:1531676 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,362 INFO    MainThread:1531736 [wandb_setup.py:_flush():68] Configure stats pid to 1531736
+2022-12-06 18:04:12,362 INFO    MainThread:1531736 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,363 INFO    MainThread:1531736 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00008_8_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,363 WARNING MainThread:1531736 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,363 INFO    MainThread:1531736 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,363 WARNING MainThread:1531736 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,363 INFO    MainThread:1531736 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,363 INFO    MainThread:1531736 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00008_8_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00008/logs/debug.log
+2022-12-06 18:04:12,363 INFO    MainThread:1531736 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00008_8_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00008/logs/debug-internal.log
+2022-12-06 18:04:12,363 INFO    MainThread:1531736 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,363 INFO    MainThread:1531736 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 2.0}
+2022-12-06 18:04:12,363 INFO    MainThread:1531736 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,364 INFO    MainThread:1531736 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,367 INFO    MainThread:1531616 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,368 INFO    MainThread:1531706 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,372 INFO    MainThread:1531676 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,374 INFO    MainThread:1531736 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,375 INFO    MainThread:1531676 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,382 INFO    MainThread:1531706 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,388 INFO    MainThread:1531736 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,390 INFO    MainThread:1531706 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,395 INFO    MainThread:1531736 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,467 INFO    MainThread:1531766 [wandb_setup.py:_flush():68] Configure stats pid to 1531766
+2022-12-06 18:04:12,468 INFO    MainThread:1531766 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,468 INFO    MainThread:1531766 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00009_9_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,468 WARNING MainThread:1531766 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,468 INFO    MainThread:1531766 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,468 WARNING MainThread:1531766 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,468 INFO    MainThread:1531766 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,468 INFO    MainThread:1531766 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00009_9_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00009/logs/debug.log
+2022-12-06 18:04:12,468 INFO    MainThread:1531766 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00009_9_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00009/logs/debug-internal.log
+2022-12-06 18:04:12,468 INFO    MainThread:1531766 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,468 INFO    MainThread:1531766 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 2.0}
+2022-12-06 18:04:12,469 INFO    MainThread:1531766 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,469 INFO    MainThread:1531766 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,483 INFO    MainThread:1531766 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,519 INFO    MainThread:1531766 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,558 INFO    MainThread:1531766 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,682 INFO    MainThread:1531794 [wandb_setup.py:_flush():68] Configure stats pid to 1531794
+2022-12-06 18:04:12,682 INFO    MainThread:1531794 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,682 INFO    MainThread:1531794 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00010_10_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,682 WARNING MainThread:1531794 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,682 INFO    MainThread:1531794 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,682 WARNING MainThread:1531794 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,682 INFO    MainThread:1531794 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,683 INFO    MainThread:1531794 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00010_10_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00010/logs/debug.log
+2022-12-06 18:04:12,683 INFO    MainThread:1531794 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00010_10_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00010/logs/debug-internal.log
+2022-12-06 18:04:12,683 INFO    MainThread:1531794 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,683 INFO    MainThread:1531794 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 2.0}
+2022-12-06 18:04:12,683 INFO    MainThread:1531794 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,683 INFO    MainThread:1531794 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,703 INFO    MainThread:1531794 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,730 INFO    MainThread:1531794 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,761 INFO    MainThread:1531794 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:12,792 INFO    MainThread:1531826 [wandb_setup.py:_flush():68] Configure stats pid to 1531826
+2022-12-06 18:04:12,792 INFO    MainThread:1531826 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:12,792 INFO    MainThread:1531826 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00011_11_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/settings
+2022-12-06 18:04:12,792 WARNING MainThread:1531826 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:12,793 INFO    MainThread:1531826 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:12,793 WARNING MainThread:1531826 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:12,793 INFO    MainThread:1531826 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:12,793 INFO    MainThread:1531826 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00011_11_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00011/logs/debug.log
+2022-12-06 18:04:12,793 INFO    MainThread:1531826 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00011_11_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11/wandb/run-20221206_180412-002bc_00011/logs/debug-internal.log
+2022-12-06 18:04:12,793 INFO    MainThread:1531826 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:12,793 INFO    MainThread:1531826 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 2.0}
+2022-12-06 18:04:12,793 INFO    MainThread:1531826 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:12,793 INFO    MainThread:1531826 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:12,797 INFO    MainThread:1531826 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:12,802 INFO    MainThread:1531826 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:12,803 INFO    MainThread:1531826 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:13,273 INFO    MainThread:1531527 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:13,381 INFO    MainThread:1531527 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:13,381 INFO    MainThread:1531527 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:13,410 INFO    MainThread:1531557 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:13,478 INFO    MainThread:1531557 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:13,478 INFO    MainThread:1531557 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:13,660 INFO    MainThread:1531676 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:13,893 INFO    MainThread:1531706 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:13,902 INFO    MainThread:1531736 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:13,997 INFO    MainThread:1531826 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:14,081 INFO    MainThread:1531646 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:14,087 INFO    MainThread:1531766 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:14,277 INFO    MainThread:1531794 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:14,506 INFO    MainThread:1531676 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:14,507 INFO    MainThread:1531676 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:14,655 INFO    MainThread:1531826 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:14,655 INFO    MainThread:1531826 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:14,663 INFO    MainThread:1531706 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:14,663 INFO    MainThread:1531706 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:14,677 INFO    MainThread:1531766 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:14,677 INFO    MainThread:1531766 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:14,686 INFO    MainThread:1531736 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:14,686 INFO    MainThread:1531736 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:14,701 INFO    MainThread:1531794 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:14,701 INFO    MainThread:1531794 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:14,701 INFO    MainThread:1531646 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:14,701 INFO    MainThread:1531646 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:14,846 INFO    MainThread:1531616 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:14,956 INFO    MainThread:1531616 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:14,956 INFO    MainThread:1531616 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:17,336 INFO    MainThread:1531405 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:17,336 INFO    MainThread:1531405 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:17,337 INFO    MainThread:1531405 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:17,337 INFO    MainThread:1531405 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:17,337 INFO    MainThread:1531405 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:17,337 INFO    MainThread:1531405 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00000_0_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-10 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f8296f20>>
+2022-12-06 18:04:17,337 INFO    MainThread:1531405 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00000_0_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-10 None
+2022-12-06 18:04:17,338 INFO    MainThread:1531405 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00000
+2022-12-06 18:04:17,338 INFO    MainThread:1531405 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:04:17,338 INFO    MainThread:1531405 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:04:17,338 INFO    MainThread:1531405 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:04:18,394 INFO    MainThread:1531527 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:18,394 INFO    MainThread:1531527 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:18,395 INFO    MainThread:1531527 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:18,395 INFO    MainThread:1531527 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:18,395 INFO    MainThread:1531527 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:18,395 INFO    MainThread:1531527 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00001_1_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f82a1390>>
+2022-12-06 18:04:18,396 INFO    MainThread:1531527 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00001_1_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:18,492 INFO    MainThread:1531557 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:18,492 INFO    MainThread:1531557 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:18,493 INFO    MainThread:1531557 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:18,493 INFO    MainThread:1531557 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:18,493 INFO    MainThread:1531557 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:18,494 INFO    MainThread:1531557 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00002_2_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f82a2c20>>
+2022-12-06 18:04:18,494 INFO    MainThread:1531557 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00002_2_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:19,517 INFO    MainThread:1531676 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:19,518 INFO    MainThread:1531676 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:19,518 INFO    MainThread:1531676 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:19,518 INFO    MainThread:1531676 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:19,519 INFO    MainThread:1531676 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:19,519 INFO    MainThread:1531676 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00006_6_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f830c760>>
+2022-12-06 18:04:19,519 INFO    MainThread:1531676 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00006_6_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:19,666 INFO    MainThread:1531826 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:19,666 INFO    MainThread:1531826 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:19,666 INFO    MainThread:1531826 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:19,667 INFO    MainThread:1531826 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:19,667 INFO    MainThread:1531826 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:19,667 INFO    MainThread:1531826 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00011_11_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f831ba60>>
+2022-12-06 18:04:19,667 INFO    MainThread:1531826 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00011_11_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:19,674 INFO    MainThread:1531706 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:19,674 INFO    MainThread:1531706 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:19,674 INFO    MainThread:1531706 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:19,674 INFO    MainThread:1531706 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:19,675 INFO    MainThread:1531706 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:19,675 INFO    MainThread:1531706 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00007_7_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f830dbd0>>
+2022-12-06 18:04:19,675 INFO    MainThread:1531706 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00007_7_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:19,689 INFO    MainThread:1531766 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:19,689 INFO    MainThread:1531766 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:19,690 INFO    MainThread:1531766 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:19,690 INFO    MainThread:1531766 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:19,690 INFO    MainThread:1531766 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:19,690 INFO    MainThread:1531766 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00009_9_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f8318d60>>
+2022-12-06 18:04:19,690 INFO    MainThread:1531766 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00009_9_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:19,698 INFO    MainThread:1531736 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:19,698 INFO    MainThread:1531736 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:19,699 INFO    MainThread:1531736 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:19,699 INFO    MainThread:1531736 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:19,699 INFO    MainThread:1531736 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:19,699 INFO    MainThread:1531736 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00008_8_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f83138b0>>
+2022-12-06 18:04:19,699 INFO    MainThread:1531736 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00008_8_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:19,712 INFO    MainThread:1531794 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:19,713 INFO    MainThread:1531794 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:19,713 INFO    MainThread:1531646 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:19,713 INFO    MainThread:1531794 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:19,713 INFO    MainThread:1531794 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:19,713 INFO    MainThread:1531794 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:19,713 INFO    MainThread:1531794 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00010_10_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f831a5f0>>
+2022-12-06 18:04:19,713 INFO    MainThread:1531794 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00010_10_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:19,713 INFO    MainThread:1531646 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:19,714 INFO    MainThread:1531646 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:19,714 INFO    MainThread:1531646 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:19,714 INFO    MainThread:1531646 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:19,714 INFO    MainThread:1531646 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00005_5_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f8302e90>>
+2022-12-06 18:04:19,714 INFO    MainThread:1531646 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00005_5_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:19,967 INFO    MainThread:1531616 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:19,968 INFO    MainThread:1531616 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:19,968 INFO    MainThread:1531616 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:19,968 INFO    MainThread:1531616 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:19,968 INFO    MainThread:1531616 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:19,968 INFO    MainThread:1531616 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00004_4_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f82fda20>>
+2022-12-06 18:04:19,969 INFO    MainThread:1531616 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00004_4_DIM_OUTPUT=1.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-11 None
+2022-12-06 18:04:22,002 INFO    MainThread:1531826 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00011
+2022-12-06 18:04:22,002 INFO    MainThread:1531826 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:04:22,003 INFO    MainThread:1531826 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:04:22,003 INFO    MainThread:1531826 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:04:26,478 INFO    MainThread:1531405 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:04:26,479 INFO    MainThread:1531405 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:04:26,482 INFO    MainThread:1531405 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:04:29,295 INFO    MainThread:1531826 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:04:29,295 INFO    MainThread:1531826 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:04:29,298 INFO    MainThread:1531826 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:04:29,312 INFO    MainThread:1531616 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00004
+2022-12-06 18:04:29,312 INFO    MainThread:1531616 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:04:29,313 INFO    MainThread:1531616 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:04:29,313 INFO    MainThread:1531616 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:04:34,819 INFO    MainThread:1531616 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:04:34,819 INFO    MainThread:1531616 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:04:34,823 INFO    MainThread:1531616 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:04:44,956 INFO    MainThread:1531676 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00006
+2022-12-06 18:04:44,957 INFO    MainThread:1531676 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:04:44,957 INFO    MainThread:1531676 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:04:44,957 INFO    MainThread:1531676 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:04:49,622 INFO    MainThread:1531676 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:04:49,622 INFO    MainThread:1531676 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:04:49,626 INFO    MainThread:1531676 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:04:49,657 INFO    MainThread:1531794 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00010
+2022-12-06 18:04:49,657 INFO    MainThread:1531794 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:04:49,657 INFO    MainThread:1531794 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:04:49,658 INFO    MainThread:1531794 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:04:50,459 INFO    MainThread:1533062 [wandb_setup.py:_flush():68] Configure stats pid to 1533062
+2022-12-06 18:04:50,459 INFO    MainThread:1533062 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:04:50,459 INFO    MainThread:1533062 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00012_12_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-49/wandb/settings
+2022-12-06 18:04:50,459 WARNING MainThread:1533062 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:04:50,459 INFO    MainThread:1533062 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:04:50,459 WARNING MainThread:1533062 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:04:50,459 INFO    MainThread:1533062 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:04:50,460 INFO    MainThread:1533062 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00012_12_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-49/wandb/run-20221206_180450-002bc_00012/logs/debug.log
+2022-12-06 18:04:50,460 INFO    MainThread:1533062 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00012_12_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-49/wandb/run-20221206_180450-002bc_00012/logs/debug-internal.log
+2022-12-06 18:04:50,460 INFO    MainThread:1533062 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:04:50,460 INFO    MainThread:1533062 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 2.0}
+2022-12-06 18:04:50,460 INFO    MainThread:1533062 [wandb_init.py:init():569] starting backend
+2022-12-06 18:04:50,460 INFO    MainThread:1533062 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:04:50,462 INFO    MainThread:1533062 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:04:50,466 INFO    MainThread:1533062 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:04:50,467 INFO    MainThread:1533062 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:04:51,486 INFO    MainThread:1533062 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:04:51,529 INFO    MainThread:1533062 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:04:51,529 INFO    MainThread:1533062 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:04:55,228 INFO    MainThread:1531794 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:04:55,228 INFO    MainThread:1531794 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:04:55,231 INFO    MainThread:1531794 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:04:56,539 INFO    MainThread:1533062 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:04:56,540 INFO    MainThread:1533062 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:04:56,540 INFO    MainThread:1533062 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:04:56,540 INFO    MainThread:1533062 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:04:56,540 INFO    MainThread:1533062 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:04:56,540 INFO    MainThread:1533062 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00012_12_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-49 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81ad1e0>>
+2022-12-06 18:04:56,540 INFO    MainThread:1533062 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00012_12_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-04-49 None
+2022-12-06 18:04:56,541 INFO    MainThread:1533062 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00012
+2022-12-06 18:04:56,541 INFO    MainThread:1533062 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:04:56,541 INFO    MainThread:1533062 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:04:56,541 INFO    MainThread:1533062 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:03,971 INFO    MainThread:1533062 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:05:03,971 INFO    MainThread:1533062 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:05:03,975 INFO    MainThread:1533062 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:05:04,010 INFO    MainThread:1531736 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00008
+2022-12-06 18:05:04,010 INFO    MainThread:1531736 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:05:04,011 INFO    MainThread:1531736 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:05:04,011 INFO    MainThread:1531736 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:04,849 INFO    MainThread:1533225 [wandb_setup.py:_flush():68] Configure stats pid to 1533225
+2022-12-06 18:05:04,849 INFO    MainThread:1533225 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:04,849 INFO    MainThread:1533225 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00013_13_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-03/wandb/settings
+2022-12-06 18:05:04,849 WARNING MainThread:1533225 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:04,850 INFO    MainThread:1533225 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:04,850 WARNING MainThread:1533225 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:04,850 INFO    MainThread:1533225 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:04,850 INFO    MainThread:1533225 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00013_13_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-03/wandb/run-20221206_180504-002bc_00013/logs/debug.log
+2022-12-06 18:05:04,850 INFO    MainThread:1533225 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00013_13_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-03/wandb/run-20221206_180504-002bc_00013/logs/debug-internal.log
+2022-12-06 18:05:04,850 INFO    MainThread:1533225 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:04,850 INFO    MainThread:1533225 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 2.0}
+2022-12-06 18:05:04,850 INFO    MainThread:1533225 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:04,850 INFO    MainThread:1533225 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:04,853 INFO    MainThread:1533225 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:04,857 INFO    MainThread:1533225 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:04,858 INFO    MainThread:1533225 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:05,863 INFO    MainThread:1533225 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:05,936 INFO    MainThread:1533225 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:05,937 INFO    MainThread:1533225 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:09,617 INFO    MainThread:1531736 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:05:09,617 INFO    MainThread:1531736 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:05:09,620 INFO    MainThread:1531736 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:05:09,681 INFO    MainThread:1531766 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00009
+2022-12-06 18:05:09,681 INFO    MainThread:1531766 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:05:09,681 INFO    MainThread:1531766 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:05:09,681 INFO    MainThread:1531766 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:10,946 INFO    MainThread:1533225 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:05:10,947 INFO    MainThread:1533225 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:05:10,947 INFO    MainThread:1533225 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:05:10,947 INFO    MainThread:1533225 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:05:10,947 INFO    MainThread:1533225 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:05:10,948 INFO    MainThread:1533225 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00013_13_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-03 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f8168490>>
+2022-12-06 18:05:10,948 INFO    MainThread:1533225 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00013_13_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-03 None
+2022-12-06 18:05:15,247 INFO    MainThread:1531766 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:05:15,247 INFO    MainThread:1531766 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:05:15,250 INFO    MainThread:1531766 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:05:15,285 INFO    MainThread:1531706 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00007
+2022-12-06 18:05:15,285 INFO    MainThread:1531706 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:05:15,286 INFO    MainThread:1531706 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:05:15,286 INFO    MainThread:1531706 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_setup.py:_flush():68] Configure stats pid to 1533399
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00014_14_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-15/wandb/settings
+2022-12-06 18:05:16,339 WARNING MainThread:1533399 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:16,339 WARNING MainThread:1533399 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00014_14_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-15/wandb/run-20221206_180516-002bc_00014/logs/debug.log
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00014_14_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-15/wandb/run-20221206_180516-002bc_00014/logs/debug-internal.log
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 2.0}
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:16,339 INFO    MainThread:1533399 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:16,342 INFO    MainThread:1533399 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:16,345 INFO    MainThread:1533399 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:16,346 INFO    MainThread:1533399 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:17,143 INFO    MainThread:1533399 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:17,187 INFO    MainThread:1533399 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:17,187 INFO    MainThread:1533399 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:20,839 INFO    MainThread:1531706 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:05:20,839 INFO    MainThread:1531706 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:05:20,842 INFO    MainThread:1531706 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:05:20,947 INFO    MainThread:1533225 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00013
+2022-12-06 18:05:20,948 INFO    MainThread:1533225 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:05:20,948 INFO    MainThread:1533225 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:05:20,948 INFO    MainThread:1533225 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:21,727 INFO    MainThread:1533641 [wandb_setup.py:_flush():68] Configure stats pid to 1533641
+2022-12-06 18:05:21,727 INFO    MainThread:1533641 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:21,727 INFO    MainThread:1533641 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00015_15_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20/wandb/settings
+2022-12-06 18:05:21,727 WARNING MainThread:1533641 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:21,727 INFO    MainThread:1533641 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:21,727 WARNING MainThread:1533641 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:21,727 INFO    MainThread:1533641 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:21,727 INFO    MainThread:1533641 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00015_15_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20/wandb/run-20221206_180521-002bc_00015/logs/debug.log
+2022-12-06 18:05:21,727 INFO    MainThread:1533641 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00015_15_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20/wandb/run-20221206_180521-002bc_00015/logs/debug-internal.log
+2022-12-06 18:05:21,727 INFO    MainThread:1533641 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:21,728 INFO    MainThread:1533641 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 3.0}
+2022-12-06 18:05:21,728 INFO    MainThread:1533641 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:21,728 INFO    MainThread:1533641 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:21,730 INFO    MainThread:1533641 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:21,733 INFO    MainThread:1533641 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:21,735 INFO    MainThread:1533641 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_setup.py:_flush():68] Configure stats pid to 1533671
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00016_16_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20/wandb/settings
+2022-12-06 18:05:21,754 WARNING MainThread:1533671 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:21,754 WARNING MainThread:1533671 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00016_16_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20/wandb/run-20221206_180521-002bc_00016/logs/debug.log
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00016_16_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20/wandb/run-20221206_180521-002bc_00016/logs/debug-internal.log
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 3.0}
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:21,754 INFO    MainThread:1533671 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:21,757 INFO    MainThread:1533671 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:21,761 INFO    MainThread:1533671 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:21,762 INFO    MainThread:1533671 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:22,197 INFO    MainThread:1533399 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:05:22,197 INFO    MainThread:1533399 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:05:22,197 INFO    MainThread:1533399 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:05:22,197 INFO    MainThread:1533399 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:05:22,198 INFO    MainThread:1533399 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:05:22,198 INFO    MainThread:1533399 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00014_14_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-15 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f8165120>>
+2022-12-06 18:05:22,198 INFO    MainThread:1533399 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00014_14_DIM_OUTPUT=2.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-15 None
+2022-12-06 18:05:22,702 INFO    MainThread:1533641 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:22,703 INFO    MainThread:1533671 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:22,749 INFO    MainThread:1533641 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:22,749 INFO    MainThread:1533641 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:22,752 INFO    MainThread:1533671 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:22,752 INFO    MainThread:1533671 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:26,397 INFO    MainThread:1533225 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:05:26,397 INFO    MainThread:1533225 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:05:26,401 INFO    MainThread:1533225 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:05:27,284 INFO    MainThread:1533880 [wandb_setup.py:_flush():68] Configure stats pid to 1533880
+2022-12-06 18:05:27,284 INFO    MainThread:1533880 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:27,284 INFO    MainThread:1533880 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00017_17_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-26/wandb/settings
+2022-12-06 18:05:27,284 WARNING MainThread:1533880 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:27,284 INFO    MainThread:1533880 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:27,285 WARNING MainThread:1533880 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:27,285 INFO    MainThread:1533880 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:27,285 INFO    MainThread:1533880 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00017_17_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-26/wandb/run-20221206_180527-002bc_00017/logs/debug.log
+2022-12-06 18:05:27,285 INFO    MainThread:1533880 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00017_17_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-26/wandb/run-20221206_180527-002bc_00017/logs/debug-internal.log
+2022-12-06 18:05:27,285 INFO    MainThread:1533880 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:27,285 INFO    MainThread:1533880 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 3.0}
+2022-12-06 18:05:27,285 INFO    MainThread:1533880 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:27,285 INFO    MainThread:1533880 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:27,288 INFO    MainThread:1533880 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:27,292 INFO    MainThread:1533880 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:27,293 INFO    MainThread:1533880 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:27,758 INFO    MainThread:1533641 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:05:27,759 INFO    MainThread:1533641 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:05:27,759 INFO    MainThread:1533641 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:05:27,759 INFO    MainThread:1533641 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:05:27,759 INFO    MainThread:1533641 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:05:27,760 INFO    MainThread:1533641 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00015_15_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81a3cd0>>
+2022-12-06 18:05:27,760 INFO    MainThread:1533641 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00015_15_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20 None
+2022-12-06 18:05:27,760 INFO    MainThread:1533641 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00015
+2022-12-06 18:05:27,760 INFO    MainThread:1533641 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:05:27,760 INFO    MainThread:1533641 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:05:27,760 INFO    MainThread:1533641 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:27,762 INFO    MainThread:1533671 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:05:27,763 INFO    MainThread:1533671 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:05:27,763 INFO    MainThread:1533671 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:05:27,763 INFO    MainThread:1533671 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:05:27,764 INFO    MainThread:1533671 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:05:27,764 INFO    MainThread:1533671 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00016_16_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f8169030>>
+2022-12-06 18:05:27,764 INFO    MainThread:1533671 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00016_16_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-20 None
+2022-12-06 18:05:28,194 INFO    MainThread:1533880 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:28,239 INFO    MainThread:1533880 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:28,239 INFO    MainThread:1533880 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:33,250 INFO    MainThread:1533880 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:05:33,250 INFO    MainThread:1533880 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:05:33,251 INFO    MainThread:1533880 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:05:33,251 INFO    MainThread:1533880 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:05:33,251 INFO    MainThread:1533880 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:05:33,251 INFO    MainThread:1533880 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00017_17_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-26 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81c7010>>
+2022-12-06 18:05:33,251 INFO    MainThread:1533880 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00017_17_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-26 None
+2022-12-06 18:05:35,444 INFO    MainThread:1533641 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:05:35,444 INFO    MainThread:1533641 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:05:35,447 INFO    MainThread:1533641 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:05:35,540 INFO    MainThread:1533399 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00014
+2022-12-06 18:05:35,540 INFO    MainThread:1533399 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:05:35,541 INFO    MainThread:1533399 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:05:35,541 INFO    MainThread:1533399 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:41,481 INFO    MainThread:1533399 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:05:41,481 INFO    MainThread:1533399 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:05:41,485 INFO    MainThread:1533399 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:05:41,523 INFO    MainThread:1533880 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00017
+2022-12-06 18:05:41,524 INFO    MainThread:1533880 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:05:41,524 INFO    MainThread:1533880 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:05:41,524 INFO    MainThread:1533880 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:42,354 INFO    MainThread:1534183 [wandb_setup.py:_flush():68] Configure stats pid to 1534183
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00018_18_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-41/wandb/settings
+2022-12-06 18:05:42,355 WARNING MainThread:1534183 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:42,355 WARNING MainThread:1534183 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00018_18_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-41/wandb/run-20221206_180542-002bc_00018/logs/debug.log
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00018_18_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-41/wandb/run-20221206_180542-002bc_00018/logs/debug-internal.log
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 3.0}
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:42,355 INFO    MainThread:1534183 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:42,357 INFO    MainThread:1534183 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:42,361 INFO    MainThread:1534183 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:42,362 INFO    MainThread:1534183 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:43,295 INFO    MainThread:1534183 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:43,339 INFO    MainThread:1534183 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:43,339 INFO    MainThread:1534183 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:47,034 INFO    MainThread:1533880 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:05:47,034 INFO    MainThread:1533880 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:05:47,037 INFO    MainThread:1533880 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:05:47,166 INFO    MainThread:1531557 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00002
+2022-12-06 18:05:47,167 INFO    MainThread:1531557 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:05:47,167 INFO    MainThread:1531557 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:05:47,168 INFO    MainThread:1531557 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:47,925 INFO    MainThread:1534291 [wandb_setup.py:_flush():68] Configure stats pid to 1534291
+2022-12-06 18:05:47,925 INFO    MainThread:1534291 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:47,925 INFO    MainThread:1534291 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00019_19_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47/wandb/settings
+2022-12-06 18:05:47,925 WARNING MainThread:1534291 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:47,925 INFO    MainThread:1534291 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:47,925 WARNING MainThread:1534291 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:47,925 INFO    MainThread:1534291 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:47,926 INFO    MainThread:1534291 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00019_19_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47/wandb/run-20221206_180547-002bc_00019/logs/debug.log
+2022-12-06 18:05:47,926 INFO    MainThread:1534291 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00019_19_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47/wandb/run-20221206_180547-002bc_00019/logs/debug-internal.log
+2022-12-06 18:05:47,926 INFO    MainThread:1534291 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:47,926 INFO    MainThread:1534291 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 3.0}
+2022-12-06 18:05:47,926 INFO    MainThread:1534291 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:47,926 INFO    MainThread:1534291 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:47,928 INFO    MainThread:1534291 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:47,933 INFO    MainThread:1534291 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:47,934 INFO    MainThread:1534291 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:47,943 INFO    MainThread:1534321 [wandb_setup.py:_flush():68] Configure stats pid to 1534321
+2022-12-06 18:05:47,943 INFO    MainThread:1534321 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:47,943 INFO    MainThread:1534321 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00020_20_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47/wandb/settings
+2022-12-06 18:05:47,943 WARNING MainThread:1534321 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:47,943 INFO    MainThread:1534321 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:47,944 WARNING MainThread:1534321 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:47,944 INFO    MainThread:1534321 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:47,944 INFO    MainThread:1534321 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00020_20_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47/wandb/run-20221206_180547-002bc_00020/logs/debug.log
+2022-12-06 18:05:47,944 INFO    MainThread:1534321 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00020_20_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47/wandb/run-20221206_180547-002bc_00020/logs/debug-internal.log
+2022-12-06 18:05:47,944 INFO    MainThread:1534321 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:47,944 INFO    MainThread:1534321 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 3.0}
+2022-12-06 18:05:47,944 INFO    MainThread:1534321 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:47,944 INFO    MainThread:1534321 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:47,947 INFO    MainThread:1534321 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:47,950 INFO    MainThread:1534321 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:47,952 INFO    MainThread:1534321 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:47,958 INFO    MainThread:1534351 [wandb_setup.py:_flush():68] Configure stats pid to 1534351
+2022-12-06 18:05:47,958 INFO    MainThread:1534351 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:47,958 INFO    MainThread:1534351 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00021_21_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47/wandb/settings
+2022-12-06 18:05:47,958 WARNING MainThread:1534351 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:47,958 INFO    MainThread:1534351 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:47,958 WARNING MainThread:1534351 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:47,958 INFO    MainThread:1534351 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:47,958 INFO    MainThread:1534351 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00021_21_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47/wandb/run-20221206_180547-002bc_00021/logs/debug.log
+2022-12-06 18:05:47,958 INFO    MainThread:1534351 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00021_21_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47/wandb/run-20221206_180547-002bc_00021/logs/debug-internal.log
+2022-12-06 18:05:47,958 INFO    MainThread:1534351 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:47,958 INFO    MainThread:1534351 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 4.0}
+2022-12-06 18:05:47,959 INFO    MainThread:1534351 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:47,959 INFO    MainThread:1534351 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:47,961 INFO    MainThread:1534351 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:47,965 INFO    MainThread:1534351 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:47,966 INFO    MainThread:1534351 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:48,349 INFO    MainThread:1534183 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:05:48,349 INFO    MainThread:1534183 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:05:48,349 INFO    MainThread:1534183 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:05:48,349 INFO    MainThread:1534183 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:05:48,350 INFO    MainThread:1534183 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:05:48,350 INFO    MainThread:1534183 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00018_18_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-41 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81cedd0>>
+2022-12-06 18:05:48,350 INFO    MainThread:1534183 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00018_18_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-41 None
+2022-12-06 18:05:48,940 INFO    MainThread:1534291 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:48,949 INFO    MainThread:1534321 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:48,951 INFO    MainThread:1534351 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:49,003 INFO    MainThread:1534291 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:49,003 INFO    MainThread:1534291 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:49,012 INFO    MainThread:1534351 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:49,012 INFO    MainThread:1534351 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:49,012 INFO    MainThread:1534321 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:49,013 INFO    MainThread:1534321 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:53,260 INFO    MainThread:1531557 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:05:53,260 INFO    MainThread:1531557 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:05:53,264 INFO    MainThread:1531557 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:05:54,014 INFO    MainThread:1534291 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:05:54,014 INFO    MainThread:1534291 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:05:54,014 INFO    MainThread:1534291 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:05:54,015 INFO    MainThread:1534291 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:05:54,015 INFO    MainThread:1534291 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:05:54,015 INFO    MainThread:1534291 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00019_19_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81cfee0>>
+2022-12-06 18:05:54,015 INFO    MainThread:1534291 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00019_19_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47 None
+2022-12-06 18:05:54,023 INFO    MainThread:1534351 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:05:54,023 INFO    MainThread:1534351 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:05:54,024 INFO    MainThread:1534351 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:05:54,024 INFO    MainThread:1534351 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:05:54,024 INFO    MainThread:1534351 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:05:54,024 INFO    MainThread:1534321 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:05:54,024 INFO    MainThread:1534351 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00021_21_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f8174670>>
+2022-12-06 18:05:54,024 INFO    MainThread:1534351 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00021_21_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47 None
+2022-12-06 18:05:54,024 INFO    MainThread:1534351 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00021
+2022-12-06 18:05:54,024 INFO    MainThread:1534351 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:05:54,025 INFO    MainThread:1534351 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:05:54,025 INFO    MainThread:1534351 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:05:54,025 INFO    MainThread:1534321 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:05:54,025 INFO    MainThread:1534321 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:05:54,025 INFO    MainThread:1534321 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:05:54,026 INFO    MainThread:1534321 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:05:54,026 INFO    MainThread:1534321 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00020_20_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81920e0>>
+2022-12-06 18:05:54,026 INFO    MainThread:1534321 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00020_20_DIM_OUTPUT=3.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-47 None
+2022-12-06 18:05:54,116 INFO    MainThread:1534657 [wandb_setup.py:_flush():68] Configure stats pid to 1534657
+2022-12-06 18:05:54,116 INFO    MainThread:1534657 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:54,116 INFO    MainThread:1534657 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00023_23_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53/wandb/settings
+2022-12-06 18:05:54,116 WARNING MainThread:1534657 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:54,116 INFO    MainThread:1534657 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:54,116 WARNING MainThread:1534657 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:54,116 INFO    MainThread:1534657 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:54,116 INFO    MainThread:1534657 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00023_23_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53/wandb/run-20221206_180554-002bc_00023/logs/debug.log
+2022-12-06 18:05:54,116 INFO    MainThread:1534657 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00023_23_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53/wandb/run-20221206_180554-002bc_00023/logs/debug-internal.log
+2022-12-06 18:05:54,117 INFO    MainThread:1534657 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:54,117 INFO    MainThread:1534657 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 4.0}
+2022-12-06 18:05:54,117 INFO    MainThread:1534657 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:54,117 INFO    MainThread:1534657 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:54,119 INFO    MainThread:1534657 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:54,122 INFO    MainThread:1534657 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:54,123 INFO    MainThread:1534657 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:54,128 INFO    MainThread:1534627 [wandb_setup.py:_flush():68] Configure stats pid to 1534627
+2022-12-06 18:05:54,128 INFO    MainThread:1534627 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:05:54,129 INFO    MainThread:1534627 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00022_22_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53/wandb/settings
+2022-12-06 18:05:54,129 WARNING MainThread:1534627 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:05:54,129 INFO    MainThread:1534627 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:05:54,129 WARNING MainThread:1534627 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:05:54,129 INFO    MainThread:1534627 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:05:54,129 INFO    MainThread:1534627 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00022_22_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53/wandb/run-20221206_180554-002bc_00022/logs/debug.log
+2022-12-06 18:05:54,129 INFO    MainThread:1534627 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00022_22_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53/wandb/run-20221206_180554-002bc_00022/logs/debug-internal.log
+2022-12-06 18:05:54,129 INFO    MainThread:1534627 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:05:54,129 INFO    MainThread:1534627 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 4.0}
+2022-12-06 18:05:54,129 INFO    MainThread:1534627 [wandb_init.py:init():569] starting backend
+2022-12-06 18:05:54,129 INFO    MainThread:1534627 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:05:54,131 INFO    MainThread:1534627 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:05:54,135 INFO    MainThread:1534627 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:05:54,136 INFO    MainThread:1534627 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:05:55,124 INFO    MainThread:1534657 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:55,136 INFO    MainThread:1534627 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:05:55,173 INFO    MainThread:1534657 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:55,173 INFO    MainThread:1534657 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:05:55,183 INFO    MainThread:1534627 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:05:55,184 INFO    MainThread:1534627 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:06:00,186 INFO    MainThread:1534657 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:06:00,186 INFO    MainThread:1534657 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:06:00,186 INFO    MainThread:1534657 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:06:00,186 INFO    MainThread:1534657 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:06:00,187 INFO    MainThread:1534657 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:06:00,187 INFO    MainThread:1534657 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00023_23_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f817ebf0>>
+2022-12-06 18:06:00,187 INFO    MainThread:1534657 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00023_23_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53 None
+2022-12-06 18:06:00,194 INFO    MainThread:1534627 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:06:00,195 INFO    MainThread:1534627 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:06:00,195 INFO    MainThread:1534627 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:06:00,195 INFO    MainThread:1534627 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:06:00,195 INFO    MainThread:1534627 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:06:00,196 INFO    MainThread:1534627 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00022_22_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81740d0>>
+2022-12-06 18:06:00,196 INFO    MainThread:1534627 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00022_22_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-05-53 None
+2022-12-06 18:06:01,832 INFO    MainThread:1534351 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:06:01,832 INFO    MainThread:1534351 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:06:01,835 INFO    MainThread:1534351 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:06:01,912 INFO    MainThread:1534627 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00022
+2022-12-06 18:06:01,912 INFO    MainThread:1534627 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:06:01,912 INFO    MainThread:1534627 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:06:01,912 INFO    MainThread:1534627 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:06:07,831 INFO    MainThread:1534627 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:06:07,831 INFO    MainThread:1534627 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:06:07,834 INFO    MainThread:1534627 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:06:07,895 INFO    MainThread:1534291 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00019
+2022-12-06 18:06:07,895 INFO    MainThread:1534291 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:06:07,895 INFO    MainThread:1534291 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:06:07,895 INFO    MainThread:1534291 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:06:08,672 INFO    MainThread:1534989 [wandb_setup.py:_flush():68] Configure stats pid to 1534989
+2022-12-06 18:06:08,672 INFO    MainThread:1534989 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:06:08,672 INFO    MainThread:1534989 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00024_24_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07/wandb/settings
+2022-12-06 18:06:08,672 WARNING MainThread:1534989 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:06:08,672 INFO    MainThread:1534989 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:06:08,673 WARNING MainThread:1534989 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:06:08,673 INFO    MainThread:1534989 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:06:08,673 INFO    MainThread:1534989 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00024_24_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07/wandb/run-20221206_180608-002bc_00024/logs/debug.log
+2022-12-06 18:06:08,673 INFO    MainThread:1534989 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00024_24_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07/wandb/run-20221206_180608-002bc_00024/logs/debug-internal.log
+2022-12-06 18:06:08,673 INFO    MainThread:1534989 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:06:08,673 INFO    MainThread:1534989 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 4.0}
+2022-12-06 18:06:08,673 INFO    MainThread:1534989 [wandb_init.py:init():569] starting backend
+2022-12-06 18:06:08,673 INFO    MainThread:1534989 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:06:08,677 INFO    MainThread:1534989 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:06:08,681 INFO    MainThread:1534989 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:06:08,682 INFO    MainThread:1534989 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:06:08,682 INFO    MainThread:1535020 [wandb_setup.py:_flush():68] Configure stats pid to 1535020
+2022-12-06 18:06:08,682 INFO    MainThread:1535020 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:06:08,682 INFO    MainThread:1535020 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00025_25_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07/wandb/settings
+2022-12-06 18:06:08,682 WARNING MainThread:1535020 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:06:08,682 INFO    MainThread:1535020 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:06:08,682 WARNING MainThread:1535020 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:06:08,682 INFO    MainThread:1535020 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:06:08,682 INFO    MainThread:1535020 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00025_25_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07/wandb/run-20221206_180608-002bc_00025/logs/debug.log
+2022-12-06 18:06:08,682 INFO    MainThread:1535020 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00025_25_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07/wandb/run-20221206_180608-002bc_00025/logs/debug-internal.log
+2022-12-06 18:06:08,682 INFO    MainThread:1535020 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:06:08,683 INFO    MainThread:1535020 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 5.0}
+2022-12-06 18:06:08,683 INFO    MainThread:1535020 [wandb_init.py:init():569] starting backend
+2022-12-06 18:06:08,683 INFO    MainThread:1535020 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:06:08,685 INFO    MainThread:1535020 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:06:08,689 INFO    MainThread:1535020 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:06:08,691 INFO    MainThread:1535020 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:06:09,763 INFO    MainThread:1534989 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:06:09,764 INFO    MainThread:1535020 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:06:09,832 INFO    MainThread:1535020 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:06:09,832 INFO    MainThread:1535020 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:06:09,838 INFO    MainThread:1534989 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:06:09,839 INFO    MainThread:1534989 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:06:13,428 INFO    MainThread:1534291 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:06:13,428 INFO    MainThread:1534291 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:06:13,431 INFO    MainThread:1534291 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:06:14,295 INFO    MainThread:1535196 [wandb_setup.py:_flush():68] Configure stats pid to 1535196
+2022-12-06 18:06:14,295 INFO    MainThread:1535196 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:06:14,295 INFO    MainThread:1535196 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00026_26_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-13/wandb/settings
+2022-12-06 18:06:14,296 WARNING MainThread:1535196 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:06:14,296 INFO    MainThread:1535196 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:06:14,296 WARNING MainThread:1535196 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:06:14,296 INFO    MainThread:1535196 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:06:14,296 INFO    MainThread:1535196 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00026_26_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-13/wandb/run-20221206_180614-002bc_00026/logs/debug.log
+2022-12-06 18:06:14,296 INFO    MainThread:1535196 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00026_26_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-13/wandb/run-20221206_180614-002bc_00026/logs/debug-internal.log
+2022-12-06 18:06:14,296 INFO    MainThread:1535196 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:06:14,296 INFO    MainThread:1535196 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 5.0}
+2022-12-06 18:06:14,296 INFO    MainThread:1535196 [wandb_init.py:init():569] starting backend
+2022-12-06 18:06:14,296 INFO    MainThread:1535196 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:06:14,298 INFO    MainThread:1535196 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:06:14,302 INFO    MainThread:1535196 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:06:14,303 INFO    MainThread:1535196 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:06:14,843 INFO    MainThread:1535020 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:06:14,843 INFO    MainThread:1535020 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:06:14,843 INFO    MainThread:1535020 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:06:14,844 INFO    MainThread:1535020 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:06:14,844 INFO    MainThread:1535020 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:06:14,844 INFO    MainThread:1535020 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00025_25_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81dbca0>>
+2022-12-06 18:06:14,844 INFO    MainThread:1535020 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00025_25_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07 None
+2022-12-06 18:06:14,848 INFO    MainThread:1534989 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:06:14,849 INFO    MainThread:1534989 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:06:14,849 INFO    MainThread:1534989 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:06:14,849 INFO    MainThread:1534989 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:06:14,849 INFO    MainThread:1534989 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:06:14,849 INFO    MainThread:1534989 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00024_24_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81dfac0>>
+2022-12-06 18:06:14,849 INFO    MainThread:1534989 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00024_24_DIM_OUTPUT=4.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-07 None
+2022-12-06 18:06:14,850 INFO    MainThread:1534989 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00024
+2022-12-06 18:06:14,850 INFO    MainThread:1534989 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:06:14,850 INFO    MainThread:1534989 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:06:14,850 INFO    MainThread:1534989 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:06:15,268 INFO    MainThread:1535196 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:06:15,313 INFO    MainThread:1535196 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:06:15,313 INFO    MainThread:1535196 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:06:20,323 INFO    MainThread:1535196 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:06:20,324 INFO    MainThread:1535196 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:06:20,324 INFO    MainThread:1535196 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:06:20,324 INFO    MainThread:1535196 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:06:20,325 INFO    MainThread:1535196 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:06:20,325 INFO    MainThread:1535196 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00026_26_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-13 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f817c1f0>>
+2022-12-06 18:06:20,325 INFO    MainThread:1535196 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00026_26_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-13 None
+2022-12-06 18:06:22,233 INFO    MainThread:1534989 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:06:22,234 INFO    MainThread:1534989 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:06:22,237 INFO    MainThread:1534989 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:06:22,253 INFO    MainThread:1534183 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00018
+2022-12-06 18:06:22,253 INFO    MainThread:1534183 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:06:22,254 INFO    MainThread:1534183 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:06:22,254 INFO    MainThread:1534183 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:06:29,053 INFO    MainThread:1534183 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:06:29,053 INFO    MainThread:1534183 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:06:29,056 INFO    MainThread:1534183 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:06:29,136 INFO    MainThread:1531527 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00001
+2022-12-06 18:06:29,137 INFO    MainThread:1531527 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:06:29,137 INFO    MainThread:1531527 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:06:29,137 INFO    MainThread:1531527 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_setup.py:_flush():68] Configure stats pid to 1535406
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00027_27_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-29/wandb/settings
+2022-12-06 18:06:30,166 WARNING MainThread:1535406 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:06:30,166 WARNING MainThread:1535406 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00027_27_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-29/wandb/run-20221206_180630-002bc_00027/logs/debug.log
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00027_27_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-29/wandb/run-20221206_180630-002bc_00027/logs/debug-internal.log
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 5.0}
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_init.py:init():569] starting backend
+2022-12-06 18:06:30,166 INFO    MainThread:1535406 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:06:30,169 INFO    MainThread:1535406 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:06:30,172 INFO    MainThread:1535406 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:06:30,173 INFO    MainThread:1535406 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:06:30,959 INFO    MainThread:1535406 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:06:31,002 INFO    MainThread:1535406 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:06:31,002 INFO    MainThread:1535406 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:06:34,509 INFO    MainThread:1531527 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:06:34,509 INFO    MainThread:1531527 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:06:34,512 INFO    MainThread:1531527 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:06:36,013 INFO    MainThread:1535406 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:06:36,013 INFO    MainThread:1535406 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:06:36,013 INFO    MainThread:1535406 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:06:36,013 INFO    MainThread:1535406 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:06:36,014 INFO    MainThread:1535406 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:06:36,014 INFO    MainThread:1535406 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00027_27_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-29 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81d1150>>
+2022-12-06 18:06:36,014 INFO    MainThread:1535406 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00027_27_DIM_OUTPUT=5.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-29 None
+2022-12-06 18:06:36,014 INFO    MainThread:1535406 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00027
+2022-12-06 18:06:36,014 INFO    MainThread:1535406 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:06:36,014 INFO    MainThread:1535406 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:06:36,015 INFO    MainThread:1535406 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:06:43,467 INFO    MainThread:1535406 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:06:43,467 INFO    MainThread:1535406 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:06:43,470 INFO    MainThread:1535406 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:06:43,549 INFO    MainThread:1533671 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00016
+2022-12-06 18:06:43,550 INFO    MainThread:1533671 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:06:43,550 INFO    MainThread:1533671 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:06:43,550 INFO    MainThread:1533671 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:06:44,323 INFO    MainThread:1535682 [wandb_setup.py:_flush():68] Configure stats pid to 1535682
+2022-12-06 18:06:44,323 INFO    MainThread:1535682 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:06:44,324 INFO    MainThread:1535682 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00028_28_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-43/wandb/settings
+2022-12-06 18:06:44,324 WARNING MainThread:1535682 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:06:44,324 INFO    MainThread:1535682 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:06:44,324 WARNING MainThread:1535682 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:06:44,324 INFO    MainThread:1535682 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:06:44,324 INFO    MainThread:1535682 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00028_28_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-43/wandb/run-20221206_180644-002bc_00028/logs/debug.log
+2022-12-06 18:06:44,324 INFO    MainThread:1535682 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00028_28_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-43/wandb/run-20221206_180644-002bc_00028/logs/debug-internal.log
+2022-12-06 18:06:44,324 INFO    MainThread:1535682 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:06:44,324 INFO    MainThread:1535682 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 6.0}
+2022-12-06 18:06:44,324 INFO    MainThread:1535682 [wandb_init.py:init():569] starting backend
+2022-12-06 18:06:44,324 INFO    MainThread:1535682 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:06:44,326 INFO    MainThread:1535682 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:06:44,331 INFO    MainThread:1535682 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:06:44,332 INFO    MainThread:1535682 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:06:45,307 INFO    MainThread:1535682 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:06:45,349 INFO    MainThread:1535682 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:06:45,349 INFO    MainThread:1535682 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:06:50,359 INFO    MainThread:1535682 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:06:50,360 INFO    MainThread:1535682 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:06:50,360 INFO    MainThread:1535682 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:06:50,360 INFO    MainThread:1535682 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:06:50,360 INFO    MainThread:1535682 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:06:50,360 INFO    MainThread:1535682 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00028_28_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-43 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81e3220>>
+2022-12-06 18:06:50,360 INFO    MainThread:1535682 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00028_28_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-43 None
+2022-12-06 18:06:50,784 INFO    MainThread:1533671 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:06:50,784 INFO    MainThread:1533671 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:06:50,787 INFO    MainThread:1533671 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:06:50,805 INFO    MainThread:1534657 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00023
+2022-12-06 18:06:50,806 INFO    MainThread:1534657 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:06:50,806 INFO    MainThread:1534657 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:06:50,806 INFO    MainThread:1534657 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:06:58,391 INFO    MainThread:1534657 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:06:58,391 INFO    MainThread:1534657 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:06:58,394 INFO    MainThread:1534657 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:06:58,502 INFO    MainThread:1535020 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00025
+2022-12-06 18:06:58,502 INFO    MainThread:1535020 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:06:58,503 INFO    MainThread:1535020 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:06:58,503 INFO    MainThread:1535020 [wandb_run.py:_restore():1938] restore done
+2022-12-06 18:06:59,173 INFO    MainThread:1535905 [wandb_setup.py:_flush():68] Configure stats pid to 1535905
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00029_29_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58/wandb/settings
+2022-12-06 18:06:59,174 WARNING MainThread:1535905 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:06:59,174 WARNING MainThread:1535905 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00029_29_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58/wandb/run-20221206_180659-002bc_00029/logs/debug.log
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00029_29_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58/wandb/run-20221206_180659-002bc_00029/logs/debug-internal.log
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 6.0}
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_init.py:init():569] starting backend
+2022-12-06 18:06:59,174 INFO    MainThread:1535905 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:06:59,176 INFO    MainThread:1535905 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:06:59,180 INFO    MainThread:1535905 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:06:59,181 INFO    MainThread:1535905 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:06:59,363 INFO    MainThread:1535935 [wandb_setup.py:_flush():68] Configure stats pid to 1535935
+2022-12-06 18:06:59,363 INFO    MainThread:1535935 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/.config/wandb/settings
+2022-12-06 18:06:59,364 INFO    MainThread:1535935 [wandb_setup.py:_flush():68] Loading settings from /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00030_30_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58/wandb/settings
+2022-12-06 18:06:59,364 WARNING MainThread:1535935 [wandb_setup.py:_flush():68] Unknown environment variable: WANDB_SERVICE
+2022-12-06 18:06:59,364 INFO    MainThread:1535935 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True', 'start_method': 'thread'}
+2022-12-06 18:06:59,364 WARNING MainThread:1535935 [wandb_setup.py:_flush():68] Could not save program above cwd: /volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py
+2022-12-06 18:06:59,364 INFO    MainThread:1535935 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': None, 'program': '/volume1/scratch/hdeplaen/Kerch/examples/mvkpca-predict.py'}
+2022-12-06 18:06:59,364 INFO    MainThread:1535935 [wandb_init.py:_log_setup():476] Logging user logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00030_30_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58/wandb/run-20221206_180659-002bc_00030/logs/debug.log
+2022-12-06 18:06:59,364 INFO    MainThread:1535935 [wandb_init.py:_log_setup():477] Logging internal logs to /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00030_30_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58/wandb/run-20221206_180659-002bc_00030/logs/debug-internal.log
+2022-12-06 18:06:59,364 INFO    MainThread:1535935 [wandb_init.py:init():516] calling init triggers
+2022-12-06 18:06:59,364 INFO    MainThread:1535935 [wandb_init.py:init():519] wandb.init called with sweep_config: {}
+config: {'NUM_POINTS': 500, 'NUM_WEIGHTS': 1.0, 'DIM_OUTPUT': 6.0}
+2022-12-06 18:06:59,364 INFO    MainThread:1535935 [wandb_init.py:init():569] starting backend
+2022-12-06 18:06:59,364 INFO    MainThread:1535935 [wandb_init.py:init():573] setting up manager
+2022-12-06 18:06:59,368 INFO    MainThread:1535935 [wandb_init.py:init():580] backend started and connected
+2022-12-06 18:06:59,373 INFO    MainThread:1535935 [wandb_init.py:init():658] updated telemetry
+2022-12-06 18:06:59,374 INFO    MainThread:1535935 [wandb_init.py:init():693] communicating run to backend with 60 second timeout
+2022-12-06 18:07:00,191 INFO    MainThread:1535935 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:07:00,207 INFO    MainThread:1535905 [wandb_run.py:_on_init():2000] communicating current version
+2022-12-06 18:07:00,235 INFO    MainThread:1535935 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:07:00,235 INFO    MainThread:1535935 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:07:00,258 INFO    MainThread:1535905 [wandb_run.py:_on_init():2004] got version response 
+2022-12-06 18:07:00,258 INFO    MainThread:1535905 [wandb_init.py:init():728] starting run threads in backend
+2022-12-06 18:07:05,246 INFO    MainThread:1535935 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:07:05,246 INFO    MainThread:1535935 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:07:05,247 INFO    MainThread:1535935 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:07:05,247 INFO    MainThread:1535935 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:07:05,247 INFO    MainThread:1535935 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:07:05,247 INFO    MainThread:1535935 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00030_30_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81d2080>>
+2022-12-06 18:07:05,247 INFO    MainThread:1535935 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00030_30_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58 None
+2022-12-06 18:07:05,268 INFO    MainThread:1535905 [wandb_run.py:_console_start():1980] atexit reg
+2022-12-06 18:07:05,268 INFO    MainThread:1535905 [wandb_run.py:_redirect():1838] redirect: SettingsConsole.WRAP_RAW
+2022-12-06 18:07:05,268 INFO    MainThread:1535905 [wandb_run.py:_redirect():1903] Wrapping output streams.
+2022-12-06 18:07:05,268 INFO    MainThread:1535905 [wandb_run.py:_redirect():1925] Redirects installed.
+2022-12-06 18:07:05,269 INFO    MainThread:1535905 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-06 18:07:05,269 INFO    MainThread:1535905 [wandb_config.py:__setitem__():148] config set trial_log_path = /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00029_29_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fe3f81d7af0>>
+2022-12-06 18:07:05,269 INFO    MainThread:1535905 [wandb_run.py:_config_callback():1160] config_cb trial_log_path /users/sista/hdeplaen/ray_results/objective_2022-12-06_18-04-09/objective_002bc_00029_29_DIM_OUTPUT=6.0000,NUM_WEIGHTS=1.0000_2022-12-06_18-06-58 None
+2022-12-06 18:07:06,367 INFO    MainThread:1535020 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:07:06,367 INFO    MainThread:1535020 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:07:06,370 INFO    MainThread:1535020 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:07:06,385 INFO    MainThread:1534321 [wandb_run.py:_finish():1746] finishing run hdeplaen/mvkpca/002bc_00020
+2022-12-06 18:07:06,386 INFO    MainThread:1534321 [wandb_run.py:_atexit_cleanup():1949] got exitcode: 0
+2022-12-06 18:07:06,386 INFO    MainThread:1534321 [wandb_run.py:_restore():1932] restore
+2022-12-06 18:07:06,386 INFO    MainThread:1534321 [wandb_run.py:_restore():1938] restore done

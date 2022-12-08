@@ -78,7 +78,7 @@ class TestKernels(unittest.TestCase):
         """
         for type_name in self.tested_kernels:
             k = kerch.kernel.factory(type=type_name, sample=self.sample, center=True, normalize=True)
-            self.assertAlmostEqual(torch.diag(k.K).sum().numpy(), len(self.sample), msg=type_name)
+            self.assertAlmostEqual(k.K.sum().numpy(), 0, msg=type_name)
 
     def test_out_of_sample(self):
         """

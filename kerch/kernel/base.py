@@ -24,18 +24,29 @@ class base(_Sample, metaclass=ABCMeta):
         is always performed relative to a statistic on the sample., defaults to `False`
     :param normalize: `True` if any implicit feature or kernel is must be normalized, `False` otherwise. The center
         is always performed relative to a statistic on the sample., defaults to `False`
+    :param ligthweight: During the computation of the statistics for centering and normalization, intermediate values
+        are computed. It `True`, the model only keeps the necessary final statistics for the centering and
+        normalization specified during construction. All other values are either never computed either discarded if
+        required at some point. If asking for out-of-sample without the default centering and construction values, the
+        statistics would then be computed and immediately discarded. Thye would have to be computed over and over again
+        if repetively required. However, provided the same values are used as the one specified in the construction,
+        this is the most efficient, not computing or keeping anything unnecessary. This parameter controls a
+        time-memory trade-off., defaults to `True`
     :type center: bool, optional
     :type normalize: bool, optional
+    :type lightweight: bool, optional
     """
 
     @abstractmethod
     @utils.kwargs_decorator({
         "center": False,
-        "normalize": False
+        "normalize": False,
+        "lightweight": True,
     })
     def __init__(self, **kwargs):
         super(base, self).__init__(**kwargs)
         self._log.debug("Initializing " + str(self))
+        self._lightweight = kwargs["lightweight"]
 
         ## CENTERING
         self._center = kwargs["center"]
@@ -58,6 +69,15 @@ class base(_Sample, metaclass=ABCMeta):
 
     def __repr__(self):
         return self.__str__()
+
+    # PROPERTIES
+    @property
+    @abstractmethod
+    def explicit(self) -> bool:
+        r"""
+        True if the method has an explicit formulation, False otherwise.
+        """
+        pass
 
     @property
     def params(self) -> dict:
@@ -142,7 +162,8 @@ class base(_Sample, metaclass=ABCMeta):
             x = self.current_sample
         return x
 
-    def _implicit_statistics(self, implicit=False, center=None, normalize=None):
+    # STATISTICS AND CACHE
+    def _implicit_statistics(self, center, normalize, always_get_raw=False) -> None:
         """
         Computes the dual matrix, also known as the kernel matrix.
         Its size is len(idx_kernels) * len(idx_kernels).
@@ -151,63 +172,162 @@ class base(_Sample, metaclass=ABCMeta):
         :return: Kernel matrix.
         """
         if self._empty_sample:
-            self._log.warning('No sample dataset. Please assign a sample dataset or specify the dimensions of the '
+            self._log.error('No sample dataset. Please assign a sample dataset or specify the dimensions of the '
                               'sample dataset to initialize random values before computing kernel values.')
-            return None
+            raise Exception
 
-        if center is None: center = self._center
-        if normalize is None: normalize = self._normalize
+        self._log.debug("Computing kernel matrix and dual statistics.")
 
-        if implicit:
-            phi = self.phi()
-            self._cache["K"] = phi @ phi.T
+        def _get_K_raw() -> Tensor:
+            if "K_raw" not in self._cache:
+                self._cache["K_raw"] = self._implicit()
+            return self._cache["K_raw"]
 
+        if always_get_raw:
+            _get_K_raw()
 
-        if "K" not in self._cache:
-            self._log.debug("Computing kernel matrix and dual statistics.")
-            if implicit:
-                phi = self.phi()
-                self._cache["K"] = phi @ phi.T
-            else:
-                self._cache["K"] = self._implicit()
-
-                # centering in the implicit case happens ad hoc
-                if self._center:
-                    self._cache["K_mean"] = torch.mean(self._cache["K"], dim=1, keepdim=True)
-                    self._cache["K_mean_tot"] = torch.mean(self._cache["K"], dim=(0, 1))
-                    self._cache["K"] = self._cache["K"] - self._cache["K_mean"] \
-                                       - self._cache["K_mean"].T \
-                                       + self._cache["K_mean_tot"]
-                if self._normalize:
-                    self._cache["K_norm"] = torch.sqrt(torch.diag(self._cache["K"]))[:, None]
+        if center and not normalize:
+            if "K_mean" not in self._cache:
+                self._cache["K_mean"] = torch.mean(_get_K_raw(), dim=1, keepdim=True)
+                self._cache["K_mean_tot"] = torch.mean(_get_K_raw(), dim=(0, 1))
+        elif normalize:
+            if "K_norm" not in self._cache:
+                self._cache["K_norm"] = torch.sqrt(torch.diag(_get_K_raw()))[:, None]
+            if center:
+                if "K_normalized_mean" not in self._cache:
                     K_norm = self._cache["K_norm"] * self._cache["K_norm"].T
-                    self._cache["K"] = self._cache["K"] / torch.clamp(K_norm, min=self._eps)
+                    self._cache["K_normalized"] = _get_K_raw() / torch.clamp(K_norm, min=self._eps)
+                    self._cache["K_normalized_mean"] = torch.mean(self._cache["K_normalized"], dim=1, keepdim=True)
+                    self._cache["K_normalized_mean_tot"] = torch.mean(self._cache["K_normalized"], dim=(0, 1))
 
-        return self._cache["K"]
+        if self._lightweight and not always_get_raw:
+            self._remove_from_cache("K_raw")
 
-    def _explicit_statistics(self):
+    def _explicit_statistics(self, center, normalize, always_get_raw=False):
         """
         Computes the primal matrix, i.e. correlation between the different outputs.
         Its size is output * output.
         """
         if self._empty_sample:
-            self._log.warning('No sample dataset. Please specify a sample dataset or the dimensions of the sample '
+            self._log.error('No sample dataset. Please specify a sample dataset or the dimensions of the sample '
                               'dataset to initialize random values before computing kernel values.')
-            return None
+            raise Exception
 
-        if "C" not in self._cache:
-            self._log.debug("Computing explicit feature map and primal statistics.")
-            self._cache["phi"] = self._explicit()
+        self._log.debug("Computing explicit feature map and primal statistics.")
 
-            if self._center:
-                self._cache["phi_mean"] = torch.mean(self._cache["phi"], dim=0)
-                self._cache["phi"] = self._cache["phi"] - self._cache["phi_mean"]
-            if self._normalize:
-                self._cache["phi_norm"] = torch.norm(self._cache["phi"], dim=1, keepdim=True)
-                self._cache["phi"] = self._cache["phi"] / self._cache["phi_norm"]
-            self._cache["C"] = self._cache["phi"].T @ self._cache["phi"]
-        return self._cache["C"], self._cache["phi"]
+        def _get_phi_raw() -> Tensor:
+            if "phi_raw" not in self._cache:
+                self._cache["phi_raw"] = self._explicit()
+            return self._cache["phi_raw"]
 
+        if always_get_raw:
+            _get_phi_raw()
+
+        if center and not normalize:
+            if "phi_mean" not in self._cache:
+                self._cache["phi_mean"] = torch.mean(_get_phi_raw(), dim=0)
+        elif normalize:
+            if "phi_norm" not in self._cache:
+                self._cache["phi_norm"] = torch.norm(_get_phi_raw(), dim=1, keepdim=True)
+            if center:
+                if "phi_normalized_mean" not in self._cache:
+                    self._cache["phi_normalized"] = _get_phi_raw() / self._cache["phi_norm"]
+                    self._cache["phi_normalized_mean"] = torch.mean(self._cache["phi_normalized"], dim=0)
+
+        if self._lightweight and not always_get_raw:
+            self._remove_from_cache("phi_raw")
+
+    def _phi(self, force: bool = False):
+        r"""
+        Returns the explicit feature map with default centering and normalization. If already computed, it is
+        recovered from the cache.
+
+        :param force: By default, the feature map is recovered from cache if already computed. Force overwrites
+            this if True., defaults to False.
+        """
+        if "phi" not in self._cache or force:
+            self._explicit_statistics(center=self._center, normalize=self._normalize, always_get_raw=True)
+            if not self._center and not self._normalize:
+                self._cache["phi"] = self._cache["phi_raw"]
+            elif self._center and not self._normalize:
+                self._cache["phi"] = self._cache["phi_raw"] - self._cache["phi_mean"]
+            elif self._center and self._normalize:
+                self._cache["phi"] = self._cache["phi_normalized"] - self._cache["phi_normalized_mean"]
+            elif not self._center and self._normalize:
+                self._cache["phi"] = self._cache["phi_raw"] / self._cache["phi_norm"]
+            self._lighten_statistics()
+        return self._cache["phi"]
+
+    def _C(self, force: bool = False) -> Tensor:
+        r"""
+        Returns the covariance matrix with default centering and normalization. If already computed, it is recovered
+        from the cache.
+
+        :param force: By default, the covariance matrix is recovered from cache if already computed. Force overwrites
+            this if True., defaults to False
+                """
+        if "C" not in self._cache or force:
+            phi = self._phi(force=force)
+            self._cache["C"] = phi.T @ phi
+        return self._cache["C"]
+
+    def _K(self, explicit=None, force: bool = False) -> Tensor:
+        r"""
+        Returns the kernel matrix with default centering and normalization. If already computed, it is recovered from
+        the cache.
+
+        :param explicit: Specifies whether the explicit or implicit formulation has to be used. Always uses the
+            the explicit if available.
+        :param force: By default, the kernel matrix is recovered from cache if already computed. Force overwrites
+            this if True., defaults to False
+        """
+        if explicit is None: explicit = self.explicit
+        if explicit:
+            phi = self._phi(force)
+            if "K" not in self._cache or force:
+                self._cache["K"] = phi @ phi.T
+        else:
+            self._implicit_statistics(center=self._center, normalize=self._normalize, always_get_raw=True)
+            if "K" not in self._cache or force:
+                if not self._center and not self._normalize:
+                    self._cache["K"] = self._cache["K_raw"]
+                elif self._center and not self._normalize:
+                    self._cache["K"] = self._cache["K_raw"] \
+                                       - self._cache["K_mean"] \
+                                       - self._cache["K_mean"].T \
+                                       + self._cache["K_mean_tot"]
+                elif self._center and self._normalize:
+                    self._cache["K"] = self._cache["K_normalized"] \
+                                       - self._cache["K_normalized_mean"] \
+                                       - self._cache["K_normalized_mean"].T \
+                                       + self._cache["K_normalized_mean_tot"]
+                elif not self._center and self._normalize:
+                    K_norm = self._cache["K_norm"] * self._cache["K_norm"].T
+                    self._cache["K"] = self._cache["K_raw"] / torch.clamp(K_norm, min=self._eps)
+            self._lighten_statistics()
+        return self._cache["K"]
+
+    def _lighten_statistics(self) -> None:
+        r"""
+        Removes cache elements to keep the model lightweight
+        """
+        if self._lightweight:
+            self._remove_from_cache("phi_normalized")
+            self._remove_from_cache("phi_raw")
+            self._remove_from_cache("K_raw")
+            self._remove_from_cache("K_normalized")
+            if not self._center:
+                self._remove_from_cache("phi_mean")
+                self._remove_from_cache("phi_normalized_mean")
+                self._remove_from_cache("K_mean")
+                self._remove_from_cache("K_mean_tot")
+                self._remove_from_cache("K_normalized_mean")
+                self._remove_from_cache("K_normalized_mean_tot")
+            if not self._normalize:
+                self._remove_from_cache("phi_norm")
+                self._remove_from_cache("K_norm")
+
+    # ACCESSIBLE METHODS
     def phi(self, x=None, center=None, normalize=None) -> Tensor:
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the specified points.
@@ -225,37 +345,32 @@ class base(_Sample, metaclass=ABCMeta):
         """
 
         # if x is None, phi(x) for x in the sample is returned.
-        if center is None:
-            center = self._center
-        if normalize is None:
-            normalize = self._normalize
+        if center is None: center = self._center
+        if normalize is None: normalize = self._normalize
 
-        # TODO
-        if center and not self._center:
-            raise NotImplementedError
-        if normalize and not self._normalize:
-            raise NotImplementedError
-
-        # check is statistics are available if required
-        if center or normalize or x is None:
-            if self._explicit_statistics() is None:
-                self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
-                raise Exception
-
+        # if the default value is required and the default centering and normalization are asked, it can directly
+        # be recovered from the cache (and added to the cache if not already computed).
         if x is None and center == self._center and normalize == self._normalize:
-            return self._explicit_statistics()[1]
+            return self._phi()
 
         x = utils.castf(x)
         phi = self._explicit(x)
-        if center:
+
+        # check that statistics are available
+        self._explicit_statistics(center, normalize)
+
+        if center and not normalize:
             phi = phi - self._cache["phi_mean"]
-        if normalize:
+        elif normalize:
             phi_norm = torch.norm(phi, dim=1, keepdim=True)
             phi = phi / torch.clamp(phi_norm, min=self._eps)
+            if center:
+                phi = phi - self._cache["phi_normalized_mean"]
 
+        self._lighten_statistics()
         return phi
 
-    def k(self, x=None, y=None, implicit=False, center=None, normalize=None) -> Tensor:
+    def k(self, x=None, y=None, explicit=None, center=None, normalize=None) -> Tensor:
         """
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
@@ -291,73 +406,77 @@ class base(_Sample, metaclass=ABCMeta):
         # if x is None and y is None:
         #     return self.K
 
-        if center is None:
-            center = self._center
-        if normalize is None:
-            normalize = self._normalize
+        # recover default values
+        if explicit is None: explicit = self.explicit
+        if center is None: center = self._center
+        if normalize is None: normalize = self._normalize
 
-        # TODO
-        if center and not self._center:
-            raise NotImplementedError
-        if normalize and not self._normalize:
-            raise NotImplementedError
+        # if the default value is required and the default centering and normalization are asked, it can directly
+        # be recovered from the cache (and added to the cache if not already computed).
+        if x is None and y is None and center == self._center and normalize == self._normalize:
+            return self._K(explicit)
 
+        # in order to get the values in the correct format (e.g. coming from numpy)
         x = utils.castf(x)
         y = utils.castf(y)
 
-        # if any computation on the sample is required
-        if center or normalize or x is None or y is None:
-            if implicit and self._explicit_statistics() is None:
-                self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
-                raise Exception
-            elif not implicit and self._implicit_statistics(implicit) is None:
-                self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
-                raise Exception
-
         # now that we know that the sample prerequisites are met, we can compute the OOS.
-        if implicit:
+        if explicit:
             phi_sample = self.phi(y, center, normalize)
             phi_oos = self.phi(x, center, normalize)
-            return phi_oos @ phi_sample.T
+            K = phi_oos @ phi_sample.T
         else:
+            self._implicit_statistics(center=center, normalize=normalize)
             K = self._implicit(x, y)
-            if center:
+
+            if center and not normalize:
                 if x is not None:
                     K_x_sample = self._implicit(x)
                     m_x_sample = torch.mean(K_x_sample, dim=1, keepdim=True)
                 else:
                     m_x_sample = self._cache["K_mean"]
-
                 if y is not None:
                     K_y_sample = self._implicit(y)
                     m_y_sample = torch.mean(K_y_sample, dim=1, keepdim=True)
                 else:
                     m_y_sample = self._cache["K_mean"]
-
                 K = K - m_x_sample \
                     - m_y_sample.T \
                     + self._cache["K_mean_tot"]
-            if normalize:
+            elif normalize:
                 if x is None:
                     n_x = self._cache["K_norm"]
                 else:
                     diag_K_x = self._implicit_self(x)[:, None]
-                    if center:
-                        diag_K_x = diag_K_x - 2 * m_x_sample + self._cache["K_mean_tot"]
                     n_x = torch.sqrt(diag_K_x)
-
                 if y is None:
                     n_y = self._cache["K_norm"]
                 else:
-                    diag_K_y = self._implicit_self(y)[:, None]
-                    if center:
-                        diag_K_y = diag_K_y - 2 * m_y_sample + self._cache["K_mean_tot"]
+                    diag_K_y = self._implicit_self(x)[:, None]
                     n_y = torch.sqrt(diag_K_y)
-
                 K_norm = n_x * n_y.T
                 K = K / torch.clamp(K_norm, min=self._eps)
+                if center:
+                    if x is None:
+                        m_norm_x = self._cache["K_normalized_mean"]
+                    else:
+                        K_x_sample = self._implicit(x)
+                        K_x_sample_norm = n_x * self._cache["K_norm"].T
+                        K_x_sample_normalized = K_x_sample / torch.clamp(K_x_sample_norm, min=self._eps)
+                        m_norm_x = torch.mean(K_x_sample_normalized, dim=1, keepdim=True)
+                    if y is None:
+                        m_norm_y = self._cache["K_normalized_mean"]
+                    else:
+                        K_y_sample = self._implicit(x)
+                        K_y_sample_norm = n_y * self._cache["K_norm"].T
+                        K_y_sample_normalized = K_y_sample / torch.clamp(K_y_sample_norm, min=self._eps)
+                        m_norm_y = torch.mean(K_y_sample_normalized, dim=1, keepdim=True)
+                    K = K - m_norm_x \
+                        - m_norm_y.T \
+                        + self._cache["K_normalized_mean_tot"]
 
-            return K
+        self._lighten_statistics()
+        return K
 
     def c(self, x=None, y=None, center=None, normalize=None) -> Tensor:
         r"""
@@ -407,8 +526,7 @@ class base(_Sample, metaclass=ABCMeta):
         .. math::
             K_{ij} = k(x_i,x_j).
         """
-        self._implicit_statistics()
-        return self._cache["K"]
+        return self._K(explicit=self.explicit)
 
     @property
     def C(self) -> Tensor:
@@ -418,7 +536,7 @@ class base(_Sample, metaclass=ABCMeta):
         .. math::
             C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.
         """
-        return self._explicit_statistics()[0]
+        return self._C()
 
     @property
     def Phi(self) -> Tensor:
@@ -428,4 +546,4 @@ class base(_Sample, metaclass=ABCMeta):
         It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
         called.
         """
-        return self._explicit_statistics()[1]
+        return self._phi()
