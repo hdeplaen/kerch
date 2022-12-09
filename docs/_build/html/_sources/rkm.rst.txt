@@ -1,0 +1,20 @@
+kerpy package
+===========
+
+Subpackages
+-----------
+
+.. toctree::
+    :maxdepth: 4
+    :glob:
+
+    kernel/index
+    kerpy.utils
+
+Module contents
+---------------
+
+.. automodule:: kerpy
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -95,6 +95,14 @@ class base(_Sample, metaclass=ABCMeta):
         pass
 
     @property
+    def sphere(self) -> bool:
+        return self._sphere
+
+    @sphere.setter
+    def sphere(self, val: bool):
+        self._sphere = val
+
+    @property
     def center(self) -> bool:
         r"""
         Indicates if the kernel has to be centered. Changing this value leads to a recomputation of the statistics.
@@ -163,7 +171,11 @@ class base(_Sample, metaclass=ABCMeta):
         return x
 
     # STATISTICS AND CACHE
-    def _implicit_statistics(self, center, normalize, always_get_raw=False) -> None:
+    def _implicit_statistics(self,
+                             sphere : bool,
+                             center : bool,
+                             normalize : bool,
+                             always_get_raw : bool = False) -> None:
         """
         Computes the dual matrix, also known as the kernel matrix.
         Its size is len(idx_kernels) * len(idx_kernels).
@@ -186,24 +198,56 @@ class base(_Sample, metaclass=ABCMeta):
         if always_get_raw:
             _get_K_raw()
 
-        if center and not normalize:
-            if "K_mean" not in self._cache:
-                self._cache["K_mean"] = torch.mean(_get_K_raw(), dim=1, keepdim=True)
-                self._cache["K_mean_tot"] = torch.mean(_get_K_raw(), dim=(0, 1))
-        elif normalize:
+        # to avoid redundancy (see later)
+        if normalize and not center:
+            sphere = True
+            normalize = False
+
+        if sphere:
             if "K_norm" not in self._cache:
                 self._cache["K_norm"] = torch.sqrt(torch.diag(_get_K_raw()))[:, None]
+        # center the mapping
+        if center:
+            if sphere:
+                if "K_sphere_mean" not in self._cache:
+                    self._cache["K_sphere"] = _get_K_raw() / torch.clamp(
+                        self._cache["K_norm"] * self._cache["K_norm"].T, min=self._eps)
+                    self._cache["K_sphere_mean"] = torch.mean(self._cache["K_sphere"], dim=1, keepdim=True)
+                    self._cache["K_sphere_mean_tot"] = torch.mean(self._cache["K_sphere_mean"], dim=0)
+            else:
+                if "K_mean" not in self._cache:
+                    self._cache["K_mean"] = torch.mean(_get_K_raw(), dim=1, keepdim=True)
+                    self._cache["K_mean_tot"] = torch.mean(self._cache["K_mean"], dim=0)
+        # normalize the mapping (only relevant if centered, otherwise can already be done with sphere)
+        if normalize:
             if center:
-                if "K_normalized_mean" not in self._cache:
-                    K_norm = self._cache["K_norm"] * self._cache["K_norm"].T
-                    self._cache["K_normalized"] = _get_K_raw() / torch.clamp(K_norm, min=self._eps)
-                    self._cache["K_normalized_mean"] = torch.mean(self._cache["K_normalized"], dim=1, keepdim=True)
-                    self._cache["K_normalized_mean_tot"] = torch.mean(self._cache["K_normalized"], dim=(0, 1))
+                if sphere:
+                    if "K_sphere_centered_norm" not in self._cache:
+                        self._cache["K_sphere_centered"] = self._cache["K_sphere"] \
+                                                           - self._cache["K_sphere_mean"] \
+                                                           - self._cache["K_sphere_mean"].T \
+                                                           + self._cache["K_sphere_mean_tot"]
+                        self._cache["K_sphere_centered_norm"] = torch.sqrt(
+                            torch.diag(self._cache["K_sphere_centered"]))[:, None]
+                else:
+                    if "K_centered_norm" not in self._cache:
+                        self._cache["K_centered"] = _get_K_raw() \
+                                                    - self._cache["K_mean_sphere"] \
+                                                    - self._cache["K_mean_sphere"].T \
+                                                    + self._cache["K_mean_tot"]
+                        self._cache["K_centered_norm"] = torch.sqrt(torch.diag(self._cache["K_centered"]))[:, None]
+        else:
+        # other cases should never happen
+            raise Exception("Internal implementation error: this case should never happen.")
 
         if self._lightweight and not always_get_raw:
             self._remove_from_cache("K_raw")
 
-    def _explicit_statistics(self, center, normalize, always_get_raw=False):
+    def _explicit_statistics(self,
+                             sphere : bool,
+                             center : bool,
+                             normalize : bool,
+                             always_get_raw : bool = False):
         """
         Computes the primal matrix, i.e. correlation between the different outputs.
         Its size is output * output.
@@ -223,16 +267,39 @@ class base(_Sample, metaclass=ABCMeta):
         if always_get_raw:
             _get_phi_raw()
 
-        if center and not normalize:
-            if "phi_mean" not in self._cache:
-                self._cache["phi_mean"] = torch.mean(_get_phi_raw(), dim=0)
-        elif normalize:
+        # this case is redundant (see below)
+        if normalize and not center:
+            sphere = True
+            normalize = False
+
+        # project the mapping onto a sphere (normalization at the source)
+        if sphere:
             if "phi_norm" not in self._cache:
                 self._cache["phi_norm"] = torch.norm(_get_phi_raw(), dim=1, keepdim=True)
+        # center the mapping
+        if center:
+            if sphere:
+                if "phi_sphere_mean" not in self._cache:
+                    self._cache["phi_sphere"] = _get_phi_raw() / torch.clamp(self._cache["phi_norm"], min=self._eps)
+                    self._cache["phi_sphere_mean"] = torch.mean(self._cache["phi_sphere"], dim=0)
+            else:
+                if "phi_mean" not in self._cache:
+                    self._cache["phi_sphere_mean"] = torch.mean(_get_phi_raw(), dim=0)
+                    self._cache["phi_centered"] = _get_phi_raw() - self._cache["phi_mean_sphere"]
+        # normalize the mapping (only relevant if centered, otherwise can already be done with sphere)
+        if normalize:
             if center:
-                if "phi_normalized_mean" not in self._cache:
-                    self._cache["phi_normalized"] = _get_phi_raw() / self._cache["phi_norm"]
-                    self._cache["phi_normalized_mean"] = torch.mean(self._cache["phi_normalized"], dim=0)
+                if sphere:
+                    if "phi_sphere_centered_norm" not in self._cache:
+                        self._cache["phi_sphere_centered"] = self._cache["phi_sphere"] - self._cache["phi_sphere_mean"]
+                        self._cache["phi_sphere_centered_norm"] = torch.norm(self._cache["phi_sphere_centered"], dim=1, keepdim=True)
+                else:
+                    if "phi_centered_norm" not in self._cache:
+                        self._cache["phi_centered"] = _get_phi_raw() - self._cache["phi_mean_sphere"]
+                        self._cache["phi_centered_norm"] = torch.norm(self._cache["phi_centered"], dim=1, keepdim=True)
+            else:
+                # other cases should never happen
+                raise Exception("Internal implementation error: this case should never happen.")
 
         if self._lightweight and not always_get_raw:
             self._remove_from_cache("phi_raw")
@@ -246,15 +313,51 @@ class base(_Sample, metaclass=ABCMeta):
             this if True., defaults to False.
         """
         if "phi" not in self._cache or force:
-            self._explicit_statistics(center=self._center, normalize=self._normalize, always_get_raw=True)
-            if not self._center and not self._normalize:
-                self._cache["phi"] = self._cache["phi_raw"]
-            elif self._center and not self._normalize:
-                self._cache["phi"] = self._cache["phi_raw"] - self._cache["phi_mean"]
-            elif self._center and self._normalize:
-                self._cache["phi"] = self._cache["phi_normalized"] - self._cache["phi_normalized_mean"]
-            elif not self._center and self._normalize:
-                self._cache["phi"] = self._cache["phi_raw"] / self._cache["phi_norm"]
+            self._explicit_statistics(sphere=self._sphere,
+                                      center=self._center,
+                                      normalize=self._normalize,
+                                      always_get_raw=True)
+            if self._sphere and not self._center and not self._normalize:
+                if "phi_sphere" not in self._cache:
+                    self._cache["phi_sphere"] = self._cache["phi_raw"] / torch.clamp(
+                        self._cache["phi_norm"], min=self._eps)
+                self._cache["phi"] = self._cache["phi_sphere"]
+
+            elif self._sphere and self._center and not self._normalize:
+                if "phi_sphere_centered" not in self._cache:
+                    self._cache["phi_sphere_centered"] = self._cache["phi_sphere"] - self._cache["phi_sphere_mean"]
+                self._cache["phi"] = self._cache["phi_sphere_centered"]
+
+            elif self._sphere and not self._center and self._normalize:
+                # this case is redundant and should not happen
+                if "phi_sphere" not in self._cache:
+                    self._cache["phi_sphere"] = self._cache["phi_raw"] / torch.clamp(
+                        self._cache["phi_norm"], min=self._eps)
+                self._cache["phi"] = self._cache["phi_sphere"]
+
+            elif self._sphere and self._center and self._normalize:
+                self._cache["phi"] = self._cache["phi_sphere_centered"] / torch.clamp(
+                    self._cache["phi_sphere_centered_norm"], min = self._eps)
+
+            elif not self._sphere and not self._center and not self._normalize:
+               self._cache["phi"] = self._cache["phi_raw"]
+
+            elif not self._sphere and self._center and not self._normalize:
+                if "phi_centered" not in self._cache:
+                    self._cache["phi_centered"] = self._cache["phi"] - self._cache["phi_mean"]
+                self._cache["phi"] = self._cache["phi_centered"]
+
+            elif not self._sphere and not self._center and self._normalize:
+                # this case is redundant and should not happen
+                if "phi_sphere" not in self._cache:
+                    self._cache["phi_sphere"] = self._cache["phi_raw"] / torch.clamp(
+                        self._cache["phi_norm"], min=self._eps)
+                self._cache["phi"] = self._cache["phi_sphere"]
+
+            elif not self._sphere and self._center and self._normalize:
+                self._cache["phi"] = self._cache["phi_centered"] / torch.clamp(
+                    self._cache["phi_centered_norm"], min = self._eps)
+
             self._lighten_statistics()
         return self._cache["phi"]
 
@@ -277,9 +380,10 @@ class base(_Sample, metaclass=ABCMeta):
         the cache.
 
         :param explicit: Specifies whether the explicit or implicit formulation has to be used. Always uses the
-            the explicit if available.
+            explicit if available.
         :param force: By default, the kernel matrix is recovered from cache if already computed. Force overwrites
-            this if True., defaults to False
+            this if True. This can be relevant in the case where it can be computed both implicitly and explicitly.,
+            defaults to False
         """
         if explicit is None: explicit = self.explicit
         if explicit:
@@ -287,23 +391,49 @@ class base(_Sample, metaclass=ABCMeta):
             if "K" not in self._cache or force:
                 self._cache["K"] = phi @ phi.T
         else:
-            self._implicit_statistics(center=self._center, normalize=self._normalize, always_get_raw=True)
-            if "K" not in self._cache or force:
-                if not self._center and not self._normalize:
-                    self._cache["K"] = self._cache["K_raw"]
-                elif self._center and not self._normalize:
-                    self._cache["K"] = self._cache["K_raw"] \
-                                       - self._cache["K_mean"] \
-                                       - self._cache["K_mean"].T \
-                                       + self._cache["K_mean_tot"]
-                elif self._center and self._normalize:
-                    self._cache["K"] = self._cache["K_normalized"] \
-                                       - self._cache["K_normalized_mean"] \
-                                       - self._cache["K_normalized_mean"].T \
-                                       + self._cache["K_normalized_mean_tot"]
-                elif not self._center and self._normalize:
-                    K_norm = self._cache["K_norm"] * self._cache["K_norm"].T
-                    self._cache["K"] = self._cache["K_raw"] / torch.clamp(K_norm, min=self._eps)
+            self._implicit_statistics(sphere = self._sphere,
+                                      center=self._center,
+                                      normalize=self._normalize,
+                                      always_get_raw=True)
+
+            if self._sphere and self._center and self._normalize:
+                self._cache["K"] = self._cache["K_sphere_centered"] / torch.clamp(
+                    self._cache["K_sphere_centered_norm"] * self._cache["K_sphere_centered_norm"].T, min = self._eps)
+            elif self._sphere and self._center and not self._normalize:
+                if "K_sphere_centered" not in self._cache:
+                    self._cache["K_sphere_centered"] = self._cache["K_sphere"] \
+                                                       - self._cache["K_sphere_mean"] \
+                                                       - self._cache["K_sphere_mean"].T \
+                                                       + self._cache["K_sphere_mean_tot"]
+                self._cache["K"] = self._cache["K_sphere_centered"]
+            elif self._sphere and not self._center and self._normalize:
+                # redundant
+                self._cache["K"] = self._cache["K_sphere_centered"] / torch.clamp(
+                    self._cache["K_sphere_centered_norm"] * self._cache["K_sphere_centered_norm"].T, min=self._eps)
+            elif self._sphere and not self._center and not self._normalize:
+                if "K_sphere" not in self._cache:
+                    self._cache["K_sphere"] = self._cache["K_raw"] / torch.clamp(
+                        self._cache["K_norm"] * self._cache["K_norm"].T, min=self._eps)
+            elif not self._sphere and self._center and self._normalize:
+                self._cache["K"] = self._cache["K_centered"] / torch.clamp(
+                    self._cache["K_centered_norm"] * self._cache["K_centered_norm"].T, min = self._eps)
+            elif not self._sphere and self._center and not self._normalize:
+                if "K_centered" not in self._cache:
+                    self._cache["K_centered"] = self._cache["K_raw"] \
+                                                - self._cache["K_mean_sphere"] \
+                                                - self._cache["K_mean_sphere"].T \
+                                                + self._cache["K_mean_tot"]
+                self._cache["K"] = self._cache["K_centered"]
+            elif not self._sphere and not self._center and self._normalize:
+                # redundant
+                self._cache["K"] = self._cache["K_sphere_centered"] / torch.clamp(
+                    self._cache["K_sphere_centered_norm"] * self._cache["K_sphere_centered_norm"].T, min=self._eps)
+            elif not self._sphere and not self._center and not self._normalize:
+                self._cache["K"] = self._cahce["K_raw"]
+            else:
+                # should never happen
+                raise Exception("Internal implementation error. This case should not happen.")
+
             self._lighten_statistics()
         return self._cache["K"]
 
@@ -312,20 +442,27 @@ class base(_Sample, metaclass=ABCMeta):
         Removes cache elements to keep the model lightweight
         """
         if self._lightweight:
-            self._remove_from_cache("phi_normalized")
             self._remove_from_cache("phi_raw")
             self._remove_from_cache("K_raw")
-            self._remove_from_cache("K_normalized")
-            if not self._center:
-                self._remove_from_cache("phi_mean")
-                self._remove_from_cache("phi_normalized_mean")
-                self._remove_from_cache("K_mean")
-                self._remove_from_cache("K_mean_tot")
-                self._remove_from_cache("K_normalized_mean")
-                self._remove_from_cache("K_normalized_mean_tot")
-            if not self._normalize:
+            if not self._sphere:
                 self._remove_from_cache("phi_norm")
                 self._remove_from_cache("K_norm")
+            if not self._center:
+                self._remove_from_cache("phi_centered")
+                self._remove_from_cache("phi_mean")
+                self._remove_from_cache("phi_sphere_centered")
+                self._remove_from_cache("phi_sphere_mean")
+                self._remove_from_cache("K_centered")
+                self._remove_from_cache("K_mean")
+                self._remove_from_cache("K_mean_tot")
+                self._remove_from_cache("K_sphere_centered")
+                self._remove_from_cache("K_sphere_mean")
+                self._remove_from_cache("K_sphere_mean_tot")
+            if not self._normalize:
+                self._remove_from_cache("phi_centered_norm")
+                self._remove_from_cache("K_centered_norm")
+                self._remove_from_cache("phi_sphere_centered_norm")
+                self._remove_from_cache("K_sphere_centered_norm")
 
     # ACCESSIBLE METHODS
     def phi(self, x=None, center=None, normalize=None) -> Tensor:
