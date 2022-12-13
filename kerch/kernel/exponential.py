@@ -34,8 +34,7 @@ class exponential(implicit, metaclass=ABCMeta):
         super(exponential, self).__init__(**kwargs)
 
         # Exponential kernels are always naturally normalized if not centered
-        if not self._center:
-            self._normalize = False
+        self._normalize = False
 
         self._sigma_trainable = kwargs["sigma_trainable"]
         if self._sigma is not None:
@@ -52,19 +51,12 @@ class exponential(implicit, metaclass=ABCMeta):
         r"""
         Indicates if the kernel is normalized. This value cannot be changed for exponential kernels.
         """
-        if self._center:
-            return self._normalize
-        else:
-            return True
+        return True
 
     @normalize.setter
     def normalize(self, val: bool):
-        self._normalize_requested = val
-        if self._center:
-            self._normalize = self._normalize_requested
-        else:
-            self._log.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
-                           'definition if non-centered.')
+        self._log.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
+                       'definition.')
 
     @property
     def center(self) -> bool:

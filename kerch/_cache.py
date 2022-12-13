@@ -16,7 +16,7 @@ class _Cache(_Module,
         super(_Cache, self).__init__(*args, **kwargs)
 
         # we initiate the cache
-        self._reset()
+        self._cache = {}
 
     def _apply(self, fn):
         # this if the native function by torch.nn.Module when ported. Here, the sole porting
@@ -30,7 +30,12 @@ class _Cache(_Module,
         # this just resets the cache and makes it empty. If refilled, the new elements
         # will be on the same support as the rest of the module as created by its parameters.
         self._log.debug("The cache is resetted.")
+        for val in self._cache.values(): del val
         self._cache = {}
+
+    def _remove_from_cache(self, key: str):
+        if key in self._cache:
+            del self._cache[key]
 
     def reset(self, children=False):
         self._reset()

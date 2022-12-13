@@ -98,7 +98,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="kerch.kernel.nystrom">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span class="sig-name descname"><span class="pre">nystrom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.nystrom" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="explicit.html#kerch.kernel.explicit" title="kerch.kernel.explicit.explicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">explicit</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="explicit.html#kerch.kernel.explicit.explicit" title="kerch.kernel.explicit.explicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">explicit</span></code></a></p>
 <p>Nyström kernel. Constructs an explicit feature map based on the eigendecomposition of any kernel matrix based on
 some sample.</p>
 <dl class="field-list simple">
@@ -121,6 +121,14 @@ on an existing kernel. In that case, the other base arguments are bypassed., def
 is always performed relative to a statistic on the sample., defaults to <cite>False</cite></p></li>
 <li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if any implicit feature or kernel is must be normalized, <cite>False</cite> otherwise. The center
 is always performed relative to a statistic on the sample., defaults to <cite>False</cite></p></li>
+<li><p><strong>ligthweight</strong> – During the computation of the statistics for centering and normalization, intermediate values
+are computed. It <cite>True</cite>, the model only keeps the necessary final statistics for the centering and
+normalization specified during construction. All other values are either never computed either discarded if
+required at some point. If asking for out-of-sample without the default centering and construction values, the
+statistics would then be computed and immediately discarded. Thye would have to be computed over and over again
+if repetively required. However, provided the same values are used as the one specified in the construction,
+this is the most efficient, not computing or keeping anything unnecessary. This parameter controls a
+time-memory trade-off., defaults to <cite>True</cite></p></li>
 <li><p><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
 be given relative to these samples., defaults to <cite>None</cite></p></li>
 <li><p><strong>sample_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
@@ -154,6 +162,15 @@ It is loaded from memory if already computed and unchanged since then, to avoid 
 called.</p>
 <div class="math notranslate nohighlight">
 \[K_{ij} = k(x_i,x_j).\]</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.nystrom.Phi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.nystrom.Phi" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the sample datapoints. Same as calling
+<a class="reference internal" href="#kerch.kernel.nystrom.phi" title="kerch.kernel.nystrom.phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code></a>, but faster.
+It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+called.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -201,6 +218,12 @@ if relevant.</p>
 <dt class="sig sig-object py" id="kerch.kernel.nystrom.dim_input">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_input</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.nystrom.dim_input" title="Permalink to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.nystrom.explicit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explicit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.nystrom.explicit" title="Permalink to this definition"></a></dt>
+<dd><p>True if the method has an explicit formulation, False otherwise.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -268,7 +291,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.nystrom.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.nystrom.k" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.nystrom.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
@@ -360,13 +383,31 @@ construction is used., defaults to None</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.kernel.nystrom.phi_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phi_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.nystrom.phi_sample" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the sample datapoints. Same as calling
-<a class="reference internal" href="#kerch.kernel.nystrom.phi" title="kerch.kernel.nystrom.phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code></a>, but faster.
-It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
-called.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.nystrom.phi_pinv">
+<span class="sig-name descname"><span class="pre">phi_pinv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centered</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.nystrom.phi_pinv" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a pseudo-inverse of the explicit feature map if available.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The normalized version is not implemented</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phi</strong> (<em>Tensor</em><em>(</em><em>N</em><em>, </em><em>dim_feature</em><em>)</em>) – Image to be pseudo-inverted. Defaults to the explicit feature map of the sample.</p></li>
+<li><p><strong>centered</strong> (<em>bool</em>) – Indicates whether the explicit feature map is centered and has to be “de-centered”
+before being inverted. Defaults to the default value used to compute the explicit feature map phi.</p></li>
+<li><p><strong>normalized</strong> (<em>bool</em>) – Indicated whether the explicit feature map is normalized and has to be be scaled before
+being pseudo-inverted. Defaults to the default value used to compute the explicit feature map phi.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pseudo-inverted values of the value of phi.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tensor(N, dim_input)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

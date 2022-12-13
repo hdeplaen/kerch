@@ -26,7 +26,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 
-    :type kernel: kerpy.kernel.base, optional
+    :type kernel: kerpy.kernel._Statistics, optional
     :type bias: bool, optional
     :type bias_trainable: bool, optional
     """

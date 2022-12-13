@@ -1,66 +1,111 @@
-import numpy as np
+from pathlib import Path
+import sys
+path_root = Path(__file__).parents[1]
+sys.path.append(str(path_root))
+print(sys.path)
+
 import kerch
-from logging import DEBUG, INFO, WARNING
+import numpy as np
+from logging import DEBUG, INFO, WARNING, ERROR
 import torch
 from matplotlib import pyplot as plt
+import ray
+from ray import tune, air
+from ray.air.callbacks.wandb import WandbLoggerCallback
+# from ray.tune.integration.wandb import WandbTrainableMixin, wandb_mixin
+import wandb
+
+# wandb.init(project="mvkpca")
+
+ray.init(local_mode=False)
 
 # PRELIMINARIES --------------------------------------------------------------------------------------------
-kerch.set_log_level(WARNING)
-torch.random.manual_seed(42)
-NUM_POINTS = 5000
-NUM_WEIGHTS = 150
-DIM_OUTPUT = 10000
-SPLIT_RATIO = 0.8
+# torch.random.manual_seed(42)
 
-# DATA -----------------------------------------------------------------------------------------------------
-x = torch.tensor(np.linspace(-10, 10, NUM_POINTS)).unsqueeze(1)
-y = torch.tensor(np.sinc(x))
+def objective(config):
+    kerch.set_log_level(ERROR)
 
-rand_idx = torch.randperm(x.shape[0])
-train_len = int(len(rand_idx) * (1 - SPLIT_RATIO))
+    NUM_POINTS = int(config["NUM_POINTS"])
+    NUM_WEIGHTS = int(config["NUM_WEIGHTS"])
+    DIM_OUTPUT = int(config["DIM_OUTPUT"])
+    SPLIT_RATIO = .8
+    DEV = torch.device('cpu')
 
-# train
-train_x = x[rand_idx[:train_len], :]
-train_y = y[rand_idx[:train_len], :]
+    # DATA -----------------------------------------------------------------------------------------------------
+    x = torch.tensor(np.linspace(-10, 10, NUM_POINTS), device=DEV).unsqueeze(1)
+    y = torch.tensor(torch.sinc(x))
 
-# test
-test_x = x[rand_idx[train_len:], :]
-test_y = y[rand_idx[train_len:], :]
+    rand_idx = torch.randperm(x.shape[0])
+    train_len = int(len(rand_idx) * (1 - SPLIT_RATIO))
 
-# MODEL
-mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": "random_features", "num_weights": NUM_POINTS, "center": False, "sample": train_y},
-                       {"name": "time", "type": "random_features", "num_weights": NUM_POINTS, "center": False, "normalize": False, "sample": train_x},
-                       center=False, dim_output=DIM_OUTPUT)
-mdl.solve(representation='primal')
+    # train
+    train_x = x[rand_idx[:train_len], :]
+    train_y = y[rand_idx[:train_len], :]
+
+    # test
+    test_x = x[rand_idx[train_len:], :]
+    test_y = y[rand_idx[train_len:], :]
+
+    # MODEL
+    mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": "random_features", "num_weights": NUM_WEIGHTS, "_center": False, "sample": train_y},
+                           {"name": "time", "type": "random_features", "num_weights": NUM_WEIGHTS, "_center": False, "_normalize": False, "sample": train_x},
+                           center=False, dim_output=DIM_OUTPUT)
+    mdl.to(DEV)
+    mdl.solve(representation='primal')
 
 
-train_phi_yp = mdl.predict_oos({"time": train_x}).detach()
-train_yp = mdl.view("space").kernel.phi_pinv(train_phi_yp)
+    train_phi_yp = mdl.predict_oos({"time": train_x}).detach()
+    train_yp = mdl.view("space").kernel.phi_pinv(train_phi_yp)
 
-test_phi_yp = mdl.predict_oos({"time": test_x}).detach()
-test_yp = mdl.view("space").kernel.phi_pinv(test_phi_yp)
+    test_phi_yp = mdl.predict_oos({"time": test_x}).detach()
+    test_yp = mdl.view("space").kernel.phi_pinv(test_phi_yp)
 
-# plot ------------------------------------------------------
-phi_x, idx = torch.sort(train_x, dim=0)
-phi_y = train_y[idx, :]
+    MSE = torch.nn.MSELoss()
+    train_mse = MSE(train_y, train_yp)
+    test_mse = MSE(test_y, test_yp)
 
-phi_x_tilde_train, idx = torch.sort(train_x, dim=0)
-phi_y_tilde_train = train_yp[idx, :]
+    return {"train": float(train_mse),
+            "test": float(test_mse)}
 
-phi_x_tilde_test, idx = torch.sort(test_x, dim=0)
-phi_y_tilde_test = test_yp[idx, :]
+search_space = {
+    "NUM_POINTS": 1000,
+    "NUM_WEIGHTS": tune.grid_search((np.round(10**(np.linspace(0,3,20))))),
+    "DIM_OUTPUT": tune.grid_search((np.round(10**(np.linspace(0,3,20)))))
+}
 
-plt.figure()
-plt.plot(x.squeeze(), y.squeeze(), 'k--', label='Original function', lw=1)
-plt.plot(phi_x.squeeze(), phi_y.squeeze(), 'kx', label='Train set', lw=1)
-plt.plot(phi_x_tilde_train.squeeze(), phi_y_tilde_train.squeeze(), 'b+',
-         label='Pred on train_set', lw=1)
-plt.plot(phi_x_tilde_test.squeeze(), phi_y_tilde_test.squeeze(), 'r*',
-         label='Pred on test_set', lw=1)
-plt.title('RKM primal')
-plt.legend()
-plt.grid()
-plt.show()
+tuner = tune.Tuner(objective,
+                   param_space=search_space,
+                   run_config=air.RunConfig(
+                       callbacks=[
+                           WandbLoggerCallback(project="mvkpca",
+                                               group="sinc")
+                       ],
+                   ),
+                   )
+results = tuner.fit()
+print(results.get_best_result(metric="train", mode="min").config)
+
+# # plot ------------------------------------------------------
+# phi_x, idx = torch.sort(train_x, dim=0)
+# phi_y = train_y[idx, :]
+#
+# phi_x_tilde_train, idx = torch.sort(train_x, dim=0)
+# phi_y_tilde_train = train_yp[idx, :]
+#
+# phi_x_tilde_test, idx = torch.sort(test_x, dim=0)
+# phi_y_tilde_test = test_yp[idx, :]
+#
+# plt.figure()
+# plt.plot(x.cpu().squeeze(), y.cpu().squeeze(), 'k--', label='Original function', lw=1)
+# plt.plot(phi_x.cpu().squeeze(), phi_y.cpu().squeeze(), 'kx', label='Train set', lw=1)
+# plt.plot(phi_x_tilde_train.cpu().squeeze(), phi_y_tilde_train.cpu().squeeze(), 'b+',
+#          label='Pred on train_set', lw=1)
+# plt.plot(phi_x_tilde_test.cpu().squeeze(), phi_y_tilde_test.cpu().squeeze(), 'r*',
+#          label='Pred on test_set', lw=1)
+# plt.title('RKM primal')
+# plt.legend()
+# plt.grid()
+# plt.show()
 
 
 

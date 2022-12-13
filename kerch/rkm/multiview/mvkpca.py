@@ -130,7 +130,7 @@ class MVKPCA(_KPCA, MVLevel):
         """
         assert self._representation == 'primal', utils.PrimalError
         # construct two lists:
-        #   known: the views not in name that are serving as base,
+        #   known: the views not in name that are serving as _Statistics,
         #   unknown: the views that are to be predicted (names).
         if isinstance(names, str):
             names = [names]

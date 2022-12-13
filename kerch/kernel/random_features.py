@@ -55,7 +55,7 @@ class random_features(explicit):
                                            kwargs["weights_trainable"])
 
         if kwargs["weights"] is None:
-            self.num_weights = kwargs["num_weights"]
+            self.num_weights = int(kwargs["num_weights"])
         else:
             self.weights = kwargs["weights"]
 

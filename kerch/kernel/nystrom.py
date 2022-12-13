@@ -25,14 +25,14 @@ class nystrom(explicit):
         instability. If `None`, the value will be assigned to `num_sample`., defaults to `None`
     :param base_type: The type of kernel on which the explicit feature map is going to be constructed., defaults to
         `"rbf"`
-    :param base_center: Specifies if the base kernel has to be centered. This is redundant and can be directly handled
+    :param base_center: Specifies if the _Statistics kernel has to be centered. This is redundant and can be directly handled
         by the Nystrom kernel itself. It is only added for completeness., defaults to `False`
-    :param base_normalize: Specifies if the base kernel has to be normalized., This is redundant and can be directly
+    :param base_normalize: Specifies if the _Statistics kernel has to be normalized., This is redundant and can be directly
         handled by the Nystrom kernel itself. It is only added for completeness., defaults to `False`
-    :param \**kwargs: Other arguments for the base kernel (e.g. the bandwidth for an RBF kernel, the degree for a
+    :param \**kwargs: Other arguments for the _Statistics kernel (e.g. the bandwidth for an RBF kernel, the degree for a
         polynomial kernel etc.). For the default values, please refer to the requested class in question.
     :param base_kernel: Instead of creating a new kernel on which to use the Nyström method, one can also perform it
-        on an existing kernel. In that case, the other base arguments are bypassed., defaults to `None`
+        on an existing kernel. In that case, the other _Statistics arguments are bypassed., defaults to `None`
     :type dim: int, optional
     :type \**kwargs: dict, optional
     :type base_type: str, optional
@@ -58,8 +58,8 @@ class nystrom(explicit):
             super(nystrom, self).__init__(**kwargs)
 
             self._base_kernel = factory(**{**kwargs,
-                                               "center": kwargs["base_center"],
-                                               "normalize": kwargs["base_normalize"],
+                                               "_center": kwargs["base_center"],
+                                               "_normalize": kwargs["base_normalize"],
                                                "type": kwargs["base_type"]})
             self._base_kernel.init_sample(sample=self._sample, idx_sample=self.idx)
         else:
@@ -67,7 +67,7 @@ class nystrom(explicit):
             super(nystrom, self).__init__(**{**kwargs,
                                              "sample":k.sample,
                                              "sample_trainable": k.sample_trainable})
-            assert isinstance(k, base), "The base kernel is not of the kernel class."
+            assert isinstance(k, base), "The _Statistics kernel is not of the kernel class."
             self._base_kernel = k
             self.init_sample(k.sample, k.idx)
 

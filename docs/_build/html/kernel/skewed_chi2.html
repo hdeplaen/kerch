@@ -95,17 +95,25 @@
 <dd><p>Bases: <a class="reference internal" href="implicit.html#kerch.kernel.implicit" title="kerch.kernel.implicit.implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit</span></code></a></p>
 <p>Skewed Chi Squared kernel. Often used in computer vision.</p>
 <div class="math notranslate nohighlight">
-\[k(x,y) = \prod_i \frac{2\sqrt(x_i+c) \sqrt(y_i+c)}{x_i + y_i + 2c}.\]</div>
+\[k(x,y) = \prod_i \frac{2\sqrt(x_i+p) \sqrt(y_i+p)}{x_i + y_i + 2}.\]</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>c</strong> – Free parameter <span class="math notranslate nohighlight">\(c\)</span>., defaults to 0.</p></li>
-<li><p><strong>c_trainable</strong> – <cite>True</cite> if the gradient of <span class="math notranslate nohighlight">\(c\)</span> is to be computed. If so, a graph is computed
-and <span class="math notranslate nohighlight">\(c\)</span> can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
+<li><p><strong>p</strong> – Free parameter <span class="math notranslate nohighlight">\(p\)</span>., defaults to 0.</p></li>
+<li><p><strong>p_trainable</strong> – <cite>True</cite> if the gradient of <span class="math notranslate nohighlight">\(p\)</span> is to be computed. If so, a graph is computed
+and <span class="math notranslate nohighlight">\(p\)</span> can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
 <li><p><strong>center</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if any implicit feature or kernel is must be centered, <cite>False</cite> otherwise. The center
 is always performed relative to a statistic on the sample., defaults to <cite>False</cite></p></li>
 <li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if any implicit feature or kernel is must be normalized, <cite>False</cite> otherwise. The center
 is always performed relative to a statistic on the sample., defaults to <cite>False</cite></p></li>
+<li><p><strong>ligthweight</strong> – During the computation of the statistics for centering and normalization, intermediate values
+are computed. It <cite>True</cite>, the model only keeps the necessary final statistics for the centering and
+normalization specified during construction. All other values are either never computed either discarded if
+required at some point. If asking for out-of-sample without the default centering and construction values, the
+statistics would then be computed and immediately discarded. Thye would have to be computed over and over again
+if repetively required. However, provided the same values are used as the one specified in the construction,
+this is the most efficient, not computing or keeping anything unnecessary. This parameter controls a
+time-memory trade-off., defaults to <cite>True</cite></p></li>
 <li><p><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
 be given relative to these samples., defaults to <cite>None</cite></p></li>
 <li><p><strong>sample_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
@@ -134,9 +142,22 @@ called.</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.skewed_chi2.Phi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.skewed_chi2.Phi" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the sample datapoints. Same as calling
+<code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code>, but faster.
+It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+called.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.skewed_chi2.c">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#kerch.kernel.skewed_chi2.c" title="Permalink to this definition"></a></dt>
-<dd><p>Parameter :math:<a href="#id1"><span class="problematic" id="id2">``</span></a>c` of the kernel.</p>
+<span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.skewed_chi2.c" title="Permalink to this definition"></a></dt>
+<dd><p>Out-of-sample covariance matrix.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A centered and normalized covariance matrix is a correlation matrix.</p>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -162,6 +183,12 @@ if relevant.</p>
 <dt class="sig sig-object py" id="kerch.kernel.skewed_chi2.dim_input">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_input</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.skewed_chi2.dim_input" title="Permalink to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.skewed_chi2.explicit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explicit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.skewed_chi2.explicit" title="Permalink to this definition"></a></dt>
+<dd><p>True if the method has an explicit formulation, False otherwise.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -229,7 +256,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.skewed_chi2.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.skewed_chi2.k" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.skewed_chi2.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
@@ -292,6 +319,12 @@ training.</p>
 <dt class="sig sig-object py" id="kerch.kernel.skewed_chi2.num_sample">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.skewed_chi2.num_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.skewed_chi2.p">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">p</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#kerch.kernel.skewed_chi2.p" title="Permalink to this definition"></a></dt>
+<dd><p>Parameter :math:<a href="#id1"><span class="problematic" id="id2">``</span></a>p` of the kernel.</p>
 </dd></dl>
 
 <dl class="py property">

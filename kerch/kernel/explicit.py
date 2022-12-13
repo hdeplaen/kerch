@@ -27,6 +27,10 @@ class explicit(base, metaclass=ABCMeta):
         return f"Explicit kernel."
 
     @property
+    def explicit(self) -> bool:
+        return True
+
+    @property
     def dim_feature(self) -> int:
         if self._dim_feature is None:
             # if it has not been set before, we can compute it with a minimal example
@@ -42,12 +46,6 @@ class explicit(base, metaclass=ABCMeta):
     def _explicit(self, x=None):
         phi = super(explicit, self)._explicit(x)
         return phi
-
-    def _implicit_statistics(self, implicit=True):
-        return super(explicit, self)._implicit_statistics(implicit)
-
-    def k(self, x=None, y=None, implicit=False, center=None, normalize=None) -> torch.Tensor:
-        return super(explicit, self).k(x, y, implicit)
 
     @abstractmethod
     def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:

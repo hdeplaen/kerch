@@ -45,6 +45,11 @@ class polynomial(base):
         return f"polynomial kernel of order {self.degree}."
 
     @property
+    def explicit(self) -> bool:
+        self._log.debug("The explicit formulation of the polynomial kernel is not implemented.")
+        return False
+
+    @property
     def dim_feature(self) -> int:
         raise NotImplementedError
 
