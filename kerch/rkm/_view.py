@@ -14,7 +14,7 @@ from abc import ABCMeta, abstractmethod
 from typing import Union
 
 from kerch import utils
-from kerch.kernel import factory, base
+from kerch.kernel import factory, _Base
 from kerch._stochastic import _Stochastic
 
 

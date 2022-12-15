@@ -54,7 +54,7 @@ class _Transform(_Logger, metaclass=ABCMeta):
     def parent(self, val: _Transform):
         if self.parent is not None:
             self._log.debug(f"Overwriting parent of child {self.type}.")
-        self.parent = val
+        self._parent = val
         if self.type in self.parent.children:
             self._log.debug(f"Overwriting child of type {self.type} in parent {self.parent.type}.")
         self.parent.children[self.type] = self
@@ -116,8 +116,8 @@ class _Transform(_Logger, metaclass=ABCMeta):
 
             if not self._lightweight or self.default:
                 self._data = data
-        else:
-            return self._data
+            return data
+        return self._data
 
     @property
     def statistics(self):
@@ -129,8 +129,7 @@ class _Transform(_Logger, metaclass=ABCMeta):
 
             if not self._lightweight or self._default_path:
                 self._statistics = statistics
-        else:
-            return self._statistics
+        return self._statistics
 
     @abstractmethod
     def _explicit_statistics_oos(self, x=None):

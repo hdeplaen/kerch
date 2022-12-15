@@ -12,11 +12,11 @@ from math import sqrt
 from typing import Union
 
 from .. import utils
-from .explicit import explicit, base
+from ._explicit import _Explicit, _Statistics
 
 
-@utils.extend_docstring(explicit)
-class rff(explicit):
+@utils.extend_docstring(_Statistics)
+class RFF(_Explicit):
     r"""
     Random Fourier Features kernel.
 
@@ -39,7 +39,7 @@ class rff(explicit):
 
     :param num_weights: Number of weights :math:`d` sampled for the RFF., defaults to 1.
     :type num_weights: int, optional
-    :param weights: Explicit values for the weights may be provided instead of automatically sampling them with the
+    :param weights: _Explicit values for the weights may be provided instead of automatically sampling them with the
         provided `num_weights`., defaults to `None`.
     :type weights: Tensor(num_weights, dim_input), optional
     :param weights_trainable: Specifies if the weights are to be considered as trainable parameters during
@@ -53,7 +53,7 @@ class rff(explicit):
          "weights": None,
          "weights_trainable": False})
     def __init__(self, **kwargs):
-        super(rff, self).__init__(**kwargs)
+        super(RFF, self).__init__(**kwargs)
         self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                            kwargs["weights_trainable"])
 
@@ -140,10 +140,10 @@ class rff(explicit):
 
     @property
     def hparams(self):
-        return {"Kernel": "Random Fourier Features", **super(rff, self).hparams}
+        return {"Kernel": "Random Fourier Features", **super(RFF, self).hparams}
 
     def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:
-        phi = super(rff, self).phi_pinv(phi=phi, centered=centered, normalized=normalized)
+        phi = super(RFF, self).phi_pinv(phi=phi, centered=centered, normalized=normalized)
         phi = phi * sqrt(self.num_weights)
         weights_pinv = .5 * torch.linalg.pinv(self.weights).T
         return torch.acos(phi[:, :self.num_weights]) @ weights_pinv + \
@@ -151,7 +151,7 @@ class rff(explicit):
 
 
     def _explicit(self, x=None):
-        x = super(rff, self)._explicit(x)
+        x = super(RFF, self)._explicit(x)
         wx = x @ self.weights.T
         dim_inv_sqrt = 1 / sqrt(self.num_weights)
         return dim_inv_sqrt * torch.cat((torch.cos(wx),

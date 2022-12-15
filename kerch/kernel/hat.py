@@ -8,14 +8,14 @@ File containing the indicator kernel class.
 """
 
 from .. import utils
-from .implicit import implicit, base
+from ._implicit import _Implicit, _Statistics
 
 import torch
 
 
 
-@utils.extend_docstring(base)
-class hat(implicit):
+@utils.extend_docstring(_Statistics)
+class Hat(_Implicit):
     r"""
     Hat kernel.
 
@@ -39,7 +39,7 @@ class hat(implicit):
          "lag_trainable": False})
     def __init__(self, **kwargs):
         self._lag = kwargs["lag"]
-        super(hat, self).__init__(**kwargs)
+        super(Hat, self).__init__(**kwargs)
 
         assert self._dim_input == 1, "The hat kernel is only defined for 1-dimensional entries."
 
@@ -84,10 +84,10 @@ class hat(implicit):
 
     @property
     def hparams(self):
-        return {"Kernel": "Hat", **super(hat, self).hparams}
+        return {"Kernel": "Hat", **super(Hat, self).hparams}
 
     def _implicit(self, x=None, y=None):
-        x, y = super(hat, self)._implicit(x, y)
+        x, y = super(Hat, self)._implicit(x, y)
 
         x = x.T[:, :, None]
         y = y.T[:, None, :]
@@ -102,4 +102,4 @@ class hat(implicit):
 
     def _slow_parameters(self, recurse=True):
         yield self._lag
-        yield from super(hat, self)._slow_parameters(recurse)
+        yield from super(Hat, self)._slow_parameters(recurse)

@@ -8,14 +8,14 @@ File containing the indicator kernel class.
 """
 
 from .. import utils
-from .implicit import implicit, base
+from ._implicit import _Implicit, _Statistics
 
 import torch
 
 
 
-@utils.extend_docstring(base)
-class indicator(implicit):
+@utils.extend_docstring(_Statistics)
+class Indicator(_Implicit):
     r"""
     Indicator kernel.
 
@@ -64,7 +64,7 @@ class indicator(implicit):
         :param gamma: value on the diagonal (default 2 * lag + 1, which ensures PSD in most cases)
         """
         self._lag = kwargs["lag"]
-        super(indicator, self).__init__(**kwargs)
+        super(Indicator, self).__init__(**kwargs)
         assert self._dim_input == 1, "The indicator kernel is only defined for 1-dimensional entries."
 
         self._lag_trainable = kwargs["lag_trainable"]
@@ -116,7 +116,7 @@ class indicator(implicit):
 
     @property
     def hparams(self):
-        return {"Kernel": "Indicator", **super(indicator, self).hparams}
+        return {"Kernel": "Indicator", **super(Indicator, self).hparams}
 
     @property
     def gamma(self):
@@ -131,7 +131,7 @@ class indicator(implicit):
         if self._link_training and self.lag_trainable:
             self._gamma.data = 2 * self.lag + 1
 
-        x, y = super(indicator, self)._implicit(x, y)
+        x, y = super(Indicator, self)._implicit(x, y)
 
         x = x[:, :, None]
         y = y.T[:, None, :]
@@ -147,4 +147,4 @@ class indicator(implicit):
     def _slow_parameters(self, recurse=True):
         yield self._lag
         yield self._gamma
-        yield from super(indicator, self)._slow_parameters(recurse)
+        yield from super(Indicator, self)._slow_parameters(recurse)

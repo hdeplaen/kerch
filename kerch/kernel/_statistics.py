@@ -14,40 +14,109 @@ from torch import Tensor
 import torch
 
 from .. import utils
-from ._Base import _Base
+from ._base import _Base
 from ._transforms import TransformTree
 
 
 @utils.extend_docstring(_Base)
 class _Statistics(_Base, metaclass=ABCMeta):
     r"""
-    :param center: `True` if any implicit feature or kernel is must be centered, `False` otherwise. The _center
-        is always performed relative to a statistic on the sample., defaults to `False`
-    :param normalize: `True` if any implicit feature or kernel is must be normalized, `False` otherwise. The _center
-        is always performed relative to a statistic on the sample., defaults to `False`
+    :param default_transforms: A list composed of the elements `'normalize'` or `'center'`. For example a centered
+        cosine kernel which is centered and normalized in order to get a covariance matrix for example can be obtained
+        by invoking a linear kernel with `default_transforms = ['normalize', 'center', 'normalize']` or just a cosine
+        kernel with `default_transforms = ['center', 'normalize']`. Redundancy is automatically handled., defaults
+        to `[]`.
     :param ligthweight: During the computation of the statistics for centering and normalization, intermediate values
         are computed. It `True`, the model only keeps the necessary final statistics for the centering and
         normalization specified during construction. All other values are either never computed either discarded if
         required at some point. If asking for out-of-sample without the default centering and construction values, the
-        statistics would then be computed and immediately discarded. Thye would have to be computed over and over again
+        statistics would then be computed and immediately discarded. They would have to be computed over and over again
         if repetively required. However, provided the same values are used as the one specified in the construction,
         this is the most efficient, not computing or keeping anything unnecessary. This parameter controls a
         time-memory trade-off., defaults to `True`
-    :type center: bool, optional
-    :type normalize: bool, optional
+    :type default_transforms: List[str]
     :type ligthweight: bool, optional
     """
 
     @abstractmethod
     @utils.kwargs_decorator({
         "lightweight": True,
+        "default_transforms": [],
     })
     def __init__(self, **kwargs):
         super(_Statistics, self).__init__(**kwargs)
+
+        self._required_centered = False
+        self._required_normalized = False
+        self._naturally_centered = False
+        self._naturally_normalized = False
+
+        self._default_transforms = self._simplify_transforms(kwargs["default_transforms"])
         self._lightweight = kwargs["lightweight"]
 
+    def _simplify_transforms(self, transforms=None) -> List:
+        if transforms is None:
+            transforms = []
+
+        # add requirements
+        if self._required_centered:
+            transforms.insert(0, 'center')
+        if self._required_normalized:
+            transforms.insert(0, 'normalize')
+
+        # remove same following elements
+        previous_item = None
+        idx = 0
+        for current_item in transforms:
+            if current_item == previous_item:
+                transforms.pop(idx)
+            else:
+                previous_item = current_item
+                idx = idx + 1
+
+        # remove unnecessary operation if kernel does it by default
+        try:
+            if self._naturally_centered and transforms[0] == 'center':
+                transforms.pop(0)
+        except IndexError:
+            pass
+
+        try:
+            if self._naturally_normalized and transforms[0] == 'normalize':
+                transforms.pop(0)
+        except IndexError:
+            pass
+
+        return transforms
+
     def _get_transforms(self, transforms=None) -> List:
-        return []
+        if transforms is None:
+            return self._default_transforms
+        return self._simplify_transforms(transforms)
+
+    @property
+    def centered(self) -> bool:
+        r"""
+        Returns if the kernel is centered in the feature maps.
+        """
+        if not self._naturally_centered:
+            try:
+                return self._default_transforms[0] == 'center'
+            except IndexError:
+                return False
+        return True
+
+    @property
+    def normalized(self) -> bool:
+        r"""
+        Returns if the kernel is normalized in the feature maps.
+        """
+        if not self._naturally_normalized:
+            try:
+                return self._default_transforms[0] == 'normalize'
+            except IndexError:
+                return False
+        return True
 
     @property
     def _explicit_statistics(self) -> TransformTree:
@@ -102,11 +171,11 @@ class _Statistics(_Base, metaclass=ABCMeta):
                 phi = self._phi()
                 self._cache["K"] = phi @ phi.T
             else:
-                self._cache["K"] = self._explicit_statistics.default_data
+                self._cache["K"] = self._implicit_statistics.default_data
         return self._cache["K"]
 
     # ACCESSIBLE METHODS
-    def phi(self, x=None, transforms = None) -> Tensor:
+    def phi(self, x=None, transforms=None) -> Tensor:
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the specified points.
 
@@ -196,12 +265,15 @@ class _Statistics(_Base, metaclass=ABCMeta):
 
     def Cov(self, x=None, y=None) -> Tensor:
         transforms = self._default_transforms
-        if transforms[-1] == "normalize":
-            if transforms[-2] != "center":
-                transforms = transforms.append("center").append("normalize")
-        elif transforms[-1] == "center":
-            transforms = transforms.append("normalize")
-        else:
-            transforms = transforms.append("center").append("normalize")
+        try:
+            if not (self._default_transforms[-1] == 'normalize'
+                    and (self._default_transforms[-2] == 'center'
+                         or self._naturally_centered)):
+                transforms.append('center')
+                transforms.append('normalize')
+        except IndexError:
+            transforms.append('center')
+            transforms.append('normalize')
 
+        transforms = self._simplify_transforms(transforms)
         return self.c(x=x, y=y, transforms=transforms)

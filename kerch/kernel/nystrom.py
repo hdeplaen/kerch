@@ -11,11 +11,12 @@ import torch
 
 
 from .. import utils
-from .explicit import explicit, base
+from ._explicit import _Explicit, _Statistics
+from ._base import _Base
 from .factory import factory
 
-@utils.extend_docstring(base)
-class nystrom(explicit):
+@utils.extend_docstring(_Statistics)
+class Nystrom(_Explicit):
     r"""
     Nyström kernel. Constructs an explicit feature map based on the eigendecomposition of any kernel matrix based on
     some sample.
@@ -49,13 +50,14 @@ class nystrom(explicit):
         "base_kernel": None
     })
     def __init__(self, **kwargs):
-        assert kwargs["base_type"] != "nystrom", 'Cannot create a Nyström kernel based on another Nyström kernel.'
+        assert kwargs["base_type"].lower() != "nystrom", 'Cannot create a Nyström kernel based on another Nyström ' \
+                                                         'kernel.'
         self._base_kernel = None
 
         k = kwargs["base_kernel"]
         if k is None:
             # normal case with a kernel created from the factory
-            super(nystrom, self).__init__(**kwargs)
+            super(Nystrom, self).__init__(**kwargs)
 
             self._base_kernel = factory(**{**kwargs,
                                                "_center": kwargs["base_center"],
@@ -64,10 +66,10 @@ class nystrom(explicit):
             self._base_kernel.init_sample(sample=self._sample, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel
-            super(nystrom, self).__init__(**{**kwargs,
+            super(Nystrom, self).__init__(**{**kwargs,
                                              "sample":k.sample,
                                              "sample_trainable": k.sample_trainable})
-            assert isinstance(k, base), "The _Statistics kernel is not of the kernel class."
+            assert isinstance(k, _Base), "The _Statistics kernel is not of the kernel class."
             self._base_kernel = k
             self.init_sample(k.sample, k.idx)
 
@@ -107,10 +109,10 @@ class nystrom(explicit):
         return self._base_kernel
 
     def hparams(self):
-        return {"Kernel": "Feature", **super(nystrom, self).hparams}
+        return {"Kernel": "Feature", **super(Nystrom, self).hparams}
 
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
-        super(nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
+        super(Nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
         if self._base_kernel is not None:
             self._base_kernel.init_sample(sample=self.sample, idx_sample=self.idx)
 

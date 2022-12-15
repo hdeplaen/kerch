@@ -1,6 +1,7 @@
-from .base import base
+from ._statistics import _Statistics
 
-def factory(type='linear', **kwargs) -> base:
+
+def factory(type='linear', **kwargs) -> _Statistics:
     r"""
     Creates a kernel based on the specified type with the specified arguments. This is the same as
     calling `kerpy.kernel.type(**kwargs)` (if `type` is not a string here). This allows for the creation of kernel where
@@ -15,10 +16,16 @@ def factory(type='linear', **kwargs) -> base:
     :type \**kwargs: dict, optional
     :return: An instantiation of the specified kernel.
     """
-    try:
-        import kerch.kernel
-        kernel = getattr(kerch.kernel, type)
-    except:
-        raise NameError("Invalid kernel type.")
-    return kernel(**kwargs)
 
+    def case_insensitive_getattr(obj, attr):
+        for a in dir(obj):
+            if a.lower() == attr.lower():
+                return getattr(obj, a)
+        return None
+
+    import kerch.kernel
+    kernel = case_insensitive_getattr(kerch.kernel, type.replace("_", ""))
+    if kernel is None:
+        raise NameError("Invalid kernel type.")
+
+    return kernel(**kwargs)

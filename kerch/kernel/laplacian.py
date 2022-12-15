@@ -10,11 +10,11 @@ File containing the RBF kernel class.
 import torch
 
 from .. import utils
-from .exponential import exponential
+from ._exponential import _Exponential
 
 
-@utils.extend_docstring(exponential)
-class laplacian(exponential):
+@utils.extend_docstring(_Exponential)
+class Laplacian(_Exponential):
     r"""
     Laplacian kernel.
 
@@ -28,7 +28,7 @@ class laplacian(exponential):
     """
 
     def __init__(self, **kwargs):
-        super(laplacian, self).__init__(**kwargs)
+        super(Laplacian, self).__init__(**kwargs)
 
     def __str__(self):
         if self._sigma is None:
@@ -37,7 +37,7 @@ class laplacian(exponential):
 
     @property
     def hparams(self):
-        return {"Kernel": "Laplacian", **super(laplacian, self).hparams}
+        return {"Kernel": "Laplacian", **super(Laplacian, self).hparams}
 
     def _dist(self, x, y):
         x = x.T[:, :, None]

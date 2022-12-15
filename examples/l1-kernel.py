@@ -38,13 +38,13 @@ class exp_l1(exponential):
         # you can therefore verify before is it exists (if it is defined by a heuristic as
         # provided by the exponential kernel (abstract) mother class.
         try:
-            return f"Exponential-L1 kernel (sigma: {self.sigma})"
+            return f"_Exponential-L1 kernel (sigma: {self.sigma})"
         except AttributeError:
-            return f"Exponential-L1 kernel (sigma undefined)"
+            return f"_Exponential-L1 kernel (sigma undefined)"
 
     @property
     def hparams(self):
         # this is to be used to get back a lot of parameters and info typically for monitoring
         # with tensorboard, weights&biases or other.
-        return {"Kernel": "Exponential-L1",
+        return {"Kernel": "_Exponential-L1",
                 **super(exp_l1, self).hparams}

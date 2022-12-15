@@ -8,15 +8,11 @@ File containing the cosine kernel class.
 """
 
 from .. import utils
-from .linear import linear, base
-
-import torch
+from .linear import Linear, _Statistics
 
 
-
-
-@utils.extend_docstring(base)
-class cosine(linear):
+@utils.extend_docstring(_Statistics)
+class Cosine(Linear):
     r"""
     Cosine kernel.
 
@@ -28,24 +24,12 @@ class cosine(linear):
     """
 
     def __init__(self, **kwargs):
-        super(cosine, self).__init__(**{**kwargs,
-                                        "_normalize":True})
+        super(Cosine, self).__init__(**kwargs)
+        self._required_normalized = True
 
     def __str__(self):
         return "Cosine kernel."
 
     @property
     def hparams(self):
-        return {"Kernel": "Cosine", **super(cosine, self).hparams}
-
-    @property
-    def normalize(self) -> bool:
-        r"""
-        Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.
-        """
-        return self._normalize_requested
-
-    @normalize.setter
-    def normalize(self, val: bool):
-        self._log.warning('Changing the normalization has not effect on the cosine kernel as it is always normalized '
-                          'by definition. Please consider a linear kernel instead.')
+        return {"Kernel": "Cosine", **super(Cosine, self).hparams}

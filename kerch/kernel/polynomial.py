@@ -8,13 +8,13 @@ File containing the polynomial kernel class.
 """
 
 from .. import utils
-from .base import base
+from ._statistics import _Statistics
 
 import torch
 
 
-@utils.extend_docstring(base)
-class polynomial(base):
+@utils.extend_docstring(_Statistics)
+class Polynomial(_Statistics):
     r"""
     Polynomial kernel. Projection onto a hypershpere.
 
@@ -35,7 +35,7 @@ class polynomial(base):
         {"degree": 2., "degree_trainable": False})
     def __init__(self, **kwargs):
         self._degree = kwargs["degree"]
-        super(polynomial, self).__init__(**kwargs)
+        super(Polynomial, self).__init__(**kwargs)
 
         self._degree_trainable = kwargs["degree_trainable"]
         self._degree = torch.nn.Parameter(torch.tensor(self._degree),
@@ -88,13 +88,13 @@ class polynomial(base):
         return {"Kernel": "Polynomial"}
 
     def _implicit(self, x=None, y=None):
-        x, y = super(polynomial, self)._implicit(x, y)
+        x, y = super(Polynomial, self)._implicit(x, y)
         return (x @ y.T + 1) ** self._degree
 
     def _explicit(self, x=None):
-        assert (self.degree % 1) == 0, 'Explicit formulation is only possible for degrees that are natural numbers.'
+        assert (self.degree % 1) == 0, '_Explicit formulation is only possible for degrees that are natural numbers.'
         raise NotImplementedError
 
     def _slow_parameters(self, recurse=True):
         yield self._degree
-        yield from super(polynomial, self)._slow_parameters(recurse)
+        yield from super(Polynomial, self)._slow_parameters(recurse)

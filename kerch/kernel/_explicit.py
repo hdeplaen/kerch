@@ -9,18 +9,19 @@ File containing the linear kernel class.
 
 import torch
 from .. import utils
-from .base import base
+from ._statistics import _Statistics
 from abc import ABCMeta, abstractmethod
 
-@utils.extend_docstring(base)
-class explicit(base, metaclass=ABCMeta):
+
+@utils.extend_docstring(_Statistics)
+class _Explicit(_Statistics, metaclass=ABCMeta):
 
     @utils.kwargs_decorator({})
     def __init__(self, **kwargs):
         """
         no specific parameters to the linear kernel
         """
-        super(explicit, self).__init__(**kwargs)
+        super(_Explicit, self).__init__(**kwargs)
         self._dim_feature = None
 
     def __str__(self):
@@ -44,7 +45,7 @@ class explicit(base, metaclass=ABCMeta):
 
     @abstractmethod
     def _explicit(self, x=None):
-        phi = super(explicit, self)._explicit(x)
+        phi = super(_Explicit, self)._explicit(x)
         return phi
 
     @abstractmethod
@@ -66,18 +67,20 @@ class explicit(base, metaclass=ABCMeta):
             :return: Pseudo-inverted values of the value of phi.
             :rtype: Tensor(N, dim_input)
         """
-        if phi is None:
-            phi = self.phi()
-        if centered is None:
-            centered = self._center
-        if normalized is None:
-            normalized = self._normalize
-        if normalized:
-            self._log.error("Pseudo-inversion of normalized explicit feature maps is not implemented.")
-            raise NotImplementedError
-        if centered:
-            if self._explicit_statistics() is None:
-                self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
-                raise Exception
-            phi = phi + self._cache["phi_mean"]
-        return phi
+
+        raise NotImplementedError
+
+        # if phi is None:
+        #     phi = self.phi()
+        # if centered is None:
+        #     centered = self._center
+        # if normalized is None:
+        #     normalized = self._normalize
+        # if normalized:
+        #     self._log.error("Pseudo-inversion of normalized explicit feature maps is not implemented.")
+        #     raise NotImplementedError
+        # if centered:
+        #     if self._explicit_statistics() is None:
+        #         self._log.error('Impossible to compute statistics on the sample (probably due to an undefined sample.')
+        #         raise Exception
+        #     phi = phi + self._cache["phi_mean"]
