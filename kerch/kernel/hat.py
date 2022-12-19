@@ -30,8 +30,8 @@ class Hat(_Implicit):
     :param lag: Lag parameter., defaults to 1
     :param lag_trainable: `True` if the gradient of the lag is to be computed. If so, a graph is computed
         and the lag can be updated. `False` just leads to a static computation., defaults to `False`
-    :type lag: double, optional
-    :type lag_trainable: bool, optional
+    :name lag: double, optional
+    :name lag_trainable: bool, optional
     """
 
     @utils.kwargs_decorator(

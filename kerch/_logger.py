@@ -43,7 +43,7 @@ class _Logger(metaclass=ABCMeta):
 
         :param level: If the value is ``None``, the current general KerPy log Level will be used (WARNING if not
             specified otherwise)., defaults to ``None``.
-        :param type: int, optional
+        :param name: int, optional
         """
         if level is None:
             level = _GLOBALS["LOG_LEVEL"]

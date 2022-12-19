@@ -3,17 +3,17 @@ from ._statistics import _Statistics
 
 def factory(type='linear', **kwargs) -> _Statistics:
     r"""
-    Creates a kernel based on the specified type with the specified arguments. This is the same as
-    calling `kerpy.kernel.type(**kwargs)` (if `type` is not a string here). This allows for the creation of kernel where
-    the type of kernel is passed as a string.
+    Creates a kernel based on the specified name with the specified arguments. This is the same as
+    calling `kerpy.kernel.name(**kwargs)` (if `name` is not a string here). This allows for the creation of kernel where
+    the name of kernel is passed as a string.
 
     :param type: Type of kernel chosen. For the possible choices, please refer to the (non-abstract) classes
         herebelow., defaults to `linear`
     :param \**kwargs: Arguments to be passed to the kernel constructor, such as `sample` or `sigma`. If an argument is
         passed that does not exist (e.g. `sigma` to a `linear` kernel), it will just be neglected. For the default
         values, please refer to the default values of the requested kernel.
-    :type type: str, optional
-    :type \**kwargs: dict, optional
+    :name type: str, optional
+    :name \**kwargs: dict, optional
     :return: An instantiation of the specified kernel.
     """
 
@@ -26,6 +26,6 @@ def factory(type='linear', **kwargs) -> _Statistics:
     import kerch.kernel
     kernel = case_insensitive_getattr(kerch.kernel, type.replace("_", ""))
     if kernel is None:
-        raise NameError("Invalid kernel type.")
+        raise NameError("Invalid kernel name.")
 
     return kernel(**kwargs)

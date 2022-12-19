@@ -36,13 +36,13 @@ class RandomFeatures(_Explicit):
         bijection is guaranteed if :math:`d = \texttt{dim_input}`.
 
     :param num_weights: Number of weights :math:`d` sampled for the Random Features kernel., defaults to 1.
-    :type num_weights: int, optional
+    :name num_weights: int, optional
     :param weights: _Explicit values for the weights may be provided instead of automatically sampling them with the
         provided `num_weights`., defaults to `None`.
-    :type weights: Tensor(num_weights, dim_input), optional
+    :name weights: Tensor(num_weights, dim_input), optional
     :param weights_trainable: Specifies if the weights are to be considered as trainable parameters during
         backpropagation., default to `False`.
-    :type weights_trainable: bool, optional
+    :name weights_trainable: bool, optional
     """
 
     @utils.kwargs_decorator(

@@ -90,7 +90,7 @@ class TestKernels(unittest.TestCase):
         """
         for type_name in self.tested_kernels:
             sample = self.sample
-            k = kerch.kernel.factory(type=type_name, sample=sample, center=True)
+            k = kerch.kernel.factory(type=type_name, sample=sample, default_transforms=['center'])
             self.assertAlmostEqual(torch.norm(k.K - k.k(x=sample, y=sample), p='fro').numpy(), 0, msg=type_name)
 
     def test_out_of_sample_normalized(self):
@@ -99,7 +99,7 @@ class TestKernels(unittest.TestCase):
         """
         for type_name in self.tested_kernels:
             sample = self.sample
-            k = kerch.kernel.factory(type=type_name, sample=sample, normalize=True)
+            k = kerch.kernel.factory(type=type_name, sample=sample, default_transforms=['normalize'])
             self.assertAlmostEqual(torch.norm(k.K - k.k(x=sample, y=sample), p='fro').numpy(), 0, msg=type_name)
 
     def test_nystrom_scratch(self):

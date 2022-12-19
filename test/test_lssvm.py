@@ -71,7 +71,7 @@ class TestLSSVM(unittest.TestCase):
             mdl1.fit(method="optimize", verbose=False, euclidean_lr=1.e-3, maxiter=100)
             kerch.plot.classifier_level(mdl1)
             # ##
-            # mdl2 = kerch.rkm.LSSVM(type=type,
+            # mdl2 = kerch.rkm.LSSVM(name=name,
             #                       sample=self.x,
             #                       representation="primal")
             # mdl2.solve()

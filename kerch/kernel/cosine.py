@@ -25,7 +25,7 @@ class Cosine(Linear):
 
     def __init__(self, **kwargs):
         super(Cosine, self).__init__(**kwargs)
-        self._required_normalized = True
+        self._required_transforms = "unit_sphere_normalization"
 
     def __str__(self):
         return "Cosine kernel."

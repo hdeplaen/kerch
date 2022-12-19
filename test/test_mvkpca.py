@@ -23,10 +23,10 @@ class TestKPCA(unittest.TestCase):
         """
         for type in self.primal_types:
             mdl = kerch.rkm.MVKPCA({"name": "x",
-                                    "type": type,
+                                    "name": type,
                                     "sample": self.x},
                                    {"name": "y",
-                                    "type": type,
+                                    "name": type,
                                     "sample": self.y},
                                    representation="primal")
             mdl.solve()
@@ -44,12 +44,12 @@ class TestKPCA(unittest.TestCase):
         Check Multi-View consistency in dual.
         """
         pass
-        # for type in self.dual_types:
+        # for name in self.dual_types:
         #     mdl = kerch.rkm.MVKPCA({"name": "x",
-        #                             "type": type,
+        #                             "name": name,
         #                             "sample": self.x},
         #                            {"name": "y",
-        #                             "type": type,
+        #                             "name": name,
         #                             "sample": self.y},
         #                            representation="dual")
         #     mdl.solve()
@@ -68,10 +68,10 @@ class TestKPCA(unittest.TestCase):
         """
         for type in self.primal_types:
             mdl1 = kerch.rkm.MVKPCA({"name": "x",
-                                     "type": type,
+                                     "name": type,
                                      "sample": self.x},
                                     {"name": "y",
-                                     "type": type,
+                                     "name": type,
                                      "sample": self.y},
                                     representation="primal",
                                     dim_output=self.DIM_FEATURE)
@@ -80,10 +80,10 @@ class TestKPCA(unittest.TestCase):
             var1 = mdl1.relative_variance()
             ##
             mdl2 = kerch.rkm.MVKPCA({"name": "x",
-                                     "type": type,
+                                     "name": type,
                                      "sample": self.x},
                                     {"name": "y",
-                                     "type": type,
+                                     "name": type,
                                      "sample": self.y},
                                     representation="primal",
                                     dim_output=self.DIM_FEATURE)
@@ -99,10 +99,10 @@ class TestKPCA(unittest.TestCase):
         """
         for type in self.dual_types:
             mdl1 = kerch.rkm.MVKPCA({"name": "x",
-                                     "type": type,
+                                     "name": type,
                                      "sample": self.x},
                                     {"name": "y",
-                                     "type": type,
+                                     "name": type,
                                      "sample": self.y},
                                     representation="dual",
                                     dim_output=self.DIM_FEATURE)
@@ -111,10 +111,10 @@ class TestKPCA(unittest.TestCase):
             var1 = mdl1.relative_variance()
             ##
             mdl2 = kerch.rkm.MVKPCA({"name": "x",
-                                     "type": type,
+                                     "name": type,
                                      "sample": self.x},
                                     {"name": "y",
-                                     "type": type,
+                                     "name": type,
                                      "sample": self.y},
                                     representation="dual",
                                     dim_output=self.DIM_FEATURE)

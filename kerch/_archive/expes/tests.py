@@ -31,7 +31,7 @@ class TestLevels(unittest.TestCase):
                         "classifier": classifier,
                         "kernel": kernel_params,
                         "init_kernels": num_data}
-        learn_params = {"type": "sgd",
+        learn_params = {"name": "sgd",
                         "init": False,
                         "plot": False,
                         "maxiter": 5e+4,
@@ -61,38 +61,38 @@ class TestLevels(unittest.TestCase):
     def test_primal_kpca(self):
         # print('PRIMAL KPCA')
         self._test_prototype(type="KPCA", representation="primal", kernel="linear")
-        # self._test_prototype(type="KPCA", representation="primal", kernel="polynomial") # NOT IMPLEMENTED
+        # self._test_prototype(name="KPCA", representation="primal", kernel="polynomial") # NOT IMPLEMENTED
 
     def test_dual_kpca(self):
         # print('DUAL KPCA')
         self._test_prototype(type="KPCA", representation="dual", kernel="linear", lr=0.001)
         self._test_prototype(type="KPCA", representation="dual", kernel="rbf", lr=0.01)
-        # self._test_prototype(type="KPCA", representation="dual", kernel="polynomial") # ERROR
-        # self._test_prototype(type="KPCA", representation="dual", kernel="sigmoid", lr=0.001)
+        # self._test_prototype(name="KPCA", representation="dual", kernel="polynomial") # ERROR
+        # self._test_prototype(name="KPCA", representation="dual", kernel="sigmoid", lr=0.001)
 
     def test_primal_lssvm(self):
         # print('PRIMAL LSSVM')
         self._test_prototype(type="LSSVM", representation="primal", kernel="linear", lr=0.05)
-        # self._test_prototype(type="LSSVM", representation="primal", kernel="polynomial")
+        # self._test_prototype(name="LSSVM", representation="primal", kernel="polynomial")
 
     def test_dual_lssvm(self):
         # print('DUAL LSSVM')
         self._test_prototype(type="LSSVM", representation="dual", kernel="linear", lr=0.001)
         self._test_prototype(type="LSSVM", representation="dual", kernel="rbf", lr=0.1)
-        # self._test_prototype(type="LSSVM", representation="dual", kernel="polynomial")
-        # self._test_prototype(type="LSSVM", representation="dual", kernel="sigmoid", lr=0.05)
+        # self._test_prototype(name="LSSVM", representation="dual", kernel="polynomial")
+        # self._test_prototype(name="LSSVM", representation="dual", kernel="sigmoid", lr=0.05)
 
     def test_primal_lssvm_classifier(self):
         # print('PRIMAL LSSVM CLASSIFIER')
         self._test_prototype(type="LSSVM", representation="primal", kernel="linear", classifier=True, lr=0.01)
-        # self._test_prototype(type="LSSVM", representation="primal", kernel="polynomial", classifier=True)
+        # self._test_prototype(name="LSSVM", representation="primal", kernel="polynomial", classifier=True)
 
     def test_dual_lssvm_classifier(self):
         # print('DUAL LSSVM CLASSIFIER')
         self._test_prototype(type="LSSVM", representation="dual", kernel="linear", classifier=True, lr=0.001)
         self._test_prototype(type="LSSVM", representation="dual", kernel="rbf", classifier=True, lr=0.1)
-        # self._test_prototype(type="LSSVM", representation="dual", kernel="polynomial", classifier=True)
-        # self._test_prototype(type="LSSVM", representation="dual", kernel="sigmoid", classifier=True, lr=0.002)
+        # self._test_prototype(name="LSSVM", representation="dual", kernel="polynomial", classifier=True)
+        # self._test_prototype(name="LSSVM", representation="dual", kernel="sigmoid", classifier=True, lr=0.002)
 
 class Suites():
     @staticmethod

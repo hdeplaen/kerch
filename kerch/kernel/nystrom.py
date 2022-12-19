@@ -24,7 +24,7 @@ class Nystrom(_Explicit):
     :param dim: Dimension of the explicit feature map to be constructed. This value cannot exceed the number of sample
         points. During eigendecomposition, very small eigenvalues are also going to pruned to avoid numerical
         instability. If `None`, the value will be assigned to `num_sample`., defaults to `None`
-    :param base_type: The type of kernel on which the explicit feature map is going to be constructed., defaults to
+    :param base_type: The name of kernel on which the explicit feature map is going to be constructed., defaults to
         `"rbf"`
     :param base_center: Specifies if the _Statistics kernel has to be centered. This is redundant and can be directly handled
         by the Nystrom kernel itself. It is only added for completeness., defaults to `False`
@@ -34,12 +34,12 @@ class Nystrom(_Explicit):
         polynomial kernel etc.). For the default values, please refer to the requested class in question.
     :param base_kernel: Instead of creating a new kernel on which to use the Nyström method, one can also perform it
         on an existing kernel. In that case, the other _Statistics arguments are bypassed., defaults to `None`
-    :type dim: int, optional
-    :type \**kwargs: dict, optional
-    :type base_type: str, optional
-    :type base_center: bool, optional
-    :type base_normalize: bool, optional
-    :type base_kernel: kerpy.kernel.*, optional
+    :name dim: int, optional
+    :name \**kwargs: dict, optional
+    :name base_type: str, optional
+    :name base_center: bool, optional
+    :name base_normalize: bool, optional
+    :name base_kernel: kerpy.kernel.*, optional
     """
 
     @utils.kwargs_decorator({
@@ -62,7 +62,7 @@ class Nystrom(_Explicit):
             self._base_kernel = factory(**{**kwargs,
                                                "_center": kwargs["base_center"],
                                                "_normalize": kwargs["base_normalize"],
-                                               "type": kwargs["base_type"]})
+                                               "name": kwargs["base_type"]})
             self._base_kernel.init_sample(sample=self._sample, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel

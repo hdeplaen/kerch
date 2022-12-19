@@ -34,8 +34,8 @@ oos_y = torch.sin(oos_x)
 
 # MODEL
 mdl = kerch.rkm.multiview.MVKPCA(
-    {"name": "space", "type": "random_features", "num_weights": NUM_WEIGHTS, "_center": False, "sample": train_y},
-    {"name": "time", "type": "random_features", "base_type": "rbf", "num_weights": NUM_WEIGHTS, "_center": False, "_normalize": False,
+    {"name": "space", "name": "random_features", "num_weights": NUM_WEIGHTS, "_center": False, "sample": train_y},
+    {"name": "time", "name": "random_features", "base_type": "rbf", "num_weights": NUM_WEIGHTS, "_center": False, "_normalize": False,
      "sample": train_x},
     center=False, dim_output=DIM_OUTPUT)
 mdl.to(DEV)

@@ -37,7 +37,7 @@ class Indicator(_Implicit):
         however ensures it, as long as the inputs are integers. If they are not, this may get more complicated.
 
     .. warning::
-        For this type of kernel, the input dimension of the datapoints `dim_input` must be 1.
+        For this name of kernel, the input dimension of the datapoints `dim_input` must be 1.
 
     :param lag: Lag parameter :math:`p`., defaults to 1.
     :param gamma: Identity value :math:`\gamma` of the kernel. If `None`, the value will be :math:`\gamma = 2p+1` to
@@ -47,10 +47,10 @@ class Indicator(_Implicit):
     :param gamma_trainable: `True` if the gradient of the :math:`\gamma` is to be computed. If so, a graph is computed
         and the :math:`\gamma` can be updated. `False` just leads to a static computation., this value will be tied to the
         evolution of the lag :math:`p`., defaults to `False`
-    :type lag: double, optional
-    :type gamma: double, optional
-    :type lag_trainable: bool, optional
-    :type gamma_trainable: bool, optional
+    :name lag: double, optional
+    :name gamma: double, optional
+    :name lag_trainable: bool, optional
+    :name gamma_trainable: bool, optional
     """
 
     @utils.kwargs_decorator(

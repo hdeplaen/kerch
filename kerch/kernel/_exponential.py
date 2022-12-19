@@ -23,8 +23,8 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         only., defaults to `None`.
     :param sigma_trainable: `True` if the gradient of the bandwidth is to be computed. If so, a graph is computed
         and the bandwidth can be updated. `False` just leads to a static computation., defaults to `False`
-    :type sigma: double, optional
-    :type sigma_trainable: bool, optional
+    :name sigma: double, optional
+    :name sigma_trainable: bool, optional
     """
 
     @utils.kwargs_decorator(

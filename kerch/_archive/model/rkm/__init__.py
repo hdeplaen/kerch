@@ -347,7 +347,7 @@ class RKM(torch.nn.Module):
         switcher3 = {"soft": SoftLSSVM.SoftLSSVM, "hard": HardLSSVM.HardLSSVM}
         switcher1 = {"KPCA": switcher2, "LSSVM": switcher3}
 
-        level = switcher1.get(type, "Invalid Level type (KPCA/LSSVM)"). \
+        level = switcher1.get(type, "Invalid Level name (KPCA/LSSVM)"). \
             get(kwargs["constraint"], "Invalid Level constraint (soft/hard)")(device=self.device, **kwargs)
 
         euclidean, slow, stiefel = level.get_params(slow_names='sigma')

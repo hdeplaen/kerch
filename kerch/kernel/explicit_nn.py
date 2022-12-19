@@ -27,7 +27,7 @@ class ExplicitNN(_Explicit):
         \phi(x) = NN\left(x\right)
 
     :param network: Network to be used.
-    :type network: torch.nn.Module
+    :name network: torch.nn.Module
     """
 
     @utils.kwargs_decorator(

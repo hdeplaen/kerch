@@ -116,8 +116,8 @@ plt.show()
 
 
 ## MV-KPCA
-mdl = kerch.rkm.MVKPCA({"name": "space", "type": "explicit_nn", "_center": True, "network": encx},
-                       {"name": "time", "type": "linear", "_center": True},
+mdl = kerch.rkm.MVKPCA({"name": "space", "name": "explicit_nn", "_center": True, "network": encx},
+                       {"name": "time", "name": "linear", "_center": True},
                        dim_output=DIM_KPCA, representation='primal',
                        param_trainable=False)
 mdl.view('space').init_sample(x)

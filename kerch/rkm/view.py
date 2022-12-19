@@ -26,9 +26,9 @@ class View(_View, _Sample):
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 
-    :type kernel: kerpy.kernel._Statistics, optional
-    :type bias: bool, optional
-    :type bias_trainable: bool, optional
+    :name kernel: kerpy.kernel._Statistics, optional
+    :name bias: bool, optional
+    :name bias_trainable: bool, optional
     """
 
     @utils.kwargs_decorator({

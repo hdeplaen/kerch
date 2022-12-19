@@ -8,14 +8,14 @@ File containing the abstract kernel classes.
 """
 
 from abc import ABCMeta, abstractmethod
-from typing import Union, List
+from typing import List
 
-from torch import Tensor
 import torch
+from torch import Tensor
 
 from .. import utils
 from ._base import _Base
-from ._transforms import TransformTree
+from kerch._transforms import TransformTree, _UnitSphereNormalization
 
 
 @utils.extend_docstring(_Base)
@@ -34,8 +34,8 @@ class _Statistics(_Base, metaclass=ABCMeta):
         if repetively required. However, provided the same values are used as the one specified in the construction,
         this is the most efficient, not computing or keeping anything unnecessary. This parameter controls a
         time-memory trade-off., defaults to `True`
-    :type default_transforms: List[str]
-    :type ligthweight: bool, optional
+    :name default_transforms: List[str]
+    :name ligthweight: bool, optional
     """
 
     @abstractmethod
@@ -46,8 +46,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
     def __init__(self, **kwargs):
         super(_Statistics, self).__init__(**kwargs)
 
-        self._required_centered = False
-        self._required_normalized = False
+        self._required_transforms = None
         self._naturally_centered = False
         self._naturally_normalized = False
 
@@ -59,30 +58,15 @@ class _Statistics(_Base, metaclass=ABCMeta):
             transforms = []
 
         # add requirements
-        if self._required_centered:
-            transforms.insert(0, 'center')
-        if self._required_normalized:
-            transforms.insert(0, 'normalize')
+        if self._required_transforms is not None:
+            transforms.append(self._required_transforms)
 
         # remove same following elements
-        previous_item = None
-        idx = 0
-        for current_item in transforms:
-            if current_item == previous_item:
-                transforms.pop(idx)
-            else:
-                previous_item = current_item
-                idx = idx + 1
+        TransformTree.beautify_transforms(transforms)
 
         # remove unnecessary operation if kernel does it by default
         try:
-            if self._naturally_centered and transforms[0] == 'center':
-                transforms.pop(0)
-        except IndexError:
-            pass
-
-        try:
-            if self._naturally_normalized and transforms[0] == 'normalize':
+            if self._naturally_normalized and transforms[0] == _UnitSphereNormalization:
                 transforms.pop(0)
         except IndexError:
             pass
@@ -133,7 +117,8 @@ class _Statistics(_Base, metaclass=ABCMeta):
             self._cache["implicit"] = TransformTree(explicit=False,
                                                     data=self._implicit,
                                                     default_transforms=self._default_transforms,
-                                                    lighweight=self._lightweight)
+                                                    lighweight=self._lightweight,
+                                                    implicit_self=self._implicit_self)
         return self._cache["implicit"]
 
     def _phi(self):
@@ -181,7 +166,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
 
         :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
             defaults to `None`
-        :type x: Tensor(,dim_input), optional
+        :name x: Tensor(,dim_input), optional
         :raises: PrimalError
         """
         x = utils.castf(x)
@@ -206,8 +191,8 @@ class _Statistics(_Base, metaclass=ABCMeta):
         :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
         :param y: Out-of-sample points (second dimension). If `None`, the default sample will be used., defaults to `None`
 
-        :type x: Tensor(N,dim_input), optional
-        :type y: Tensor(M,dim_input), optional
+        :name x: Tensor(N,dim_input), optional
+        :name y: Tensor(M,dim_input), optional
 
         :return: Kernel matrix
         :rtype: Tensor(N,M)
@@ -220,7 +205,15 @@ class _Statistics(_Base, metaclass=ABCMeta):
         x = utils.castf(x)
         y = utils.castf(y)
         transforms = self._get_transforms(transforms)
-        return self._implicit_statistics.apply_transforms(data_fun=self._implicit, x=x, y=y, transforms=transforms)
+        if self.explicit:
+            phi_x = self._explicit_statistics.apply_transforms(data=self._explicit, x=x, transforms=transforms)
+            if utils.equal(x, y):
+                phi_y = phi_x
+            else:
+                phi_y = self._explicit_statistics.apply_transforms(data=self._explicit, x=y, transforms=transforms)
+            return phi_x @ phi_y.T
+        else:
+            return self._implicit_statistics.apply_transforms(data=self._implicit, x=x, y=y, transforms=transforms)
 
     def c(self, x=None, y=None, transforms=None) -> Tensor:
         r"""
@@ -228,11 +221,11 @@ class _Statistics(_Base, metaclass=ABCMeta):
         """
 
         transforms = self._get_transforms(transforms)
-        phi_x = self._explicit_statistics.apply_transforms(data_fun=self._explicit, x=x, transforms=transforms)
-        if x == y:
+        phi_x = self._explicit_statistics.apply_transforms(data=self._explicit, x=x, transforms=transforms)
+        if torch.equal(x,y):
             phi_y = phi_x
         else:
-            phi_y = self._explicit_statistics.apply_transforms(data_fun=self._explicit, x=y, transforms=transforms)
+            phi_y = self._explicit_statistics.apply_transforms(data=self._explicit, x=y, transforms=transforms)
         return phi_x.T @ phi_y
 
     def forward(self, x, representation="dual") -> Tensor:
@@ -243,8 +236,8 @@ class _Statistics(_Base, metaclass=ABCMeta):
         :param representation: Chosen representation. If `dual`, an out-of-sample kernel matrix is returned. If
             `primal` is specified, it returns the explicit feature map., defaults to `dual`
 
-        :type x: Tensor(,dim_input)
-        :type representation: str, optional
+        :name x: Tensor(,dim_input)
+        :name representation: str, optional
 
         :return: Out-of-sample kernel matrix or explicit feature map depending on `representation`.
 

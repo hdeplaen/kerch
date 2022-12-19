@@ -27,7 +27,7 @@ class ImplicitNN(_Implicit):
 
 
     :param network: Network to be used.
-    :type network: torch.nn.Module
+    :name network: torch.nn.Module
     """
 
     @utils.kwargs_decorator(

@@ -57,13 +57,13 @@ class _Explicit(_Statistics, metaclass=ABCMeta):
                 The normalized version is not implemented
 
             :param phi: Image to be pseudo-inverted. Defaults to the explicit feature map of the sample.
-            :type phi: Tensor(N, dim_feature)
+            :name phi: Tensor(N, dim_feature)
             :param centered: Indicates whether the explicit feature map is centered and has to be "de-centered"
                 before being inverted. Defaults to the default value used to compute the explicit feature map phi.
-            :type centered: bool
+            :name centered: bool
             :param normalized: Indicated whether the explicit feature map is normalized and has to be be scaled before
                 being pseudo-inverted. Defaults to the default value used to compute the explicit feature map phi.
-            :type normalized: bool
+            :name normalized: bool
             :return: Pseudo-inverted values of the value of phi.
             :rtype: Tensor(N, dim_input)
         """

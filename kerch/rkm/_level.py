@@ -12,8 +12,8 @@ class _Level(_View, metaclass=ABCMeta):
     :param eta: :math:`\eta`., defaults to 1.
     :param representation: Chosen representation, "primal" or "dual"., defaults to "dual".
 
-    :type eta: double, optional
-    :type representation: str, optional
+    :name eta: double, optional
+    :name representation: str, optional
     """
 
     @utils.extend_docstring(_View)
@@ -68,7 +68,7 @@ class _Level(_View, metaclass=ABCMeta):
         a dual formulation to be fitted.
 
         :param representation: Representation of the model (``"primal"`` or ``"dual"``)., defaults to ``"dual"``.
-        :type representation: str, optional
+        :name representation: str, optional
         """
 
         # self._log.debug("The fitting is always done on the full sample dataset, regardless of the stochastic state.")
@@ -101,7 +101,7 @@ class _Level(_View, metaclass=ABCMeta):
     def fit(self, **kwargs):
         switcher = {"exact": self.solve,
                     "optimize": self.optimize}
-        switcher.get(kwargs["method"], 'Invalid method type (must be solve or optimize')(**kwargs)
+        switcher.get(kwargs["method"], 'Invalid method name (must be solve or optimize')(**kwargs)
 
     @utils.kwargs_decorator({
         "representation": None,

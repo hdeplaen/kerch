@@ -38,13 +38,13 @@ class RFF(_Explicit):
         k(x,y) = \phi(x)^{\top}\phi(y) = \exp\left( -\frac{1}{2}\lVert x-y \rVert_2^2 \right)
 
     :param num_weights: Number of weights :math:`d` sampled for the RFF., defaults to 1.
-    :type num_weights: int, optional
+    :name num_weights: int, optional
     :param weights: _Explicit values for the weights may be provided instead of automatically sampling them with the
         provided `num_weights`., defaults to `None`.
-    :type weights: Tensor(num_weights, dim_input), optional
+    :name weights: Tensor(num_weights, dim_input), optional
     :param weights_trainable: Specifies if the weights are to be considered as trainable parameters during
         backpropagation., default to `False`.
-    :type weights_trainable: bool, optional
+    :name weights_trainable: bool, optional
 
     """
 
