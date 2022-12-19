@@ -61,12 +61,12 @@ class View(_View, _Sample):
         kernel = kwargs["kernel"]
         if kernel is None:
             self._kernel = factory(**{**kwargs,
-                                      "sample": self.sample,
+                                      "sample": self.transformed_sample,
                                       "idx_sample": self.idx})
         elif isinstance(kernel, _Base):
             self._log.info("Initiating View _Based on existing kernel and overwriting its sample.")
             self._kernel = kernel
-            self._kernel.init_sample(sample=self.sample,
+            self._kernel.init_sample(sample=self.transformed_sample,
                                      idx_sample=self.idx)
         else:
             raise TypeError("Argument kernel is not of the kernel class.")
@@ -191,7 +191,7 @@ class View(_View, _Sample):
         """
         self._log.info("Updating View _Based on an external kernel and overwriting its sample.")
         self._kernel = val
-        self._kernel.init_sample(sample=self.sample,
+        self._kernel.init_sample(sample=self.transformed_sample,
                                  idx_sample=self.idx)
 
     #########################################################################

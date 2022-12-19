@@ -64,7 +64,7 @@ class Polynomial(_Statistics):
 
     @degree.setter
     def degree(self, val):
-        self._reset()
+        self._reset_cache()
         self._degree.data = val
 
     @property

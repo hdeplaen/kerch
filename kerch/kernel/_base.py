@@ -155,6 +155,7 @@ class _Base(_Sample, metaclass=ABCMeta):
             return self._phi()
 
         x = utils.castf(x)
+        x = self.transform_sample(x)
         return self._explicit(x)
 
     def k(self, x=None, y=None, explicit=None) -> Tensor:
@@ -187,11 +188,13 @@ class _Base(_Sample, metaclass=ABCMeta):
         #     return self.K
 
         if x is None and y is None:
-            return self._K(_Explicit)
+            return self._K(explicit=self.explicit)
 
         # in order to get the values in the correct format (e.g. coming from numpy)
         x = utils.castf(x)
         y = utils.castf(y)
+        x = self.transform_sample(x)
+        y = self.transform_sample(y)
         return self._implicit(x, y)
 
     def c(self, x=None, y=None) -> Tensor:

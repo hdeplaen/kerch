@@ -43,6 +43,11 @@ class RepresentationError(KerPyError):
         self.message = "Unrecognized or unspecified representation (must be primal or dual)."
         super(RepresentationError, self).__init__(*args, **kwargs)
 
+class BijectionError(KerPyError):
+    def __init__(self, *args, **kwargs):
+        self.message = "Mathematically undefined operation. A projection is not bijective, thus non invertible."
+        super(BijectionError, self).__init__(*args, **kwargs)
+
 
 class MultiViewError(KerPyError):
     def __init__(self, *args, **kwargs):

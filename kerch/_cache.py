@@ -26,7 +26,7 @@ class _Cache(_Module,
                 cache_entry.data = fn(cache_entry)
         return super(_Cache, self)._apply(fn)
 
-    def _reset(self):
+    def _reset_cache(self):
         # this just resets the cache and makes it empty. If refilled, the new elements
         # will be on the same support as the rest of the module as created by its parameters.
         self._log.debug("The cache is resetted.")
@@ -38,7 +38,7 @@ class _Cache(_Module,
             del self._cache[key]
 
     def reset(self, children=False):
-        self._reset()
+        self._reset_cache()
         for cache in self.children():
             if isinstance(cache, _Cache):
                 cache.reset(children=children)

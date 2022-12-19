@@ -51,7 +51,7 @@ class SkewedChi2(_Implicit):
 
     @p.setter
     def p(self, val):
-        self._reset()
+        self._reset_cache()
         self._p.data = utils.castf(val, tensor=False, dev=self._p.device)
 
     def __str__(self):

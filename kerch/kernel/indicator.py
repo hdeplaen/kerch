@@ -99,7 +99,7 @@ class Indicator(_Implicit):
 
     @lag.setter
     def lag(self, val):
-        self._reset()
+        self._reset_cache()
         self._lag.data = utils.castf(val, tensor=False, dev=self._lag.device)
 
     @property
@@ -124,7 +124,7 @@ class Indicator(_Implicit):
 
     @gamma.setter
     def gamma(self, val):
-        self._reset()
+        self._reset_cache()
         self._gamma.data = utils.castf(val, tensor=False, dev=self._gamma.device)
 
     def _implicit(self, x=None, y=None):

@@ -47,7 +47,8 @@ class Nystrom(_Explicit):
         "base_type": "rbf",
         "base_center": False,
         "base_normalize": False,
-        "base_kernel": None
+        "base_kernel": None,
+        "base_kernel_transforms": []
     })
     def __init__(self, **kwargs):
         assert kwargs["base_type"].lower() != "nystrom", 'Cannot create a Nyström kernel based on another Nyström ' \
@@ -62,16 +63,17 @@ class Nystrom(_Explicit):
             self._base_kernel = factory(**{**kwargs,
                                                "_center": kwargs["base_center"],
                                                "_normalize": kwargs["base_normalize"],
-                                               "name": kwargs["base_type"]})
+                                               "name": kwargs["base_type"],
+                                                "kernel_transforms": kwargs["base_kernel_transforms"]})
             self._base_kernel.init_sample(sample=self._sample, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel
             super(Nystrom, self).__init__(**{**kwargs,
-                                             "sample":k.sample,
+                                             "sample":k.transformed_sample,
                                              "sample_trainable": k.sample_trainable})
             assert isinstance(k, _Base), "The _Statistics kernel is not of the kernel class."
             self._base_kernel = k
-            self.init_sample(k.sample, k.idx)
+            self.init_sample(k.transformed_sample, k.idx)
 
         self._dim = kwargs["dim"]
         if self._dim is None:
@@ -90,7 +92,7 @@ class Nystrom(_Explicit):
             assert val <= self._num_total, 'Cannot construct an explicit feature map of greater dimension than ' \
                                            'the number of sample points.'
         self._dim = utils.casti(val)
-        self._reset()
+        self._reset_cache()
 
     @property
     def dim_feature(self) -> int:
@@ -114,7 +116,7 @@ class Nystrom(_Explicit):
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         super(Nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
         if self._base_kernel is not None:
-            self._base_kernel.init_sample(sample=self.sample, idx_sample=self.idx)
+            self._base_kernel.init_sample(sample=self.transformed_sample, idx_sample=self.idx)
 
     def _compute_decomposition(self):
         if "H" not in self._cache:

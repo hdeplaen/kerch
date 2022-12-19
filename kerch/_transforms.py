@@ -22,7 +22,7 @@ from torch.nn import Parameter
 from kerch._logger import _Logger
 from kerch.utils.tensor import equal
 from kerch.utils.type import EPS
-from kerch.utils.errors import DualError
+from kerch.utils.errors import BijectionError
 
 
 class _Transform(_Logger, metaclass=ABCMeta):
@@ -93,14 +93,14 @@ class _Transform(_Logger, metaclass=ABCMeta):
         pass
 
     def _implicit_statistics(self, data, x=None):
-        raise DualError
+        raise BijectionError
 
     @abstractmethod
     def _explicit_data(self):
         pass
 
     def _implicit_data(self):
-        raise DualError
+        raise BijectionError
 
     @property
     def data(self) -> Tensor:
@@ -134,14 +134,14 @@ class _Transform(_Logger, metaclass=ABCMeta):
         pass
 
     def _implicit_statistics_oos(self, data, x=None):
-        raise DualError
+        raise BijectionError
 
     @abstractmethod
     def _explicit_data_oos(self, x=None):
         pass
 
     def _implicit_data_oos(self, x=None, y=None):
-        raise DualError
+        raise BijectionError
 
     def statistics_oos(self, x=None, y=None, data=None) -> Union[Tensor, (Tensor, Tensor)]:
         if self.explicit:
@@ -179,6 +179,18 @@ class _Transform(_Logger, metaclass=ABCMeta):
 
     def clean_oos(self):
         self._statistics_oos = None
+
+    def revert(self, data):
+        if self.explicit:
+            self._revert_explicit(data)
+        else:
+            self._revert_implicit(data)
+
+    def _revert_explicit(self, data):
+        raise BijectionError
+
+    def _revert_implicit(self, data):
+        raise BijectionError
 
 
 class _MeanCentering(_Transform):
@@ -218,6 +230,9 @@ class _MeanCentering(_Transform):
         return self.parent.data_oos(x=x, y=y) - mean_x \
                - mean_y.T \
                + mean_tot
+
+    def _revert_explicit(self, data):
+        return data + self.statistics()
 
 
 class _UnitSphereNormalization(_Transform):
@@ -267,7 +282,7 @@ class _UnitSphereNormalization(_Transform):
 
     def _implicit_self(self, x=None) -> Tensor:
         if isinstance(self.parent, TransformTree):
-            return self.parent._implicit_self(x)
+            return self.parent._implicit_self(x)[:, None]
         else:
             return torch.diag(self.data_oos(x, x))[:, None]
 
@@ -310,10 +325,13 @@ class _MinimumCentering(_Transform):
         return data - self.statistics(data)
 
     def _explicit_statistics_oos(self, x=None, data=None):
-        return self.statistics
+        return self.statistics()
 
     def _explicit_data_oos(self, x=None):
         return self.parent.data_oos(x=x) - self.statistics_oos(x=x)
+
+    def _revert_explicit(self, data):
+        return data + self.statistics()
 
 
 class _UnitVarianceNormalization(_Transform):
@@ -342,9 +360,9 @@ all_transforms = {"normalize": _UnitSphereNormalization,  # for legacy
                   "mean_centering": _MeanCentering,
                   "minimum_centering": _MinimumCentering,
                   "unit_variance_normalization": _UnitVarianceNormalization,
-                  "min_max_normalization": _MinMaxNormalization,
+                  "minmax_normalization": _MinMaxNormalization,
                   "standardize": [_MeanCentering, _UnitVarianceNormalization],
-                  "min_max_rescaling": [_MinimumCentering, _MinMaxNormalization]}
+                  "minmax_rescaling": [_MinimumCentering, _MinMaxNormalization]}
 
 
 class TransformTree(_Transform):
@@ -393,7 +411,13 @@ class TransformTree(_Transform):
 
         self._implicit_self_fun = implicit_self
 
-    # TODO: rewrite __str__ to show full tree
+    def __repr__(self):
+        output = "Transforms: \n"
+        if len(self._default_transforms) == 1:
+            return output + "\t" + "none"
+        for transform in self._default_transforms[1:]:
+            output += "\t" + self.children[transform].__str__()
+        return output
 
     @property
     def default_transforms(self) -> List:
@@ -453,7 +477,13 @@ class TransformTree(_Transform):
                                          "the normalization."
         return self._data_oos(x, y)
 
-    def apply_transforms(self, data, x=None, y=None, transforms: List[str] = None) -> Tensor:
+    def _revert_explicit(self, data):
+        return data
+
+    def _revert_implicit(self, data):
+        return data
+
+    def _create_tree(self, transforms: List[str] = None) -> List[_Transform]:
         transforms = TransformTree.beautify_transforms(transforms)
         if transforms is None:
             transforms = self._default_transforms
@@ -466,7 +496,10 @@ class TransformTree(_Transform):
             else:
                 child = tree_path[-1].children[transform]
             tree_path.append(child)
+        return tree_path
 
+    def apply(self, data, x=None, y=None, transforms: List[str] = None) -> Tensor:
+        tree_path = self._create_tree(transforms)
         if x is None and y is None:
             sol = tree_path[-1].data
         else:
@@ -476,3 +509,9 @@ class TransformTree(_Transform):
                 node.clean_oos()
             self._data_oos = None  # to avoid blocking the destruction if necessary by the garbage collector
         return sol
+
+    def revert(self, data, transforms: List[str] = None) -> Tensor:
+        tree_path = self._create_tree(transforms)
+        for transform in reversed(tree_path):
+            data = transform.revert(data)
+        return data

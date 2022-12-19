@@ -60,7 +60,7 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
 
     @sigma.setter
     def sigma(self, val):
-        self._reset()
+        self._reset_cache()
         self._sigma.data = utils.castf(val, tensor=False, dev=self._sigma.device)
 
     @property

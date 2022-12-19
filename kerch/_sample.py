@@ -12,6 +12,7 @@ from . import utils
 from ._cache import _Cache
 from ._logger import _Logger
 from ._stochastic import _Stochastic
+from ._transforms import TransformTree
 
 
 @utils.extend_docstring(_Stochastic)
@@ -43,6 +44,9 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
     :name idx_sample: int[], optional
     :name idx_sample: float, optional
+
+    :param sample_transform: TODO
+    :type sample_transform: List[str]
     """
 
     @abstractmethod
@@ -52,7 +56,8 @@ class _Sample(_Stochastic,  # manager stochastic indices
         "num_sample": None,
         "dim_input": None,
         "idx_sample": None,
-        "prop_sample": None})
+        "prop_sample": None,
+        "sample_transforms": []})
     def __init__(self, **kwargs):
         super(_Sample, self).__init__(**kwargs)
 
@@ -66,8 +71,9 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
         self._sample = torch.nn.Parameter(torch.empty((0, 0)))
         self._sample_trainable = kwargs["sample_trainable"]
-        
+
         self.init_sample(sample, idx_sample=kwargs["idx_sample"], prop_sample=kwargs["prop_sample"])
+        self._default_sample_transforms = kwargs["sample_transforms"]
 
     @property
     def dim_input(self) -> int:
@@ -109,9 +115,16 @@ class _Sample(_Stochastic,  # manager stochastic indices
             self.init_sample()
 
     @property
+    def transformed_sample(self) -> Tensor:
+        r"""
+        Sample dataset after (optional) transformations (none by default).
+        """
+        return self.sample_transforms.default_data
+
+    @property
     def sample(self) -> torch.nn.Parameter:
         r"""
-        Sample dataset.
+        Raw sample before any transformation.
         """
         return self._sample
 
@@ -188,7 +201,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
         for sample_module in self.children():
             if isinstance(sample_module, _Sample):
-                sample_module.init_sample(self.sample)
+                sample_module.init_sample(self.transformed_sample)
 
         self.stochastic(idx=idx_sample, prop=prop_sample)
 
@@ -209,7 +222,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
             return
 
         sample_values = utils.castf(sample_values, dev=self._sample.device)
-        self._reset()
+        self._reset_cache()
 
         # use all indices if unspecified
         if idx_sample is None:
@@ -228,5 +241,35 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
     def _euclidean_parameters(self, recurse=True):
         if not self._empty_sample:
-            yield self.sample
+            yield self.transformed_sample
         yield from super(_Sample, self)._euclidean_parameters(recurse)
+
+    @property
+    def sample_transforms(self) -> TransformTree:
+        r"""
+        Default transformations used by the data.
+        """
+        return self._sample_transforms
+
+    @property
+    def _sample_transforms(self) -> TransformTree:
+        if "sample_transforms" not in self._cache:
+            self._cache["sample_transforms"] = TransformTree(explicit=True,
+                                                    data=self._sample,
+                                                    default_transforms=self._default_sample_transforms,
+                                                    lighweight=self._lightweight)
+        return self._cache["sample_transforms"]
+
+    def transform_sample(self, data) -> Tensor:
+        r"""
+        Apply to data the same transformations as on the sample.
+        """
+        return self.sample_transforms.apply(data)
+
+    def transform_sample_revert(self, data) -> Tensor:
+        r"""
+        Get back the original data from a transformed data, by using the same transformations as the sample,
+        but in reverse. This is not always feasible, depending on the transformations used (normalizations are
+        typically not invertible as they are projections which are not bijective).
+        """
+        return self.sample_transforms.revert(data)

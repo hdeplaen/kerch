@@ -21,7 +21,7 @@ from kerch._transforms import TransformTree, _UnitSphereNormalization
 @utils.extend_docstring(_Base)
 class _Statistics(_Base, metaclass=ABCMeta):
     r"""
-    :param default_transforms: A list composed of the elements `'normalize'` or `'center'`. For example a centered
+    :param kernel_transforms: A list composed of the elements `'normalize'` or `'center'`. For example a centered
         cosine kernel which is centered and normalized in order to get a covariance matrix for example can be obtained
         by invoking a linear kernel with `default_transforms = ['normalize', 'center', 'normalize']` or just a cosine
         kernel with `default_transforms = ['center', 'normalize']`. Redundancy is automatically handled., defaults
@@ -34,14 +34,14 @@ class _Statistics(_Base, metaclass=ABCMeta):
         if repetively required. However, provided the same values are used as the one specified in the construction,
         this is the most efficient, not computing or keeping anything unnecessary. This parameter controls a
         time-memory trade-off., defaults to `True`
-    :name default_transforms: List[str]
+    :name kernel_transforms: List[str]
     :name ligthweight: bool, optional
     """
 
     @abstractmethod
     @utils.kwargs_decorator({
         "lightweight": True,
-        "default_transforms": [],
+        "kernel_transforms": [],
     })
     def __init__(self, **kwargs):
         super(_Statistics, self).__init__(**kwargs)
@@ -50,8 +50,18 @@ class _Statistics(_Base, metaclass=ABCMeta):
         self._naturally_centered = False
         self._naturally_normalized = False
 
-        self._default_transforms = self._simplify_transforms(kwargs["default_transforms"])
+        self._default_kernel_transforms = self._simplify_transforms(kwargs["kernel_transforms"])
         self._lightweight = kwargs["lightweight"]
+
+    @property
+    def kernel_transforms(self) -> TransformTree:
+        r"""
+        Default transforms performed on the kernel
+        """
+        if self.explicit:
+            return self._explicit_statistics
+        else:
+            return self._implicit_statistics
 
     def _simplify_transforms(self, transforms=None) -> List:
         if transforms is None:
@@ -75,7 +85,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
 
     def _get_transforms(self, transforms=None) -> List:
         if transforms is None:
-            return self._default_transforms
+            return self._default_kernel_transforms
         return self._simplify_transforms(transforms)
 
     @property
@@ -85,7 +95,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         """
         if not self._naturally_centered:
             try:
-                return self._default_transforms[0] == 'center'
+                return self._default_kernel_transforms[0] == 'center'
             except IndexError:
                 return False
         return True
@@ -97,7 +107,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         """
         if not self._naturally_normalized:
             try:
-                return self._default_transforms[0] == 'normalize'
+                return self._default_kernel_transforms[0] == 'normalize'
             except IndexError:
                 return False
         return True
@@ -107,7 +117,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         if "explicit" not in self._cache:
             self._cache["explicit"] = TransformTree(explicit=True,
                                                     data=self._explicit,
-                                                    default_transforms=self._default_transforms,
+                                                    default_transforms=self._default_kernel_transforms,
                                                     lighweight=self._lightweight)
         return self._cache["explicit"]
 
@@ -116,7 +126,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         if "implicit" not in self._cache:
             self._cache["implicit"] = TransformTree(explicit=False,
                                                     data=self._implicit,
-                                                    default_transforms=self._default_transforms,
+                                                    default_transforms=self._default_kernel_transforms,
                                                     lighweight=self._lightweight,
                                                     implicit_self=self._implicit_self)
         return self._cache["implicit"]
@@ -171,7 +181,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         """
         x = utils.castf(x)
         transforms = self._get_transforms(transforms)
-        return self._explicit_statistics.apply_transforms(data_fun=self._explicit, x=x, transforms=transforms)
+        return self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(x), transforms=transforms)
 
     def k(self, x=None, y=None, explicit=None, transforms=None) -> Tensor:
         """
@@ -206,14 +216,19 @@ class _Statistics(_Base, metaclass=ABCMeta):
         y = utils.castf(y)
         transforms = self._get_transforms(transforms)
         if self.explicit:
-            phi_x = self._explicit_statistics.apply_transforms(data=self._explicit, x=x, transforms=transforms)
+            phi_x = self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(x), transforms=transforms)
             if utils.equal(x, y):
                 phi_y = phi_x
             else:
-                phi_y = self._explicit_statistics.apply_transforms(data=self._explicit, x=y, transforms=transforms)
+                phi_y = self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(x), transforms=transforms)
             return phi_x @ phi_y.T
         else:
-            return self._implicit_statistics.apply_transforms(data=self._implicit, x=x, y=y, transforms=transforms)
+            if utils.equal(x, y):
+                x = self.transform_sample(x)
+                return self._implicit_statistics.apply(data=self._implicit, x=x, y=x, transforms=transforms)
+            else:
+                return self._implicit_statistics.apply(data=self._implicit, x=self.transform_sample(x),
+                                                       y = self.transform_sample(y), transforms=transforms)
 
     def c(self, x=None, y=None, transforms=None) -> Tensor:
         r"""
@@ -221,11 +236,11 @@ class _Statistics(_Base, metaclass=ABCMeta):
         """
 
         transforms = self._get_transforms(transforms)
-        phi_x = self._explicit_statistics.apply_transforms(data=self._explicit, x=x, transforms=transforms)
+        phi_x = self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(x), transforms=transforms)
         if torch.equal(x,y):
             phi_y = phi_x
         else:
-            phi_y = self._explicit_statistics.apply_transforms(data=self._explicit, x=y, transforms=transforms)
+            phi_y = self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(y), transforms=transforms)
         return phi_x.T @ phi_y
 
     def forward(self, x, representation="dual") -> Tensor:
@@ -257,10 +272,10 @@ class _Statistics(_Base, metaclass=ABCMeta):
         return fun(x)
 
     def Cov(self, x=None, y=None) -> Tensor:
-        transforms = self._default_transforms
+        transforms = self._default_kernel_transforms
         try:
-            if not (self._default_transforms[-1] == 'normalize'
-                    and (self._default_transforms[-2] == 'center'
+            if not (self._default_kernel_transforms[-1] == 'normalize'
+                    and (self._default_kernel_transforms[-2] == 'center'
                          or self._naturally_centered)):
                 transforms.append('center')
                 transforms.append('normalize')
