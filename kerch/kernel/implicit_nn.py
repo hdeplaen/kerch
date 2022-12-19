@@ -8,15 +8,14 @@ File containing the implicit kernel class.
 """
 
 from .. import utils
-from .implicit import implicit, base
+from ._implicit import _Implicit, _Statistics
 import torch
 
 
-
-@utils.extend_docstring(base)
-class implicit_nn(implicit):
+@utils.extend_docstring(_Statistics)
+class ImplicitNN(_Implicit):
     r"""
-    Implicit kernel class, parametrized by a neural network.
+    _Implicit kernel class, parametrized by a neural network.
 
     .. math::
         k(x,y) = NN\left( [x, y] \right).
@@ -28,7 +27,7 @@ class implicit_nn(implicit):
 
 
     :param network: Network to be used.
-    :type network: torch.nn.Module
+    :name network: torch.nn.Module
     """
 
     @utils.kwargs_decorator(
@@ -37,7 +36,7 @@ class implicit_nn(implicit):
         """
         :param network: torch.nn.Module explicit kernel
         """
-        super(implicit_nn, self).__init__(**kwargs)
+        super(ImplicitNN, self).__init__(**kwargs)
         self._network: torch.nn.Module = kwargs["network"]
         assert isinstance(self._network, torch.nn.Module), "Torch network module must be specified."
 
@@ -46,7 +45,7 @@ class implicit_nn(implicit):
 
     @property
     def hparams(self):
-        return {"Kernel": "Implicit", **super(implicit_nn, self).hparams}
+        return {"Kernel": "_Implicit", **super(ImplicitNN, self).hparams}
 
     def _implicit(self, x=None, y=None):
         raise NotImplementedError
@@ -56,4 +55,4 @@ class implicit_nn(implicit):
 
     def _euclidean_parameters(self, recurse=True):
         yield from self._network.parameters()
-        yield from super(implicit_nn, self)._euclidean_parameters(recurse)
+        yield from super(ImplicitNN, self)._euclidean_parameters(recurse)

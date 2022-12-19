@@ -17,7 +17,7 @@ from . import model  # alpha
 from . import plot  # alpha
 from . import opt  # alpha
 from ._logger import set_log_level, get_log_level, _GLOBAL_LOGGER
-from .utils import set_ftype, set_itype, FTYPE, ITYPE
+from .utils import set_ftype, set_itype, FTYPE, ITYPE, EPS
 
 # CHECK FUNCTIONALITIES
 def gpu_available() -> bool:

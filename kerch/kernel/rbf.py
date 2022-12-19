@@ -10,11 +10,11 @@ File containing the RBF kernel class.
 import torch
 
 from .. import utils
-from .exponential import exponential
+from ._exponential import _Exponential
 
 
-@utils.extend_docstring(exponential)
-class rbf(exponential):
+@utils.extend_docstring(_Exponential)
+class RBF(_Exponential):
     r"""
     RBF kernel (radial basis function).
 
@@ -24,7 +24,7 @@ class rbf(exponential):
     """
 
     def __init__(self, **kwargs):
-        super(rbf, self).__init__(**kwargs)
+        super(RBF, self).__init__(**kwargs)
 
     def __str__(self):
         if self._sigma is None:
@@ -33,7 +33,7 @@ class rbf(exponential):
 
     @property
     def hparams(self):
-        return {"Kernel": "RBF", **super(rbf, self).hparams}
+        return {"Kernel": "RBF", **super(RBF, self).hparams}
 
     def _dist(self, x, y):
         x = x.T[:, :, None]

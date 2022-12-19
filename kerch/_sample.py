@@ -29,10 +29,10 @@ class _Sample(_Stochastic,  # manager stochastic indices
     :param dim_input: Dimension of each sample point. This parameter is neglected if `sample` is not `None` and
         overwritten by the dimension of the sample points., defaults to 1
 
-    :type sample: Tensor(num_sample, dim_input), optional
-    :type sample_trainable: bool, optional
-    :type num_sample: int, optional
-    :type dim_input: int, optional
+    :name sample: Tensor(num_sample, dim_input), optional
+    :name sample_trainable: bool, optional
+    :name num_sample: int, optional
+    :name dim_input: int, optional
 
     :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
         `idx_stochastic` and `prop_stochastic` are `None`., defaults to `None`
@@ -41,8 +41,8 @@ class _Sample(_Stochastic,  # manager stochastic indices
         such that :math:`0 <` `prop_stochastic` :math:`\leq 1`. All indices are considered if both `idx_stochastic` and
         `prop_stochastic` are `None`., defaults to `None`.
 
-    :type idx_sample: int[], optional
-    :type idx_sample: float, optional
+    :name idx_sample: int[], optional
+    :name idx_sample: float, optional
     """
 
     @abstractmethod
@@ -152,10 +152,10 @@ class _Sample(_Stochastic,  # manager stochastic indices
             it will keep the same dimension by consequence. A last case occurs when `sample` is of the class
             `torch.nn.Parameter`: the sample will then use those values and they can thus be shared with the module
             calling this method., defaults to `None`
-        :type sample: Tensor, optional
+        :name sample: Tensor, optional
         :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
             `idx_sample` and `prop_sample` are `None`., defaults to `None`
-        :type idx_sample: int[], optional
+        :name idx_sample: int[], optional
         :param prop_sample: Instead of giving indices, specifying a proportion of the original sample set is also
             possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
             such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
@@ -200,8 +200,8 @@ class _Sample(_Stochastic,  # manager stochastic indices
         :param sample_values: Values given to the updated samples.
         :param idx_sample: Indices of the samples to be updated. All indices are considered if `None`., defaults to
             `None`
-        :type sample_values: Tensor
-        :type idx_sample: int[], optional
+        :name sample_values: Tensor
+        :name idx_sample: int[], optional
         """
 
         if self._empty_sample:

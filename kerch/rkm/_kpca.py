@@ -40,7 +40,7 @@ class _KPCA(_Level):
 
         :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
             to ``False``
-        :type as_tensor: bool, optional
+        :name as_tensor: bool, optional
 
         .. warning::
             For this value to strictly be interpreted as a variance, the corresponding kernel (or feature map)
@@ -65,7 +65,7 @@ class _KPCA(_Level):
 
         :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
             to ``False``
-        :type as_tensor: bool, optional
+        :name as_tensor: bool, optional
 
         .. warning::
             For this value to strictly be interpreted as a variance, the corresponding kernel (or feature map)
@@ -85,7 +85,7 @@ class _KPCA(_Level):
 
         :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
             to ``False``
-        :type as_tensor: bool, optional
+        :name as_tensor: bool, optional
         """
         var = self.model_variance(as_tensor=as_tensor, normalize=False) / \
               self.total_variance(as_tensor=as_tensor, normalize=False)

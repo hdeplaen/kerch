@@ -47,8 +47,8 @@ def objective(config):
     test_y = y[rand_idx[train_len:], :]
 
     # MODEL
-    mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": "random_features", "num_weights": NUM_WEIGHTS, "center": False, "sample": train_y},
-                           {"name": "time", "type": "random_features", "num_weights": NUM_WEIGHTS, "center": False, "normalize": False, "sample": train_x},
+    mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "name": "random_features", "num_weights": NUM_WEIGHTS, "_center": False, "sample": train_y},
+                           {"name": "time", "name": "random_features", "num_weights": NUM_WEIGHTS, "_center": False, "_normalize": False, "sample": train_x},
                            center=False, dim_output=DIM_OUTPUT)
     mdl.to(DEV)
     mdl.solve(representation='primal')

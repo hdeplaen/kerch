@@ -85,7 +85,7 @@ class plot():
         im3 = ax.scatter(p1, p2, s=100 * np.abs(alpha) / (np.max(np.abs(alpha))), c=np.where(alpha >= 0, 'g', 'r'))
         lim1 = ax.set_xlim((self.xmin, self.xmax))
         lim2 = ax.set_ylim((self.ymin, self.ymax))
-        title = plt.text(0.5, 1.01, s, ha="center", va="bottom",
+        title = plt.text(0.5, 1.01, s, ha="_center", va="bottom",
                          transform=ax.transAxes, fontsize="large")
         if self.live:
             plt.pause(0.01)

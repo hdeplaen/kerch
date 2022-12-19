@@ -26,7 +26,7 @@ This is done by first instantiating a model, setting its dataset, searching for 
 parameters and plotting. The implementation can be found [here](examples/lssvm-tuning.py).
 
 ```python
-mdl = kerch.model.LSSVM(type="rbf",                 # kernel type
+mdl = kerch.model.LSSVM(type="rbf",                 # kernel name
                      representation="dual")         # initiate model
 mdl.set_data_prop(data=data,                        # data
                   labels=labels,                    # corresponding labels

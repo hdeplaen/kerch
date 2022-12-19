@@ -13,7 +13,7 @@ from math import sqrt
 
 import kerch.rkm
 from kerch import utils
-from kerch.kernel import factory, base
+from kerch.kernel import factory, _Base
 from kerch._sample import _Sample
 from ._view import _View
 
@@ -21,14 +21,14 @@ from ._view import _View
 @utils.extend_docstring(_Sample)
 class View(_View, _Sample):
     r"""
-    :param kernel: Initiates a View based on an existing kernel object. If the value is not `None`, all other
+    :param kernel: Initiates a View _Based on an existing kernel object. If the value is not `None`, all other
         parameters are neglected and inherited from the provided kernel., default to `None`
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 
-    :type kernel: kerpy.kernel.base, optional
-    :type bias: bool, optional
-    :type bias_trainable: bool, optional
+    :name kernel: kerpy.kernel._Statistics, optional
+    :name bias: bool, optional
+    :name bias_trainable: bool, optional
     """
 
     @utils.kwargs_decorator({
@@ -63,8 +63,8 @@ class View(_View, _Sample):
             self._kernel = factory(**{**kwargs,
                                       "sample": self.sample,
                                       "idx_sample": self.idx})
-        elif isinstance(kernel, base):
-            self._log.info("Initiating View based on existing kernel and overwriting its sample.")
+        elif isinstance(kernel, _Base):
+            self._log.info("Initiating View _Based on existing kernel and overwriting its sample.")
             self._kernel = kernel
             self._kernel.init_sample(sample=self.sample,
                                      idx_sample=self.idx)
@@ -178,18 +178,18 @@ class View(_View, _Sample):
         return self.kernel.dim_feature
 
     @property
-    def kernel(self) -> base:
+    def kernel(self) -> _Base:
         r"""
         The kernel used by the model or View.
         """
         return self._kernel
 
-    def set_kernel(self, val: base):
+    def set_kernel(self, val: _Base):
         r"""
         For some obscure reason, this does not work as a setter (@kernel.setter).
         TODO: find out why and solve
         """
-        self._log.info("Updating View based on an external kernel and overwriting its sample.")
+        self._log.info("Updating View _Based on an external kernel and overwriting its sample.")
         self._kernel = val
         self._kernel.init_sample(sample=self.sample,
                                  idx_sample=self.idx)
@@ -200,9 +200,9 @@ class View(_View, _Sample):
         if self._hidden_exists:
             # will return a PrimalError if not available
             self.weight = self.Phi.T @ self.H
-            self._log.debug("Setting the weight based on the hidden values.")
+            self._log.debug("Setting the weight _Based on the hidden values.")
         else:
-            self._log.info("The weight cannot based on the hidden values as these are unset.")
+            self._log.info("The weight cannot _Based on the hidden values as these are unset.")
 
     ## MATHS
 

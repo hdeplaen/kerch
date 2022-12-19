@@ -58,7 +58,7 @@ class Optimizer():
         if self._dict:
             opt_switcher = {"sgd": stiefel_optimizer.SGDG,
                             "adam": stiefel_optimizer.AdamG}
-            self._opt = opt_switcher.get(type, "Incorrect optimizer type.")(self._dict)
+            self._opt = opt_switcher.get(type, "Incorrect optimizer name.")(self._dict)
 
     @property
     def requires_grad(self):
@@ -70,7 +70,7 @@ class Optimizer():
 
     @property
     def hparams(self):
-        return {'type': self._type, **self._kwargs}
+        return {'name': self._type, **self._kwargs}
 
     @property
     def params(self):

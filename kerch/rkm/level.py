@@ -24,9 +24,9 @@ class Level(_Level, View, metaclass=ABCMeta):
         :param target: Target sample of the model, defaults to ```None``
         :param representation: Representation of the model (``"primal"`` or ``"dual"``)., defaults to ``"dual"``.
 
-        :type sample: Matrix, optional
-        :type target: Matrix or vector, optional
-        :type representation: str, optional
+        :name sample: Matrix, optional
+        :name target: Matrix or vector, optional
+        :name representation: str, optional
         """
 
         # set the sample to input (always works for the underlying kernel)

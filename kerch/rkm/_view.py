@@ -14,7 +14,7 @@ from abc import ABCMeta, abstractmethod
 from typing import Union
 
 from kerch import utils
-from kerch.kernel import factory, base
+from kerch.kernel import factory, _Base
 from kerch._stochastic import _Stochastic
 
 
@@ -26,9 +26,9 @@ class _View(_Stochastic, metaclass=ABCMeta):
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 
-    :type kernel: kerpy.kernel.base, optional
-    :type bias: bool, optional
-    :type bias_trainable: bool, optional
+    :name kernel: kerpy.kernel._Statistics, optional
+    :name bias: bool, optional
+    :name bias_trainable: bool, optional
     """
 
     @utils.kwargs_decorator({
@@ -88,8 +88,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
         :param representation: 'primal' or 'dual'
         :param overwrite: Does not initialize already initialized parameters if False., defaults to True
-        :type representation: str, optional
-        :type overwrite: bool, optional
+        :name representation: str, optional
+        :name overwrite: bool, optional
         """
         representation = utils.check_representation(representation, self._representation, cls=self)
 

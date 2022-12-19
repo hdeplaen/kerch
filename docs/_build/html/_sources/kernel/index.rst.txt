@@ -52,7 +52,7 @@ Examples
     fig, axs = plt.subplots(2,2)
 
     axs[0,0].imshow(k.K, vmin=-1, vmax=1)
-    axs[0,0].set_title("Sample -Sample")
+    axs[0,0].set_title("Sample - Sample")
 
     axs[0,1].imshow(k.k(y=oos), vmin=-1, vmax=1)
     axs[0,1].set_title("Sample - OOS")

@@ -12,11 +12,11 @@ from math import sqrt
 from typing import Union
 
 from .. import utils
-from .explicit import explicit, base
+from ._explicit import _Explicit, _Statistics
 
 
-@utils.extend_docstring(explicit)
-class random_features(explicit):
+@utils.extend_docstring(_Statistics)
+class RandomFeatures(_Explicit):
     r"""
     Random Features kernel.
 
@@ -36,13 +36,13 @@ class random_features(explicit):
         bijection is guaranteed if :math:`d = \texttt{dim_input}`.
 
     :param num_weights: Number of weights :math:`d` sampled for the Random Features kernel., defaults to 1.
-    :type num_weights: int, optional
-    :param weights: Explicit values for the weights may be provided instead of automatically sampling them with the
+    :name num_weights: int, optional
+    :param weights: _Explicit values for the weights may be provided instead of automatically sampling them with the
         provided `num_weights`., defaults to `None`.
-    :type weights: Tensor(num_weights, dim_input), optional
+    :name weights: Tensor(num_weights, dim_input), optional
     :param weights_trainable: Specifies if the weights are to be considered as trainable parameters during
         backpropagation., default to `False`.
-    :type weights_trainable: bool, optional
+    :name weights_trainable: bool, optional
     """
 
     @utils.kwargs_decorator(
@@ -50,7 +50,7 @@ class random_features(explicit):
          "weights": None,
          "weights_trainable": False})
     def __init__(self, **kwargs):
-        super(random_features, self).__init__(**kwargs)
+        super(RandomFeatures, self).__init__(**kwargs)
         self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                            kwargs["weights_trainable"])
 
@@ -137,16 +137,16 @@ class random_features(explicit):
 
     @property
     def hparams(self):
-        return {"Kernel": "Random Features", **super(random_features, self).hparams}
+        return {"Kernel": "Random Features", **super(RandomFeatures, self).hparams}
 
     def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:
-        phi = super(random_features, self).phi_pinv(phi=phi, centered=centered, normalized=normalized)
+        phi = super(RandomFeatures, self).phi_pinv(phi=phi, centered=centered, normalized=normalized)
         phi = phi * sqrt(self.num_weights)
         weights_pinv = torch.linalg.pinv(self.weights).T
         return torch.special.logit(phi, eps=1.e-8) @ weights_pinv
 
     def _explicit(self, x=None):
-        x = super(random_features, self)._explicit(x)
+        x = super(RandomFeatures, self)._explicit(x)
         wx = x @ self.weights.T
         dim_inv_sqrt = 1 / sqrt(self.num_weights)
         return dim_inv_sqrt * torch.sigmoid(wx)

@@ -93,7 +93,7 @@ class MVKPCA(_KPCA, MVLevel):
 
         :param known: Dictionary of the inputs where the key is the view identifier (``str`` or ``int``) and the
             values the inputs to the views.
-        :type known: dict
+        :name known: dict
         :return:
         :rtype: Tensor
         """
@@ -126,11 +126,11 @@ class MVKPCA(_KPCA, MVLevel):
         not mentioned.
 
         :param names: Names of the views to be predicted, based on the non-listed ones.
-        :type names: List[str]
+        :name names: List[str]
         """
         assert self._representation == 'primal', utils.PrimalError
         # construct two lists:
-        #   known: the views not in name that are serving as base,
+        #   known: the views not in name that are serving as _Statistics,
         #   unknown: the views that are to be predicted (names).
         if isinstance(names, str):
             names = [names]

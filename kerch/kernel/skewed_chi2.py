@@ -10,12 +10,12 @@ File containing the RBF kernel class.
 import torch
 
 from .. import utils
-from .implicit import implicit, base
+from ._implicit import _Implicit, _Statistics
 
 
 
-@utils.extend_docstring(base)
-class skewed_chi2(implicit):
+@utils.extend_docstring(_Statistics)
+class SkewedChi2(_Implicit):
     r"""
     Skewed Chi Squared kernel. Often used in computer vision.
 
@@ -33,7 +33,7 @@ class skewed_chi2(implicit):
         {"p": 0., "p_trainable": False})
     def __init__(self, **kwargs):
         self._p = kwargs["p"]
-        super(skewed_chi2, self).__init__(**kwargs)
+        super(SkewedChi2, self).__init__(**kwargs)
 
         self._p_trainable = kwargs["p_trainable"]
         self._p = torch.nn.Parameter(
@@ -47,7 +47,7 @@ class skewed_chi2(implicit):
         """
         if isinstance(self._p, torch.nn.Parameter):
             return self._p.data.cpu().numpy().astype(float)
-        return self._p
+        return float(self._p)
 
     @p.setter
     def p(self, val):
@@ -63,20 +63,20 @@ class skewed_chi2(implicit):
 
     @property
     def hparams(self):
-        return {"Kernel": "Skewed Chi Squred", "Trainable p": self._p_trainable, **super(skewed_chi2, self).hparams}
+        return {"Kernel": "Skewed Chi Squred", "Trainable p": self._p_trainable, **super(SkewedChi2, self).hparams}
 
     def _implicit(self, x=None, y=None):
-        x, y = super(skewed_chi2, self)._implicit(x, y)
+        x, y = super(SkewedChi2, self)._implicit(x, y)
 
         x = x.T[:, :, None]
         y = y.T[:, None, :]
 
         prod = torch.sqrt(x + self._p) * torch.sqrt(y + self._p)
-        sum = torch.clamp(x + y + 2 * self._p, min=self._eps)
+        sum = torch.clamp(x + y + 2 * self._p, min=utils.EPS)
         output = torch.prod(2 * prod / sum, dim=0, keepdim=True)
 
         return output.squeeze(0)
 
     def _slow_parameters(self, recurse=True):
         yield self._p
-        yield from super(skewed_chi2, self)._slow_parameters(recurse)
+        yield from super(SkewedChi2, self)._slow_parameters(recurse)

@@ -53,7 +53,7 @@ class _Module(_Logger,
         switcher = {'euclidean': self._euclidean_parameters,
                     'stiefel': self._stiefel_parameters,
                     'slow': self._slow_parameters}
-        gen = switcher.get(type, 'Invalid manifold type.')
+        gen = switcher.get(type, 'Invalid manifold name.')
 
         memo = set()
         for p in gen(recurse=recurse):

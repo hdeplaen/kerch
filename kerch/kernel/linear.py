@@ -10,11 +10,11 @@ File containing the linear kernel class.
 import torch
 
 from .. import utils
-from .explicit import explicit, base
+from ._explicit import _Explicit, _Statistics
 
 
-@utils.extend_docstring(base)
-class linear(explicit):
+@utils.extend_docstring(_Statistics)
+class Linear(_Explicit):
     r"""
     Linear kernel.
 
@@ -26,8 +26,8 @@ class linear(explicit):
 
     @utils.kwargs_decorator({})
     def __init__(self, **kwargs):
-        super(linear, self).__init__(**kwargs)
-        if self.normalize == True:
+        super(Linear, self).__init__(**kwargs)
+        if self.normalized == True:
             self._log.info("A normalized linear kernel also corresponds to a cosine kernel.")
 
     def __str__(self):
@@ -38,10 +38,10 @@ class linear(explicit):
         return self.dim_input
 
     def hparams(self):
-        return {"Kernel": "Linear", **super(linear, self).hparams}
+        return {"Kernel": "Linear", **super(Linear, self).hparams}
 
     def _explicit(self, x=None):
-        return super(linear, self)._explicit(x)
+        return super(Linear, self)._explicit(x)
 
     def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:
-        return super(linear, self).phi_pinv(phi, centered, normalized)
+        return super(Linear, self).phi_pinv(phi, centered, normalized)

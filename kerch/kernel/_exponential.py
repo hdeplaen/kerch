@@ -11,11 +11,11 @@ import torch
 
 from abc import ABCMeta, abstractmethod
 from .. import utils
-from .implicit import implicit, base
+from ._implicit import _Implicit, _Statistics
 
 
-@utils.extend_docstring(base)
-class exponential(implicit, metaclass=ABCMeta):
+@utils.extend_docstring(_Statistics)
+class _Exponential(_Implicit, metaclass=ABCMeta):
     r"""
     :param sigma: Bandwidth :math:`\sigma` of the kernel. If `None`, the value is filled by a heuristic on
         the sample dataset: 3/10th of the median of the pairwise distances. Computing the heuristic on the full sample
@@ -23,18 +23,18 @@ class exponential(implicit, metaclass=ABCMeta):
         only., defaults to `None`.
     :param sigma_trainable: `True` if the gradient of the bandwidth is to be computed. If so, a graph is computed
         and the bandwidth can be updated. `False` just leads to a static computation., defaults to `False`
-    :type sigma: double, optional
-    :type sigma_trainable: bool, optional
+    :name sigma: double, optional
+    :name sigma_trainable: bool, optional
     """
 
     @utils.kwargs_decorator(
         {"sigma": None, "sigma_trainable": False})
     def __init__(self, **kwargs):
         self._sigma = kwargs["sigma"]
-        super(exponential, self).__init__(**kwargs)
+        super(_Exponential, self).__init__(**kwargs)
 
-        # Exponential kernels are always naturally normalized if not centered
-        self._normalize = False
+        # _Exponential kernels are always naturally normalized
+        self._naturally_normalized = True
 
         self._sigma_trainable = kwargs["sigma_trainable"]
         if self._sigma is not None:
@@ -47,34 +47,6 @@ class exponential(implicit, metaclass=ABCMeta):
         return f"exponential kernel (sigma: {str(self.sigma)})"
 
     @property
-    def normalize(self) -> bool:
-        r"""
-        Indicates if the kernel is normalized. This value cannot be changed for exponential kernels.
-        """
-        return True
-
-    @normalize.setter
-    def normalize(self, val: bool):
-        self._log.info('Changing the normalization has not effect on the RBF kernel as it is always normalized by '
-                       'definition.')
-
-    @property
-    def center(self) -> bool:
-        r"""
-        Indicates if the kernel has to be centered. Changing this value leads to a recomputation of the statistics.
-        """
-        return self._center
-
-    @center.setter
-    def center(self, val: bool):
-        self._center = val
-        if self._center:
-            self._normalize = self._normalize_requested
-        else:
-            self._normalize = False
-        self._reset()
-
-    @property
     def sigma(self):
         r"""
         Bandwidth :math:`\sigma` of the kernel.
@@ -82,7 +54,7 @@ class exponential(implicit, metaclass=ABCMeta):
         if isinstance(self._sigma, torch.nn.Parameter):
             return self._sigma.data.cpu().numpy()
         elif self._sigma is None and not self._empty_sample:
-            self._implicit_statistics()
+            self.k(explicit=True, transforms=[])
             return self.sigma
         return self._sigma
 
@@ -109,14 +81,14 @@ class exponential(implicit, metaclass=ABCMeta):
 
     @property
     def hparams(self):
-        return {"Trainable sigma": self.sigma_trainable, **super(exponential, self).hparams}
+        return {"Trainable sigma": self.sigma_trainable, **super(_Exponential, self).hparams}
 
     @abstractmethod
     def _dist(self, x, y):
         pass
 
     def _implicit(self, x=None, y=None):
-        x, y = super(exponential, self)._implicit(x, y)
+        x, y = super(_Exponential, self)._implicit(x, y)
 
         D = self._dist(x, y)
 
@@ -140,4 +112,4 @@ class exponential(implicit, metaclass=ABCMeta):
     def _slow_parameters(self, recurse=True):
         if self._sigma is not None:
             yield self._sigma
-        yield from super(exponential, self)._slow_parameters(recurse)
+        yield from super(_Exponential, self)._slow_parameters(recurse)

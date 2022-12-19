@@ -12,8 +12,8 @@ x = fun(t)
 
 #####################
 
-mdl = kerch.rkm.MVKPCA({"name": "space", "type": "linear", "sample": x},
-                       {"name": "time", "type": "rbf", "sample": t, "sigma": 1.},
+mdl = kerch.rkm.MVKPCA({"name": "space", "name": "linear", "sample": x},
+                       {"name": "time", "name": "rbf", "sample": t, "sigma": 1.},
                        representation='dual')
 
 mdl.solve()

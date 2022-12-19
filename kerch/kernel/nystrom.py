@@ -11,11 +11,12 @@ import torch
 
 
 from .. import utils
-from .explicit import explicit, base
+from ._explicit import _Explicit, _Statistics
+from ._base import _Base
 from .factory import factory
 
-@utils.extend_docstring(base)
-class nystrom(explicit):
+@utils.extend_docstring(_Statistics)
+class Nystrom(_Explicit):
     r"""
     Nyström kernel. Constructs an explicit feature map based on the eigendecomposition of any kernel matrix based on
     some sample.
@@ -23,22 +24,22 @@ class nystrom(explicit):
     :param dim: Dimension of the explicit feature map to be constructed. This value cannot exceed the number of sample
         points. During eigendecomposition, very small eigenvalues are also going to pruned to avoid numerical
         instability. If `None`, the value will be assigned to `num_sample`., defaults to `None`
-    :param base_type: The type of kernel on which the explicit feature map is going to be constructed., defaults to
+    :param base_type: The name of kernel on which the explicit feature map is going to be constructed., defaults to
         `"rbf"`
-    :param base_center: Specifies if the base kernel has to be centered. This is redundant and can be directly handled
+    :param base_center: Specifies if the _Statistics kernel has to be centered. This is redundant and can be directly handled
         by the Nystrom kernel itself. It is only added for completeness., defaults to `False`
-    :param base_normalize: Specifies if the base kernel has to be normalized., This is redundant and can be directly
+    :param base_normalize: Specifies if the _Statistics kernel has to be normalized., This is redundant and can be directly
         handled by the Nystrom kernel itself. It is only added for completeness., defaults to `False`
-    :param \**kwargs: Other arguments for the base kernel (e.g. the bandwidth for an RBF kernel, the degree for a
+    :param \**kwargs: Other arguments for the _Statistics kernel (e.g. the bandwidth for an RBF kernel, the degree for a
         polynomial kernel etc.). For the default values, please refer to the requested class in question.
     :param base_kernel: Instead of creating a new kernel on which to use the Nyström method, one can also perform it
-        on an existing kernel. In that case, the other base arguments are bypassed., defaults to `None`
-    :type dim: int, optional
-    :type \**kwargs: dict, optional
-    :type base_type: str, optional
-    :type base_center: bool, optional
-    :type base_normalize: bool, optional
-    :type base_kernel: kerpy.kernel.*, optional
+        on an existing kernel. In that case, the other _Statistics arguments are bypassed., defaults to `None`
+    :name dim: int, optional
+    :name \**kwargs: dict, optional
+    :name base_type: str, optional
+    :name base_center: bool, optional
+    :name base_normalize: bool, optional
+    :name base_kernel: kerpy.kernel.*, optional
     """
 
     @utils.kwargs_decorator({
@@ -49,25 +50,26 @@ class nystrom(explicit):
         "base_kernel": None
     })
     def __init__(self, **kwargs):
-        assert kwargs["base_type"] != "nystrom", 'Cannot create a Nyström kernel based on another Nyström kernel.'
+        assert kwargs["base_type"].lower() != "nystrom", 'Cannot create a Nyström kernel based on another Nyström ' \
+                                                         'kernel.'
         self._base_kernel = None
 
         k = kwargs["base_kernel"]
         if k is None:
             # normal case with a kernel created from the factory
-            super(nystrom, self).__init__(**kwargs)
+            super(Nystrom, self).__init__(**kwargs)
 
             self._base_kernel = factory(**{**kwargs,
-                                               "center": kwargs["base_center"],
-                                               "normalize": kwargs["base_normalize"],
-                                               "type": kwargs["base_type"]})
+                                               "_center": kwargs["base_center"],
+                                               "_normalize": kwargs["base_normalize"],
+                                               "name": kwargs["base_type"]})
             self._base_kernel.init_sample(sample=self._sample, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel
-            super(nystrom, self).__init__(**{**kwargs,
+            super(Nystrom, self).__init__(**{**kwargs,
                                              "sample":k.sample,
                                              "sample_trainable": k.sample_trainable})
-            assert isinstance(k, base), "The base kernel is not of the kernel class."
+            assert isinstance(k, _Base), "The _Statistics kernel is not of the kernel class."
             self._base_kernel = k
             self.init_sample(k.sample, k.idx)
 
@@ -107,10 +109,10 @@ class nystrom(explicit):
         return self._base_kernel
 
     def hparams(self):
-        return {"Kernel": "Feature", **super(nystrom, self).hparams}
+        return {"Kernel": "Feature", **super(Nystrom, self).hparams}
 
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
-        super(nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
+        super(Nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
         if self._base_kernel is not None:
             self._base_kernel.init_sample(sample=self.sample, idx_sample=self.idx)
 
