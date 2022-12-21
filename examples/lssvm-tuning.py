@@ -3,7 +3,7 @@ import kerch
 ## DATASET
 tr_set, _, _, _ = kerch.dataset.factory("two_moons",
                                         tr_size=250)           # get the dataset
-X, y = tr_set                                               # get data and labels
+X, y = tr_set                                               # get oos and labels
 
 ## MODEL & TRAINING
 mdl = kerch.model.LSSVM(type="rbf", representation="dual")     # initiate model

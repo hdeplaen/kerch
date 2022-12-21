@@ -124,7 +124,7 @@ class View(_View, _Sample):
                 self._bias.data = val
                 # zeroing the gradients if relevant
                 if self._bias_trainable:
-                    self._bias.grad.data.zero_()
+                    self._bias.grad.sample.zero_()
 
     @property
     def bias_trainable(self) -> bool:

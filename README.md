@@ -28,7 +28,7 @@ parameters and plotting. The implementation can be found [here](examples/lssvm-t
 ```python
 mdl = kerch.model.LSSVM(type="rbf",                 # kernel name
                      representation="dual")         # initiate model
-mdl.set_data_prop(data=data,                        # data
+mdl.set_data_prop(data=data,                        # oos
                   labels=labels,                    # corresponding labels
                   proportions=[1, 0, 0])            # initiate dataset
 mdl.hyperopt({"gamma", "sigma"},                    # define which parameters to tune

@@ -116,7 +116,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
     def _explicit_statistics(self) -> TransformTree:
         if "explicit" not in self._cache:
             self._cache["explicit"] = TransformTree(explicit=True,
-                                                    data=self._explicit,
+                                                    sample=self._explicit,
                                                     default_transforms=self._default_kernel_transforms,
                                                     lighweight=self._lightweight)
         return self._cache["explicit"]
@@ -125,7 +125,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
     def _implicit_statistics(self) -> TransformTree:
         if "implicit" not in self._cache:
             self._cache["implicit"] = TransformTree(explicit=False,
-                                                    data=self._implicit,
+                                                    sample=self._implicit,
                                                     default_transforms=self._default_kernel_transforms,
                                                     lighweight=self._lightweight,
                                                     implicit_self=self._implicit_self)
@@ -137,7 +137,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         recovered from the cache.
         """
         if "phi" not in self._cache:
-            self._cache["phi"] = self._explicit_statistics.default_data
+            self._cache["phi"] = self._explicit_statistics.default_sample
         return self._cache["phi"]
 
     def _C(self) -> Tensor:
@@ -166,7 +166,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
                 phi = self._phi()
                 self._cache["K"] = phi @ phi.T
             else:
-                self._cache["K"] = self._implicit_statistics.default_data
+                self._cache["K"] = self._implicit_statistics.default_sample
         return self._cache["K"]
 
     # ACCESSIBLE METHODS
@@ -181,7 +181,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         """
         x = utils.castf(x)
         transforms = self._get_transforms(transforms)
-        return self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(x), transforms=transforms)
+        return self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
 
     def k(self, x=None, y=None, explicit=None, transforms=None) -> Tensor:
         """
@@ -216,18 +216,18 @@ class _Statistics(_Base, metaclass=ABCMeta):
         y = utils.castf(y)
         transforms = self._get_transforms(transforms)
         if self.explicit:
-            phi_x = self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(x), transforms=transforms)
+            phi_x = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
             if utils.equal(x, y):
                 phi_y = phi_x
             else:
-                phi_y = self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(x), transforms=transforms)
+                phi_y = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
             return phi_x @ phi_y.T
         else:
             if utils.equal(x, y):
                 x = self.transform_sample(x)
-                return self._implicit_statistics.apply(data=self._implicit, x=x, y=x, transforms=transforms)
+                return self._implicit_statistics.apply(oos=self._implicit, x=x, y=x, transforms=transforms)
             else:
-                return self._implicit_statistics.apply(data=self._implicit, x=self.transform_sample(x),
+                return self._implicit_statistics.apply(oos=self._implicit, x=self.transform_sample(x),
                                                        y = self.transform_sample(y), transforms=transforms)
 
     def c(self, x=None, y=None, transforms=None) -> Tensor:
@@ -236,11 +236,11 @@ class _Statistics(_Base, metaclass=ABCMeta):
         """
 
         transforms = self._get_transforms(transforms)
-        phi_x = self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(x), transforms=transforms)
+        phi_x = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
         if torch.equal(x,y):
             phi_y = phi_x
         else:
-            phi_y = self._explicit_statistics.apply(data=self._explicit, x=self.transform_sample(y), transforms=transforms)
+            phi_y = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(y), transforms=transforms)
         return phi_x.T @ phi_y
 
     def forward(self, x, representation="dual") -> Tensor:

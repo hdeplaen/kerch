@@ -19,6 +19,7 @@ import torch
 from torch import Tensor
 from torch.nn import Parameter
 
+import kerch
 from kerch._logger import _Logger
 from kerch.utils.tensor import equal
 from kerch.utils.type import EPS
@@ -37,8 +38,8 @@ class _Transform(_Logger, metaclass=ABCMeta):
         self._lightweight = lighweight
 
         # DATA
-        self._data = None
-        self._statistics = None
+        self._sample = None
+        self._statistics_sample = None
         self._statistics_oos = None
 
     def __str__(self):
@@ -89,107 +90,107 @@ class _Transform(_Logger, metaclass=ABCMeta):
 
     # DATA
     @abstractmethod
-    def _explicit_statistics(self, data):
+    def _explicit_statistics(self, sample):
         pass
 
-    def _implicit_statistics(self, data, x=None):
+    def _implicit_statistics(self, sample, x=None):
         raise BijectionError
 
     @abstractmethod
-    def _explicit_data(self):
+    def _explicit_sample(self):
         pass
 
-    def _implicit_data(self):
+    def _implicit_sample(self):
         raise BijectionError
 
     @property
-    def data(self) -> Tensor:
-        if self._data is None:
+    def sample(self) -> Tensor:
+        if self._sample is None:
             if self.explicit:
-                data = self._explicit_data()
+                data = self._explicit_sample()
             else:
-                data = self._implicit_data()
+                data = self._implicit_sample()
 
             if not self._lightweight or self.default:
-                self._data = data
+                self._sample = data
             return data
-        return self._data
+        return self._sample
 
-    def statistics(self, data=None) -> Tensor:
-        if self._statistics is None:
-            if data is None:
-                data = self.parent.data
+    def statistics_sample(self, sample=None) -> Tensor:
+        if self._statistics_sample is None:
+            if sample is None:
+                sample = self.parent.sample
             if self.explicit:
-                statistics = self._explicit_statistics(data=data)
+                statistics = self._explicit_statistics(sample=sample)
             else:
-                statistics = self._implicit_statistics(data=data)
+                statistics = self._implicit_statistics(sample=sample)
 
             if not self._lightweight or self._default_path:
-                self._statistics = statistics
-        return self._statistics
+                self._statistics_sample = statistics
+        return self._statistics_sample
 
     # OOS
     @abstractmethod
-    def _explicit_statistics_oos(self, data, x=None):
+    def _explicit_statistics_oos(self, oos, x=None):
         pass
 
-    def _implicit_statistics_oos(self, data, x=None):
+    def _implicit_statistics_oos(self, oos, x=None):
         raise BijectionError
 
     @abstractmethod
-    def _explicit_data_oos(self, x=None):
+    def _explicit_oos(self, x=None):
         pass
 
-    def _implicit_data_oos(self, x=None, y=None):
+    def _implicit_oos(self, x=None, y=None):
         raise BijectionError
 
-    def statistics_oos(self, x=None, y=None, data=None) -> Union[Tensor, (Tensor, Tensor)]:
+    def statistics_oos(self, x=None, y=None, oos=None) -> Union[Tensor, (Tensor, Tensor)]:
         if self.explicit:
             if self._statistics_oos is None:
-                if data is None:
-                    data = self.parent.data_oos(x=x)
+                if oos is None:
+                    oos = self.parent.oos(x=x)
                 if x is None:
-                    statistic = self.statistics()
+                    statistic = self.statistics_sample()
                 else:
-                    statistic = self._explicit_statistics_oos(x=x, data=data)
+                    statistic = self._explicit_statistics_oos(x=x, oos=oos)
                 self._statistics_oos = statistic
             return self._statistics_oos
         else:  # implicit
             if self._statistics_oos is None:
-                if data is None:
-                    data = self.parent.data_oos(x=x, y=y)
+                if oos is None:
+                    oos = self.parent.oos(x=x, y=y)
                 if x is None:
-                    stat_x = self.statistics
+                    stat_x = self.statistics_sample
                 else:
-                    stat_x = self._implicit_statistics_oos(x=x, data=data)
+                    stat_x = self._implicit_statistics_oos(x=x, oos=oos)
                 if equal(x,y):
                     stat_y = stat_x
                 elif y is None:
-                    stat_y = self.statistics
+                    stat_y = self.statistics_sample
                 else:
-                    stat_y = self._implicit_statistics_oos(x=y, data=data)
+                    stat_y = self._implicit_statistics_oos(x=y, oos=oos)
                 self._statistics_oos = [stat_x, stat_y]
             return self._statistics_oos[0], self._statistics_oos[1]
 
-    def data_oos(self, x=None, y=None) -> Tensor:
+    def oos(self, x=None, y=None) -> Tensor:
         if self.explicit:
-            return self._explicit_data_oos(x=x)
+            return self._explicit_oos(x=x)
         else:
-            return self._implicit_data_oos(x=x, y=y)
+            return self._implicit_oos(x=x, y=y)
 
     def clean_oos(self):
         self._statistics_oos = None
 
-    def revert(self, data):
+    def revert(self, oos):
         if self.explicit:
-            self._revert_explicit(data)
+            self._revert_explicit(oos)
         else:
-            self._revert_implicit(data)
+            self._revert_implicit(oos)
 
-    def _revert_explicit(self, data):
+    def _revert_explicit(self, oos):
         raise BijectionError
 
-    def _revert_implicit(self, data):
+    def _revert_implicit(self, oos):
         raise BijectionError
 
 
@@ -197,42 +198,42 @@ class _MeanCentering(_Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
         super(_MeanCentering, self).__init__(explicit=explicit, name="Mean centering", default_path=default_path)
 
-    def _explicit_statistics(self, data):
-        return torch.mean(data, dim=0)
+    def _explicit_statistics(self, sample):
+        return torch.mean(sample, dim=0)
 
-    def _implicit_statistics(self, data, x=None):
-        mean = torch.mean(data, dim=1, keepdim=True)
+    def _implicit_statistics(self, sample, x=None):
+        mean = torch.mean(sample, dim=1, keepdim=True)
         mean_tot = torch.mean(mean)
         return mean, mean_tot
 
-    def _explicit_data(self):
-        data = self.parent.data
-        return data - self.statistics(data)
+    def _explicit_sample(self):
+        sample = self.parent.sample
+        return sample - self.statistics_sample(sample)
 
-    def _implicit_data(self):
-        mat = self.parent.data
-        mean, mean_tot = self.statistics(mat)
+    def _implicit_sample(self):
+        mat = self.parent.sample
+        mean, mean_tot = self.statistics_sample(mat)
         return mat - mean - mean.T + mean_tot
 
-    def _explicit_statistics_oos(self, x=None, data=None):
-        return self.statistics()
+    def _explicit_statistics_oos(self, x=None, oos=None):
+        return self.statistics_sample()
 
-    def _implicit_statistics_oos(self, x=None, data=None):
-        mat_x = self.parent.data_oos(x=x)
-        return torch.mean(mat_x, dim=1, keepdim=True)
+    def _implicit_statistics_oos(self, x=None, oos=None):
+        sample_x = self.parent.oos(x=x)
+        return torch.mean(sample_x, dim=1, keepdim=True)
 
-    def _explicit_data_oos(self, x=None):
-        return self.parent.data_oos(x=x) - self.statistics_oos(x=x)
+    def _explicit_oos(self, x=None):
+        return self.parent.oos(x=x) - self.statistics_oos(x=x)
 
-    def _implicit_data_oos(self, x=None, y=None):
+    def _implicit_oos(self, x=None, y=None):
         mean_x, mean_y = self.statistics_oos(x=x, y=y)
-        mean_tot = self.statistics()[1]
-        return self.parent.data_oos(x=x, y=y) - mean_x \
+        mean_tot = self.statistics_sample()[1]
+        return self.parent.oos(x=x, y=y) - mean_x \
                - mean_y.T \
                + mean_tot
 
-    def _revert_explicit(self, data):
-        return data + self.statistics()
+    def _revert_explicit(self, oos):
+        return oos + self.statistics_sample()
 
 
 class _UnitSphereNormalization(_Transform):
@@ -240,51 +241,51 @@ class _UnitSphereNormalization(_Transform):
         super(_UnitSphereNormalization, self).__init__(explicit=explicit, name="Unit Sphere Normalization",
                                                        default_path=default_path)
 
-    def _explicit_statistics(self, data):
-        return torch.norm(data, dim=1, keepdim=True)
+    def _explicit_statistics(self, sample):
+        return torch.norm(sample, dim=1, keepdim=True)
 
-    def _implicit_statistics(self, data, x=None):
-        if data.nelement() == 0:
+    def _implicit_statistics(self, sample, x=None):
+        if sample.nelement() == 0:
             return self._implicit_self(x)
         else:
-            return torch.sqrt(torch.diag(data))[:, None]
+            return torch.sqrt(torch.diag(sample))[:, None]
 
-    def _explicit_data(self):
-        data = self.parent.data
-        norm = self.statistics(data)
-        return data / torch.clamp(norm, min=EPS)
+    def _explicit_sample(self):
+        sample = self.parent.sample
+        norm = self.statistics_sample(sample)
+        return sample / torch.clamp(norm, min=EPS)
 
-    def _implicit_data(self):
-        data = self.parent.data
-        norm = self.statistics(data)
-        return data / torch.clamp(norm * norm.T, min=EPS)
+    def _implicit_sample(self):
+        sample = self.parent.sample
+        norm = self.statistics_sample(sample)
+        return sample / torch.clamp(norm * norm.T, min=EPS)
 
-    def _explicit_statistics_oos(self, x=None, data=None):
-        return torch.norm(data, dim=1, keepdim=True)
+    def _explicit_statistics_oos(self, x=None, oos=None):
+        return torch.norm(oos, dim=1, keepdim=True)
 
-    def _implicit_statistics_oos(self, x=None, data=None) -> Tensor:
-        if data.nelement() == 0:
+    def _implicit_statistics_oos(self, x=None, oos=None) -> Tensor:
+        if oos.nelement() == 0:
             d = self._implicit_self(x)
         else:
-            d = torch.diag(data)[:, None]
+            d = torch.diag(oos)[:, None]
         return torch.sqrt(d)
 
-    def _explicit_data_oos(self, x=None):
-        vec = self.parent.data_oos(x)
-        norm = self.statistics_oos(x=x, data=vec)
-        return vec / torch.clamp(norm, min=EPS)
+    def _explicit_oos(self, x=None):
+        oos = self.parent.oos(x)
+        norm = self.statistics_oos(x=x, oos=oos)
+        return oos / torch.clamp(norm, min=EPS)
 
-    def _implicit_data_oos(self, x=None, y=None):
-        mat = self.parent.data_oos(x=x, y=y)
+    def _implicit_oos(self, x=None, y=None):
+        oos = self.parent.oos(x=x, y=y)
         # avoid computing the full matrix and use the _implicit_self when possible
-        norm_x, norm_y = self.statistics_oos(x=x, y=y, data=torch.empty(0))
-        return mat / torch.clamp(norm_x * norm_y.T, min=EPS)
+        norm_x, norm_y = self.statistics_oos(x=x, y=y, oos=torch.empty(0))
+        return oos / torch.clamp(norm_x * norm_y.T, min=EPS)
 
     def _implicit_self(self, x=None) -> Tensor:
         if isinstance(self.parent, TransformTree):
             return self.parent._implicit_self(x)[:, None]
         else:
-            return torch.diag(self.data_oos(x, x))[:, None]
+            return torch.diag(self.oos(x, x))[:, None]
 
 
 class _MinMaxNormalization(_Transform):
@@ -292,24 +293,27 @@ class _MinMaxNormalization(_Transform):
         super(_MinMaxNormalization, self).__init__(explicit=explicit,
                                                    name="Min Max Normalization", default_path=default_path)
 
-    def _explicit_statistics(self, data):
-        max_vec = torch.max(data, dim=0)
+    def _explicit_statistics(self, sample):
+        max_sample = torch.max(sample, dim=0).values
         if type(self.parent) is _MinimumCentering:
-            return max_vec  # new min is 0
+            return max_sample  # new min is 0
         else:
-            min_vec = torch.min(data, dim=0)
-            return max_vec - min_vec
+            min_sample = torch.min(sample, dim=0).values
+            return max_sample - min_sample
 
-    def _explicit_data(self):
-        data = self.parent.data
-        norm = self.statistics(data)
-        return data / torch.clamp(norm, min=EPS)
+    def _explicit_sample(self):
+        sample = self.parent.sample
+        norm = self.statistics_sample(sample)
+        return sample / torch.clamp(norm, min=EPS)
 
-    def _explicit_statistics_oos(self, x=None, data=None):
-        return self.statistics
+    def _explicit_statistics_oos(self, x=None, oos=None):
+        return self.statistics_sample()
 
-    def _explicit_data_oos(self, x=None):
-        return self.parent.data_oos(x=x) / torch.clamp(self.statistics_oos(x=x), min=EPS)
+    def _explicit_oos(self, x=None):
+        return self.parent.oos(x=x) / torch.clamp(self.statistics_oos(x=x), min=EPS)
+
+    def _revert_explicit(self, oos):
+        return oos * torch.clamp(self.statistics_sample(), min=EPS)
 
 
 class _MinimumCentering(_Transform):
@@ -317,21 +321,21 @@ class _MinimumCentering(_Transform):
         super(_MinimumCentering, self).__init__(explicit=explicit,
                                                 name="Minimum Centering", default_path=default_path)
 
-    def _explicit_statistics(self, data):
-        return torch.min(data, dim=0)
+    def _explicit_statistics(self, sample):
+        return torch.min(sample, dim=0).values
 
-    def _explicit_data(self):
-        data = self.parent.data
-        return data - self.statistics(data)
+    def _explicit_sample(self):
+        sample = self.parent.sample
+        return sample - self.statistics_sample(sample)
 
-    def _explicit_statistics_oos(self, x=None, data=None):
-        return self.statistics()
+    def _explicit_statistics_oos(self, x=None, oos=None):
+        return self.statistics_sample()
 
-    def _explicit_data_oos(self, x=None):
-        return self.parent.data_oos(x=x) - self.statistics_oos(x=x)
+    def _explicit_oos(self, x=None):
+        return self.parent.oos(x=x) - self.statistics_oos(x=x)
 
-    def _revert_explicit(self, data):
-        return data + self.statistics()
+    def _revert_explicit(self, oos):
+        return oos + self.statistics_sample()
 
 
 class _UnitVarianceNormalization(_Transform):
@@ -339,19 +343,22 @@ class _UnitVarianceNormalization(_Transform):
         super(_UnitVarianceNormalization, self).__init__(explicit=explicit,
                                                          name="Unit Variance Normalization", default_path=default_path)
 
-    def _explicit_statistics(self, data):
-        return torch.std(data, dim=0)
+    def _explicit_statistics(self, sample):
+        return torch.std(sample, dim=0)
 
-    def _explicit_data(self):
-        data = self.parent.data
-        norm = self.statistics(data)
-        return data / torch.clamp(norm, min=EPS)
+    def _explicit_sample(self):
+        sample = self.parent.sample
+        norm = self.statistics_sample(sample)
+        return sample / torch.clamp(norm, min=EPS)
 
-    def _explicit_statistics_oos(self, x=None, data=None):
-        return self.statistics
+    def _explicit_statistics_oos(self, x=None, oos=None):
+        return self.statistics_sample()
 
-    def _explicit_data_oos(self, x=None):
-        return self.parent.data_oos(x=x) / torch.clamp(self.statistics_oos(x=x), min=EPS)
+    def _explicit_oos(self, x=None):
+        return self.parent.oos(x=x) / torch.clamp(self.statistics_oos(x=x), min=EPS)
+
+    def _revert_explicit(self, sample):
+        return sample * torch.clamp(self.statistics_sample(), min=EPS)
 
 
 all_transforms = {"normalize": _UnitSphereNormalization,  # for legacy
@@ -373,8 +380,16 @@ class TransformTree(_Transform):
         else:
             transform_classes = []
             for transform_name in transforms:
-                transform_classes.append(all_transforms.get(
-                    transform_name, NameError(f"Unrecognized transform key {transform_name}.")))
+                new_transform = all_transforms.get(
+                    transform_name, NameError(f"Unrecognized transform key {transform_name}."))
+                if isinstance(new_transform, List):
+                    for tr in new_transform:
+                        transform_classes.append(tr)
+                elif issubclass(new_transform, _Transform):
+                    transform_classes.append(new_transform)
+                else:
+                    kerch._GLOBAL_LOGGER._log.error("Error while creating TransformTree list of transforms")
+
 
             # remove same following elements
             previous_item = None
@@ -388,7 +403,7 @@ class TransformTree(_Transform):
 
             return transform_classes
 
-    def __init__(self, explicit: bool, data, default_transforms=None, implicit_self=None, **kwargs):
+    def __init__(self, explicit: bool, sample, default_transforms=None, implicit_self=None, **kwargs):
         super(TransformTree, self).__init__(explicit=explicit, name='base', **kwargs)
 
         if default_transforms is None:
@@ -405,7 +420,7 @@ class TransformTree(_Transform):
         self._default_node = node
         node.default = True
 
-        self._base = data
+        self._base = sample
         self._data = None
         self._data_oos = None
 
@@ -428,18 +443,18 @@ class TransformTree(_Transform):
             return self._base()
         return self._base
 
-    def _explicit_statistics(self, data):
+    def _explicit_statistics(self, sample):
         return None
 
-    def _implicit_statistics(self, data, x=None):
+    def _implicit_statistics(self, sample, x=None):
         return None
 
-    def _explicit_data(self):
+    def _explicit_sample(self):
         if callable(self._base):
             return self._base()
         return self._base
 
-    def _implicit_data(self):
+    def _implicit_sample(self):
         if callable(self._base):
             return self._base()
         return self._base
@@ -448,40 +463,40 @@ class TransformTree(_Transform):
         if self._implicit_self_fun is not None:
             return self._implicit_self_fun(x)
         if x is None:
-            return torch.diag(self._implicit_data())[:, None]
+            return torch.diag(self._implicit_sample())[:, None]
         else:
-            return torch.diag(self._implicit_data_oos(x, x))[:, None]
+            return torch.diag(self._implicit_oos(x, x))[:, None]
 
     @property
-    def default_data(self) -> Tensor:
-        return self._default_node.data
+    def default_sample(self) -> Tensor:
+        return self._default_node.sample
 
     @property
     def default_statistics(self) -> Tensor:
-        return self._default_node.statistics()
+        return self._default_node.statistics_sample()
 
-    def _explicit_statistics_oos(self, data, x=None):
+    def _explicit_statistics_oos(self, oos, x=None):
         pass
 
-    def _implicit_statistics_oos(self, data, x=None):
+    def _implicit_statistics_oos(self, oos, x=None):
         pass
 
-    def _explicit_data_oos(self, x=None):
+    def _explicit_oos(self, x=None):
         if callable(self._data_oos):
             return self._data_oos(x)
         return self._data_oos
 
-    def _implicit_data_oos(self, x=None, y=None):
+    def _implicit_oos(self, x=None, y=None):
         assert callable(self._data_oos), "data_fun should be callable in the implicit case as it requires the " \
                                          "computation of data_fun(x,sample) for the centering and data_fun(x,x) for " \
                                          "the normalization."
         return self._data_oos(x, y)
 
-    def _revert_explicit(self, data):
-        return data
+    def _revert_explicit(self, oos):
+        return oos
 
-    def _revert_implicit(self, data):
-        return data
+    def _revert_implicit(self, oos):
+        return oos
 
     def _create_tree(self, transforms: List[str] = None) -> List[_Transform]:
         transforms = TransformTree.beautify_transforms(transforms)
@@ -498,20 +513,23 @@ class TransformTree(_Transform):
             tree_path.append(child)
         return tree_path
 
-    def apply(self, data, x=None, y=None, transforms: List[str] = None) -> Tensor:
+    def apply(self, oos, x=None, y=None, transforms: List[str] = None) -> Tensor:
         tree_path = self._create_tree(transforms)
-        if x is None and y is None:
-            sol = tree_path[-1].data
-        else:
-            self._data_oos = data
-            sol = tree_path[-1].data_oos(x=x, y=y)
-            for node in tree_path:
-                node.clean_oos()
-            self._data_oos = None  # to avoid blocking the destruction if necessary by the garbage collector
+        if (not isinstance(oos, Tensor)) and x is None and y is None:
+            return tree_path[-1].sample
+        elif isinstance(oos, Tensor):
+            x = 'oos1'
+            y = 'oos2'
+
+        self._data_oos = oos
+        sol = tree_path[-1].oos(x=x, y=y)
+        for node in tree_path:
+            node.clean_oos()
+        self._data_oos = None  # to avoid blocking the destruction if necessary by the garbage collector
         return sol
 
-    def revert(self, data, transforms: List[str] = None) -> Tensor:
+    def revert(self, oos, transforms: List[str] = None) -> Tensor:
         tree_path = self._create_tree(transforms)
         for transform in reversed(tree_path):
-            data = transform.revert(data)
-        return data
+            oos = transform.revert(oos)
+        return oos

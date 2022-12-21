@@ -14,7 +14,7 @@ def invert_dict(name, dict):
 def add_dict(name, dict):
     dicts = {}
     for key in dict:
-        new_entry = {name + ' ' + key: dict[key].data}
+        new_entry = {name + ' ' + key: dict[key].sample}
         dicts = {**new_entry, **dicts}
     return dicts
 

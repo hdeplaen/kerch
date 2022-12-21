@@ -23,7 +23,7 @@ class _Cache(_Module,
         # of the cache is also added.
         with torch.no_grad():
             for _, cache_entry in self._cache.items():
-                cache_entry.data = fn(cache_entry)
+                cache_entry.sample = fn(cache_entry)
         return super(_Cache, self)._apply(fn)
 
     def _reset_cache(self):

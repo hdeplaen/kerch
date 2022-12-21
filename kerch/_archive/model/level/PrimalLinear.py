@@ -27,7 +27,7 @@ class PrimalLinear(Linear.Linear):
 
     @weight.setter
     def weight(self, val):
-        self._weight.data[:,:] = val.data.t()
+        self._weight.data[:,:] = val.sample.t()
 
     @property
     def bias(self):
@@ -35,7 +35,7 @@ class PrimalLinear(Linear.Linear):
 
     @bias.setter
     def bias(self, val):
-        self._bias.data[:] = val.data
+        self._bias.data[:] = val.sample
 
     def set(self, a, b=None):
         self.weight = a

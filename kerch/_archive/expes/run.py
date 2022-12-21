@@ -31,7 +31,7 @@ def general_expe(name, verbose=False):
 
     # LOADING PARAMETERS
     params = {**default_params, **load_params('expe', name)}
-    data_params = {**default_data_params, **params['data']}
+    data_params = {**default_data_params, **params['oos']}
 
     # SINGLE EXPERIMENT
     def _single_expe(num=0):

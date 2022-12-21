@@ -166,7 +166,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
                 # zeroing the gradients if relevant
                 if self._param_trainable and self._hidden.grad is not None:
-                    self._hidden.grad.data.zero_()
+                    self._hidden.grad.sample.zero_()
 
                 self._dim_output, self._num_h = self._hidden.shape
                 self._reset_weight()
@@ -242,7 +242,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
                         self._weight.data = val.T
                         # zeroing the gradients if relevant
                         if self._param_trainable and self._weight.grad is not None:
-                            self._weight.grad.data.zero_()
+                            self._weight.grad.sample.zero_()
                     else:
                         self._weight = torch.nn.Parameter(val.T, requires_grad=self._param_trainable)
 

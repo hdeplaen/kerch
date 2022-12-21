@@ -94,7 +94,7 @@ class Level(torch.nn.Module, metaclass=ABCMeta):
             "linear": linear})
 
     def init(self, x, y):
-        self._y[self._idxk.all_kernels] = y.data
+        self._y[self._idxk.all_kernels] = y.sample
         self.linear.init_y(y, self._idxk.all_kernels)
 
     def forward(self, x, y, init=False):

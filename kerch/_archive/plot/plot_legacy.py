@@ -54,8 +54,8 @@ class plot():
         self.yy = yy
 
     def _two_dim(self):
-        sigma = self.mdl.Model['hilbert'].Model['expkernel'].sigma_trainable.data
-        bias = self.mdl.Model['hilbert'].Model['lin'].bias.data
+        sigma = self.mdl.Model['hilbert'].Model['expkernel'].sigma_trainable.sample
+        bias = self.mdl.Model['hilbert'].Model['lin'].bias.sample
         alpha = self.mdl.Model['hilbert'].Model['lin'].weight
         alpha = alpha.detach().cpu().numpy().squeeze()
         p = self.mdl.Model['hilbert'].Model[self.mdl.kernel_type].param

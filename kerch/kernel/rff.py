@@ -106,7 +106,7 @@ class RFF(_Explicit):
 
                 # zeroing the gradients if relevant
                 if self.weights_trainable and self._weights.grad is not None:
-                    self._weights.grad.data.zero_()
+                    self._weights.grad.sample.zero_()
             self._log.debug("The weights has been (re)initialized")
         else:
             self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),

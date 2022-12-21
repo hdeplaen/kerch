@@ -35,7 +35,7 @@ class DualLinear(Linear.Linear):
 
     @alpha.setter
     def alpha(self, val):
-        self._alpha.data[:,:] = val.data.t()
+        self._alpha.data[:,:] = val.sample.t()
 
     @property
     def bias(self):
@@ -43,7 +43,7 @@ class DualLinear(Linear.Linear):
 
     @bias.setter
     def bias(self, val):
-        self._bias.data[:] = val.data
+        self._bias.data[:] = val.sample
 
     def set(self, a, b=None):
         self.alpha = a
@@ -66,7 +66,7 @@ class DualLinear(Linear.Linear):
             # print(f"{(self.alpha).mean()}")
 
     def init_y(self, y, idxs):
-        self._y[idxs] = y.data
+        self._y[idxs] = y.sample
 
     def merge(self, idxs):
         if self._classifier: raise NotImplemented

@@ -119,7 +119,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         r"""
         Sample dataset after (optional) transformations (none by default).
         """
-        return self.sample_transforms.default_data
+        return self.sample_transforms.default_sample
 
     @property
     def sample(self) -> torch.nn.Parameter:
@@ -186,7 +186,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
             self._sample = torch.nn.Parameter(
                 torch.nn.init.orthogonal_(torch.empty((self._num_total, self._dim_input),
                                                       dtype=utils.FTYPE,
-                                                      device=self._sample.device), ),
+                                                      device=self._sample.device)),
                 requires_grad=self._sample_trainable)
         elif isinstance(sample, torch.nn.Parameter):
             self._log.debug("Using existing sample defined as an external parameter.")
@@ -247,7 +247,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
     @property
     def sample_transforms(self) -> TransformTree:
         r"""
-        Default transformations used by the data.
+        Default transformations used by the oos.
         """
         return self._sample_transforms
 
@@ -255,20 +255,20 @@ class _Sample(_Stochastic,  # manager stochastic indices
     def _sample_transforms(self) -> TransformTree:
         if "sample_transforms" not in self._cache:
             self._cache["sample_transforms"] = TransformTree(explicit=True,
-                                                    data=self._sample,
-                                                    default_transforms=self._default_sample_transforms,
-                                                    lighweight=self._lightweight)
+                                                             sample=self._sample,
+                                                             default_transforms=self._default_sample_transforms,
+                                                             lighweight=self._lightweight)
         return self._cache["sample_transforms"]
 
     def transform_sample(self, data) -> Tensor:
         r"""
-        Apply to data the same transformations as on the sample.
+        Apply to oos the same transformations as on the sample.
         """
         return self.sample_transforms.apply(data)
 
     def transform_sample_revert(self, data) -> Tensor:
         r"""
-        Get back the original data from a transformed data, by using the same transformations as the sample,
+        Get back the original oos from a transformed oos, by using the same transformations as the sample,
         but in reverse. This is not always feasible, depending on the transformations used (normalizations are
         typically not invertible as they are projections which are not bijective).
         """

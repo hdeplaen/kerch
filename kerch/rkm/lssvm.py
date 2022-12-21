@@ -35,7 +35,7 @@ class LSSVM(Level):
 
     def _center_h(self):
         if self._hidden_exists:
-            self._hidden.data -= torch.mean(self._hidden.data, dim=1)
+            self._hidden.sample -= torch.mean(self._hidden.sample, dim=1)
 
     def _solve_primal(self) -> None:
         C = self.kernel.C
@@ -59,8 +59,8 @@ class LSSVM(Level):
         B = torch.cat((Y, S), dim=0)
 
         sol = torch.linalg.solve(A, B)
-        weight = sol[0:-1].data
-        bias = sol[-1].data
+        weight = sol[0:-1].sample
+        bias = sol[-1].sample
 
         self.weight = weight
         self.bias = bias
@@ -93,8 +93,8 @@ class LSSVM(Level):
         B = torch.cat((N2, Zeros), dim=0)
 
         sol = torch.linalg.solve(A, B)
-        hidden = sol[0:-1].data
-        bias = sol[-1].data
+        hidden = sol[0:-1].sample
+        bias = sol[-1].sample
 
         self.hidden = hidden
         self.bias = bias

@@ -116,7 +116,7 @@ class LSSVM(Level, metaclass=ABCMeta):
         l = .5 * reg + .5 * self._gamma * recon
         # print(f"REG:{reg} | RECON:{recon} | LOSS:{l}")
 
-        self._last_recon = recon.data
+        self._last_recon = recon.sample
         self._last_reg = reg.data
         self._last_loss = l.data
         return l, x_tilde
@@ -144,7 +144,7 @@ class LSSVM(Level, metaclass=ABCMeta):
         sol, _ = torch.solve(B, A)
         # sol = torch.linalg.solve(A, B) # torch >= 1.8
         weight = sol[0:-1]
-        bias = sol[-1].data
+        bias = sol[-1].sample
 
         reg = (1 / N) * weight.t() @ weight
         yhat = phi @ weight + bias
@@ -172,8 +172,8 @@ class LSSVM(Level, metaclass=ABCMeta):
 
         sol, _ = torch.solve(B, A)
         # sol = torch.linalg.solve(A, B[:, None]) # torch >= 1.8
-        alpha = sol[0:-1].data
-        beta = sol[-1].data
+        alpha = sol[0:-1].sample
+        beta = sol[-1].sample
 
         reg = (1 / len(y)) * alpha.t() @ K @ alpha
         if self._classifier:

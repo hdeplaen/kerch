@@ -65,9 +65,9 @@ includes all the steps to apply the provided optimizers to your model.
     ```python
     for param in model.parameters():
         # initialize to orthogonal matrix
-        q = qr_retraction(param.data.view(param.size(0), -1))
+        q = qr_retraction(param.sample.view(param.size(0), -1))
         if q.size()[0] < q.size()[1]:
-            param.data.copy_(q.view(param.size()))
+            param.sample.copy_(q.view(param.size()))
             param_g.append(param)
         else:
             param_e0.append(param)
@@ -91,12 +91,12 @@ includes all the steps to apply the provided optimizers to your model.
                 key_g.append(key)
                 if opt.optim_method in ['SGDG', 'AdamG']:
                     # initialize to scale 1
-                    unitp, _ = unit(value.data.view(value.size(0), -1)) 
-                    value.data.copy_(unitp.view(value.size()))
+                    unitp, _ = unit(value.sample.view(value.size(0), -1)) 
+                    value.sample.copy_(unitp.view(value.size()))
                 elif opt.optim_method == ['Carley_SGD', 'Carley_Adam']:
                     # initialize to orthogonal matrix
-                    q = qr_retraction(value.data.view(value.size(0), -1)) 
-                    value.data.copy_(q.view(value.size()))               
+                    q = qr_retraction(value.sample.view(value.size(0), -1)) 
+                    value.sample.copy_(q.view(value.size()))               
             elif 'bn' in key or 'bias' in key:
                 param_e0.append(value)
             else:

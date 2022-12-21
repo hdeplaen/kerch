@@ -42,7 +42,7 @@ class data():
 
         def spiral_xy(i, spiral_num):
             """
-            Create the data for a spiral.
+            Create the oos for a spiral.
 
             Arguments:
                 i runs from 0 to 96
@@ -83,7 +83,7 @@ class data():
     @staticmethod
     def usps(tot_data, test_data):
         digits = datasets.load_digits(2)
-        x = digits['data'][:tot_data, :, :]
+        x = digits['oos'][:tot_data, :, :]
         y = digits['target'][:tot_data]
         y = np.where(y == 0, -1, 1)
 
@@ -180,17 +180,17 @@ class data():
                 tot_data = tr_size + val_size + test_size
             else:
                 assert tot_data >= tr_size + val_size + test_size, \
-                    "Not enough data in the dataset for the requested sample sizes."
+                    "Not enough oos in the dataset for the requested sample sizes."
         else:
             if tot_data is None:
                 tot_data = tr_size + val_size
             else:
                 assert tot_data >= tr_size + val_size, \
-                    "Not enough data in the training dataset for the requested training and validation sizes."
+                    "Not enough oos in the training dataset for the requested training and validation sizes."
                 assert test_data >= test_size, \
-                    "Not enough data in the test set for the requested test size."
+                    "Not enough oos in the test set for the requested test size."
 
-        assert tot_data is not 0, "Cannot select no data."
+        assert tot_data is not 0, "Cannot select no oos."
         dataset, test, info = fun(tot_data, test_data)
         input, target = dataset
         test_input, test_target = test

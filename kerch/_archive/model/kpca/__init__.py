@@ -67,7 +67,7 @@ class KPCA(Level, metaclass=ABCMeta):
     def loss(self, x=None, y=None):
         x = self.forward(x, y)
         var = self._var()
-        self._last_var = var.data
+        self._last_var = var.sample
         return var, x
 
     def solve(self, x, y=None):
@@ -81,13 +81,13 @@ class KPCA(Level, metaclass=ABCMeta):
         s, v = eigs(C, k=self._size_out)
         w = v
 
-        return w.data, None
+        return w.sample, None
 
     def dual(self, x, y=None):
         K = self.kernel.dmatrix()
         s, v = eigs(K, k=self._size_out)
 
-        return v.data, None
+        return v.sample, None
 
     def get_params(self, slow_names=None):
         euclidean = torch.nn.ParameterList(
