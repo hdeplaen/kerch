@@ -272,4 +272,4 @@ class _Sample(_Stochastic,  # manager stochastic indices
         but in reverse. This is not always feasible, depending on the transformations used (normalizations are
         typically not invertible as they are projections which are not bijective).
         """
-        return self.sample_transforms.revert(data)
+        return self.sample_transforms._revert(data)

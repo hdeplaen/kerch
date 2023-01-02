@@ -282,7 +282,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
                 return self.hidden
             else:
                 self._log.warning("No hidden values exist or have been initialized.")
-                raise utils.DualError(self)
+                raise utils.ImplicitError(self)
         raise NotImplementedError
 
     def w(self, x=None) -> Union[Tensor, torch.nn.Parameter]:
@@ -293,7 +293,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
             if self._weight_exists:
                 return self.weight
             else:
-                raise utils.PrimalError
+                raise utils.ExplicitError
         raise NotImplementedError
 
     def phiw(self, x=None, representation="dual") -> Tensor:

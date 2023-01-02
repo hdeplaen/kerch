@@ -3,6 +3,7 @@ import torch
 import kerch
 
 from kerch._transforms import TransformTree, all_transforms
+from kerch.utils.errors import BijectionError
 
 kerch.set_log_level(40)  # only print errors
 unittest.TestCase.__str__ = lambda x: ""
@@ -31,6 +32,7 @@ class TestTransforms(unittest.TestCase):
         t_oos = TT.apply(self.oos)
         self.assertAlmostEqual(torch.sum(torch.norm(t_sample, dim=1)).numpy(), self.num_sample, places=5)
         self.assertAlmostEqual(torch.sum(torch.norm(t_oos, dim=1)).numpy(), self.num_oos, places=5)
+        self.assertRaises(BijectionError, TT.revert, t_oos)
 
 
     def test_mean_centering(self):
@@ -41,7 +43,8 @@ class TestTransforms(unittest.TestCase):
         t_oos = TT.apply(self.sample)
         self.assertAlmostEqual(torch.norm(torch.sum(t_sample, dim=0)).numpy(), 0, places=5)
         self.assertAlmostEqual(torch.norm(torch.sum(t_oos, dim=0)).numpy(), 0, places=5)
-
+        t_orig = TT.revert(t_oos)
+        self.assertAlmostEqual(torch.sum(torch.norm(t_orig - self.sample)).numpy(), 0, places=5)
 
     def test_minimum_centering(self):
         """Verifies the consistency of the centering with the minimum value of each feature across all sample points."""
@@ -50,6 +53,9 @@ class TestTransforms(unittest.TestCase):
         t_oos = TT.apply(self.sample)
         self.assertAlmostEqual(torch.norm(torch.min(t_sample, dim=0).values).numpy(), 0, places=5)
         self.assertAlmostEqual(torch.norm(torch.min(t_oos, dim=0).values).numpy(), 0, places=5)
+
+        t_orig = TT.revert(t_oos)
+        self.assertAlmostEqual(torch.sum(torch.norm(t_orig - self.sample)).numpy(), 0, places=5)
 
 
     def test_unit_variance_normalization(self):
@@ -60,6 +66,8 @@ class TestTransforms(unittest.TestCase):
         self.assertAlmostEqual(torch.sum(torch.std(t_sample, dim=0)).numpy(), self.dim, places=5)
         self.assertAlmostEqual(torch.sum(torch.std(t_oos, dim=0)).numpy(), self.dim, places=5)
 
+        t_orig = TT.revert(t_oos)
+        self.assertAlmostEqual(torch.sum(torch.norm(t_orig - self.sample)).numpy(), 0, places=5)
 
     def test_minmax_normalization(self):
         """Verifies the consistency of the the minimum maximum rescaling."""
@@ -70,6 +78,9 @@ class TestTransforms(unittest.TestCase):
                                           torch.min(t_sample, dim=0).values).numpy(), self.dim, places=5)
         self.assertAlmostEqual(torch.sum(torch.max(t_oos, dim=0).values -
                                           torch.min(t_oos, dim=0).values).numpy(), self.dim, places=5)
+
+        t_orig = TT.revert(t_oos)
+        self.assertAlmostEqual(torch.sum(torch.norm(t_orig - self.sample)).numpy(), 0, places=5)
 
 
     def test_minmax_rescaling(self):
@@ -82,6 +93,9 @@ class TestTransforms(unittest.TestCase):
         self.assertAlmostEqual(torch.norm(torch.min(t_oos, dim=0).values).numpy(), 0, places=5)
         self.assertAlmostEqual(torch.sum(torch.max(t_oos, dim=0).values).numpy(), self.dim, places=5)
 
+        t_orig = TT.revert(t_oos)
+        self.assertAlmostEqual(torch.sum(torch.norm(t_orig - self.sample)).numpy(), 0, places=5)
+
 
     def test_standardize(self):
         """Verifies the consistency of the standardization of each feature rescaling (0 mean, 1 std),
@@ -93,3 +107,6 @@ class TestTransforms(unittest.TestCase):
         self.assertAlmostEqual(torch.norm(torch.sum(t_oos, dim=0)).numpy(), 0, places=5)
         self.assertAlmostEqual(torch.sum(torch.std(t_sample, dim=0)).numpy(), self.dim, places=5)
         self.assertAlmostEqual(torch.sum(torch.std(t_oos, dim=0)).numpy(), self.dim, places=5)
+
+        t_orig = TT.revert(t_oos)
+        self.assertAlmostEqual(torch.sum(torch.norm(t_orig - self.sample)).numpy(), 0, places=5)

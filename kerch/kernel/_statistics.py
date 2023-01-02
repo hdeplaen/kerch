@@ -177,7 +177,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
             defaults to `None`
         :name x: Tensor(,dim_input), optional
-        :raises: PrimalError
+        :raises: ExplicitError
         """
         x = utils.castf(x)
         transforms = self._get_transforms(transforms)
@@ -207,7 +207,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         :return: Kernel matrix
         :rtype: Tensor(N,M)
 
-        :raises: PrimalError
+        :raises: ExplicitError
         """
         # if x is None and y is None:
         #     return self.K

@@ -7,17 +7,17 @@ Source code for the RKM toolbox.
 @date: March 2021
 """
 
-class DualError(Exception):
+class ImplicitError(Exception):
     def __init__(self):
         self.message = "Dual representation not available."
-        super(DualError, self).__init__(self.message)
+        super(ImplicitError, self).__init__(self.message)
 
 
-class PrimalError(Exception):
+class ExplicitError(Exception):
     def __init__(self):
         self.message = "Primal representation not available. \
         The explicit representation lies in an infinite dimensional Hilbert space."
-        super(PrimalError, self).__init__(self.message)
+        super(ExplicitError, self).__init__(self.message)
 
 
 class RepresentationError(Exception):

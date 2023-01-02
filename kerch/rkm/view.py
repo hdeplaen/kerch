@@ -198,7 +198,7 @@ class View(_View, _Sample):
     ## WEIGHT
     def _update_weight_from_hidden(self):
         if self._hidden_exists:
-            # will return a PrimalError if not available
+            # will return a ExplicitError if not available
             self.weight = self.Phi.T @ self.H
             self._log.debug("Setting the weight _Based on the hidden values.")
         else:

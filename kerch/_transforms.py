@@ -23,7 +23,7 @@ import kerch
 from kerch._logger import _Logger
 from kerch.utils.tensor import equal
 from kerch.utils.type import EPS
-from kerch.utils.errors import BijectionError
+from kerch.utils.errors import BijectionError, ImplicitError
 
 
 class _Transform(_Logger, metaclass=ABCMeta):
@@ -101,7 +101,7 @@ class _Transform(_Logger, metaclass=ABCMeta):
         pass
 
     def _implicit_sample(self):
-        raise BijectionError
+        raise ImplicitError
 
     @property
     def sample(self) -> Tensor:
@@ -181,17 +181,17 @@ class _Transform(_Logger, metaclass=ABCMeta):
     def clean_oos(self):
         self._statistics_oos = None
 
-    def revert(self, oos):
+    def _revert(self, oos):
         if self.explicit:
-            self._revert_explicit(oos)
+            return self._revert_explicit(oos)
         else:
-            self._revert_implicit(oos)
+            return self._revert_implicit(oos)
 
     def _revert_explicit(self, oos):
         raise BijectionError
 
     def _revert_implicit(self, oos):
-        raise BijectionError
+        raise ImplicitError
 
 
 class _MeanCentering(_Transform):
@@ -428,9 +428,9 @@ class TransformTree(_Transform):
 
     def __repr__(self):
         output = "Transforms: \n"
-        if len(self._default_transforms) == 1:
-            return output + "\t" + "none"
-        for transform in self._default_transforms[1:]:
+        if len(self._default_transforms) == 0:
+            return output + "\t" + "None (default)"
+        for transform in self._default_transforms:
             output += "\t" + self.children[transform].__str__()
         return output
 
@@ -531,5 +531,5 @@ class TransformTree(_Transform):
     def revert(self, oos, transforms: List[str] = None) -> Tensor:
         tree_path = self._create_tree(transforms)
         for transform in reversed(tree_path):
-            oos = transform.revert(oos)
+            oos = transform._revert(oos)
         return oos

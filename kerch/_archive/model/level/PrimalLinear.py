@@ -48,10 +48,10 @@ class PrimalLinear(Linear.Linear):
         pass
 
     def merge(self, idxs):
-        raise mdl.DualError
+        raise mdl.ImplicitError
 
     def reduce(self, idxs):
-        raise mdl.DualError
+        raise mdl.ImplicitError
 
     def reduce_idxs(self, **kwargs):
-        raise mdl.DualError
+        raise mdl.ImplicitError

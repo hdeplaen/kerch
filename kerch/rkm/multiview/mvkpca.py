@@ -128,7 +128,7 @@ class MVKPCA(_KPCA, MVLevel):
         :param names: Names of the views to be predicted, based on the non-listed ones.
         :name names: List[str]
         """
-        assert self._representation == 'primal', utils.PrimalError
+        assert self._representation == 'primal', utils.ExplicitError
         # construct two lists:
         #   known: the views not in name that are serving as _Statistics,
         #   unknown: the views that are to be predicted (names).

@@ -25,17 +25,20 @@ class KerPyError(Exception, metaclass=ABCMeta):
         super(KerPyError, self).__init__(msg)
 
 
-class DualError(KerPyError):
+class ImplicitError(KerPyError):
     def __init__(self, *args, **kwargs):
-        self.message = "Dual representation not available."
-        super(DualError, self).__init__(*args, **kwargs)
+        self.message = "Implicit representation not available."
+        super(ImplicitError, self).__init__(*args, **kwargs)
 
 
-class PrimalError(KerPyError):
+class ExplicitError(KerPyError):
     def __init__(self, *args, **kwargs):
-        self.message = "Primal representation not available. " \
-                       "The explicit representation lies in an infinite dimensional Hilbert space."
-        super(PrimalError, self).__init__(*args, **kwargs)
+        self.message = "Explicit representation not available.\n" \
+                       "[Example 1]: The explicit representation does not exist as it lies in an infinite " \
+                       "dimensional Hilbert space.\n" \
+                       "[Example 2]: Only the inner product (implicit representation) is known, but not the " \
+                       "original vectors."
+        super(ExplicitError, self).__init__(*args, **kwargs)
 
 
 class RepresentationError(KerPyError):

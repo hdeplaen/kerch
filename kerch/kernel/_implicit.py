@@ -33,11 +33,11 @@ class _Implicit(_Statistics, metaclass=ABCMeta):
 
     @property
     def dim_feature(self) -> int:
-        raise utils.PrimalError
+        raise utils.ExplicitError
 
     @abstractmethod
     def _implicit(self, x=None, y=None):
         return super(_Implicit, self)._implicit(x, y)
 
     def _explicit(self, x=None):
-        raise utils.PrimalError(self)
+        raise utils.ExplicitError(self)
