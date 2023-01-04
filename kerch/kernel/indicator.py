@@ -47,10 +47,10 @@ class Indicator(_Implicit):
     :param gamma_trainable: `True` if the gradient of the :math:`\gamma` is to be computed. If so, a graph is computed
         and the :math:`\gamma` can be updated. `False` just leads to a static computation., this value will be tied to the
         evolution of the lag :math:`p`., defaults to `False`
-    :name lag: double, optional
-    :name gamma: double, optional
-    :name lag_trainable: bool, optional
-    :name gamma_trainable: bool, optional
+    :type lag: double, optional
+    :type gamma: double, optional
+    :type lag_trainable: bool, optional
+    :type gamma_trainable: bool, optional
     """
 
     @utils.kwargs_decorator(

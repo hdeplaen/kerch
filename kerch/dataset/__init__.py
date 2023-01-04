@@ -88,7 +88,7 @@ def usps(tot_data, test_data):
     return (x, y), (None, None), info
 
 def pima_indians(tot_data, test_data):
-    with open('kerpy/expes/datasets/pima-indians-diabetes.csv') as csvfile:
+    with open('kerch/expes/datasets/pima-indians-diabetes.csv') as csvfile:
         data = pd.read_csv(csvfile, header=None, delimiter=',', lineterminator='\n')
     print('Pima Indians Diabetes dataset loaded. ')
     data = data.to_numpy()
@@ -102,7 +102,7 @@ def pima_indians(tot_data, test_data):
     return (input, target), (None, None), info
 
 def bupa_liver_disorder(tot_data, test_data):
-    with open('kerpy/expes/datasets/pima-indians-diabetes.csv') as csvfile:
+    with open('kerch/expes/datasets/pima-indians-diabetes.csv') as csvfile:
         data = pd.read_csv(csvfile, header=None, delimiter=',', lineterminator='\n')
     print('Bupa liver disorder dataset loaded. ')
     data = data.to_numpy()
@@ -116,9 +116,9 @@ def bupa_liver_disorder(tot_data, test_data):
     return (input, target), (None, None), info
 
 def adult(tot_data, test_data):
-    with open('kerpy/expes/datasets/adult_tr.csv') as csvfile:
+    with open('kerch/expes/datasets/adult_tr.csv') as csvfile:
         data_tr = pd.read_csv(csvfile, header=None, delimiter=',', lineterminator='\n')
-    with open('kerpy/expes/datasets/adult_te.csv') as csvfile:
+    with open('kerch/expes/datasets/adult_te.csv') as csvfile:
         data_te = pd.read_csv(csvfile, header=None, delimiter=',', lineterminator='\n')
 
     tr_input = data_tr.iloc[:, 0:13]
@@ -142,7 +142,7 @@ def adult(tot_data, test_data):
     return (tr_input, tr_target), (te_input, te_target), info
 
 def ionoshpere(tot_data, test_data):
-    with open('kerpy/expes/datasets/ion.csv') as csvfile:
+    with open('kerch/expes/datasets/ion.csv') as csvfile:
         data_tr = pd.read_csv(csvfile, header=None, delimiter=',', lineterminator='\n')
 
     tr_input = data_tr.iloc[:, 0:34].to_numpy()

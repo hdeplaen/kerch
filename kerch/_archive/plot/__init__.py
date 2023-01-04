@@ -17,12 +17,12 @@ import kerch._archive.plot.plotenv_tensorboard as plotenv_tensorboard
 
 
 class plotenv(plotenv_parent.plotenv_parent):
-    def __new__(cls, model: kerpy, opt: opt.Optimizer):
-        if kerpy.PLOT_ENV == 'wandb':
+    def __new__(cls, model: kerch, opt: opt.Optimizer):
+        if kerch.PLOT_ENV == 'wandb':
             return plotenv_wandb.plotenv_wandb(model, opt)
-        elif kerpy.PLOT_ENV == 'tensorboard':
+        elif kerch.PLOT_ENV == 'tensorboard':
             return plotenv_tensorboard.plotenv_tensorboard(model, opt)
-        elif kerpy.PLOT_ENV == 'both':
+        elif kerch.PLOT_ENV == 'both':
             pl = plotenv_tensorboard.plotenv_tensorboard(model, opt)
             name, log_dir, id = pl.names
             wandb.init(name=name,
@@ -33,7 +33,7 @@ class plotenv(plotenv_parent.plotenv_parent):
                        entity='hdeplaen',
                        reinit=True)
             return pl
-        elif kerpy.PLOT_ENV == 'none':
+        elif kerch.PLOT_ENV == 'none':
             return super(plotenv, cls).__init__(model, opt)
         else:
             warnings.warn('Plot environment not recognized. No plotting will occur.')

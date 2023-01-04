@@ -30,9 +30,9 @@ class Sigmoid(_Implicit):
     :param b: Value for :math:`b`., defaults to 0
     :param params: `True` if the gradient of :math:`a` and :math:`b` are to be computed. If so, a graph is computed
         and the parameters can be updated. `False` just leads to a static computation., defaults to `False`
-    :name a: double, optional
-    :name b: double, optional
-    :name params_trainable: bool, optional
+    :type a: double, optional
+    :type b: double, optional
+    :type params_trainable: bool, optional
     """
 
     @utils.kwargs_decorator(

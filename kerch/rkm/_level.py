@@ -12,8 +12,8 @@ class _Level(_View, metaclass=ABCMeta):
     :param eta: :math:`\eta`., defaults to 1.
     :param representation: Chosen representation, "primal" or "dual"., defaults to "dual".
 
-    :name eta: double, optional
-    :name representation: str, optional
+    :type eta: double, optional
+    :type representation: str, optional
     """
 
     @utils.extend_docstring(_View)
@@ -68,7 +68,7 @@ class _Level(_View, metaclass=ABCMeta):
         a dual formulation to be fitted.
 
         :param representation: Representation of the model (``"primal"`` or ``"dual"``)., defaults to ``"dual"``.
-        :name representation: str, optional
+        :type representation: str, optional
         """
 
         # self._log.debug("The fitting is always done on the full sample dataset, regardless of the stochastic state.")

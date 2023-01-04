@@ -34,12 +34,12 @@ class Nystrom(_Explicit):
         polynomial kernel etc.). For the default values, please refer to the requested class in question.
     :param base_kernel: Instead of creating a new kernel on which to use the Nyström method, one can also perform it
         on an existing kernel. In that case, the other _Statistics arguments are bypassed., defaults to `None`
-    :name dim: int, optional
-    :name \**kwargs: dict, optional
-    :name base_type: str, optional
-    :name base_center: bool, optional
-    :name base_normalize: bool, optional
-    :name base_kernel: kerpy.kernel.*, optional
+    :type dim: int, optional
+    :type \**kwargs: dict, optional
+    :type base_type: str, optional
+    :type base_center: bool, optional
+    :type base_normalize: bool, optional
+    :type base_kernel: kerch.kernel.*, optional
     """
 
     @utils.kwargs_decorator({
@@ -56,6 +56,7 @@ class Nystrom(_Explicit):
         self._base_kernel = None
 
         k = kwargs["base_kernel"]
+        assert not isinstance(k, str), "base_kernel must be of kernel type (use base_type instead)."
         if k is None:
             # normal case with a kernel created from the factory
             super(Nystrom, self).__init__(**kwargs)
@@ -65,15 +66,17 @@ class Nystrom(_Explicit):
                                                "_normalize": kwargs["base_normalize"],
                                                "name": kwargs["base_type"],
                                                 "kernel_transforms": kwargs["base_kernel_transforms"]})
-            self._base_kernel.init_sample(sample=self._sample, idx_sample=self.idx)
+            self._base_kernel.init_sample(sample=self.transformed_sample, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel
+            assert isinstance(k, _Base), "The provided kernel is not of the kernel class."
             super(Nystrom, self).__init__(**{**kwargs,
-                                             "sample":k.transformed_sample,
-                                             "sample_trainable": k.sample_trainable})
-            assert isinstance(k, _Base), "The _Statistics kernel is not of the kernel class."
+                                             "sample":k.sample,
+                                             "sample_trainable": k.sample_trainable,
+                                             "idx_sample": k.idx})
             self._base_kernel = k
-            self.init_sample(k.transformed_sample, k.idx)
+            self._log.info("Keeping original kernel transforms (no overwriting, so base_kernel_transforms is "
+                           "neglected).")
 
         self._dim = kwargs["dim"]
         if self._dim is None:
@@ -165,5 +168,5 @@ class Nystrom(_Explicit):
         Ky = self._base_kernel.k(x)
         return Ky @ self._cache["H"] @ torch.diag(1 / self._cache["lambdas_sqrt"])
 
-    def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:
+    def _phi_pinv(self, phi) -> torch.Tensor:
         raise NotImplementedError

@@ -38,13 +38,13 @@ class RFF(_Explicit):
         k(x,y) = \phi(x)^{\top}\phi(y) = \exp\left( -\frac{1}{2}\lVert x-y \rVert_2^2 \right)
 
     :param num_weights: Number of weights :math:`d` sampled for the RFF., defaults to 1.
-    :name num_weights: int, optional
+    :type num_weights: int, optional
     :param weights: _Explicit values for the weights may be provided instead of automatically sampling them with the
         provided `num_weights`., defaults to `None`.
-    :name weights: Tensor(num_weights, dim_input), optional
+    :type weights: Tensor(num_weights, dim_input), optional
     :param weights_trainable: Specifies if the weights are to be considered as trainable parameters during
         backpropagation., default to `False`.
-    :name weights_trainable: bool, optional
+    :type weights_trainable: bool, optional
 
     """
 
@@ -142,8 +142,7 @@ class RFF(_Explicit):
     def hparams(self):
         return {"Kernel": "Random Fourier Features", **super(RFF, self).hparams}
 
-    def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:
-        phi = super(RFF, self).phi_pinv(phi=phi, centered=centered, normalized=normalized)
+    def _phi_pinv(self, phi) -> torch.Tensor:
         phi = phi * sqrt(self.num_weights)
         weights_pinv = .5 * torch.linalg.pinv(self.weights).T
         return torch.acos(phi[:, :self.num_weights]) @ weights_pinv + \

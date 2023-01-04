@@ -39,9 +39,9 @@ class _Logger(metaclass=ABCMeta):
     def set_log_level(self, level: int = None) -> int:
         r"""
         Sets a specific log Level to this object. It serves as a way to use specific log Level for a specific class,
-        different than the current general KerPy log Level.
+        different than the current general kerch log Level.
 
-        :param level: If the value is ``None``, the current general KerPy log Level will be used (WARNING if not
+        :param level: If the value is ``None``, the current general kerch log Level will be used (WARNING if not
             specified otherwise)., defaults to ``None``.
         :param name: int, optional
         """

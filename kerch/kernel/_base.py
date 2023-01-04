@@ -148,7 +148,7 @@ class _Base(_Sample, metaclass=ABCMeta):
 
         :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
             defaults to `None`
-        :name x: Tensor(,dim_input), optional
+        :type x: Tensor(,dim_input), optional
         :raises: ExplicitError
         """
         if x is None:
@@ -176,8 +176,8 @@ class _Base(_Sample, metaclass=ABCMeta):
         :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
         :param y: Out-of-sample points (second dimension). If `None`, the default sample will be used., defaults to `None`
 
-        :name x: Tensor(N,dim_input), optional
-        :name y: Tensor(M,dim_input), optional
+        :type x: Tensor(N,dim_input), optional
+        :type y: Tensor(M,dim_input), optional
 
         :return: Kernel matrix
         :rtype: Tensor(N,M)
@@ -212,8 +212,8 @@ class _Base(_Sample, metaclass=ABCMeta):
         :param representation: Chosen representation. If `dual`, an out-of-sample kernel matrix is returned. If
             `primal` is specified, it returns the explicit feature map., defaults to `dual`
 
-        :name x: Tensor(,dim_input)
-        :name representation: str, optional
+        :type x: Tensor(,dim_input)
+        :type representation: str, optional
 
         :return: Out-of-sample kernel matrix or explicit feature map depending on `representation`.
 

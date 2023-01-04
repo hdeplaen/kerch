@@ -28,12 +28,16 @@ def objective(config):
     NUM_POINTS = int(config["NUM_POINTS"])
     NUM_WEIGHTS = int(config["NUM_WEIGHTS"])
     DIM_OUTPUT = int(config["DIM_OUTPUT"])
+    TRANSFORM_SAMPLE = config["TRANSFORM_SAMPLE"]
+    TRANSFORM_KERNEL = config["TRANSFORM_KERNEL"]
+    TYPE_TIME = config["TYPE_TIME"]
+    TYPE_SPACE = config["TYPE_SPACE"]
     SPLIT_RATIO = .8
     DEV = torch.device('cpu')
 
     # DATA -----------------------------------------------------------------------------------------------------
     x = torch.tensor(np.linspace(-10, 10, NUM_POINTS), device=DEV).unsqueeze(1)
-    y = torch.tensor(torch.sinc(x))
+    y = torch.sinc(x)
 
     rand_idx = torch.randperm(x.shape[0])
     train_len = int(len(rand_idx) * (1 - SPLIT_RATIO))
@@ -47,8 +51,10 @@ def objective(config):
     test_y = y[rand_idx[train_len:], :]
 
     # MODEL
-    mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "name": "random_features", "num_weights": NUM_WEIGHTS, "_center": False, "sample": train_y},
-                           {"name": "time", "name": "random_features", "num_weights": NUM_WEIGHTS, "_center": False, "_normalize": False, "sample": train_x},
+    sample_transforms = [TRANSFORM_SAMPLE]
+    kernel_transforms = [TRANSFORM_KERNEL]
+    mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": TYPE_SPACE, "num_weights": NUM_WEIGHTS, "sample": train_y, "sample_transforms": sample_transforms, "kernel_transforms": kernel_transforms},
+                           {"name": "time", "type": TYPE_TIME, "num_weights": NUM_WEIGHTS, "sample": train_x, "sample_transforms": sample_transforms, "kernel_transforms": kernel_transforms},
                            center=False, dim_output=DIM_OUTPUT)
     mdl.to(DEV)
     mdl.solve(representation='primal')
@@ -70,7 +76,11 @@ def objective(config):
 search_space = {
     "NUM_POINTS": 1000,
     "NUM_WEIGHTS": tune.grid_search((np.round(10**(np.linspace(0,3,20))))),
-    "DIM_OUTPUT": tune.grid_search((np.round(10**(np.linspace(0,3,20)))))
+    "DIM_OUTPUT": tune.grid_search((np.round(10**(np.linspace(0,3,20))))),
+    "TYPE_TIME" : tune.grid_search(['random_features', 'linear']),
+    "TYPE_SPACE" : tune.grid_search(['random_features', 'linear']),
+    "TRANSFORM_SAMPLE" : tune.grid_search(["standardize", "minmax_rescaling", "minimum_centering"]),
+    "TRANSFORM_KERNEL": tune.grid_search(["standardize", "minmax_rescaling", "minimum_centering"])
 }
 
 tuner = tune.Tuner(objective,
@@ -78,7 +88,7 @@ tuner = tune.Tuner(objective,
                    run_config=air.RunConfig(
                        callbacks=[
                            WandbLoggerCallback(project="mvkpca",
-                                               group="sinc")
+                                               group='sinc3')
                        ],
                    ),
                    )

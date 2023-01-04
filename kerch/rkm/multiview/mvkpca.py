@@ -54,7 +54,7 @@ class MVKPCA(_KPCA, MVLevel):
         # weight_known_normed = weight_known / weight_known_norm
         # return phi_known @ weight_known_normed @ weight_predict.T
 
-        # TECHNIQUE 4
+        # TECHNIQUE 4 (THIS ONE)
         Inv = torch.linalg.inv(torch.diag(self.vals) - weight_predict.T @ weight_predict)
         return phi_known @ weight_known @ Inv @ weight_predict.T
 
@@ -93,7 +93,7 @@ class MVKPCA(_KPCA, MVLevel):
 
         :param known: Dictionary of the inputs where the key is the view identifier (``str`` or ``int``) and the
             values the inputs to the views.
-        :name known: dict
+        :type known: dict
         :return:
         :rtype: Tensor
         """
@@ -126,7 +126,7 @@ class MVKPCA(_KPCA, MVLevel):
         not mentioned.
 
         :param names: Names of the views to be predicted, based on the non-listed ones.
-        :name names: List[str]
+        :type names: List[str]
         """
         assert self._representation == 'primal', utils.ExplicitError
         # construct two lists:

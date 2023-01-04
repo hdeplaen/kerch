@@ -27,8 +27,8 @@ class Polynomial(_Statistics):
     :param degree: Degree of the polynomial kernel., defaults to 1
     :param degree_trainable: `True` if the gradient of the degree is to be computed. If so, a graph is computed
         and the degree can be updated. `False` just leads to a static computation., defaults to `False`
-    :name degree: double, optional
-    :name degree_trainable: bool, optional
+    :type degree: double, optional
+    :type degree_trainable: bool, optional
     """
 
     @utils.kwargs_decorator(

@@ -27,7 +27,7 @@ class ExplicitNN(_Explicit):
         \phi(x) = NN\left(x\right)
 
     :param network: Network to be used.
-    :name network: torch.nn.Module
+    :type network: torch.nn.Module
     """
 
     @utils.kwargs_decorator(
@@ -48,6 +48,8 @@ class ExplicitNN(_Explicit):
         self._decoder: torch.nn.Module = kwargs["decoder"]
         assert isinstance(self._decoder, torch.nn.Module) or self._decoder is None, "If specified, the decoder must " \
                                                                                     "be an instance of torch.nn.Module."
+
+        self._nn_loss_func = kwargs["nn_loss_func"]
 
     def __str__(self):
         return "explicit kernel"
@@ -73,10 +75,10 @@ class ExplicitNN(_Explicit):
             yield self._decoder.parameters()
         super(ExplicitNN, self)._euclidean_parameters(recurse)
 
-    def phi_pinv(self, phi=None, centered=None, normalized=None) -> torch.Tensor:
+    def _phi_pinv(self, phi) -> torch.Tensor:
         if self._decoder is None:
             self._log.error("No decoder provided for pseudo-inversion of a neural-network based "
                             "explicit feature map.")
             raise Exception
-        phi = super(ExplicitNN, self).phi_pinv(phi, centered, normalized)
         return self._decoder(phi)
+

@@ -382,7 +382,9 @@ class TransformTree(_Transform):
             for transform_name in transforms:
                 new_transform = all_transforms.get(
                     transform_name, NameError(f"Unrecognized transform key {transform_name}."))
-                if isinstance(new_transform, List):
+                if isinstance(new_transform, Exception):
+                    raise new_transform
+                elif isinstance(new_transform, List):
                     for tr in new_transform:
                         transform_classes.append(tr)
                 elif issubclass(new_transform, _Transform):

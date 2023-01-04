@@ -93,7 +93,7 @@ def load_params(file: str, expe: str):
     :param expe: string representing parameters.
     :return: dictionnary of parameters.
     """
-    with open(os.path.join(sys.path[0], "kerpy/expes/expes/" + file + ".yaml"), "r") as file:
+    with open(os.path.join(sys.path[0], "kerch/expes/expes/" + file + ".yaml"), "r") as file:
         content = yaml.safe_load(file)
     return content.get(expe, 'Name of experiment not recognized in yaml file.')
 

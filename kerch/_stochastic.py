@@ -61,11 +61,11 @@ class _Stochastic(_Cache,  # creates a transportable cache (e.g. for GPU)
         case of stochastic training.
 
         :param idx: Indices of the sample subset relative to the original sample set., defaults to `None`
-        :name idx: int[], optional
+        :type idx: int[], optional
         :param prop: Instead of giving indices, passing a proportion of the original sample set is also
             possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
             such that :math:`0 <` `prop_stochastic` :math:`\leq 1`., defaults to `None`.
-        :name prop: double, optional
+        :type prop: double, optional
 
         If `None` is specified for both `idx_stochastic` and `prop_stochastic`, all samples are used and the subset equals the
         original sample set. This is also the default behavior if this function is never called, nor the parameters

@@ -34,14 +34,16 @@ class _Statistics(_Base, metaclass=ABCMeta):
         if repetively required. However, provided the same values are used as the one specified in the construction,
         this is the most efficient, not computing or keeping anything unnecessary. This parameter controls a
         time-memory trade-off., defaults to `True`
-    :name kernel_transforms: List[str]
-    :name ligthweight: bool, optional
+    :type kernel_transforms: List[str]
+    :type ligthweight: bool, optional
     """
 
     @abstractmethod
     @utils.kwargs_decorator({
         "lightweight": True,
         "kernel_transforms": [],
+        "center": False,
+        "normalize": False
     })
     def __init__(self, **kwargs):
         super(_Statistics, self).__init__(**kwargs)
@@ -49,9 +51,21 @@ class _Statistics(_Base, metaclass=ABCMeta):
         self._required_transforms = None
         self._naturally_centered = False
         self._naturally_normalized = False
-
-        self._default_kernel_transforms = self._simplify_transforms(kwargs["kernel_transforms"])
         self._lightweight = kwargs["lightweight"]
+
+        transforms = kwargs["kernel_transforms"]
+
+        # LEGACY SUPPORT
+        if kwargs["center"]:
+            self._log.warning("Argument center kept for legacy and will be removed in a later version. Please use the "
+                              "more versatile kernel_transforms parameter instead.")
+            transforms.append("mean_centering")
+        if kwargs["normalize"]:
+            self._log.warning("Argument normalize kept for legacy and will be removed in a later version. Please use "
+                              "the more versatile kernel_transforms parameter instead.")
+            transforms.append("unit_sphere_normalization")
+
+        self._default_kernel_transforms = self._simplify_transforms(transforms)
 
     @property
     def kernel_transforms(self) -> TransformTree:
@@ -176,7 +190,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
 
         :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
             defaults to `None`
-        :name x: Tensor(,dim_input), optional
+        :type x: Tensor(,dim_input), optional
         :raises: ExplicitError
         """
         x = utils.castf(x)
@@ -201,8 +215,8 @@ class _Statistics(_Base, metaclass=ABCMeta):
         :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
         :param y: Out-of-sample points (second dimension). If `None`, the default sample will be used., defaults to `None`
 
-        :name x: Tensor(N,dim_input), optional
-        :name y: Tensor(M,dim_input), optional
+        :type x: Tensor(N,dim_input), optional
+        :type y: Tensor(M,dim_input), optional
 
         :return: Kernel matrix
         :rtype: Tensor(N,M)
@@ -251,8 +265,8 @@ class _Statistics(_Base, metaclass=ABCMeta):
         :param representation: Chosen representation. If `dual`, an out-of-sample kernel matrix is returned. If
             `primal` is specified, it returns the explicit feature map., defaults to `dual`
 
-        :name x: Tensor(,dim_input)
-        :name representation: str, optional
+        :type x: Tensor(,dim_input)
+        :type representation: str, optional
 
         :return: Out-of-sample kernel matrix or explicit feature map depending on `representation`.
 

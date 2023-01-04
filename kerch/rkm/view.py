@@ -26,9 +26,9 @@ class View(_View, _Sample):
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 
-    :name kernel: kerpy.kernel._Statistics, optional
-    :name bias: bool, optional
-    :name bias_trainable: bool, optional
+    :type kernel: kerch.kernel._Statistics, optional
+    :type bias: bool, optional
+    :type bias_trainable: bool, optional
     """
 
     @utils.kwargs_decorator({
@@ -61,12 +61,12 @@ class View(_View, _Sample):
         kernel = kwargs["kernel"]
         if kernel is None:
             self._kernel = factory(**{**kwargs,
-                                      "sample": self.transformed_sample,
+                                      "sample": self.sample,
                                       "idx_sample": self.idx})
         elif isinstance(kernel, _Base):
             self._log.info("Initiating View _Based on existing kernel and overwriting its sample.")
             self._kernel = kernel
-            self._kernel.init_sample(sample=self.transformed_sample,
+            self._kernel.init_sample(sample=self.sample,
                                      idx_sample=self.idx)
         else:
             raise TypeError("Argument kernel is not of the kernel class.")
@@ -191,7 +191,7 @@ class View(_View, _Sample):
         """
         self._log.info("Updating View _Based on an external kernel and overwriting its sample.")
         self._kernel = val
-        self._kernel.init_sample(sample=self.transformed_sample,
+        self._kernel.init_sample(sample=self.sample,
                                  idx_sample=self.idx)
 
     #########################################################################
