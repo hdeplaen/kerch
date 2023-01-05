@@ -142,7 +142,7 @@ class RFF(_Explicit):
     def hparams(self):
         return {"Kernel": "Random Fourier Features", **super(RFF, self).hparams}
 
-    def _phi_pinv(self, phi) -> torch.Tensor:
+    def _explicit_preimage(self, phi) -> torch.Tensor:
         phi = phi * sqrt(self.num_weights)
         weights_pinv = .5 * torch.linalg.pinv(self.weights).T
         return torch.acos(phi[:, :self.num_weights]) @ weights_pinv + \

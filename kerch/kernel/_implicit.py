@@ -9,9 +9,10 @@ File containing the RBF kernel class.
 
 from .. import utils
 from ._statistics import _Statistics
-import math
+from torch import Tensor as T
 
 from abc import ABCMeta, abstractmethod
+from ..utils import ExplicitError
 
 
 class _Implicit(_Statistics, metaclass=ABCMeta):
@@ -41,3 +42,6 @@ class _Implicit(_Statistics, metaclass=ABCMeta):
 
     def _explicit(self, x=None):
         raise utils.ExplicitError(self)
+
+    def explicit_preimage(self, phi: T):
+        raise ExplicitError

@@ -25,12 +25,13 @@ f = lambda x : torch.sin(x * 2 * torch.pi)
 
 kerch.set_log_level(ERROR)
 
-SIGMA = 1.2
-STEP = 5
+SIGMA = 1.1
+STEP = 50
 NUM_OOR = 750
 NUM_POINTS = 200
-NUM_WEIGHTS = 200
+NUM_WEIGHTS = 50
 DIM_OUTPUT = 2000
+KNN = 10
 DEV = torch.device('cpu')
 
 # DATA -----------------------------------------------------------------------------------------------------
@@ -44,28 +45,25 @@ y_oor = f(x_oor)
 sample_transforms = []
 kernel_transforms = []
 
-x_train = x
-y_train = y
+x_train = torch.concat((x, x), dim=0)
+y_train = torch.concat((y, y), dim=0)
 
 for idx in tqdm(range(0, NUM_OOR, STEP)):
-    mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": "random_features", "num_weights": NUM_WEIGHTS, "sample": y_train,
+    mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": "rbf", "num_weights": NUM_WEIGHTS, "sample": y_train,
                                       "sample_transforms": sample_transforms, "kernel_transforms": kernel_transforms},
-                                     {"name": "time", "type": "nystrom", "base_type": "rbf", "sigma": SIGMA,
+                                     {"name": "time", "type": "rbf", "base_type": "rbf", "sigma": SIGMA,
                                       "num_weights": NUM_WEIGHTS,
                                       "sample": x_train, "sample_transforms": sample_transforms,
                                       "kernel_transforms": kernel_transforms},
-                                     center=False, dim_output=DIM_OUTPUT)
+                                     center=False, dim_output=DIM_OUTPUT, representation='dual')
     mdl.to(DEV)
-    mdl.solve(representation='primal')
+    mdl.solve()
 
-    y_pred_phi = mdl.predict_oos({"time": x}).detach()
-    y_pred = mdl.view("space").kernel.phi_pinv(y_pred_phi)
+    y_pred = mdl.predict({"time": x}, knn=KNN)['space'].detach()
+    y_pred_oor = mdl.predict({"time": x_oor}, knn=KNN)['space'].detach()
 
-    y_pred_oor_phi = mdl.predict_oos({"time": x_oor}).detach()
-    y_pred_oor = mdl.view("space").kernel.phi_pinv(y_pred_oor_phi)
-
-    x_train = torch.concat((x, x_oor[:idx,:]), dim=0)
-    y_train = torch.concat((y, y_pred_oor[:idx,:]), dim=0)
+    x_train = torch.concat((x, x, x_oor[:idx,:]), dim=0)
+    y_train = torch.concat((y, y, y_pred_oor[:idx,:]), dim=0)
 
     ## PLOT
 

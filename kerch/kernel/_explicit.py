@@ -48,7 +48,7 @@ class _Explicit(_Statistics, metaclass=ABCMeta):
         phi = super(_Explicit, self)._explicit(x)
         return phi
 
-    def phi_pinv(self, phi=None) -> torch.Tensor:
+    def explicit_preimage(self, phi=None) -> torch.Tensor:
         r"""
             Returns a pseudo-inverse of the explicit feature map if available.
 
@@ -64,9 +64,9 @@ class _Explicit(_Statistics, metaclass=ABCMeta):
         if phi is None:
             phi = self.phi()
         phi = self._explicit_statistics.revert(phi)
-        x_tilde = self._phi_pinv(phi)
+        x_tilde = self._explicit_preimage(phi)
         return self.sample_transforms.revert(x_tilde)
 
     @abstractmethod
-    def _phi_pinv(self, phi):
+    def _explicit_preimage(self, phi):
         pass

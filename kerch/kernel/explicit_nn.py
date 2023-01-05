@@ -75,7 +75,7 @@ class ExplicitNN(_Explicit):
             yield self._decoder.parameters()
         super(ExplicitNN, self)._euclidean_parameters(recurse)
 
-    def _phi_pinv(self, phi) -> torch.Tensor:
+    def _explicit_preimage(self, phi) -> torch.Tensor:
         if self._decoder is None:
             self._log.error("No decoder provided for pseudo-inversion of a neural-network based "
                             "explicit feature map.")

@@ -47,22 +47,17 @@ test_y = y[rand_idx[train_len:], :]
 # MODEL
 sample_transforms = []
 kernel_transforms = []
-mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": "random_features", "num_weights": NUM_WEIGHTS, "sample": train_y, "sample_transforms": sample_transforms, "kernel_transforms": kernel_transforms},
-                       {"name": "time", "type": "nystrom", "base_type": "rbf", "sigma":25, "num_weights": NUM_WEIGHTS, "sample": train_x, "sample_transforms": sample_transforms, "kernel_transforms": kernel_transforms},
-                       center=False, dim_output=DIM_OUTPUT)
+mdl = kerch.rkm.multiview.MVKPCA({"name": "space", "type": "rbf", "num_weights": NUM_WEIGHTS, "sample": train_y, "sample_transforms": sample_transforms, "kernel_transforms": kernel_transforms},
+                       {"name": "time", "type": "rbf", "base_type": "rbf", "sigma":25, "num_weights": NUM_WEIGHTS, "sample": train_x, "sample_transforms": sample_transforms, "kernel_transforms": kernel_transforms},
+                       center=False, dim_output=DIM_OUTPUT, representation='dual')
 mdl.to(DEV)
-mdl.solve(representation='primal')
+mdl.solve()
 
 
-train_phi_yp = mdl.predict_oos({"time": train_x}).detach()
-train_yp = mdl.view("space").kernel.phi_pinv(train_phi_yp)
-
-test_phi_yp = mdl.predict_oos({"time": test_x}).detach()
-test_yp = mdl.view("space").kernel.phi_pinv(test_phi_yp)
-
+train_yp = mdl.predict({"time": train_x})['space'].detach()
+test_yp = mdl.predict({"time": test_x})['space'].detach()
 out_of_range_x = np.concatenate((np.linspace(-max_out_of_range,-max_range,50), np.linspace(max_range,max_out_of_range,50)))
-out_of_range_phi_yp = mdl.predict_oos({"time": out_of_range_x}).detach()
-out_of_range = mdl.view("space").kernel.phi_pinv(out_of_range_phi_yp)
+out_of_range = mdl.predict({"time": out_of_range_x})['space'].detach()
 
 MSE = torch.nn.MSELoss()
 train_mse = MSE(train_y, train_yp)

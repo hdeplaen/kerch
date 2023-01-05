@@ -30,7 +30,7 @@ class MultiView(_View):
         self._log.debug("The output dimension, the sample and the hidden variables of each View will be overwritten "
                         "by the general value passed as an argument, possibly with None.")
 
-        # append the views
+        # append the known
         for view in views:
             self.attach_view(view)
 
@@ -61,11 +61,11 @@ class MultiView(_View):
 
         # verify the consistency of the new view with the previous ones if relevant
         if view.num_sample is not None and self._num_total is not None:
-            assert view.num_sample == self._num_total, 'Inconsistency in the sample sizes of the initialized views.'
+            assert view.num_sample == self._num_total, 'Inconsistency in the sample sizes of the initialized known.'
         elif view.num_sample is not None and self._num_total is None:
             self._num_total = view.num_sample
 
-        # append to dict and meta variables for the views
+        # append to dict and meta variables for the known
         try:
             name = view.name
         except AttributeError:
@@ -143,7 +143,7 @@ class MultiView(_View):
     ## ATTACH
     def detach_all(self) -> None:
         r"""
-        Detaches all the views.
+        Detaches all the known.
         """
         for v in self.views:
             v.detach()
@@ -164,9 +164,10 @@ class MultiView(_View):
         for v in self._views:
             v._update_weight_from_hidden()
 
+
     ## MATH
     def phis(self, x: Union[T, torch.nn.Parameter, dict, list, str, None] = None) -> Iterator[T]:
-        # the first cases arises when x contains a value. all views then use that value.
+        # the first cases arises when x contains a value. all known then use that value.
         if isinstance(x, T) or isinstance(x, torch.nn.Parameter) or x is None:
             for v in self.views:
                 yield v.phi(x)
@@ -187,17 +188,22 @@ class MultiView(_View):
     def phi(self, x: Union[T, torch.nn.Parameter, dict, list, str, None] = None) -> T:
         return torch.cat(list(self.phis(x)), dim=1)
 
-    def ks(self, x=None) -> Iterator[T]:
+    def ks(self, x: Union[T, torch.nn.Parameter, dict, list, str, None] = None) -> Iterator[T]:
         if isinstance(x, T) or isinstance(x, torch.nn.Parameter):
             for v in self.views:
                 yield v.k(x)
         elif isinstance(x, dict):
             for key, value in x.items():
                 yield self.view(key).k(value)
+        elif isinstance(x, list):
+                for key in x:
+                    yield self.view(key).k()
+        elif isinstance(x, str):
+            yield self.view(x).k()
         else:
             raise NotImplementedError
 
-    def k(self, x=None) -> T:
+    def k(self, x: Union[T, torch.nn.Parameter, dict, list, str, None] = None) -> T:
         return sum(self.ks(x))
 
     @property

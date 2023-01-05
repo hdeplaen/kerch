@@ -115,13 +115,6 @@ class _Sample(_Stochastic,  # manager stochastic indices
             self.init_sample()
 
     @property
-    def transformed_sample(self) -> Tensor:
-        r"""
-        Sample dataset after (optional) transformations (none by default).
-        """
-        return self.sample_transforms.default_sample
-
-    @property
     def sample(self) -> torch.nn.Parameter:
         r"""
         Raw sample before any transformation.
@@ -152,7 +145,11 @@ class _Sample(_Stochastic,  # manager stochastic indices
         Returns the sample that is currently used in the computations and for the normalizing and centering statistics
         if relevant.
         """
-        return self._sample[self.idx, :]
+        return self.sample_transforms.default_sample
+
+    @property
+    def current_sample_untransformed(self) -> Tensor:
+        return self._sample[self.idx,:]
 
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         r"""
@@ -255,7 +252,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
     def _sample_transforms(self) -> TransformTree:
         if "sample_transforms" not in self._cache:
             self._cache["sample_transforms"] = TransformTree(explicit=True,
-                                                             sample=self._sample,
+                                                             sample=self._sample[self.idx,:],
                                                              default_transforms=self._default_sample_transforms,
                                                              lighweight=self._lightweight)
         return self._cache["sample_transforms"]

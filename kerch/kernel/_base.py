@@ -263,3 +263,12 @@ class _Base(_Sample, metaclass=ABCMeta):
         called.
         """
         return self._phi()
+
+    def implicit_preimage(self, coeff: Tensor, knn: int=1):
+        preimage = utils.knn_weighted(coefficients=coeff, x=self.current_sample_untransformed, num=knn)
+        return self.transform_sample_revert(preimage)
+
+    @abstractmethod
+    def explicit_preimage(self, phi: Tensor):
+        pass
+

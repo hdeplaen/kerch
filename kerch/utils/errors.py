@@ -55,5 +55,5 @@ class BijectionError(kerchError):
 class MultiViewError(kerchError):
     def __init__(self, *args, **kwargs):
         self.message = "Primal operations are not defined a multi-view context. You must ask them for the different " \
-                       "views separately, if it exists for it."
+                       "known separately, if it exists for it."
         super(MultiViewError, self).__init__(*args, **kwargs)

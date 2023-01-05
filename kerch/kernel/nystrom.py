@@ -66,7 +66,7 @@ class Nystrom(_Explicit):
                                                "_normalize": kwargs["base_normalize"],
                                                "name": kwargs["base_type"],
                                                 "kernel_transforms": kwargs["base_kernel_transforms"]})
-            self._base_kernel.init_sample(sample=self.transformed_sample, idx_sample=self.idx)
+            self._base_kernel.init_sample(sample=self.current_sample, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel
             assert isinstance(k, _Base), "The provided kernel is not of the kernel class."
@@ -119,7 +119,7 @@ class Nystrom(_Explicit):
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         super(Nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
         if self._base_kernel is not None:
-            self._base_kernel.init_sample(sample=self.transformed_sample, idx_sample=self.idx)
+            self._base_kernel.init_sample(sample=self.current_sample, idx_sample=self.idx)
 
     def _compute_decomposition(self):
         if "H" not in self._cache:
@@ -168,5 +168,5 @@ class Nystrom(_Explicit):
         Ky = self._base_kernel.k(x)
         return Ky @ self._cache["H"] @ torch.diag(1 / self._cache["lambdas_sqrt"])
 
-    def _phi_pinv(self, phi) -> torch.Tensor:
+    def _explicit_preimage(self, phi) -> torch.Tensor:
         raise NotImplementedError

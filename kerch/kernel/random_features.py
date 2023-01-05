@@ -139,7 +139,7 @@ class RandomFeatures(_Explicit):
     def hparams(self):
         return {"Kernel": "Random Features", **super(RandomFeatures, self).hparams}
 
-    def _phi_pinv(self, phi) -> torch.Tensor:
+    def _explicit_preimage(self, phi) -> torch.Tensor:
         phi = phi * sqrt(self.num_weights)
         weights_pinv = torch.linalg.pinv(self.weights).T
         return torch.special.logit(phi, eps=1.e-8) @ weights_pinv

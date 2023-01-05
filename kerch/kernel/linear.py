@@ -43,5 +43,5 @@ class Linear(_Explicit):
     def _explicit(self, x=None):
         return super(Linear, self)._explicit(x)
 
-    def _phi_pinv(self, phi) -> torch.Tensor:
+    def _explicit_preimage(self, phi) -> torch.Tensor:
         return phi

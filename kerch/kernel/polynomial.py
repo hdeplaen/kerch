@@ -95,6 +95,9 @@ class Polynomial(_Statistics):
         assert (self.degree % 1) == 0, '_Explicit formulation is only possible for degrees that are natural numbers.'
         raise NotImplementedError
 
+    def explicit_preimage(self, phi):
+        raise NotImplementedError
+
     def _slow_parameters(self, recurse=True):
         yield self._degree
         yield from super(Polynomial, self)._slow_parameters(recurse)
