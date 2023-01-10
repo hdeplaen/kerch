@@ -44,4 +44,4 @@ class _Implicit(_Statistics, metaclass=ABCMeta):
         raise utils.ExplicitError(self)
 
     def explicit_preimage(self, phi: T):
-        raise ExplicitError
+        raise utils.ExplicitError(self)

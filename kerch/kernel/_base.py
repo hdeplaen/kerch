@@ -13,6 +13,7 @@ from abc import ABCMeta, abstractmethod
 
 from .. import utils
 from .._sample import _Sample
+from ..preimage import smoother
 
 
 @utils.extend_docstring(_Sample)
@@ -163,7 +164,7 @@ class _Base(_Sample, metaclass=ABCMeta):
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
         .. math::
-            K = [k(x_i,y_j)]_{i,j=1}^{N,M},
+            K = [k1(x_i,y_j)]_{i,j=1}^{N,M},
 
         with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`x`) and :math:`\{y_i\}_{j=1}^N` the sample points
         (`y`).
@@ -235,12 +236,12 @@ class _Base(_Sample, metaclass=ABCMeta):
     @property
     def K(self) -> Tensor:
         r"""
-        Returns the kernel matrix on the sample dataset. Same result as calling :py:func:`k()`, but faster.
+        Returns the kernel matrix on the sample dataset. Same result as calling :py:func:`k1()`, but faster.
         It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
         called.
 
         .. math::
-            K_{ij} = k(x_i,x_j).
+            K_{ij} = k1(x_i,x_j).
         """
         return self._K(explicit=self.explicit)
 
@@ -265,7 +266,7 @@ class _Base(_Sample, metaclass=ABCMeta):
         return self._phi()
 
     def implicit_preimage(self, coeff: Tensor, knn: int=1):
-        preimage = utils.knn_weighted(coefficients=coeff, x=self.current_sample_untransformed, num=knn)
+        preimage = smoother(coefficients=coeff, x=self.current_sample_untransformed, num=knn)
         return self.transform_sample_revert(preimage)
 
     @abstractmethod

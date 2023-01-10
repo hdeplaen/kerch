@@ -55,8 +55,8 @@ class TestKPCA(unittest.TestCase):
         #     mdl.solve()
         #     recon_x = mdl.reconstruct('x')
         #     recon_y = mdl.reconstruct('y')
-        #     k_x = mdl.k('x')
-        #     k_y = mdl.k('y')
+        #     k_x = mdl.k1('x')
+        #     k_y = mdl.k1('y')
         #     self.assertAlmostEqual(recon_x.sum().detach().cpu().numpy(),
         #                            k_x.sum().detach().cpu().numpy())
         #     self.assertAlmostEqual(recon_y.sum().detach().cpu().numpy(),

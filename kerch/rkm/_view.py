@@ -35,7 +35,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
         "dim_output": None,
         "hidden": None,
         "weight": None,
-        "param_trainable": True
+        "param_trainable": True,
+        "representation": "dual"
     })
     def __init__(self, *args, **kwargs):
         """
@@ -43,6 +44,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
         """
         super(_View, self).__init__(*args, **kwargs)
         self._dim_output = kwargs["dim_output"]
+        self._representation = utils.check_representation(kwargs["representation"], cls=self)
 
         weight = kwargs["weight"]
         hidden = kwargs["hidden"]
@@ -262,6 +264,10 @@ class _View(_Stochastic, metaclass=ABCMeta):
     def _update_weight_from_hidden(self):
         pass
 
+    @abstractmethod
+    def _update_hidden_from_weight(self):
+        pass
+
     ## MATHS
 
     @abstractmethod
@@ -277,6 +283,13 @@ class _View(_Stochastic, metaclass=ABCMeta):
         return phi.T @ phi / self.num_idx
 
     def h(self, x=None) -> Union[Tensor, torch.nn.Parameter]:
+        if not self._hidden_exists and self._weight_exists:
+            try:
+                self._update_hidden_from_weight()
+            except NotImplementedError:
+                self._log.info('The relation between the weights and the hidden variables have '
+                               'not been implemented in this case.')
+
         if x is None:
             if self._hidden_exists:
                 return self.hidden
@@ -286,14 +299,11 @@ class _View(_Stochastic, metaclass=ABCMeta):
         raise NotImplementedError
 
     def w(self, x=None) -> Union[Tensor, torch.nn.Parameter]:
-        if not self._weight_exists and self._hidden_exists:
+        if not self.attached and not self._weight_exists and self._hidden_exists:
             self._update_weight_from_hidden()
 
         if x is None:
-            if self._weight_exists:
-                return self.weight
-            else:
-                raise utils.ExplicitError
+            return self.weight
         raise NotImplementedError
 
     def phiw(self, x=None, representation="dual") -> Tensor:
@@ -301,7 +311,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
             return self.phi(x) @ self.W
 
         def dual(x):
-            return self.kernel.k(x) @ self.H
+            return self.kernel.k1(x) @ self.H
 
         switcher = {"primal": primal,
                     "dual": dual}

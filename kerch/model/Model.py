@@ -35,7 +35,7 @@ class Model(_DataHolder, _Module, metaclass=ABCMeta):
         else:
             loss = 0.
             if self._validation_data is not None:
-                self._log.info("The validation set is not used for k-fold cross-validation, "
+                self._log.info("The validation set is not used for k1-fold cross-validation, "
                           "only the training set is divided.")
             for fold in range(k):
                 data_list, labels_list = self._get_fold(prop=prop)

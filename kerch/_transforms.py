@@ -12,7 +12,7 @@ performed) and then back from the root to the leaf (effective computation).
 """
 
 from __future__ import annotations
-from typing import Union, List
+from typing import Union, List, Tuple
 from abc import ABCMeta, abstractmethod
 
 import torch
@@ -40,12 +40,25 @@ class _Transform(_Logger, metaclass=ABCMeta):
         # DATA
         self._sample = None
         self._statistics_sample = None
-        self._statistics_oos = None
+        self._oos = {}
+        self._statistics_oos = {}
+
 
     def __str__(self):
         if self._default:
             return self._name + " (default)"
         return self._name
+    @staticmethod
+    def _get_names(x=None, y=None) -> Tuple[int, int]:
+        if x is not None:
+            x_name = id(x)
+        else:
+            x_name = 0
+        if y is not None:
+            y_name = id(y)
+        else:
+            y_name = 0
+        return x_name, y_name
 
     @property
     def parent(self) -> Union[_Transform, None]:
@@ -145,41 +158,66 @@ class _Transform(_Logger, metaclass=ABCMeta):
         raise BijectionError
 
     def statistics_oos(self, x=None, y=None, oos=None) -> Union[Tensor, (Tensor, Tensor)]:
+        x_name, y_name = _Transform._get_names(x, y)
+
         if self.explicit:
-            if self._statistics_oos is None:
-                if oos is None:
-                    oos = self.parent.oos(x=x)
+            if x_name not in self._statistics_oos:
                 if x is None:
-                    statistic = self.statistics_sample()
+                    self._statistics_oos[x_name] = self.statistics_sample()
                 else:
-                    statistic = self._explicit_statistics_oos(x=x, oos=oos)
-                self._statistics_oos = statistic
-            return self._statistics_oos
+                    if oos is None:
+                        oos = self.parent.oos(x=x)
+                    self._statistics_oos[x_name] = self._explicit_statistics_oos(x=x, oos=oos)
+            return self._statistics_oos[x_name]
         else:  # implicit
-            if self._statistics_oos is None:
-                if oos is None:
-                    oos = self.parent.oos(x=x, y=y)
+
+            if x_name not in self._statistics_oos:
                 if x is None:
-                    stat_x = self.statistics_sample
+                    self._statistics_oos[x_name] = self.statistics_sample()
                 else:
-                    stat_x = self._implicit_statistics_oos(x=x, oos=oos)
-                if equal(x,y):
-                    stat_y = stat_x
-                elif y is None:
-                    stat_y = self.statistics_sample
+                    if oos is None:
+                        oos = self.parent.oos(x=x, y=y)
+                    self._statistics_oos[x_name] = self._implicit_statistics_oos(x=x, oos=oos)
+            if y_name not in self._statistics_oos:
+                # if equal(x, y):
+                #     self._statistics_oos[y_name] = self._statistics_oos[x_name]
+                if y is None:
+                    self._statistics_oos[y_name] = self.statistics_sample()
                 else:
-                    stat_y = self._implicit_statistics_oos(x=y, oos=oos)
-                self._statistics_oos = [stat_x, stat_y]
-            return self._statistics_oos[0], self._statistics_oos[1]
+                    if oos is None:
+                        oos = self.parent.oos(x=x, y=y)
+                    self._statistics_oos[y_name] = self._implicit_statistics_oos(x=y, oos=oos)
+            return self._statistics_oos[x_name], self._statistics_oos[y_name]
 
     def oos(self, x=None, y=None) -> Tensor:
+        x_name, y_name = _Transform._get_names(x, y)
+
         if self.explicit:
-            return self._explicit_oos(x=x)
+            if x_name not in self._oos:
+                if x is None:
+                    self._oos[x_name] = self._explicit_sample()
+                else:
+                    self._oos[x_name] = self._explicit_oos(x=x)
+            return self._oos[x_name]
         else:
-            return self._implicit_oos(x=x, y=y)
+            if x is None and y is None:
+                return self._implicit_sample()
+            elif x is None:
+                if y_name not in self._oos:
+                    self._oos[y_name] = self._implicit_oos(x=y)
+                return self._oos[y_name]
+            elif y is None:
+                if x_name not in self._oos:
+                    self._oos[x_name] = self._implicit_oos(x=x)
+                return self._oos[x_name]
+            else:
+                if (x_name, y_name) not in self._oos:
+                    self._oos[(x_name, y_name)] = self._implicit_oos(x=x, y=y)
+                return self._oos[(x_name, y_name)]
 
     def clean_oos(self):
-        self._statistics_oos = None
+        self._statistics_oos = {}
+        self._oos = {}
 
     def _revert(self, oos):
         if self.explicit:
@@ -219,17 +257,17 @@ class _MeanCentering(_Transform):
         return self.statistics_sample()
 
     def _implicit_statistics_oos(self, x=None, oos=None):
-        sample_x = self.parent.oos(x=x)
-        return torch.mean(sample_x, dim=1, keepdim=True)
+        sample_x = self.parent.oos(y=x)
+        return torch.mean(sample_x, dim=1, keepdim=True), self.statistics_sample()[1]
 
     def _explicit_oos(self, x=None):
         return self.parent.oos(x=x) - self.statistics_oos(x=x)
 
     def _implicit_oos(self, x=None, y=None):
         mean_x, mean_y = self.statistics_oos(x=x, y=y)
-        mean_tot = self.statistics_sample()[1]
-        return self.parent.oos(x=x, y=y) - mean_x \
-               - mean_y.T \
+        mean_tot = mean_x[1]
+        return self.parent.oos(x=x, y=y) - mean_x[0] \
+               - mean_y[0].T \
                + mean_tot
 
     def _revert_explicit(self, oos):
@@ -285,7 +323,7 @@ class _UnitSphereNormalization(_Transform):
         if isinstance(self.parent, TransformTree):
             return self.parent._implicit_self(x)[:, None]
         else:
-            return torch.diag(self.oos(x, x))[:, None]
+            return torch.diag(self.parent.oos(x, x))[:, None]
 
 
 class _MinMaxNormalization(_Transform):
@@ -515,7 +553,10 @@ class TransformTree(_Transform):
             tree_path.append(child)
         return tree_path
 
-    def apply(self, oos, x=None, y=None, transforms: List[str] = None) -> Tensor:
+    def apply(self, oos=None, x=None, y=None, transforms: List[str] = None) -> Tensor:
+        if oos is None:
+            oos = self._base
+
         tree_path = self._create_tree(transforms)
         if (not isinstance(oos, Tensor)) and x is None and y is None:
             return tree_path[-1].sample
@@ -530,7 +571,10 @@ class TransformTree(_Transform):
         self._data_oos = None  # to avoid blocking the destruction if necessary by the garbage collector
         return sol
 
-    def revert(self, oos, transforms: List[str] = None) -> Tensor:
+    def revert(self, oos=None, transforms: List[str] = None) -> Tensor:
+        if oos is None:
+            oos = self._base
+
         tree_path = self._create_tree(transforms)
         for transform in reversed(tree_path):
             oos = transform._revert(oos)

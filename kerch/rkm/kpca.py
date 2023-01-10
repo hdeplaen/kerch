@@ -32,3 +32,6 @@ class KPCA(_KPCA, Level):
             H = self.hidden
             R = H @ H.T
             return K @ R
+
+    def _update_hidden_from_weight(self):
+        self.hidden = self(representation='primal') @ torch.diag(1 / self.vals)

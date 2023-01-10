@@ -20,7 +20,7 @@ class Hat(_Implicit):
     Hat kernel.
 
     .. math::
-        k(x,y) = \left\{
+        k1(x,y) = \left\{
         \begin{array}
         lp + 1 - |x-y| & \text{ if } |x-y|\leq p, \\
         0 & \text{ otherwise.}

@@ -35,7 +35,7 @@ class RFF(_Explicit):
     In the limit of :math:`d \rightarrow +\infty`, we recover the RBF kernel with unity bandwidth :math:`\sigma = 1`:
 
     .. math::
-        k(x,y) = \phi(x)^{\top}\phi(y) = \exp\left( -\frac{1}{2}\lVert x-y \rVert_2^2 \right)
+        k1(x,y) = \phi(x)^{\top}\phi(y) = \exp\left( -\frac{1}{2}\lVert x-y \rVert_2^2 \right)
 
     :param num_weights: Number of weights :math:`d` sampled for the RFF., defaults to 1.
     :type num_weights: int, optional
@@ -51,7 +51,9 @@ class RFF(_Explicit):
     @utils.kwargs_decorator(
         {"num_weights": 1,
          "weights": None,
-         "weights_trainable": False})
+         "weights_trainable": False,
+         "sigma": 1.,
+         "sigma_trainable": False})
     def __init__(self, **kwargs):
         super(RFF, self).__init__(**kwargs)
         self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
@@ -61,6 +63,36 @@ class RFF(_Explicit):
             self.num_weights = kwargs["num_weights"]
         else:
             self.weights = kwargs["weights"]
+
+        # SIGMA
+        self._sigma_trainable = kwargs["sigma_trainable"]
+        sigma = torch.tensor(kwargs["sigma"], dtype=utils.FTYPE)
+        self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
+
+
+    @property
+    def sigma(self) -> float:
+        r"""
+        Bandwidth :math:`\sigma` of the kernel.
+        """
+        return self._sigma.data.cpu().numpy()
+
+    @sigma.setter
+    def sigma(self, val):
+        self._reset_cache()
+        self._sigma.data = utils.castf(val, tensor=False, dev=self._sigma.device)
+
+    @property
+    def sigma_trainable(self) -> bool:
+        r"""
+        Boolean indicating of the bandwidth is trainable.
+        """
+        return self._sigma_trainable
+
+    @sigma_trainable.setter
+    def sigma_trainable(self, val: bool):
+        self._sigma_trainable = val
+        self._sigma.requires_grad = self._sigma_trainable
 
     @property
     def _weights_exists(self) -> bool:
@@ -155,3 +187,18 @@ class RFF(_Explicit):
         dim_inv_sqrt = 1 / sqrt(self.num_weights)
         return dim_inv_sqrt * torch.cat((torch.cos(wx),
                                          torch.sin(wx)), dim=1)
+
+
+    ##############################################################################
+    # OVERWRITING SAMPLE IN ORDER TO INTEGRATE SIGMA ARTIFICIALLY AS A TRANSFORM #
+    ##############################################################################
+
+    @property
+    def current_sample(self) -> torch.Tensor:
+        return super(RFF, self).current_sample / self._sigma
+
+    def transform_sample(self, data) -> torch.Tensor:
+        return super(RFF, self).transform_sample(data) / self._sigma
+
+    def transform_sample_revert(self, data) -> torch.Tensor:
+        return super(RFF, self).transform_sample_revert(data) * self._sigma

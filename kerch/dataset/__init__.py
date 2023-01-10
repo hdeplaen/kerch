@@ -180,7 +180,7 @@ def generate_dataset(fun, tr_size, val_size, test_size, tot_data, test_data):
             assert test_data >= test_size, \
                 "Not enough oos in the test set for the requested test size."
 
-    assert tot_data is not 0, "Cannot select no oos."
+    assert tot_data != 0, "Cannot select no oos."
     dataset, test, info = fun(tot_data, test_data)
     input, target = dataset
     test_input, test_target = test
@@ -189,16 +189,16 @@ def generate_dataset(fun, tr_size, val_size, test_size, tot_data, test_data):
 
     # SELECT
     idx_random = np.random.permutation(tot_data)
-    if tr_size is not 0:
+    if tr_size != 0:
         idx_tr = idx_random[0:tr_size]
         tr_input = input[idx_tr, :]
         tr_target = target[idx_tr]
-    if val_size is not 0:
+    if val_size != 0:
         idx_val = idx_random[tr_size:tr_size + val_size]
         val_input = input[idx_val, :]
         val_target = target[idx_val]
 
-    if test_data is not 0:
+    if test_data != 0:
         if test_data is None:
             idx_test = idx_random[tr_size + val_size:tr_size + val_size + test_size]
         if test_data is not None:

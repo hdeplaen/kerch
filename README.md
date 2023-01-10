@@ -23,7 +23,7 @@ The package is built on PyTorch and supports GPU acceleration.
 ### Training and plotting an LS-SVM
 
 This is done by first instantiating a model, setting its dataset, searching for the hyperparameters, fitting with those 
-parameters and plotting. The implementation can be found [here](examples/lssvm-tuning.py).
+parameters and plotting. The implementation can be found [here](research/lssvm-tuning.py).
 
 ```python
 mdl = kerch.model.LSSVM(type="rbf",                 # kernel name
@@ -47,16 +47,17 @@ The factory class alows for the fast instantiation of various implemented kernel
 options to choose from and the out-of-sample will also satisfy these properties, based on statistics relative ti the 
 sample. You can easily use numpy arrays ore even python builtins such as `range()`. An implementation can be found 
 [here](examples/kernel.py)
+
 ```python
-sample = np.sin(np.arange(0,15) / np.pi) + .1
-oos = np.sin(np.arange(15,30) / np.pi) + .1
+sample = np.sin(np.arange(0, 15) / np.pi) + .1
+oos = np.sin(np.arange(15, 30) / np.pi) + .1
 
 k = kerch.kernel.factory(type="polynomial", sample=sample, center=True, normalize=True)
 
-k.K   # = k.k()
-k.k(y=oos)
-k.k(x=oos)
-k.k(x=oos, y=oos)
+k.K  # = k1.k1()
+k.k1(y=oos)
+k.k1(x=oos)
+k.k1(x=oos, y=oos)
 
 ```
 

@@ -132,3 +132,6 @@ class LSSVM(Level):
 
     def after_step(self) -> None:
         self._center_h()
+
+    def _update_hidden_from_weight(self):
+        raise NotImplementedError

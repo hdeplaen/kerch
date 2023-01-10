@@ -81,7 +81,7 @@ class plot():
         ax = self.fig_two_dim.gca()
         self.fig_two_dim.set_tight_layout(True)
         im1 = ax.contourf(self.xx, self.yy, surf, alpha=.4, cmap=cmap)
-        im2 = ax.scatter(self.x[:, 0], self.x[:, 1], s=3, c=np.where(self.y == -1, 'k', 'b'))
+        im2 = ax.scatter(self.x[:, 0], self.x[:, 1], s=3, c=np.where(self.y == -1, 'k1', 'b'))
         im3 = ax.scatter(p1, p2, s=100 * np.abs(alpha) / (np.max(np.abs(alpha))), c=np.where(alpha >= 0, 'g', 'r'))
         lim1 = ax.set_xlim((self.xmin, self.xmax))
         lim2 = ax.set_ylim((self.ymin, self.ymax))

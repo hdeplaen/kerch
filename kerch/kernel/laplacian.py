@@ -19,7 +19,7 @@ class Laplacian(_Exponential):
     Laplacian kernel.
 
     .. math::
-        k(x,y) = \exp\left( -\frac{\lVert x-y \rVert_2}{2\sigma^2} \right).
+        k1(x,y) = \exp\left( -\frac{\lVert x-y \rVert_2}{2\sigma^2} \right).
 
 
     .. note::

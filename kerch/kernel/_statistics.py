@@ -202,7 +202,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
         .. math::
-            K = [k(x_i,y_j)]_{i,j=1}^{N,M},
+            K = [k1(x_i,y_j)]_{i,j=1}^{N,M},
 
         with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`x`) and :math:`\{y_i\}_{j=1}^N` the sample points
         (`y`).
@@ -226,23 +226,31 @@ class _Statistics(_Base, metaclass=ABCMeta):
         # if x is None and y is None:
         #     return self.K
         # in order to get the values in the correct format (e.g. coming from numpy)
+        if explicit is None:
+            explicit = self.explicit
+
         x = utils.castf(x)
         y = utils.castf(y)
         transforms = self._get_transforms(transforms)
-        if self.explicit:
-            phi_x = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
+        if explicit:
+            phi_x = self._explicit_statistics.apply(x=self.transform_sample(x),
+                                                    transforms=transforms)
             if utils.equal(x, y):
                 phi_y = phi_x
             else:
-                phi_y = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
+                phi_y = self._explicit_statistics.apply(y=self.transform_sample(y),
+                                                        transforms=transforms)
             return phi_x @ phi_y.T
         else:
             if utils.equal(x, y):
                 x = self.transform_sample(x)
-                return self._implicit_statistics.apply(oos=self._implicit, x=x, y=x, transforms=transforms)
+                return self._implicit_statistics.apply(x=x,
+                                                       y=x,
+                                                       transforms=transforms)
             else:
-                return self._implicit_statistics.apply(oos=self._implicit, x=self.transform_sample(x),
-                                                       y = self.transform_sample(y), transforms=transforms)
+                return self._implicit_statistics.apply(x=self.transform_sample(x),
+                                                       y=self.transform_sample(y),
+                                                       transforms=transforms)
 
     def c(self, x=None, y=None, transforms=None) -> Tensor:
         r"""
@@ -251,10 +259,11 @@ class _Statistics(_Base, metaclass=ABCMeta):
 
         transforms = self._get_transforms(transforms)
         phi_x = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
-        if torch.equal(x,y):
+        if torch.equal(x, y):
             phi_y = phi_x
         else:
-            phi_y = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(y), transforms=transforms)
+            phi_y = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(y),
+                                                    transforms=transforms)
         return phi_x.T @ phi_y
 
     def forward(self, x, representation="dual") -> Tensor:

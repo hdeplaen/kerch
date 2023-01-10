@@ -204,6 +204,9 @@ class View(_View, _Sample):
         else:
             self._log.info("The weight cannot _Based on the hidden values as these are unset.")
 
+    def _update_hidden_from_weight(self):
+        raise NotImplementedError
+
     ## MATHS
 
     def phi(self, x=None) -> Tensor:

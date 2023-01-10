@@ -19,7 +19,7 @@ class RBF(_Exponential):
     RBF kernel (radial basis function).
 
     .. math::
-        k(x,y) = \exp\left( -\frac{\lVert x-y \rVert_2^2}{2\sigma^2} \right).
+        k1(x,y) = \exp\left( -\frac{\lVert x-y \rVert_2^2}{2\sigma^2} \right).
 
     """
 

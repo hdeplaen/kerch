@@ -6,7 +6,7 @@ import torch
 
 from abc import ABCMeta, abstractmethod
 from torch import Tensor
-import traceback
+from typing import Union
 
 from . import utils
 from ._cache import _Cache
@@ -198,7 +198,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
         for sample_module in self.children():
             if isinstance(sample_module, _Sample):
-                sample_module.init_sample(self.transformed_sample)
+                sample_module.init_sample(self.current_sample)
 
         self.stochastic(idx=idx_sample, prop=prop_sample)
 
@@ -238,7 +238,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
     def _euclidean_parameters(self, recurse=True):
         if not self._empty_sample:
-            yield self.transformed_sample
+            yield self._sample
         yield from super(_Sample, self)._euclidean_parameters(recurse)
 
     @property
@@ -257,10 +257,12 @@ class _Sample(_Stochastic,  # manager stochastic indices
                                                              lighweight=self._lightweight)
         return self._cache["sample_transforms"]
 
-    def transform_sample(self, data) -> Tensor:
+    def transform_sample(self, data) -> Union[Tensor, None]:
         r"""
         Apply to oos the same transformations as on the sample.
         """
+        if data is None:
+            return None
         return self.sample_transforms.apply(data)
 
     def transform_sample_revert(self, data) -> Tensor:

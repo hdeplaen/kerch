@@ -19,7 +19,7 @@ class AdditiveChi2(_Implicit):
     Additive Chi Squared kernel. Often used in computer vision.
 
     .. math::
-        k(x,y) = \sum_i \frac{2x_i y_i}{x_i + y_i}.
+        k1(x,y) = \sum_i \frac{2x_i y_i}{x_i + y_i}.
 
     """
 

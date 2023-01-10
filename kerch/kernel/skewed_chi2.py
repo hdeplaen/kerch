@@ -20,7 +20,7 @@ class SkewedChi2(_Implicit):
     Skewed Chi Squared kernel. Often used in computer vision.
 
     .. math::
-        k(x,y) = \prod_i \frac{2\sqrt(x_i+p) \sqrt(y_i+p)}{x_i + y_i + 2}.
+        k1(x,y) = \prod_i \frac{2\sqrt(x_i+p) \sqrt(y_i+p)}{x_i + y_i + 2}.
 
 
     :param p: Free parameter :math:`p`., defaults to 0.

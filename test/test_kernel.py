@@ -40,7 +40,7 @@ class TestKernels(unittest.TestCase):
         for type_name in self.tested_kernels:
             k = kerch.kernel.factory(type=type_name, sample=self.sample)
             self.assertIsInstance(k.k(), torch.Tensor, msg=type_name)
-            # self.assertIsInstance(k.K, torch.Tensor, msg=type_name)
+            # self.assertIsInstance(k1.K, torch.Tensor, msg=type_name)
 
     def test_symmetry(self):
         """

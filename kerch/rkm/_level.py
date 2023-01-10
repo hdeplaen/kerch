@@ -19,12 +19,10 @@ class _Level(_View, metaclass=ABCMeta):
     @utils.extend_docstring(_View)
     @utils.kwargs_decorator({
         "eta": 1.,
-        "representation": "dual"
     })
     def __init__(self, *args, **kwargs):
         super(_Level, self).__init__(*args, **kwargs)
         self.eta = kwargs["eta"]
-        self._representation = utils.check_representation(kwargs["representation"], cls=self)
 
     @property
     def _I_primal(self) -> T:
@@ -105,7 +103,7 @@ class _Level(_View, metaclass=ABCMeta):
 
     @utils.kwargs_decorator({
         "representation": None,
-        "loss": "classic",
+        # "loss": "classic",
         "maxiter": 10000,
         "verbose": True
     })

@@ -51,9 +51,11 @@ class MultiView(_View):
             view.dim_output = self._dim_output
             view.hidden = self.hidden_as_param
         elif isinstance(view, dict):
-            view = View(**{**view,
+            view = View(**{"representation": self._representation,
+                           **view,
                            "dim_output": self._dim_output,
-                           "hidden": self.hidden})
+                           "hidden": self.hidden,
+                           })
         else:
             self._log.error(f"View {view} could not be added as it is nor a view object nor a dictionnary of "
                             f"parameters")
@@ -164,6 +166,8 @@ class MultiView(_View):
         for v in self._views:
             v._update_weight_from_hidden()
 
+    def _update_hidden_from_weight(self):
+        raise NotImplementedError
 
     ## MATH
     def phis(self, x: Union[T, torch.nn.Parameter, dict, list, str, None] = None) -> Iterator[T]:

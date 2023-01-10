@@ -22,7 +22,6 @@ class MVKPCA(_KPCA, MVLevel):
     def __str__(self):
         return "multi-view KPCA(" + MVLevel.__str__(self) + "\n)"
 
-
     def _project_primal(self, known, to_predict):
         phi_known = self.phi(known)
         weight_known = self.weights_by_name(list(known.keys()))
@@ -31,16 +30,20 @@ class MVKPCA(_KPCA, MVLevel):
         Inv = torch.linalg.inv(torch.diag(self.vals) - weight_predict.T @ weight_predict)
         return phi_known @ weight_known @ Inv @ weight_predict.T
 
-
     def _project_dual(self, known, to_predict):
         k_known = self.k(known)
         K_predict = self.k(to_predict)
 
-        Inv = torch.linalg.inv(torch.diag(self.vals) - self.H @ K_predict @ self.H.T)
-        # return K_predict @ self.H.T @ Inv @ self.H @ k_known
-        return k_known @ self.H.T @ Inv @ self.H @ K_predict
+        sqrt_vals = torch.sqrt(self.vals).unsqueeze(0)
+        Norm = sqrt_vals.T @ sqrt_vals
 
-    def _project(self, known: dict, representation:str):
+        Inv = torch.linalg.inv(torch.diag(self.vals) - self.H.T @ K_predict @ self.H)
+        # Inv = torch.linalg.inv(self.H.T @ K_predict @ self.H / Norm)
+
+        # return K_predict @ self.H.T @ Inv @ self.H @ k_known
+        return k_known @ self.H @ Inv @ self.H.T @ K_predict
+
+    def _project(self, known: dict, representation: str):
         r"""
         Predicts the feature map of the known not specified in the inputs, based on the values specified in the
         inputs.
@@ -76,32 +79,44 @@ class MVKPCA(_KPCA, MVLevel):
                     'dual': self._project_dual}
         return switcher.get(representation, 'Error with the specified representation')(known, to_predict), to_predict
 
-    def project(self, known:dict, representation:str=None) -> T:
+    def project(self, known: dict, representation: str = None) -> T:
         representation = utils.check_representation(representation, default=self._representation, cls=self)
         return self._project(known, representation)[0]
 
-    def predict(self, known, representation=None, knn:int=1):
-        representation = utils.check_representation(representation, default=self._representation, cls=self)
+    @utils.kwargs_decorator(
+        {"representation": "dual",
+         "method": "smoother",
+         "knn": 1,
+         }
+    )
+    def predict(self, known, **kwargs):
+        representation = utils.check_representation(kwargs["representation"], default=self._representation, cls=self)
         projection, to_predict = self._project(known, representation)
+        method = kwargs["method"]
 
         sol = {}
         if representation == 'primal':
             dim = 0
             for view, name in zip(self.views_by_name(to_predict), to_predict):
-                view_phi = projection[:,dim:view.dim_feature]
+                view_phi = projection[:, dim:view.dim_feature]
                 dim = view.dim_feature
-                sol[name] = view.kernel.explicit_preimage(view_phi)
+                if method == 'smoother':
+                    sol[name] = view.kernel.implicit_preimage(view_phi @ view.phi().T, kwargs["knn"])
+                elif method == 'pinv':
+                    sol[name] = view.kernel.explicit_preimage(view_phi)
+                else:
+                    raise NotImplementedError
         elif representation == 'dual':
             for view, name in zip(self.views_by_name(to_predict), to_predict):
-                sol[name] = view.kernel.implicit_preimage(projection, knn)
+                if method == 'smoother':
+                    sol[name] = view.kernel.implicit_preimage(projection, kwargs["knn"])
+                else:
+                    raise NotImplementedError
 
         return sol
 
-
-
-
-
-
+    def _update_hidden_from_weight(self):
+        self.hidden = sum([v(representation='primal') for v in self.views]) @ torch.diag(1 / self.vals)
 
     # def predict_opt(self, inputs: dict, representation='dual', lr: float = .001, tot_iter: int = 500) -> dict:
     #     # initiate parameters
