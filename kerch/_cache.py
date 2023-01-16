@@ -4,19 +4,52 @@ which can also be ported like torch.nn.Parameters are, on GPU for example.
 """
 
 import torch
+from typing import Union
 from abc import ABCMeta, abstractmethod
 
 from ._module import _Module
+from .utils import kwargs_decorator
 
 
 class _Cache(_Module,
              metaclass=ABCMeta):
+    cache_level_switcher = switcher = {"oblivious": 0,
+                                       "lightweight": 1,
+                                       "normal": 2,
+                                       "heavy": 3,
+                                       "total": 4}
+
     @abstractmethod
+    @kwargs_decorator({
+        "cache_level": "normal"
+    })
     def __init__(self, *args, **kwargs):
         super(_Cache, self).__init__(*args, **kwargs)
 
         # we initiate the cache
         self._cache = {}
+        self.cache_level = kwargs["cache_level"]
+
+    @property
+    def cache_level(self) -> str:
+        r"""
+        Cache level possible values (defaults to "normal"):
+        * "oblivious": the cache is inexistent and everything is computed on the go.
+        * "lightweight": the cache is very light. For example, only the kernel matrix and statistics of the sample
+            points are saved.
+        * "normal": same as lightweight, but the statistics of the out-of-sample points are also saved.
+        * "heavy": in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.
+        * "total": every step of any computation is saved.
+        """
+        switcher = _Cache.cache_level_switcher
+        inv_switcher = {switcher[k]: k for k in switcher}
+        return inv_switcher[self._cache_level]
+
+    @cache_level.setter
+    def cache_level(self, val: Union[str, int]):
+        if isinstance(val, str):
+            val = _Cache.cache_level_switcher.get(val, "Unrecognized cache level.")
+        self._cache_level = val
 
     def _apply(self, fn):
         # this if the native function by torch.nn.Module when ported. Here, the sole porting

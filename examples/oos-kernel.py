@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 sample = np.sin(np.arange(0,15) / np.pi) + .1       # sample
 oos = np.sin(np.arange(15,30) / np.pi) + .1         # out-of-sample
 
-k = kerch.kernel.factory(type="polynomial", sample=sample, center=True, normalize=True)
+k = kerch.kernel.factory(type="rbf", sample=sample, center=True, normalize=True)
 
 fig, axs = plt.subplots(2,2)
 

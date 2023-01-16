@@ -188,7 +188,6 @@ class RFF(_Explicit):
         return dim_inv_sqrt * torch.cat((torch.cos(wx),
                                          torch.sin(wx)), dim=1)
 
-
     ##############################################################################
     # OVERWRITING SAMPLE IN ORDER TO INTEGRATE SIGMA ARTIFICIALLY AS A TRANSFORM #
     ##############################################################################
@@ -197,7 +196,9 @@ class RFF(_Explicit):
     def current_sample(self) -> torch.Tensor:
         return super(RFF, self).current_sample / self._sigma
 
-    def transform_sample(self, data) -> torch.Tensor:
+    def transform_sample(self, data) -> Union[None, torch.Tensor]:
+        if data is None:
+            return None
         return super(RFF, self).transform_sample(data) / self._sigma
 
     def transform_sample_revert(self, data) -> torch.Tensor:

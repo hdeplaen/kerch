@@ -39,6 +39,13 @@ class _Base(_Sample, metaclass=ABCMeta):
         pass
 
     @property
+    def hparams(self):
+        r"""
+        Dictionnary containing the hyper-parameters and their values. This can be relevant for monitoring.
+        """
+        return {}
+
+    @property
     def params(self) -> dict:
         r"""
         Dictionnary containing the parameters and their values. This can be relevant for monitoring.
@@ -118,8 +125,9 @@ class _Base(_Sample, metaclass=ABCMeta):
             this if True., defaults to False
                 """
         if "C" not in self._cache:
+            scale = 1 / self.num_idx
             phi = self._phi()
-            self._cache["C"] = phi.T @ phi
+            self._cache["C"] = scale * phi.T @ phi
         return self._cache["C"]
 
     def _K(self, explicit=None, force : bool=False) -> Tensor:
@@ -198,14 +206,25 @@ class _Base(_Sample, metaclass=ABCMeta):
         y = self.transform_sample(y)
         return self._implicit(x, y)
 
-    def c(self, x=None, y=None) -> Tensor:
+    def c(self, x=None) -> Tensor:
         r"""
-        Out-of-sample covariance matrix.
-        """
-        return self.phi(x).T \
-               @ self.phi(y)
+        Out-of-sample explicit matrix.
 
-    def forward(self, x, representation="dual") -> Tensor:
+        .. math::
+            C = \frac1M\sum_{i}^{M} \phi(x_i)\phi(x_i)^\top.
+
+        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
+        :type x: Tensor(N,dim_input), optional
+
+        :return: Covariance matrix
+        :rtype: Tensor(dim_feature,dim_feature)
+        """
+
+        phi = self.phi(x)
+        scale = 1 / x.shape[0]
+        return scale * phi.T @ phi
+
+    def forward(self, x, representation="implicit") -> Tensor:
         """
         Passes datapoints through the kernel.
 
@@ -221,14 +240,14 @@ class _Base(_Sample, metaclass=ABCMeta):
         :raises: RepresentationError
         """
 
-        def primal(x):
+        def explicit(x):
             return self.phi(x)
 
-        def dual(x):
+        def implicit(x):
             return self.k(x)
 
-        switcher = {"primal": primal,
-                    "dual": dual}
+        switcher = {"explicit": explicit,
+                    "implicit": implicit}
 
         fun = switcher.get(representation, utils.model.RepresentationError)
         return fun(x)
@@ -245,31 +264,30 @@ class _Base(_Sample, metaclass=ABCMeta):
         """
         return self._K(explicit=self.explicit)
 
-    @property
-    def C(self) -> Tensor:
-        r"""
-        Returns the covariance matrix on the sample datapoints.
+    # @property
+    # def C(self) -> Tensor:
+    #     r"""
+    #     Returns the explicit matrix on the sample datapoints.
+    #
+    #     .. math::
+    #         C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.
+    #     """
+    #     return self._C()
 
-        .. math::
-            C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.
-        """
-        return self._C()
+    # @property
+    # def Phi(self) -> Tensor:
+    #     r"""
+    #     Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling
+    #     :py:func:`phi()`, but faster.
+    #     It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+    #     called.
+    #     """
+    #     return self._phi()
 
-    @property
-    def Phi(self) -> Tensor:
-        r"""
-        Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling
-        :py:func:`phi()`, but faster.
-        It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
-        called.
-        """
-        return self._phi()
-
-    def implicit_preimage(self, coeff: Tensor, knn: int=1):
+    def implicit_preimage(self, coeff: Tensor, knn: int = 1):
         preimage = smoother(coefficients=coeff, x=self.current_sample_untransformed, num=knn)
         return self.transform_sample_revert(preimage)
 
     @abstractmethod
     def explicit_preimage(self, phi: Tensor):
         pass
-

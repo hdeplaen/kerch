@@ -109,7 +109,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
     @num_sample.setter
     def num_sample(self, val: int):
         assert self._num_total is None, "Cannot set the number of sample points after initialization if the " \
-                                         "sample dataset. Use init_sample() instead."
+                                        "sample dataset. Use init_sample() instead."
         self._num_total = val
         if self._dim_input is not None:
             self.init_sample()
@@ -149,7 +149,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
     @property
     def current_sample_untransformed(self) -> Tensor:
-        return self._sample[self.idx,:]
+        return self._sample[self.idx, :]
 
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         r"""
@@ -160,7 +160,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
             `dim_input` are also overwritten. If `None` is specified, the sample dataset will be initialized according
             to `num_sample` and `dim_input` specified during the construction. If a previous sample set has been used,
             it will keep the same dimension by consequence. A last case occurs when `sample` is of the class
-            `torch.nn.Parameter`: the sample will then use those values and they can thus be shared with the module
+            `torch.nn.Parameter`: the sample will then use those values, and they can thus be shared with the module
             calling this method., defaults to `None`
         :type sample: Tensor, optional
         :param idx_sample: Initializes the indices of the samples to be updated. All indices are considered if both
@@ -252,9 +252,9 @@ class _Sample(_Stochastic,  # manager stochastic indices
     def _sample_transforms(self) -> TransformTree:
         if "sample_transforms" not in self._cache:
             self._cache["sample_transforms"] = TransformTree(explicit=True,
-                                                             sample=self._sample[self.idx,:],
+                                                             sample=self._sample[self.idx, :],
                                                              default_transforms=self._default_sample_transforms,
-                                                             lighweight=self._lightweight)
+                                                             cache_level=self._cache_level)
         return self._cache["sample_transforms"]
 
     def transform_sample(self, data) -> Union[Tensor, None]:

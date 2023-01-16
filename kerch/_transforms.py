@@ -20,14 +20,14 @@ from torch import Tensor
 from torch.nn import Parameter
 
 import kerch
-from kerch._logger import _Logger
+from kerch._cache import _Cache
 from kerch.utils.tensor import equal
 from kerch.utils.type import EPS
 from kerch.utils.errors import BijectionError, ImplicitError
 
 
-class _Transform(_Logger, metaclass=ABCMeta):
-    def __init__(self, explicit: bool, name: str, lighweight: bool = True, default_path: bool = False, **kwargs):
+class _Transform(_Cache, metaclass=ABCMeta):
+    def __init__(self, explicit: bool, name: str, default_path: bool = False, **kwargs):
         super(_Transform, self).__init__(**kwargs)
         self._parent = None
         self._children: dict = {}
@@ -35,7 +35,6 @@ class _Transform(_Logger, metaclass=ABCMeta):
         self._explicit: bool = explicit
         self._default: bool = False
         self._default_path: bool = default_path
-        self._lightweight = lighweight
 
         # DATA
         self._sample = None
@@ -205,7 +204,7 @@ class _Transform(_Logger, metaclass=ABCMeta):
             elif x is None:
                 if y_name not in self._oos:
                     self._oos[y_name] = self._implicit_oos(x=y)
-                return self._oos[y_name]
+                return self._oos[y_name].T
             elif y is None:
                 if x_name not in self._oos:
                     self._oos[x_name] = self._implicit_oos(x=x)
@@ -257,7 +256,7 @@ class _MeanCentering(_Transform):
         return self.statistics_sample()
 
     def _implicit_statistics_oos(self, x=None, oos=None):
-        sample_x = self.parent.oos(y=x)
+        sample_x = self.parent.oos(x=x)
         return torch.mean(sample_x, dim=1, keepdim=True), self.statistics_sample()[1]
 
     def _explicit_oos(self, x=None):

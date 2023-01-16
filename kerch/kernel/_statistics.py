@@ -40,7 +40,6 @@ class _Statistics(_Base, metaclass=ABCMeta):
 
     @abstractmethod
     @utils.kwargs_decorator({
-        "lightweight": True,
         "kernel_transforms": [],
         "center": False,
         "normalize": False
@@ -51,7 +50,6 @@ class _Statistics(_Base, metaclass=ABCMeta):
         self._required_transforms = None
         self._naturally_centered = False
         self._naturally_normalized = False
-        self._lightweight = kwargs["lightweight"]
 
         transforms = kwargs["kernel_transforms"]
 
@@ -132,7 +130,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
             self._cache["explicit"] = TransformTree(explicit=True,
                                                     sample=self._explicit,
                                                     default_transforms=self._default_kernel_transforms,
-                                                    lighweight=self._lightweight)
+                                                    cache_level=self._cache_level)
         return self._cache["explicit"]
 
     @property
@@ -141,7 +139,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
             self._cache["implicit"] = TransformTree(explicit=False,
                                                     sample=self._implicit,
                                                     default_transforms=self._default_kernel_transforms,
-                                                    lighweight=self._lightweight,
+                                                    cache_level=self._cache_level,
                                                     implicit_self=self._implicit_self)
         return self._cache["implicit"]
 
@@ -160,8 +158,9 @@ class _Statistics(_Base, metaclass=ABCMeta):
         from the cache.
                 """
         if "C" not in self._cache:
+            scale = 1 / self.num_idx
             phi = self._phi()
-            self._cache["C"] = phi.T @ phi
+            self._cache["C"] = scale * phi.T @ phi
         return self._cache["C"]
 
     def _K(self, explicit=None, force: bool = False) -> Tensor:
@@ -169,7 +168,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         Returns the kernel matrix with default centering and normalization. If already computed, it is recovered from
         the cache.
 
-        :param explicit: Specifies whether the explicit or implicit formulation has to be used. Always uses the
+        :param explicit: Specifies whether the explicit or implicit formulation has to be used. Always uses
             the explicit if available.
         :param force: By default, the kernel matrix is recovered from cache if already computed. Force overwrites
             this if True., defaults to False
@@ -252,19 +251,24 @@ class _Statistics(_Base, metaclass=ABCMeta):
                                                        y=self.transform_sample(y),
                                                        transforms=transforms)
 
-    def c(self, x=None, y=None, transforms=None) -> Tensor:
+    def c(self, x=None, transforms=None) -> Tensor:
         r"""
-        Out-of-sample covariance matrix.
+        Out-of-sample explicit matrix.
+
+        .. math::
+            C = \frac1M\sum_{i}^{M} \phi(x_i)\phi(x_i)^\top.
+
+        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
+        :type x: Tensor(N,dim_input), optional
+
+        :return: Explicit matrix
+        :rtype: Tensor(dim_feature,dim_feature)
         """
 
         transforms = self._get_transforms(transforms)
-        phi_x = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
-        if torch.equal(x, y):
-            phi_y = phi_x
-        else:
-            phi_y = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(y),
-                                                    transforms=transforms)
-        return phi_x.T @ phi_y
+        phi = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
+        scale = 1 / x.shape[0]
+        return scale * phi.T @ phi
 
     def forward(self, x, representation="dual") -> Tensor:
         """
@@ -294,17 +298,36 @@ class _Statistics(_Base, metaclass=ABCMeta):
         fun = switcher.get(representation, utils.model.RepresentationError)
         return fun(x)
 
-    def Cov(self, x=None, y=None) -> Tensor:
+    def cov(self, x=None) -> Tensor:
+        r"""
+        Returns the covariance matrix fo the provided input.
+
+        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
+        :type x: Tensor(N,dim_input), optional
+
+        :return: Covariance matrix
+        :rtype: Tensor(dim_feature, dim_feature)
+        """
         transforms = self._default_kernel_transforms
         try:
-            if not (self._default_kernel_transforms[-1] == 'normalize'
-                    and (self._default_kernel_transforms[-2] == 'center'
-                         or self._naturally_centered)):
+            if not (self._default_kernel_transforms[-1] == 'center'):
                 transforms.append('center')
-                transforms.append('normalize')
         except IndexError:
             transforms.append('center')
-            transforms.append('normalize')
 
         transforms = self._simplify_transforms(transforms)
-        return self.c(x=x, y=y, transforms=transforms)
+        return self.c(x=x, transforms=transforms)
+
+    def corr(self, x=None) -> Tensor:
+        """
+        Returns the correlation matrix fo the provided input.
+
+        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
+        :type x: Tensor(N,dim_input), optional
+
+        :return: Correlation matrix
+        :rtype: Tensor(dim_feature, dim_feature)
+        """
+        cov = self.cov(x=x)
+        var = torch.sqrt(torch.diag(cov))[:, None]
+        return cov / (var * var.T)

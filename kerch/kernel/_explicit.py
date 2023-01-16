@@ -70,3 +70,38 @@ class _Explicit(_Statistics, metaclass=ABCMeta):
     @abstractmethod
     def _explicit_preimage(self, phi):
         pass
+
+    ## DIRECT ATTRIBUTES
+    @property
+    def C(self) -> torch.Tensor:
+        r"""
+        Returns the explicit matrix on the sample datapoints.
+
+        .. math::
+            C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.
+        """
+        return self._C()
+
+    @property
+    def Phi(self) -> torch.Tensor:
+        r"""
+        Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling
+        :py:func:`phi()`, but faster.
+        It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+        called.
+        """
+        return self._phi()
+
+    @property
+    def Cov(self) -> torch.Tensor:
+        r"""
+        Returns the covariance matrix of the sample. Same as calling self.cov().
+        """
+        return self.cov()
+
+    @property
+    def Corr(self) -> torch.Tensor:
+        r"""
+        Returns the correlation matrix of the sample. Same as calling self.corr().
+        """
+        return self.corr()
