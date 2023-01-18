@@ -19,6 +19,11 @@ _kerch_handler.setFormatter(_kerch_format)
 
 
 class _Logger(metaclass=ABCMeta):
+    r"""
+    :param log_level: The logging level of this specific instance. If None, it will be the default logging level set
+        for the toolbox., defaults to None.
+    :type log_level: str or int
+    """
     @utils.kwargs_decorator({
         "log_level": None,
         "name": None

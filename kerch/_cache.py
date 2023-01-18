@@ -8,16 +8,30 @@ from typing import Union
 from abc import ABCMeta, abstractmethod
 
 from ._module import _Module
-from .utils import kwargs_decorator
+from .utils import kwargs_decorator, extend_docstring
 
-
+@extend_docstring(_Module)
 class _Cache(_Module,
              metaclass=ABCMeta):
+    r"""
+    :param cache_level: level for a cache, defaults to 'normal'.
+    :type cache_level: str
+    """
+
     cache_level_switcher = switcher = {"oblivious": 0,
                                        "lightweight": 1,
                                        "normal": 2,
                                        "heavy": 3,
                                        "total": 4}
+
+    @staticmethod
+    def _get_level(level:Union[int, str]) -> int:
+        r"""
+        Transforms the cache level to an int if not already.
+        """
+        if isinstance(level, str):
+            val = _Cache.cache_level_switcher.get(level, "Unrecognized cache level.")
+        return level
 
     @abstractmethod
     @kwargs_decorator({
@@ -47,30 +61,74 @@ class _Cache(_Module,
 
     @cache_level.setter
     def cache_level(self, val: Union[str, int]):
-        if isinstance(val, str):
-            val = _Cache.cache_level_switcher.get(val, "Unrecognized cache level.")
+        val = _Cache._get_level(val)
         self._cache_level = val
 
     def _apply(self, fn):
-        # this if the native function by torch.nn.Module when ported. Here, the sole porting
-        # of the cache is also added.
+        r"""
+        This if the native function by torch.nn.Module when ported. Here, the sole porting
+        of the cache is also added. This is used for example to port the data to the gpu or cpu.
+        """
         with torch.no_grad():
-            for _, cache_entry in self._cache.items():
-                cache_entry.sample = fn(cache_entry)
+            for value in self._cache.values():
+                cache_entry = value[1]
+                if isinstance(cache_entry, torch.Tensor):
+                    cache_entry.data = fn(cache_entry)
+                elif isinstance(cache_entry, _Cache):
+                    cache_entry._apply(fn)
         return super(_Cache, self)._apply(fn)
 
-    def _reset_cache(self):
-        # this just resets the cache and makes it empty. If refilled, the new elements
-        # will be on the same support as the rest of the module as created by its parameters.
-        self._log.debug("The cache is resetted.")
-        for val in self._cache.values(): del val
-        self._cache = {}
+    def _get(self, key, level, fun, force:bool=False):
+        r"""
+        Retrieves an element from the cache. If the element is not present, it saved to the cache provided its level
+        is lower or equal to the default level. This can be overwritten by the force argument.
 
-    def _remove_from_cache(self, key: str):
+        :param name: key of the cache element
+        :param level: level where to save the cache element
+        :param fun: function to compute the element
+        :param force: if the value is True, the element will nevertheless be saved whatever level
+        """
+        level : _Cache._get_level(level)
+        if key in self._cache:
+            return self._cache[key][1]
+        val = fun()
+        if level <= self._cache_level or force:
+            self._cache[key] = (level, val)
+        return val
+
+    def _reset_cache(self, max_level:Union[str,int]=0) -> None:
+        r"""
+        this just resets the cache and makes it empty. If refilled, the new elements
+        # will be on the same support as the rest of the module as created by its parameters.
+
+        :param max_level: all levels above this level will be cleaned, max_level included. Defaults to 'oblivious'.
+        """
+
+        max_level = _Cache._get_level(max_level)
+        self._log.debug(f"The cache is resetted (levels {max_level} and above).")
+        # for val in self._cache.values(): del val
+        if max_level == 0:
+            self._cache = {}
+        else:
+            for key, value in self._cache.items():
+                if value[0] >= max_level:
+                    del self._cache[key]
+
+    def _remove_from_cache(self, key: str) -> None:
+        r"""
+        Removes a specific element from the cache.
+
+        :param key: Key of the cache element to be removed
+        """
         if key in self._cache:
             del self._cache[key]
 
-    def reset(self, children=False):
+    def reset(self, children=False) -> None:
+        r"""
+        Resets the cache to empty.
+
+        :param children: TODO
+        """
         self._reset_cache()
         for cache in self.children():
             if isinstance(cache, _Cache):

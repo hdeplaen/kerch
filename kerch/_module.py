@@ -7,9 +7,10 @@ from typing import Iterator
 from abc import ABCMeta, abstractmethod
 
 from ._logger import _Logger
-from .utils import capitalize_only_first
+from .utils import capitalize_only_first, extend_docstring
 
 
+@extend_docstring(_Logger)
 class _Module(_Logger,
               torch.nn.Module,
               object,
