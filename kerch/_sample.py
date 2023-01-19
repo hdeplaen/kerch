@@ -14,13 +14,6 @@ from ._logger import _Logger
 from ._stochastic import _Stochastic
 from .projections import ProjectionTree
 
-
-class _SampleElement():
-    def __init__(self):
-        pass
-        # TODO
-
-
 @utils.extend_docstring(_Stochastic)
 class _Sample(_Stochastic,  # manager stochastic indices
               _Cache,  # creates a transportable cache (e.g. for GPU)

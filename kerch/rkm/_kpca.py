@@ -36,7 +36,7 @@ class _KPCA(_Level):
         Total variance contained in the feature map. In primal formulation,
         this is given by :math:`\DeclareMathOperator{\tr}{tr}\tr(C)`, where :math:`C = \sum\phi(x)\phi(x)^\top` is
         the covariance matrix on the sample. In dual, this is given by :math:`\DeclareMathOperator{\tr}{tr}\tr(K)`,
-        where :math:`K_{ij} = k1(x_i,x_j)` is the kernel matrix on the sample.
+        where :math:`K_{ij} = k(x_i,x_j)` is the kernel matrix on the sample.
 
         :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
             to ``False``

@@ -18,7 +18,7 @@ class ImplicitNN(_Implicit):
     _Implicit kernel class, parametrized by a neural network.
 
     .. math::
-        k1(x,y) = NN\left( [x, y] \right).
+        k(x,y) = NN\left( [x, y] \right).
 
 
     .. warning::

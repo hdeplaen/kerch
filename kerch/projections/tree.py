@@ -57,18 +57,22 @@ class ProjectionTree(_Projection):
             return None
         else:
             projection_classes = []
-            for projection_name in projections:
-                new_projection = ProjectionTree.all_projections.get(
-                    projection_name, NameError(f"Unrecognized projection key {projection_name}."))
-                if isinstance(new_projection, Exception):
-                    raise new_projection
-                elif isinstance(new_projection, List):
-                    for tr in new_projection:
-                        projection_classes.append(tr)
-                elif issubclass(new_projection, _Projection):
-                    projection_classes.append(new_projection)
-                else:
-                    kerch._GLOBAL_LOGGER._log.error("Error while creating ProjectionTree list of projections")
+            for projection in projections:
+                try:
+                    if issubclass(projection, _Projection):
+                        projection_classes.append(projection)
+                except TypeError:
+                    new_projection = ProjectionTree.all_projections.get(
+                        projection, NameError(f"Unrecognized projection key {projection}."))
+                    if isinstance(new_projection, Exception):
+                        raise new_projection
+                    elif isinstance(new_projection, List):
+                        for tr in new_projection:
+                            projection_classes.append(tr)
+                    if issubclass(new_projection, _Projection):
+                        projection_classes.append(new_projection)
+                    else:
+                        kerch._GLOBAL_LOGGER._log.error("Error while creating ProjectionTree list of projections")
 
             # remove same following elements
             previous_item = None

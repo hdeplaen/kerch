@@ -19,7 +19,7 @@ class Sigmoid(_Implicit):
     Sigmoid kernel.
 
     .. math::
-        k1(x,y) = \sigma\left( a (x^\top y) + b \right),
+        k(x,y) = \sigma\left( a (x^\top y) + b \right),
 
     where :math:`\sigma(\cdot)` is the sigmoid function.
 

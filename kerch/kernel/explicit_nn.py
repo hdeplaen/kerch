@@ -18,7 +18,7 @@ class ExplicitNN(_Explicit):
     _Implicit kernel class, parametrized by a neural network.
 
     .. math::
-        k1(x,y) = NN\left(x\right)^\top NN\left(y\right).
+        k(x,y) = NN\left(x\right)^\top NN\left(y\right).
 
 
     In other words, we have

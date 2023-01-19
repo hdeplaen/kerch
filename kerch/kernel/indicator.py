@@ -20,7 +20,7 @@ class Indicator(_Implicit):
     Indicator kernel.
 
     .. math::
-        k1(x,y) = \left\{
+        k(x,y) = \left\{
         \begin{array}
         g\gamma & \text{ if } |x-y|=0, \\
         1 & \text{ if } 0 < |x-y| \leq p, \\

@@ -144,7 +144,7 @@ class _Projection(_Cache, metaclass=ABCMeta):
             def fun(x, oos):
                 if oos is None:
                     oos = self.parent.oos(x=x)
-                return self._explicit_statistics_oos(x=x, oos=oos)
+                return self._implicit_statistics_oos(x=x, oos=oos)
             if x is None:
                 x_stat = self.statistics_sample()
             else:

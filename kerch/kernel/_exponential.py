@@ -31,10 +31,9 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         {"sigma": None, "sigma_trainable": False})
     def __init__(self, **kwargs):
         self._sigma = kwargs["sigma"]
-        super(_Exponential, self).__init__(**kwargs)
-
         # _Exponential kernels are always naturally normalized
-        self._naturally_normalized = True
+
+        super(_Exponential, self).__init__(**kwargs)
 
         self._sigma_trainable = kwargs["sigma_trainable"]
         if self._sigma is not None:
@@ -45,6 +44,10 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         if self._sigma is None:
             return f"exponential kernel (sigma undefined)"
         return f"exponential kernel (sigma: {str(self.sigma)})"
+
+    @property
+    def _naturally_normalized(self) -> bool:
+        return True
 
     @property
     def sigma(self):

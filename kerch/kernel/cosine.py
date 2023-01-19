@@ -17,7 +17,7 @@ class Cosine(Linear):
     Cosine kernel.
 
     .. math::
-        k1(x,y) = \frac{\cos\left(x^{\top} y\right)}{\max\left(\lVert x \rVert_2 \cdot \lVert y \rVert_2, \epsilon\right)}.
+        k(x,y) = \frac{\cos\left(x^{\top} y\right)}{\max\left(\lVert x \rVert_2 \cdot \lVert y \rVert_2, \epsilon\right)}.
 
     This corresponds to a normalized linear kernel, or equivalently a linear kernel on which the datapoints are first
     projected onto a hypersphere.
@@ -25,7 +25,10 @@ class Cosine(Linear):
 
     def __init__(self, **kwargs):
         super(Cosine, self).__init__(**kwargs)
-        self._required_projections = "unit_sphere_normalization"
+
+    @property
+    def _required_projections(self):
+        return "unit_sphere_normalization"
 
     def __str__(self):
         return "Cosine kernel."

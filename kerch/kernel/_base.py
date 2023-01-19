@@ -175,7 +175,7 @@ class _Base(_Sample, metaclass=ABCMeta):
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
         .. math::
-            K = [k1(x_i,y_j)]_{i,j=1}^{N,M},
+            K = [k(x_i,y_j)]_{i,j=1}^{N,M},
 
         with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`x`) and :math:`\{y_i\}_{j=1}^N` the sample points
         (`y`).
@@ -258,12 +258,12 @@ class _Base(_Sample, metaclass=ABCMeta):
     @property
     def K(self) -> Tensor:
         r"""
-        Returns the kernel matrix on the sample dataset. Same result as calling :py:func:`k1()`, but faster.
+        Returns the kernel matrix on the sample dataset. Same result as calling :py:func:`k()`, but faster.
         It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
         called.
 
         .. math::
-            K_{ij} = k1(x_i,x_j).
+            K_{ij} = k(x_i,x_j).
         """
         return self._K(explicit=self.explicit)
 

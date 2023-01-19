@@ -16,6 +16,10 @@ from . import utils
 from ._cache import _Cache
 from ._logger import _Logger
 
+class _StochasticElement():
+    pass
+
+
 @utils.extend_docstring(_Cache)
 class _Stochastic(_Cache,  # creates a transportable cache (e.g. for GPU)
                   metaclass=ABCMeta):

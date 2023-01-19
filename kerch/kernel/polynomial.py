@@ -19,7 +19,7 @@ class Polynomial(_Projected):
     Polynomial kernel. Projection onto a hypershpere.
 
     .. math::
-        k1(x,y) = \left(x^\top y + 1\right)^\texttt{degree}.
+        k(x,y) = \left(x^\top y + 1\right)^\texttt{degree}.
 
     .. note ::
         An explicit feature map also corresponds to this kernel, but is not implemented.

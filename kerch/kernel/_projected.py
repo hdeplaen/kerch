@@ -8,7 +8,7 @@ File containing the abstract kernel classes.
 """
 
 from abc import ABCMeta, abstractmethod
-from typing import List
+from typing import List, Union
 
 import torch
 from torch import Tensor
@@ -39,10 +39,6 @@ class _Projected(_Base, metaclass=ABCMeta):
     def __init__(self, **kwargs):
         super(_Projected, self).__init__(**kwargs)
 
-        self._required_projections = None
-        self._naturally_centered = False
-        self._naturally_normalized = False
-
         projections = kwargs["kernel_projections"]
 
         # LEGACY SUPPORT
@@ -67,6 +63,18 @@ class _Projected(_Base, metaclass=ABCMeta):
         else:
             return self._implicit_projection
 
+    @property
+    def _naturally_centered(self) -> bool:
+        return False
+
+    @property
+    def _naturally_normalized(self) -> bool:
+        return False
+
+    @property
+    def _required_projections(self) -> Union[List, None]:
+        return None
+
     def _simplify_projections(self, projections=None) -> List:
         if projections is None:
             projections = []
@@ -76,7 +84,7 @@ class _Projected(_Base, metaclass=ABCMeta):
             projections.append(self._required_projections)
 
         # remove same following elements
-        ProjectionTree.beautify_projections(projections)
+        projections = ProjectionTree.beautify_projections(projections)
 
         # remove unnecessary operation if kernel does it by default
         try:
@@ -193,7 +201,7 @@ class _Projected(_Base, metaclass=ABCMeta):
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
         .. math::
-            K = [k1(x_i,y_j)]_{i,j=1}^{N,M},
+            K = [k(x_i,y_j)]_{i,j=1}^{N,M},
 
         with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`x`) and :math:`\{y_i\}_{j=1}^N` the sample points
         (`y`).

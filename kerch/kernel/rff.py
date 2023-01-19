@@ -35,7 +35,7 @@ class RFF(_Explicit):
     In the limit of :math:`d \rightarrow +\infty`, we recover the RBF kernel with unity bandwidth :math:`\sigma = 1`:
 
     .. math::
-        k1(x,y) = \phi(x)^{\top}\phi(y) = \exp\left( -\frac{1}{2}\lVert x-y \rVert_2^2 \right)
+        k(x,y) = \phi(x)^{\top}\phi(y) = \exp\left( -\frac{1}{2}\lVert x-y \rVert_2^2 \right)
 
     :param num_weights: Number of weights :math:`d` sampled for the RFF., defaults to 1.
     :type num_weights: int, optional

@@ -19,7 +19,7 @@ class Linear(_Explicit):
     Linear kernel.
 
     .. math::
-        k1(x,y) = x^\top x.
+        k(x,y) = x^\top x.
 
     To this kernel also corresponds the explicit finite dimensional feature map :math:`\phi(x)=x`.
     """

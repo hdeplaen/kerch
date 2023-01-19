@@ -17,7 +17,6 @@ from kerch import utils
 from kerch.kernel import factory, _Base
 from kerch._stochastic import _Stochastic
 
-
 @utils.extend_docstring(_Stochastic)
 class _View(_Stochastic, metaclass=ABCMeta):
     r"""
@@ -26,7 +25,6 @@ class _View(_Stochastic, metaclass=ABCMeta):
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 
-    :type kernel: kerch.kernel._Projected, optional
     :type bias: bool, optional
     :type bias_trainable: bool, optional
     """
@@ -311,7 +309,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
             return self.phi(x) @ self.W
 
         def dual(x):
-            return self.kernel.k1(x) @ self.H
+            return self.kernel.k(x) @ self.H
 
         switcher = {"primal": primal,
                     "dual": dual}
