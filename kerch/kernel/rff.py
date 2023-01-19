@@ -12,10 +12,10 @@ from math import sqrt
 from typing import Union
 
 from .. import utils
-from ._explicit import _Explicit, _Statistics
+from ._explicit import _Explicit, _Projected
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Projected)
 class RFF(_Explicit):
     r"""
     Random Fourier Features kernel.
@@ -68,7 +68,6 @@ class RFF(_Explicit):
         self._sigma_trainable = kwargs["sigma_trainable"]
         sigma = torch.tensor(kwargs["sigma"], dtype=utils.FTYPE)
         self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
-
 
     @property
     def sigma(self) -> float:
@@ -178,28 +177,26 @@ class RFF(_Explicit):
         phi = phi * sqrt(self.num_weights)
         weights_pinv = .5 * torch.linalg.pinv(self.weights).T
         return torch.acos(phi[:, :self.num_weights]) @ weights_pinv + \
-               torch.asin(phi[:, self.num_weights:]) @ weights_pinv
+            torch.asin(phi[:, self.num_weights:]) @ weights_pinv
 
-
-    def _explicit(self, x=None):
-        x = super(RFF, self)._explicit(x)
+    def _explicit(self, x):
         wx = x @ self.weights.T
         dim_inv_sqrt = 1 / sqrt(self.num_weights)
         return dim_inv_sqrt * torch.cat((torch.cos(wx),
                                          torch.sin(wx)), dim=1)
 
     ##############################################################################
-    # OVERWRITING SAMPLE IN ORDER TO INTEGRATE SIGMA ARTIFICIALLY AS A TRANSFORM #
+    # OVERWRITING SAMPLE IN ORDER TO INTEGRATE SIGMA ARTIFICIALLY AS A projection #
     ##############################################################################
 
     @property
     def current_sample(self) -> torch.Tensor:
         return super(RFF, self).current_sample / self._sigma
 
-    def transform_sample(self, data) -> Union[None, torch.Tensor]:
+    def project_sample(self, data) -> Union[None, torch.Tensor]:
         if data is None:
             return None
-        return super(RFF, self).transform_sample(data) / self._sigma
+        return super(RFF, self).project_sample(data) / self._sigma
 
-    def transform_sample_revert(self, data) -> torch.Tensor:
-        return super(RFF, self).transform_sample_revert(data) * self._sigma
+    def project_sample_revert(self, data) -> torch.Tensor:
+        return super(RFF, self).project_sample_revert(data) * self._sigma

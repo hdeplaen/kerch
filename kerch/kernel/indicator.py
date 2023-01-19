@@ -8,13 +8,13 @@ File containing the indicator kernel class.
 """
 
 from .. import utils
-from ._implicit import _Implicit, _Statistics
+from ._implicit import _Implicit, _Projected
 
 import torch
 
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Projected)
 class Indicator(_Implicit):
     r"""
     Indicator kernel.
@@ -127,11 +127,9 @@ class Indicator(_Implicit):
         self._reset_cache()
         self._gamma.data = utils.castf(val, tensor=False, dev=self._gamma.device)
 
-    def _implicit(self, x=None, y=None):
+    def _implicit(self, x, y):
         if self._link_training and self.lag_trainable:
             self._gamma.data = 2 * self.lag + 1
-
-        x, y = super(Indicator, self)._implicit(x, y)
 
         x = x[:, :, None]
         y = y.T[:, None, :]

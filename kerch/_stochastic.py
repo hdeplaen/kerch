@@ -75,7 +75,7 @@ class _Stochastic(_Cache,  # creates a transportable cache (e.g. for GPU)
             Both `idx_stochastic` and `prop_stochastic` cannot be filled together as conflict would arise.
         """
         if self._num_total is None:
-            self._log.info("Setting stochastic indices cannot work before any oos or dimensions have been fed.")
+            self._log.info("Setting stochastic indices cannot work before any value or dimensions have been fed.")
             return
 
         self._reset_cache()

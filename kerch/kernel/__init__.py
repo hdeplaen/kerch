@@ -1,5 +1,5 @@
 from ._base import _Base
-from ._statistics import _Statistics
+from ._projected import _Projected
 from ._implicit import _Implicit
 from ._explicit import _Explicit
 from ._exponential import _Exponential

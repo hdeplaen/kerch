@@ -64,7 +64,7 @@ class TestKernels(unittest.TestCase):
         Verifies if the centered kernel matrices have zero sum.
         """
         for type_name in self.tested_kernels:
-            k = kerch.kernel.factory(type=type_name, sample=self.sample, kernel_transforms=['center'])
+            k = kerch.kernel.factory(type=type_name, sample=self.sample, kernel_projections=['center'])
             self.assertAlmostEqual(k.K.sum().numpy(), 0, msg=type_name)
 
     def test_normalized_kernel_matrices(self):
@@ -72,7 +72,7 @@ class TestKernels(unittest.TestCase):
         Verifies if the normalized kernel matrices have unit diagonal (or negative).
         """
         for type_name in self.tested_kernels:
-            k = kerch.kernel.factory(type=type_name, sample=self.sample, kernel_transforms=['normalize'])
+            k = kerch.kernel.factory(type=type_name, sample=self.sample, kernel_projections=['normalize'])
             self.assertAlmostEqual(torch.abs(torch.diag(k.K)).sum().numpy(), len(self.sample), msg=type_name)
 
     def test_out_of_sample(self):
@@ -90,7 +90,7 @@ class TestKernels(unittest.TestCase):
         """
         for type_name in self.tested_kernels:
             sample = self.sample
-            k = kerch.kernel.factory(type=type_name, sample=sample, kernel_transforms=['center'])
+            k = kerch.kernel.factory(type=type_name, sample=sample, kernel_projections=['center'])
             self.assertAlmostEqual(torch.norm(k.K - k.k(x=sample, y=sample), p='fro').numpy(), 0, msg=type_name)
 
     def test_out_of_sample_normalized(self):
@@ -99,7 +99,7 @@ class TestKernels(unittest.TestCase):
         """
         for type_name in self.tested_kernels:
             sample = self.sample
-            k = kerch.kernel.factory(type=type_name, sample=sample, kernel_transforms=['normalize'])
+            k = kerch.kernel.factory(type=type_name, sample=sample, kernel_projections=['normalize'])
             self.assertAlmostEqual(torch.norm(k.K - k.k(x=sample, y=sample), p='fro').numpy(), 0, msg=type_name)
 
     def test_nystrom_scratch(self):

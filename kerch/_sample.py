@@ -12,7 +12,13 @@ from . import utils
 from ._cache import _Cache
 from ._logger import _Logger
 from ._stochastic import _Stochastic
-from ._transforms import TransformTree
+from .projections import ProjectionTree
+
+
+class _SampleElement():
+    def __init__(self):
+        pass
+        # TODO
 
 
 @utils.extend_docstring(_Stochastic)
@@ -45,8 +51,8 @@ class _Sample(_Stochastic,  # manager stochastic indices
     :type idx_sample: int[], optional
     :type idx_sample: float, optional
 
-    :param sample_transform: TODO
-    :type sample_transform: List[str]
+    :param sample_projection: TODO
+    :type sample_projection: List[str]
     """
 
     @abstractmethod
@@ -57,7 +63,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         "dim_input": None,
         "idx_sample": None,
         "prop_sample": None,
-        "sample_transforms": []})
+        "sample_projections": []})
     def __init__(self, **kwargs):
         super(_Sample, self).__init__(**kwargs)
 
@@ -73,7 +79,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         self._sample_trainable = kwargs["sample_trainable"]
 
         self.init_sample(sample, idx_sample=kwargs["idx_sample"], prop_sample=kwargs["prop_sample"])
-        self._default_sample_transforms = kwargs["sample_transforms"]
+        self._default_sample_projections = kwargs["sample_projections"]
 
     @property
     def dim_input(self) -> int:
@@ -117,7 +123,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
     @property
     def sample(self) -> torch.nn.Parameter:
         r"""
-        Raw sample before any transformation.
+        Raw sample before any projectionation.
         """
         return self._sample
 
@@ -145,10 +151,10 @@ class _Sample(_Stochastic,  # manager stochastic indices
         Returns the sample that is currently used in the computations and for the normalizing and centering statistics
         if relevant.
         """
-        return self.sample_transforms.default_sample
+        return self.sample_projections.projected_sample
 
     @property
-    def current_sample_untransformed(self) -> Tensor:
+    def current_sample_unprojectioned(self) -> Tensor:
         return self._sample[self.idx, :]
 
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
@@ -242,33 +248,33 @@ class _Sample(_Stochastic,  # manager stochastic indices
         yield from super(_Sample, self)._euclidean_parameters(recurse)
 
     @property
-    def sample_transforms(self) -> TransformTree:
+    def sample_projections(self) -> ProjectionTree:
         r"""
-        Default transformations used by the oos.
+        Default projections used by the sample.
         """
-        return self._sample_transforms
+        return self._sample_projections
 
     @property
-    def _sample_transforms(self) -> TransformTree:
-        if "sample_transforms" not in self._cache:
-            self._cache["sample_transforms"] = TransformTree(explicit=True,
-                                                             sample=self._sample[self.idx, :],
-                                                             default_transforms=self._default_sample_transforms,
-                                                             cache_level=self._cache_level)
-        return self._cache["sample_transforms"]
+    def _sample_projections(self) -> ProjectionTree:
+        def fun():
+            return ProjectionTree(explicit=True,
+                                  sample=self._sample[self.idx, :],
+                                  default_projections=self._default_sample_projections,
+                                  cache_level=self._cache_level)
+        return self._get("sample_projections", "oblivious", fun)
 
-    def transform_sample(self, data) -> Union[Tensor, None]:
+    def project_sample(self, data) -> Union[Tensor, None]:
         r"""
-        Apply to oos the same transformations as on the sample.
+        Apply to value the same projections as on the sample.
         """
         if data is None:
             return None
-        return self.sample_transforms.apply(data)
+        return self.sample_projections.apply(data)
 
-    def transform_sample_revert(self, data) -> Tensor:
+    def projection_sample_revert(self, data) -> Tensor:
         r"""
-        Get back the original oos from a transformed oos, by using the same transformations as the sample,
-        but in reverse. This is not always feasible, depending on the transformations used (normalizations are
+        Get back the original value from a projected value, by using the same projections as the sample,
+        but in reverse. This is not always feasible, depending on the projections used (normalizations are
         typically not invertible as they are projections which are not bijective).
         """
-        return self.sample_transforms._revert(data)
+        return self.sample_projections.revert(data)

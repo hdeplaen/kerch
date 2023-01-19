@@ -11,11 +11,11 @@ import torch
 
 
 from .. import utils
-from ._explicit import _Explicit, _Statistics
+from ._explicit import _Explicit, _Projected
 from ._base import _Base
 from .factory import factory
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Projected)
 class Nystrom(_Explicit):
     r"""
     Nyström kernel. Constructs an explicit feature map based on the eigendecomposition of any kernel matrix based on
@@ -26,14 +26,14 @@ class Nystrom(_Explicit):
         instability. If `None`, the value will be assigned to `num_sample`., defaults to `None`
     :param base_type: The name of kernel on which the explicit feature map is going to be constructed., defaults to
         `"rbf"`
-    :param base_center: Specifies if the _Statistics kernel has to be centered. This is redundant and can be directly handled
+    :param base_center: Specifies if the _Projected kernel has to be centered. This is redundant and can be directly handled
         by the Nystrom kernel itself. It is only added for completeness., defaults to `False`
-    :param base_normalize: Specifies if the _Statistics kernel has to be normalized., This is redundant and can be directly
+    :param base_normalize: Specifies if the _Projected kernel has to be normalized., This is redundant and can be directly
         handled by the Nystrom kernel itself. It is only added for completeness., defaults to `False`
-    :param \**kwargs: Other arguments for the _Statistics kernel (e.g. the bandwidth for an RBF kernel, the degree for a
+    :param \**kwargs: Other arguments for the _Projected kernel (e.g. the bandwidth for an RBF kernel, the degree for a
         polynomial kernel etc.). For the default values, please refer to the requested class in question.
     :param base_kernel: Instead of creating a new kernel on which to use the Nyström method, one can also perform it
-        on an existing kernel. In that case, the other _Statistics arguments are bypassed., defaults to `None`
+        on an existing kernel. In that case, the other _Projected arguments are bypassed., defaults to `None`
     :type dim: int, optional
     :type \**kwargs: dict, optional
     :type base_type: str, optional
@@ -48,7 +48,7 @@ class Nystrom(_Explicit):
         "base_center": False,
         "base_normalize": False,
         "base_kernel": None,
-        "base_kernel_transforms": []
+        "base_kernel_projections": []
     })
     def __init__(self, **kwargs):
         assert kwargs["base_type"].lower() != "nystrom", 'Cannot create a Nyström kernel based on another Nyström ' \
@@ -65,7 +65,7 @@ class Nystrom(_Explicit):
                                                "_center": kwargs["base_center"],
                                                "_normalize": kwargs["base_normalize"],
                                                "name": kwargs["base_type"],
-                                                "kernel_transforms": kwargs["base_kernel_transforms"]})
+                                                "kernel_projections": kwargs["base_kernel_projections"]})
             self._base_kernel.init_sample(sample=self.current_sample, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel
@@ -75,7 +75,7 @@ class Nystrom(_Explicit):
                                              "sample_trainable": k.sample_trainable,
                                              "idx_sample": k.idx})
             self._base_kernel = k
-            self._log.info("Keeping original kernel transforms (no overwriting, so base_kernel_transforms is "
+            self._log.info("Keeping original kernel projections (no overwriting, so base_kernel_projections is "
                            "neglected).")
 
         self._dim = kwargs["dim"]
@@ -159,7 +159,7 @@ class Nystrom(_Explicit):
     def update_sample(self, sample_values, idx_sample=None):
         raise NotImplementedError
 
-    def _explicit(self, x=None):
+    def _explicit_with_none(self, x=None):
         self._compute_decomposition()
 
         if x is None:
@@ -167,6 +167,9 @@ class Nystrom(_Explicit):
 
         Ky = self._base_kernel.k(x)
         return Ky @ self._cache["H"] @ torch.diag(1 / self._cache["lambdas_sqrt"])
+
+    def _explicit(self, x):
+        pass # should never happen
 
     def _explicit_preimage(self, phi) -> torch.Tensor:
         raise NotImplementedError

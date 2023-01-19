@@ -11,10 +11,10 @@ import torch
 
 from abc import ABCMeta, abstractmethod
 from .. import utils
-from ._implicit import _Implicit, _Statistics
+from ._implicit import _Implicit, _Projected
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Implicit)
 class _Exponential(_Implicit, metaclass=ABCMeta):
     r"""
     :param sigma: Bandwidth :math:`\sigma` of the kernel. If `None`, the value is filled by a heuristic on
@@ -54,7 +54,7 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         if isinstance(self._sigma, torch.nn.Parameter):
             return self._sigma.data.cpu().numpy()
         elif self._sigma is None and not self._empty_sample:
-            self.k(explicit=True, transforms=[])
+            self.k(explicit=True, projections=[])
             return self.sigma
         return self._sigma
 
@@ -87,9 +87,7 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
     def _dist(self, x, y):
         pass
 
-    def _implicit(self, x=None, y=None):
-        x, y = super(_Exponential, self)._implicit(x, y)
-
+    def _implicit(self, x, y):
         D = self._dist(x, y)
 
         # define sigma if not set by the user

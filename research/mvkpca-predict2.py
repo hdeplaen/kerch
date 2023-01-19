@@ -27,7 +27,7 @@ train_y = y[rand_idx[:train_len], :]
 test_x = x[rand_idx[train_len:], :]
 test_y = y[rand_idx[train_len:], :]
 
-# oos
+# value
 oos_x = torch.cat((torch.linspace(-15,-10,round(NUM_POINTS/2),),
                    torch.linspace(+10,+15,round(NUM_POINTS/2))))
 oos_y = torch.sin(oos_x)

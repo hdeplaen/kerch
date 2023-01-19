@@ -8,11 +8,11 @@ File containing the explicit kernel class.
 """
 
 from .. import utils
-from ._explicit import _Explicit, _Statistics
+from ._explicit import _Explicit, _Projected
 import torch
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Projected)
 class ExplicitNN(_Explicit):
     r"""
     _Implicit kernel class, parametrized by a neural network.
@@ -65,8 +65,7 @@ class ExplicitNN(_Explicit):
     def decoder(self) -> torch.nn.Module:
         return self._decoder
 
-    def _explicit(self, x=None):
-        x = super(ExplicitNN, self)._explicit(x)
+    def _explicit(self, x):
         return self._encoder(x)
 
     def _euclidean_parameters(self, recurse=True):

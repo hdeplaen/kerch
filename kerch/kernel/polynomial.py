@@ -8,13 +8,13 @@ File containing the polynomial kernel class.
 """
 
 from .. import utils
-from ._statistics import _Statistics
+from ._projected import _Projected
 
 import torch
 
 
-@utils.extend_docstring(_Statistics)
-class Polynomial(_Statistics):
+@utils.extend_docstring(_Projected)
+class Polynomial(_Projected):
     r"""
     Polynomial kernel. Projection onto a hypershpere.
 
@@ -87,11 +87,10 @@ class Polynomial(_Statistics):
     def hparams(self):
         return {"Kernel": "Polynomial"}
 
-    def _implicit(self, x=None, y=None):
-        x, y = super(Polynomial, self)._implicit(x, y)
+    def _implicit(self, x, y):
         return (x @ y.T + 1) ** self._degree
 
-    def _explicit(self, x=None):
+    def _explicit(self, x):
         assert (self.degree % 1) == 0, '_Explicit formulation is only possible for degrees that are natural numbers.'
         raise NotImplementedError
 

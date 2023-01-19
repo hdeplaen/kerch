@@ -8,13 +8,13 @@ File containing the indicator kernel class.
 """
 
 from .. import utils
-from ._implicit import _Implicit, _Statistics
+from ._implicit import _Implicit, _Projected
 
 import torch
 
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Projected)
 class Hat(_Implicit):
     r"""
     Hat kernel.
@@ -86,9 +86,7 @@ class Hat(_Implicit):
     def hparams(self):
         return {"Kernel": "Hat", **super(Hat, self).hparams}
 
-    def _implicit(self, x=None, y=None):
-        x, y = super(Hat, self)._implicit(x, y)
-
+    def _implicit(self, x, y):
         x = x.T[:, :, None]
         y = y.T[:, None, :]
 

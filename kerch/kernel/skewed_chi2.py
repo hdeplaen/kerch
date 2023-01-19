@@ -10,11 +10,11 @@ File containing the RBF kernel class.
 import torch
 
 from .. import utils
-from ._implicit import _Implicit, _Statistics
+from ._implicit import _Implicit, _Projected
 
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Projected)
 class SkewedChi2(_Implicit):
     r"""
     Skewed Chi Squared kernel. Often used in computer vision.
@@ -65,9 +65,7 @@ class SkewedChi2(_Implicit):
     def hparams(self):
         return {"Kernel": "Skewed Chi Squred", "Trainable p": self._p_trainable, **super(SkewedChi2, self).hparams}
 
-    def _implicit(self, x=None, y=None):
-        x, y = super(SkewedChi2, self)._implicit(x, y)
-
+    def _implicit(self, x, y):
         x = x.T[:, :, None]
         y = y.T[:, None, :]
 

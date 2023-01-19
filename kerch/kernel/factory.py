@@ -1,7 +1,7 @@
-from ._statistics import _Statistics
+from ._projected import _Projected
 
 
-def factory(type='rbf', **kwargs) -> _Statistics:
+def factory(type='rbf', **kwargs) -> _Projected:
     r"""
     Creates a kernel based on the specified name with the specified arguments. This is the same as
     calling `kerch.kernel.name(**kwargs)` (if `name` is not a string here). This allows for the creation of kernel where

@@ -8,12 +8,12 @@ File containing the sigmoid kernel class.
 """
 
 from .. import utils
-from ._implicit import _Implicit, _Statistics
+from ._implicit import _Implicit, _Projected
 
 import torch
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Projected)
 class Sigmoid(_Implicit):
     r"""
     Sigmoid kernel.
@@ -66,8 +66,7 @@ class Sigmoid(_Implicit):
         """
         return self._params_trainable
 
-    def _implicit(self, x=None, y=None):
-        x, y = super(Sigmoid, self)._implicit(x, y)
+    def _implicit(self, x, y):
         K = x @ y.T
         K = self._linear(K)
         return torch.sigmoid(K)

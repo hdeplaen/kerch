@@ -8,14 +8,15 @@ File containing the RBF kernel class.
 """
 
 from .. import utils
-from ._statistics import _Statistics
+from ._projected import _Projected
 from torch import Tensor as T
 
 from abc import ABCMeta, abstractmethod
-from ..utils import ExplicitError
+from ..utils import ExplicitError, extend_docstring
 
 
-class _Implicit(_Statistics, metaclass=ABCMeta):
+@extend_docstring(_Projected)
+class _Implicit(_Projected, metaclass=ABCMeta):
     @utils.kwargs_decorator(
         {"sigma": 1., "sigma_trainable": False})
     def __init__(self, **kwargs):
@@ -36,12 +37,8 @@ class _Implicit(_Statistics, metaclass=ABCMeta):
     def dim_feature(self) -> int:
         raise utils.ExplicitError
 
-    @abstractmethod
-    def _implicit(self, x=None, y=None):
-        return super(_Implicit, self)._implicit(x, y)
-
-    def _explicit(self, x=None):
-        raise utils.ExplicitError(self)
+    def _explicit(self, x):
+        raise ExplicitError(self)
 
     def explicit_preimage(self, phi: T):
-        raise utils.ExplicitError(self)
+        raise ExplicitError(self)

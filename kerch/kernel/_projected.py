@@ -15,90 +15,82 @@ from torch import Tensor
 
 from .. import utils
 from ._base import _Base
-from kerch._transforms import TransformTree, _UnitSphereNormalization
+from ..projections import ProjectionTree
+from ..projections._sphere import _UnitSphereNormalization
 
 
 @utils.extend_docstring(_Base)
-class _Statistics(_Base, metaclass=ABCMeta):
+class _Projected(_Base, metaclass=ABCMeta):
     r"""
-    :param kernel_transforms: A list composed of the elements `'normalize'` or `'center'`. For example a centered
+    :param kernel_projections: A list composed of the elements `'normalize'` or `'center'`. For example a centered
         cosine kernel which is centered and normalized in order to get a covariance matrix for example can be obtained
-        by invoking a linear kernel with `default_transforms = ['normalize', 'center', 'normalize']` or just a cosine
-        kernel with `default_transforms = ['center', 'normalize']`. Redundancy is automatically handled., defaults
+        by invoking a linear kernel with `default_projections = ['normalize', 'center', 'normalize']` or just a cosine
+        kernel with `default_projections = ['center', 'normalize']`. Redundancy is automatically handled., defaults
         to `[]`.
-    :param ligthweight: During the computation of the statistics for centering and normalization, intermediate values
-        are computed. It `True`, the model only keeps the necessary final statistics for the centering and
-        normalization specified during construction. All other values are either never computed either discarded if
-        required at some point. If asking for out-of-sample without the default centering and construction values, the
-        statistics would then be computed and immediately discarded. They would have to be computed over and over again
-        if repetively required. However, provided the same values are used as the one specified in the construction,
-        this is the most efficient, not computing or keeping anything unnecessary. This parameter controls a
-        time-memory trade-off., defaults to `True`
-    :type kernel_transforms: List[str]
-    :type ligthweight: bool, optional
+    :type kernel_projections: List[str]
     """
 
     @abstractmethod
     @utils.kwargs_decorator({
-        "kernel_transforms": [],
+        "kernel_projections": [],
         "center": False,
         "normalize": False
     })
     def __init__(self, **kwargs):
-        super(_Statistics, self).__init__(**kwargs)
+        super(_Projected, self).__init__(**kwargs)
 
-        self._required_transforms = None
+        self._required_projections = None
         self._naturally_centered = False
         self._naturally_normalized = False
 
-        transforms = kwargs["kernel_transforms"]
+        projections = kwargs["kernel_projections"]
 
         # LEGACY SUPPORT
         if kwargs["center"]:
             self._log.warning("Argument center kept for legacy and will be removed in a later version. Please use the "
-                              "more versatile kernel_transforms parameter instead.")
-            transforms.append("mean_centering")
+                              "more versatile kernel_projections parameter instead.")
+            projections.append("mean_centering")
         if kwargs["normalize"]:
             self._log.warning("Argument normalize kept for legacy and will be removed in a later version. Please use "
-                              "the more versatile kernel_transforms parameter instead.")
-            transforms.append("unit_sphere_normalization")
+                              "the more versatile kernel_projections parameter instead.")
+            projections.append("unit_sphere_normalization")
 
-        self._default_kernel_transforms = self._simplify_transforms(transforms)
+        self._default_kernel_projections = self._simplify_projections(projections)
 
     @property
-    def kernel_transforms(self) -> TransformTree:
+    def kernel_projections(self) -> ProjectionTree:
         r"""
-        Default transforms performed on the kernel
+        Default projections performed on the kernel
         """
         if self.explicit:
-            return self._explicit_statistics
+            return self._explicit_projection
         else:
-            return self._implicit_statistics
+            return self._implicit_projection
 
-    def _simplify_transforms(self, transforms=None) -> List:
-        if transforms is None:
-            transforms = []
+    def _simplify_projections(self, projections=None) -> List:
+        if projections is None:
+            projections = []
 
         # add requirements
-        if self._required_transforms is not None:
-            transforms.append(self._required_transforms)
+        if self._required_projections is not None:
+            projections.append(self._required_projections)
 
         # remove same following elements
-        TransformTree.beautify_transforms(transforms)
+        ProjectionTree.beautify_projections(projections)
 
         # remove unnecessary operation if kernel does it by default
         try:
-            if self._naturally_normalized and transforms[0] == _UnitSphereNormalization:
-                transforms.pop(0)
+            if self._naturally_normalized and projections[0] == _UnitSphereNormalization:
+                projections.pop(0)
         except IndexError:
             pass
 
-        return transforms
+        return projections
 
-    def _get_transforms(self, transforms=None) -> List:
-        if transforms is None:
-            return self._default_kernel_transforms
-        return self._simplify_transforms(transforms)
+    def _get_projections(self, projections=None) -> List:
+        if projections is None:
+            return self._default_kernel_projections
+        return self._simplify_projections(projections)
 
     @property
     def centered(self) -> bool:
@@ -107,7 +99,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         """
         if not self._naturally_centered:
             try:
-                return self._default_kernel_transforms[0] == 'center'
+                return self._default_kernel_projections[0] == 'center'
             except IndexError:
                 return False
         return True
@@ -119,38 +111,38 @@ class _Statistics(_Base, metaclass=ABCMeta):
         """
         if not self._naturally_normalized:
             try:
-                return self._default_kernel_transforms[0] == 'normalize'
+                return self._default_kernel_projections[0] == 'normalize'
             except IndexError:
                 return False
         return True
 
     @property
-    def _explicit_statistics(self) -> TransformTree:
-        if "explicit" not in self._cache:
-            self._cache["explicit"] = TransformTree(explicit=True,
-                                                    sample=self._explicit,
-                                                    default_transforms=self._default_kernel_transforms,
-                                                    cache_level=self._cache_level)
-        return self._cache["explicit"]
+    def _explicit_projection(self) -> ProjectionTree:
+        def fun():
+            return ProjectionTree(explicit=True,
+                                  sample=self._explicit_with_none,
+                                  default_projections=self._default_kernel_projections,
+                                  cache_level=self._cache_level)
+        return self._get("explicit_projection", "oblivious", fun)
 
     @property
-    def _implicit_statistics(self) -> TransformTree:
-        if "implicit" not in self._cache:
-            self._cache["implicit"] = TransformTree(explicit=False,
-                                                    sample=self._implicit,
-                                                    default_transforms=self._default_kernel_transforms,
-                                                    cache_level=self._cache_level,
-                                                    implicit_self=self._implicit_self)
-        return self._cache["implicit"]
+    def _implicit_projection(self) -> ProjectionTree:
+        def fun():
+            return ProjectionTree(explicit=False,
+                                  sample=self._implicit_with_none,
+                                  default_projections=self._default_kernel_projections,
+                                  cache_level=self._cache_level,
+                                  implicit_self=self._implicit_self)
+        return self._get("implicit_projection", "oblivious", fun)
 
     def _phi(self):
         r"""
         Returns the explicit feature map with default centering and normalization. If already computed, it is
         recovered from the cache.
         """
-        if "phi" not in self._cache:
-            self._cache["phi"] = self._explicit_statistics.default_sample
-        return self._cache["phi"]
+        def fun():
+            return self._explicit_projection.projected_sample
+        return self._get("phi", "lightweight", fun)
 
     def _C(self) -> Tensor:
         r"""
@@ -163,27 +155,27 @@ class _Statistics(_Base, metaclass=ABCMeta):
             self._cache["C"] = scale * phi.T @ phi
         return self._cache["C"]
 
-    def _K(self, explicit=None, force: bool = False) -> Tensor:
+    def _K(self, explicit=None, overwrite: bool = False) -> Tensor:
         r"""
         Returns the kernel matrix with default centering and normalization. If already computed, it is recovered from
         the cache.
 
         :param explicit: Specifies whether the explicit or implicit formulation has to be used. Always uses
             the explicit if available.
-        :param force: By default, the kernel matrix is recovered from cache if already computed. Force overwrites
+        :param overwrite: By default, the kernel matrix is recovered from cache if already computed. Force overwrites
             this if True., defaults to False
         """
-        if "K" not in self._cache or force:
+        def fun(explicit):
             if explicit is None: explicit = self.explicit
             if explicit:
                 phi = self._phi()
-                self._cache["K"] = phi @ phi.T
+                return phi @ phi.T
             else:
-                self._cache["K"] = self._implicit_statistics.default_sample
-        return self._cache["K"]
+                return self._implicit_projection.projected_sample
+        return self._get("K", "lightweight", lambda: fun(explicit), force=False, overwrite=overwrite)
 
     # ACCESSIBLE METHODS
-    def phi(self, x=None, transforms=None) -> Tensor:
+    def phi(self, x=None, projections=None) -> Tensor:
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the specified points.
 
@@ -193,10 +185,10 @@ class _Statistics(_Base, metaclass=ABCMeta):
         :raises: ExplicitError
         """
         x = utils.castf(x)
-        transforms = self._get_transforms(transforms)
-        return self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
+        projections = self._get_projections(projections)
+        return self._explicit_projection.apply(oos=self._explicit_with_none, x=self.project_sample(x), projections=projections)
 
-    def k(self, x=None, y=None, explicit=None, transforms=None) -> Tensor:
+    def k(self, x=None, y=None, explicit=None, projections=None) -> Tensor:
         """
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
@@ -230,28 +222,28 @@ class _Statistics(_Base, metaclass=ABCMeta):
 
         x = utils.castf(x)
         y = utils.castf(y)
-        transforms = self._get_transforms(transforms)
+        projections = self._get_projections(projections)
         if explicit:
-            phi_x = self._explicit_statistics.apply(x=self.transform_sample(x),
-                                                    transforms=transforms)
+            phi_x = self._explicit_projection.apply(x=self.project_sample(x),
+                                                    projections=projections)
             if utils.equal(x, y):
                 phi_y = phi_x
             else:
-                phi_y = self._explicit_statistics.apply(y=self.transform_sample(y),
-                                                        transforms=transforms)
+                phi_y = self._explicit_projection.apply(y=self.project_sample(y),
+                                                        projections=projections)
             return phi_x @ phi_y.T
         else:
             if utils.equal(x, y):
-                x = self.transform_sample(x)
-                return self._implicit_statistics.apply(x=x,
+                x = self.project_sample(x)
+                return self._implicit_projection.apply(x=x,
                                                        y=x,
-                                                       transforms=transforms)
+                                                       projections=projections)
             else:
-                return self._implicit_statistics.apply(x=self.transform_sample(x),
-                                                       y=self.transform_sample(y),
-                                                       transforms=transforms)
+                return self._implicit_projection.apply(x=self.project_sample(x),
+                                                       y=self.project_sample(y),
+                                                       projections=projections)
 
-    def c(self, x=None, transforms=None) -> Tensor:
+    def c(self, x=None, projections=None) -> Tensor:
         r"""
         Out-of-sample explicit matrix.
 
@@ -265,8 +257,8 @@ class _Statistics(_Base, metaclass=ABCMeta):
         :rtype: Tensor(dim_feature,dim_feature)
         """
 
-        transforms = self._get_transforms(transforms)
-        phi = self._explicit_statistics.apply(oos=self._explicit, x=self.transform_sample(x), transforms=transforms)
+        projections = self._get_projections(projections)
+        phi = self._explicit_projection.apply(oos=self._explicit_with_none, x=self.project_sample(x), projections=projections)
         scale = 1 / x.shape[0]
         return scale * phi.T @ phi
 
@@ -308,15 +300,15 @@ class _Statistics(_Base, metaclass=ABCMeta):
         :return: Covariance matrix
         :rtype: Tensor(dim_feature, dim_feature)
         """
-        transforms = self._default_kernel_transforms
+        projections = self._default_kernel_projections
         try:
-            if not (self._default_kernel_transforms[-1] == 'center'):
-                transforms.append('center')
+            if not (self._default_kernel_projections[-1] == 'center'):
+                projections.append('center')
         except IndexError:
-            transforms.append('center')
+            projections.append('center')
 
-        transforms = self._simplify_transforms(transforms)
-        return self.c(x=x, transforms=transforms)
+        projections = self._simplify_projections(projections)
+        return self.c(x=x, projections=projections)
 
     def corr(self, x=None) -> Tensor:
         """
@@ -331,3 +323,7 @@ class _Statistics(_Base, metaclass=ABCMeta):
         cov = self.cov(x=x)
         var = torch.sqrt(torch.diag(cov))[:, None]
         return cov / (var * var.T)
+
+    def implicit_preimage(self, coeff: Tensor, knn: int = 1):
+        preimage = super(self).implicit_preimage(coeff=coeff, knn=knn)
+        return self.project_sample_revert(preimage)

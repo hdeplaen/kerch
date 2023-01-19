@@ -85,50 +85,54 @@ class _Base(_Sample, metaclass=ABCMeta):
     ###################################################################################################
 
     @abstractmethod
-    def _implicit(self, x=None, y=None) -> Tensor:
-        # implicit without _center
+    def _implicit(self, x, y) -> Tensor:
+        pass
+
+    def _implicit_with_none(self, x=None, y=None) -> Tensor:
+        # implicit raw
         if x is None:
             x = self.current_sample
         if y is None:
             y = self.current_sample
-        return x, y
+        return self._implicit(x, y)
 
     def _implicit_self(self, x=None):
-        K = self._implicit(x, x)
+        K = self._implicit_with_none(x, x)
         return torch.diag(K)
 
     @abstractmethod
-    def _explicit(self, x=None):
-        # explicit without _center
+    def _explicit(self, x) -> Tensor:
+        pass
+
+    def _explicit_with_none(self, x=None):
+        # explicit raw
         if x is None:
             x = self.current_sample
-        return x
+        return self._explicit(x)
 
     def _phi(self):
         r"""
         Returns the explicit feature map with default centering and normalization. If already computed, it is
         recovered from the cache.
 
-        :param force: By default, the feature map is recovered from cache if already computed. Force overwrites
+        :param overwrite: By default, the feature map is recovered from cache if already computed. Force overwrites
             this if True., defaults to False.
         """
-        if "phi" not in self._cache:
-            self._cache["phi"] = self._explicit()
-        return self._cache["phi"]
+        return self._get("phi", "lightweight", self.explicit)
 
     def _C(self) -> Tensor:
         r"""
         Returns the covariance matrix with default centering and normalization. If already computed, it is recovered
         from the cache.
 
-        :param force: By default, the covariance matrix is recovered from cache if already computed. Force overwrites
+        :param overwrite: By default, the covariance matrix is recovered from cache if already computed. Force overwrites
             this if True., defaults to False
                 """
-        if "C" not in self._cache:
+        def fun():
             scale = 1 / self.num_idx
             phi = self._phi()
-            self._cache["C"] = scale * phi.T @ phi
-        return self._cache["C"]
+            return scale * phi.T @ phi
+        return self._get("C", "lightweight", fun)
 
     def _K(self, explicit=None, force : bool=False) -> Tensor:
         r"""
@@ -140,15 +144,14 @@ class _Base(_Sample, metaclass=ABCMeta):
         :param force: By default, the kernel matrix is recovered from cache if already computed. Force overwrites
             this if True., defaults to False
         """
-
-        if "K" not in self._cache or force:
+        def fun(explicit):
             if explicit is None: explicit = self.explicit
             if explicit:
                 phi = self._phi()
-                self._cache["K"] = phi @ phi.T
+                return phi @ phi.T
             else:
-                self._cache["K"] = self._explicit()
-        return self._cache["K"]
+                return self._explicit_with_none()
+        return self._get("K", "lightweight", lambda: fun(explicit))
 
     # ACCESSIBLE METHODS
     def phi(self, x=None) -> Tensor:
@@ -164,8 +167,8 @@ class _Base(_Sample, metaclass=ABCMeta):
             return self._phi()
 
         x = utils.castf(x)
-        x = self.transform_sample(x)
-        return self._explicit(x)
+        x = self.project_sample(x)
+        return self._explicit_with_none(x)
 
     def k(self, x=None, y=None, explicit=None) -> Tensor:
         """
@@ -202,9 +205,9 @@ class _Base(_Sample, metaclass=ABCMeta):
         # in order to get the values in the correct format (e.g. coming from numpy)
         x = utils.castf(x)
         y = utils.castf(y)
-        x = self.transform_sample(x)
-        y = self.transform_sample(y)
-        return self._implicit(x, y)
+        x = self.project_sample(x)
+        y = self.project_sample(y)
+        return self._implicit_with_none(x, y)
 
     def c(self, x=None) -> Tensor:
         r"""
@@ -285,8 +288,8 @@ class _Base(_Sample, metaclass=ABCMeta):
     #     return self._phi()
 
     def implicit_preimage(self, coeff: Tensor, knn: int = 1):
-        preimage = smoother(coefficients=coeff, x=self.current_sample_untransformed, num=knn)
-        return self.transform_sample_revert(preimage)
+        from ..preimage import smoother
+        return smoother(coefficients=coeff, x=self.current_sample_unprojectioned, num=knn)
 
     @abstractmethod
     def explicit_preimage(self, phi: Tensor):

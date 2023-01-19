@@ -26,7 +26,7 @@ class View(_View, _Sample):
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 
-    :type kernel: kerch.kernel._Statistics, optional
+    :type kernel: kerch.kernel._Projected, optional
     :type bias: bool, optional
     :type bias_trainable: bool, optional
     """

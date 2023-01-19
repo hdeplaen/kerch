@@ -8,11 +8,11 @@ File containing the implicit kernel class.
 """
 
 from .. import utils
-from ._implicit import _Implicit, _Statistics
+from ._implicit import _Implicit, _Projected
 import torch
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Projected)
 class ImplicitNN(_Implicit):
     r"""
     _Implicit kernel class, parametrized by a neural network.
@@ -47,7 +47,7 @@ class ImplicitNN(_Implicit):
     def hparams(self):
         return {"Kernel": "_Implicit", **super(ImplicitNN, self).hparams}
 
-    def _implicit(self, x=None, y=None):
+    def _implicit(self, x, y):
         raise NotImplementedError
 
         # x, y = super(ImplicitKernel, self)._implicit(x, y)

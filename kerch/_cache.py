@@ -10,6 +10,7 @@ from abc import ABCMeta, abstractmethod
 from ._module import _Module
 from .utils import kwargs_decorator, extend_docstring
 
+
 @extend_docstring(_Module)
 class _Cache(_Module,
              metaclass=ABCMeta):
@@ -23,15 +24,6 @@ class _Cache(_Module,
                                        "normal": 2,
                                        "heavy": 3,
                                        "total": 4}
-
-    @staticmethod
-    def _get_level(level:Union[int, str]) -> int:
-        r"""
-        Transforms the cache level to an int if not already.
-        """
-        if isinstance(level, str):
-            val = _Cache.cache_level_switcher.get(level, "Unrecognized cache level.")
-        return level
 
     @abstractmethod
     @kwargs_decorator({
@@ -61,8 +53,18 @@ class _Cache(_Module,
 
     @cache_level.setter
     def cache_level(self, val: Union[str, int]):
-        val = _Cache._get_level(val)
+        val = self._get_level(val)
         self._cache_level = val
+
+    def _get_level(self, level: Union[int, str, None]) -> int:
+        r"""
+        Transforms the cache level to an int if not already.
+        """
+        if level is None:
+            return self._cache_level
+        if isinstance(level, str):
+            level = _Cache.cache_level_switcher.get(level, "Unrecognized cache level.")
+        return level
 
     def _apply(self, fn):
         r"""
@@ -78,40 +80,63 @@ class _Cache(_Module,
                     cache_entry._apply(fn)
         return super(_Cache, self)._apply(fn)
 
-    def _get(self, key, level, fun, force:bool=False):
+    def _get(self, key, level, fun, force: bool = False, overwrite: bool = False):
         r"""
         Retrieves an element from the cache. If the element is not present, it saved to the cache provided its level
-        is lower or equal to the default level. This can be overwritten by the force argument.
+        is lower or equal to the default level. This can be overwritten by the overwrite argument.
 
         :param name: key of the cache element
         :param level: level where to save the cache element
         :param fun: function to compute the element
         :param force: if the value is True, the element will nevertheless be saved whatever level
+        :param overwrite: forces the recomputation of the memory element and potential overwriting
+
+        :type key: str
+        :type level: str
+        :type fun: function handle
+        :type force: bool
+        :type overwrite: bool
         """
-        level : _Cache._get_level(level)
-        if key in self._cache:
-            return self._cache[key][1]
+        level = self._get_level(level)
+
+        if not overwrite:
+            if key in self._cache:
+                return self._cache[key][1]
+            elif type(key) is tuple:
+                reverted_key = (key[1],key[0])
+                if reverted_key in self._cache:
+                    return self._cache[reverted_key][1].T
+
         val = fun()
         if level <= self._cache_level or force:
             self._cache[key] = (level, val)
         return val
 
-    def _reset_cache(self, max_level:Union[str,int]=0) -> None:
+    def _reset_cache(self) -> None:
         r"""
         this just resets the cache and makes it empty. If refilled, the new elements
-        # will be on the same support as the rest of the module as created by its parameters.
-
-        :param max_level: all levels above this level will be cleaned, max_level included. Defaults to 'oblivious'.
+        will be on the same support as the rest of the module as created by its parameters.
         """
 
-        max_level = _Cache._get_level(max_level)
-        self._log.debug(f"The cache is resetted (levels {max_level} and above).")
+        self._log.debug(f"The cache is resetted.")
+        # for val in self._cache.values(): del val
+        self._cache = {}
+
+    def _clean_cache(self, max_level: Union[str, int, None] = None):
+        r"""
+        Cleans all cache elements that have been forced.
+
+        :param max_level: all levels above this level will be cleaned, max_level excluded. Defaults to the default
+            cache level.
+        """
+        max_level = self._get_level(max_level)
+        self._log.debug(f"The cache is cleaned for levels {max_level} and above).")
         # for val in self._cache.values(): del val
         if max_level == 0:
             self._cache = {}
         else:
             for key, value in self._cache.items():
-                if value[0] >= max_level:
+                if value[0] > max_level:
                     del self._cache[key]
 
     def _remove_from_cache(self, key: str) -> None:

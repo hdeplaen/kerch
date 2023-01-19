@@ -9,18 +9,15 @@ File containing the linear kernel class.
 
 import torch
 from .. import utils
-from ._statistics import _Statistics
+from ._projected import _Projected
 from abc import ABCMeta, abstractmethod
 
 
-@utils.extend_docstring(_Statistics)
-class _Explicit(_Statistics, metaclass=ABCMeta):
+@utils.extend_docstring(_Projected)
+class _Explicit(_Projected, metaclass=ABCMeta):
 
     @utils.kwargs_decorator({})
     def __init__(self, **kwargs):
-        """
-        no specific parameters to the linear kernel
-        """
         super(_Explicit, self).__init__(**kwargs)
         self._dim_feature = None
 
@@ -35,18 +32,17 @@ class _Explicit(_Statistics, metaclass=ABCMeta):
     def dim_feature(self) -> int:
         if self._dim_feature is None:
             # if it has not been set before, we can compute it with a minimal example
-            self._dim_feature = self._explicit(x=self.current_sample[0:1, :]).shape[1]
+            self._dim_feature = self._explicit_with_none(x=self.current_sample[0:1, :]).shape[1]
         return self._dim_feature
 
-    def _implicit(self, x=None, y=None):
+    def _implicit(self, x, y):
         phi_oos = self._explicit(x)
         phi_sample = self._explicit(y)
         return phi_oos @ phi_sample.T
 
     @abstractmethod
-    def _explicit(self, x=None):
-        phi = super(_Explicit, self)._explicit(x)
-        return phi
+    def _explicit(self, x):
+        return x
 
     def explicit_preimage(self, phi=None) -> torch.Tensor:
         r"""
@@ -63,9 +59,9 @@ class _Explicit(_Statistics, metaclass=ABCMeta):
 
         if phi is None:
             phi = self.phi()
-        phi = self._explicit_statistics.revert(phi)
+        phi = self._explicit_Projected.revert(phi)
         x_tilde = self._explicit_preimage(phi)
-        return self.sample_transforms.revert(x_tilde)
+        return self.sample_projections.revert(x_tilde)
 
     @abstractmethod
     def _explicit_preimage(self, phi):

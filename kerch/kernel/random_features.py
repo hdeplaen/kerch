@@ -12,10 +12,10 @@ from math import sqrt
 from typing import Union
 
 from .. import utils
-from ._explicit import _Explicit, _Statistics
+from ._explicit import _Explicit, _Projected
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Projected)
 class RandomFeatures(_Explicit):
     r"""
     Random Features kernel.
@@ -144,8 +144,7 @@ class RandomFeatures(_Explicit):
         weights_pinv = torch.linalg.pinv(self.weights).T
         return torch.special.logit(phi, eps=1.e-8) @ weights_pinv
 
-    def _explicit(self, x=None):
-        x = super(RandomFeatures, self)._explicit(x)
+    def _explicit(self, x):
         wx = x @ self.weights.T
         dim_inv_sqrt = 1 / sqrt(self.num_weights)
         return dim_inv_sqrt * torch.sigmoid(wx)

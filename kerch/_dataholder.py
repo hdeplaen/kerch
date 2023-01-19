@@ -72,7 +72,7 @@ class _DataHolder(_Logger):
         if data is None:
             data = self._training_data
             labels = self._training_labels
-        elif labels is None: # if labels is None and not oos
+        elif labels is None: # if labels is None and not value
             raise NotImplementedError # reconstruction error for example in KPCA (still see how to implement it neatly).
         return data, labels
 
@@ -81,7 +81,7 @@ class _DataHolder(_Logger):
     @staticmethod
     def _split_data(data, labels=None, props=None):
         r"""
-        Splits the oos in multiple random datasets based on props.
+        Splits the value in multiple random datasets based on props.
         """
         if props is None:
             return data, labels

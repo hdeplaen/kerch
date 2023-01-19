@@ -10,10 +10,10 @@ File containing the linear kernel class.
 import torch
 
 from .. import utils
-from ._explicit import _Explicit, _Statistics
+from ._explicit import _Explicit
 
 
-@utils.extend_docstring(_Statistics)
+@utils.extend_docstring(_Explicit)
 class Linear(_Explicit):
     r"""
     Linear kernel.
@@ -40,7 +40,7 @@ class Linear(_Explicit):
     def hparams(self):
         return {"Kernel": "Linear", **super(Linear, self).hparams}
 
-    def _explicit(self, x=None):
+    def _explicit(self, x):
         return super(Linear, self)._explicit(x)
 
     def _explicit_preimage(self, phi) -> torch.Tensor:
