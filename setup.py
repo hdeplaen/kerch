@@ -1,17 +1,26 @@
 import setuptools
 import pathlib
-import pkg_resources
 import kerch
+import os
+
+try:
+    # pip >=20
+    from pip._internal.network.session import PipSession
+    from pip._internal.req import parse_requirements
+except ImportError:
+    try:
+        # 10.0.0 <= pip <= 19.3.1
+        from pip._internal.download import PipSession
+        from pip._internal.req import parse_requirements
+    except ImportError:
+        # pip <= 9.0.3
+        from pip.download import PipSession
+        from pip.req import parse_requirements
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-with pathlib.Path('requirements.txt').open() as requirements_txt:
-    install_requires = [
-        str(requirement)
-        for requirement
-        in pkg_resources.parse_requirements(requirements_txt)
-    ]
+requirements = parse_requirements(os.path.join(os.path.dirname(__file__), 'requirements.txt'), session=PipSession())
 
 with open("LICENSE", "r", encoding="utf-8") as fh:
     license = fh.read()
@@ -34,7 +43,7 @@ setuptools.setup(
     },
     platforms=['linux', 'macosx', 'windows'],
     license=license,
-    install_requires=install_requires,
+    install_requires=requirements,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: GPU :: NVIDIA CUDA',
@@ -45,6 +54,8 @@ setuptools.setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Operating System :: OS Independent',
         'Operating System :: POSIX :: Linux',

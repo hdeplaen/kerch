@@ -9,7 +9,7 @@ def smoother(coefficients: torch.Tensor, x: torch.Tensor, num: int = 1) -> torch
     num_x = x.shape[0]
 
     assert num_coefficients == num_x, \
-        f'KNN: Incorrect number of coefficients ({num_coefficients}), ' \
+        f'Smoother: Incorrect number of coefficients ({num_coefficients}), ' \
         f'compared to the number of points ({num_x}).'
 
     if num >= num_coefficients:
