@@ -287,9 +287,19 @@ class _Base(_Sample, metaclass=ABCMeta):
     #     """
     #     return self._phi()
 
-    def implicit_preimage(self, coeff: Tensor, knn: int = 1):
-        from ..preimage import smoother
-        return smoother(coefficients=coeff, x=self.current_sample_unprojectioned, num=knn)
+    def implicit_preimage(self, k_coefficient: Tensor, method: str = 'knn', **kwargs):
+        match method.lower():
+            case 'knn':
+                from ..preimage import knn
+                return knn(k_coefficient, **kwargs)
+            case 'smoother':
+                from ..preimage import smoother
+                return smoother(k_coefficient, **kwargs)
+            case 'iterative':
+                from ..preimage import iterative
+                return iterative(k_coefficient, self, **kwargs)
+            case _:
+                raise AttributeError('Unknown or non-implemented preimage method.')
 
     @abstractmethod
     def explicit_preimage(self, phi: Tensor):
