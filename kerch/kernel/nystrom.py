@@ -65,7 +65,7 @@ class Nystrom(_Explicit):
                                                "_center": kwargs["base_center"],
                                                "_normalize": kwargs["base_normalize"],
                                                "name": kwargs["base_type"],
-                                                "kernel_projections": kwargs["base_kernel_projections"]})
+                                               "kernel_projections": kwargs["base_kernel_projections"]})
             self._base_kernel.init_sample(sample=self.current_sample, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel

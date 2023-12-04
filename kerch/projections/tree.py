@@ -69,7 +69,7 @@ class ProjectionTree(_Projection):
                     elif isinstance(new_projection, List):
                         for tr in new_projection:
                             projection_classes.append(tr)
-                    if issubclass(new_projection, _Projection):
+                    elif issubclass(new_projection, _Projection):
                         projection_classes.append(new_projection)
                     else:
                         kerch._GLOBAL_LOGGER._log.error("Error while creating ProjectionTree list of projections")
@@ -113,8 +113,10 @@ class ProjectionTree(_Projection):
         output = "Projections: \n"
         if len(self._default_projections) == 0:
             return output + "\t" + "None (default)"
-        for projection in self._default_projections:
-            output += "\t" + self.offspring[projection].__str__()
+        node = self._default_node
+        while not isinstance(node, ProjectionTree):
+            output += "\t" + str(node)
+            node = node.parent
         return output
 
     @property
@@ -186,7 +188,7 @@ class ProjectionTree(_Projection):
     def _revert_implicit(self, oos):
         return oos
 
-    def _create_tree(self, projections: List[str] = None) -> List[_Projection]:
+    def _get_tree(self, projections: List[str] = None) -> List[_Projection]:
         projections = ProjectionTree.beautify_projections(projections)
         if projections is None:
             projections = self._default_projections
@@ -229,7 +231,7 @@ class ProjectionTree(_Projection):
             else:
                 self._log.error("No out-of-sample provided and the default one is not a function handle.")
 
-        tree_path = self._create_tree(projections)
+        tree_path = self._get_tree(projections)
         if (not isinstance(oos, Tensor)) and x is None and y is None:
             return tree_path[-1].sample
         elif isinstance(oos, Tensor):
@@ -256,7 +258,7 @@ class ProjectionTree(_Projection):
         :type projections: List[str]
         """
 
-        tree_path = self._create_tree(projections)
+        tree_path = self._get_tree(projections)
         for projection in reversed(tree_path):
             value = projection._revert(value)
         return value

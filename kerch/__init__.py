@@ -13,7 +13,7 @@ _GLOBALS = {"PLOT_ENV": None,
 from . import kernel    # ok (tested & documented)
 from . import rkm  # beta
 from . import model  # alpha
-# from . import dataset  # alpha
+from . import dataset  # alpha
 from . import plot  # alpha
 from . import opt  # alpha
 from ._logger import set_log_level, get_log_level, _GLOBAL_LOGGER

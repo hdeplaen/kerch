@@ -27,6 +27,7 @@ class _Projection(_Cache, metaclass=ABCMeta):
         if self._default:
             return self._name + " (default)"
         return self._name
+
     @staticmethod
     def _get_names(x=None, y=None) -> Tuple[str, str]:
         if x is not None:

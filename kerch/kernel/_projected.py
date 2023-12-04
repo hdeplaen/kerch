@@ -240,7 +240,7 @@ class _Projected(_Base, metaclass=ABCMeta):
                 phi_y = self._explicit_projection.apply(y=self.project_sample(y),
                                                         projections=projections)
             return phi_x @ phi_y.T
-        else:
+        else: # implicit
             if utils.equal(x, y):
                 x = self.project_sample(x)
                 return self._implicit_projection.apply(x=x,

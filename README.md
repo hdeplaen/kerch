@@ -23,7 +23,7 @@ The package is built on PyTorch and supports GPU acceleration.
 ### Training and plotting an LS-SVM
 
 This is done by first instantiating a model, setting its dataset, searching for the hyperparameters, fitting with those 
-parameters and plotting. The implementation can be found [here](research/lssvm-tuning.py).
+parameters and plotting. The implementation can be found [here](research/misc/lssvm-tuning.py).
 
 ```python
 mdl = kerch.model.LSSVM(type="rbf",                 # kernel name

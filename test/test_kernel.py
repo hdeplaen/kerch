@@ -109,7 +109,7 @@ class TestKernels(unittest.TestCase):
         sample = self.sample
         k_nystrom = kerch.kernel.Nystrom(sample=sample)
         k_base = k_nystrom.base_kernel
-        self.assertAlmostEqual(torch.norm(k_nystrom.K - k_base.K, p='fro').numpy(), 0)
+        self.assertAlmostEqual(torch.norm(k_nystrom.k() - k_base.K, p='fro').numpy(), 0)
 
     def test_nystrom_base(self):
         """
@@ -118,7 +118,7 @@ class TestKernels(unittest.TestCase):
         sample = self.sample
         k_base = kerch.kernel.RBF(sample=sample)
         k_nystrom = kerch.kernel.Nystrom(base_kernel=k_base)
-        self.assertAlmostEqual(torch.norm(k_nystrom.k() - k_base.K, p='fro').numpy(), 0)
+        self.assertAlmostEqual(torch.norm(k_nystrom.k() - k_base.k(), p='fro').numpy(), 0)
 
     @unittest.skipUnless(kerch.gpu_available(), 'CUDA is not available for PyTorch on this machine.')
     def test_gpu(self):
