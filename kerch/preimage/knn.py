@@ -1,7 +1,8 @@
 import torch
-from ..kernel import _Base as K
+from ..kernel import _Base
 
-def knn(k_coefficients: torch.Tensor, kernel: K, num: int = 1) -> torch.Tensor:
+@torch.no_grad()
+def knn(k_coefficients: torch.Tensor, kernel: _Base, num: int = 1) -> torch.Tensor:
     r"""
     Returns the sum of the num closest x, the distance being given by the coefficients.
 
@@ -15,10 +16,12 @@ def knn(k_coefficients: torch.Tensor, kernel: K, num: int = 1) -> torch.Tensor:
     :rtype: torch.Tensor
     """
 
-    num_points, num_coefficients = k_coefficients.shape[0]
-    sample = K.current_sample
-    num_sample = K.num_idx
+    # PRELIMINARIES
+    num_points, num_coefficients = k_coefficients.shape
+    sample = kernel.current_sample
+    num_sample = kernel.num_idx
 
+    # DEFENSIVE
     try:
         num = int(num)
     except ValueError:
@@ -35,9 +38,9 @@ def knn(k_coefficients: torch.Tensor, kernel: K, num: int = 1) -> torch.Tensor:
     assert num > 0, \
         f"The number of required neighbors num must be strictly positive ({num})."
 
-    preimages = []
-    for idx in range(num_points):
-        _, indices = torch.sort(k_coefficients, descending=True)
-        loc_sol = torch.mean(sample[indices[:num], :], dim=0)
-        preimages.append(loc_sol)
-    return torch.vstack(preimages)
+    # PRE-IMAGE
+    _, indices = torch.topk(k_coefficients, k=num, dim=1, largest=True)
+    kept_sample = sample[indices]
+    preimages = torch.mean(kept_sample, dim=1)
+
+    return preimages

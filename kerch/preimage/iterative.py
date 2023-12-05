@@ -12,7 +12,7 @@ def iterative(k_coefficient: torch.Tensor, kernel: K, num_iter: int = 100, lr=1.
         \tilde{\mathbf{x}} = \mathrm{argmin}_{\mathbf{x}} \big\lVert \mathtt{k_coefficient} - \mathtt{kernel.k(x)} \big\rVert_2^2
 
 
-    The method optimizes with an NAdam algorithm.
+    The method optimizes with an SGD algorithm.
 
     :param k_coefficients: coefficients in the RKHS to be inverted.
     :type k_coefficients: torch.Tensor
@@ -37,23 +37,32 @@ def iterative(k_coefficient: torch.Tensor, kernel: K, num_iter: int = 100, lr=1.
         else:
             kernel._log.warn(f"The cache level is recommended to be at lightweight at maximum in order to ease the "
                              f"memory load during the pre-image computation. It is temporarily being set to "
-                             f"lightweight. You can also set the argument lightweight_cache to True and set it "
-                             f"temporarily lower during the computation.")
+                             f"lightweight. You can also set the argument lightweight_cache to True to set it "
+                             f"temporarily lower during the pre-image computation.")
 
-    assert k_coefficient.shape[1] == kernel.num_idx, (f"Pre-image: the provided kernel coefficients do not correspond to "
-                                                f"the number of sample datapoints.")
+    assert k_coefficient.size(1) == kernel.num_idx, \
+        f"Pre-image: the provided kernel coefficients ({k_coefficient.size(1)}) do not correspond to the number " \
+        f"of sample datapoints ({kernel.num_idx})."
+
+    assert num_iter > 0, \
+        f"The number of iterations num_iter ({num_iter}) must be strictly positive (num_iter > 0)."
 
     # PRELIMINARIES
     vals0 = smoother(k_coefficient, kernel, 'all')
     vals = torch.nn.Parameter(vals0, requires_grad=True)
-    loss = torch.nn.MSELoss()
-    optimizer = torch.optim.NAdam(vals, lr=lr)
+    loss_fn = torch.nn.MSELoss()
+    optimizer = torch.optim.SGD([vals], lr=lr)
 
     # OPTIMIZE
-    for idx in range(num_iter):
+    def closure():
+        optimizer.zero_grad()
         k_current = kernel(vals)
-        loss(k_current, k_coefficient)
-        optimizer.step()
+        loss = loss_fn(k_current, k_coefficient)
+        loss.backward(retain_graph=True)
+        return loss
+
+    for idx in range(num_iter):
+        optimizer.step(closure)
 
     # SET BACK THE ORIGINAL CACHE LEVEL
     if (cache_level > _Cache.cache_level_switcher['lightweight']) and lightweight_cache:

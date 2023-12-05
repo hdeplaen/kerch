@@ -21,8 +21,8 @@ from ._view import _View
 @utils.extend_docstring(_Sample)
 class View(_View, _Sample):
     r"""
-    :param kernel: Initiates a View _Based on an existing kernel object. If the value is not `None`, all other
-        parameters are neglected and inherited from the provided kernel., default to `None`
+    :param kernel: Initiates a View based on an existing kernel object. If the value is not `None`, all other
+        parameters are neglected and inherited from the provided kernel., defaults to `None`
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 

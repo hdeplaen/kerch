@@ -1,9 +1,9 @@
 import torch
-from ..kernel import _Base as K
+from ..kernel import _Base
 from typing import Union
 
-
-def smoother(k_coefficients: torch.Tensor, kernel: K, num: Union[int, str] = 'all') -> torch.Tensor:
+@torch.no_grad()
+def smoother(k_coefficients: torch.Tensor, kernel: _Base, num: Union[int, str] = 'all') -> torch.Tensor:
     r"""
     Returns a weighted sum of x by the coefficients.
 
@@ -17,10 +17,13 @@ def smoother(k_coefficients: torch.Tensor, kernel: K, num: Union[int, str] = 'al
     :return: Pre-image
     :rtype: torch.Tensor
     """
-    num_points, num_coefficients = k_coefficients.shape
-    sample = K.current_sample
-    num_sample = K.num_idx
 
+    # PRELIMINARIES
+    num_points, num_coefficients = k_coefficients.shape
+    sample = kernel.current_sample
+    num_sample = kernel.num_idx
+
+    # DEFENSIVE
     assert num_coefficients == num_sample, \
         f'Smoother: Incorrect number of coefficients ({num_coefficients}), ' \
         f'compared to the number of points sample points in the provided kernel ({num_sample}).'
@@ -42,15 +45,14 @@ def smoother(k_coefficients: torch.Tensor, kernel: K, num: Union[int, str] = 'al
     assert num <= num_coefficients, \
         f"The argument num ({num}) exceeds the number of sample point of the provided kernel ({num_sample})."
 
+    # PRE-IMAGE
     if num == num_coefficients:
-        return torch.einsum('ni,ij->nj', k_coefficients / torch.sum(k_coefficients, dim=0), sample)
+        kept_coeff = k_coefficients
+    else:
+        vals, indices = torch.topk(k_coefficients, k=num, dim=1, largest=True)
+        kept_coeff = torch.zeros_like(k_coefficients)
+        kept_coeff.scatter_(1, indices, vals)
+    normalized_coeff = kept_coeff / torch.sum(kept_coeff, dim=1, keepdim=True)
+    preimages = normalized_coeff @ sample
 
-    preimages = []
-    for idx in range(num_points):
-        sorted_coefficients, indices = torch.sort(k_coefficients[idx, :], descending=True)
-        nearest_coefficients = sorted_coefficients[:num]
-
-        normalized_coefficients = nearest_coefficients / torch.sum(nearest_coefficients)
-        loc_sol = torch.einsum('i,ij->j', normalized_coefficients, sample[indices[:num], :])
-        preimages.append(loc_sol)
-    return torch.vstack(preimages)
+    return preimages

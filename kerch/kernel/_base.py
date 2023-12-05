@@ -13,7 +13,6 @@ from abc import ABCMeta, abstractmethod
 
 from .. import utils
 from .._sample import _Sample
-from ..preimage import smoother
 
 
 @utils.extend_docstring(_Sample)
@@ -288,13 +287,21 @@ class _Base(_Sample, metaclass=ABCMeta):
     #     return self._phi()
 
     def implicit_preimage(self, k_coefficient: Tensor, method: str = 'knn', **kwargs):
+        # DEFENSIVE
+        k_coefficient = utils.castf(k_coefficient)
+
+        if torch.all(k_coefficient < 0):
+            self._log.warning(f"The argument k_coefficient contains negative values, which should never be the case by "
+                              f"definition of a RKHS.")
+
+        # PRE-IMAGE
         match method.lower():
             case 'knn':
                 from ..preimage import knn
-                return knn(k_coefficient, **kwargs)
+                return knn(k_coefficient, self, **kwargs)
             case 'smoother':
                 from ..preimage import smoother
-                return smoother(k_coefficient, **kwargs)
+                return smoother(k_coefficient, self, **kwargs)
             case 'iterative':
                 from ..preimage import iterative
                 return iterative(k_coefficient, self, **kwargs)

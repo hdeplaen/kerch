@@ -20,6 +20,21 @@ class KPCA(_KPCA, Level):
     def __str__(self):
         return "KPCA with " + Level.__str__(self)
 
+    @property
+    @torch.no_grad()
+    def K_reconstructed(self) -> T:
+        H = self.hidden
+        D = torch.diag(self.vals)
+        return H @ D @ H.T
+
+    @property
+    @torch.no_grad()
+    def C_reconstructed(self) -> T:
+        U = self.weight
+        D = torch.diag(self.vals)
+        return U @ D @ U.T
+
+
     def reconstruct(self, x=None, representation=None):
         representation = check_representation(representation, self._representation, self)
         if representation == 'primal':

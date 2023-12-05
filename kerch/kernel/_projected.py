@@ -295,7 +295,7 @@ class _Projected(_Base, metaclass=ABCMeta):
         switcher = {"primal": primal,
                     "dual": dual}
 
-        fun = switcher.get(representation, utils.model.RepresentationError)
+        fun = switcher.get(representation, utils.RepresentationError)
         return fun(x)
 
     def cov(self, x=None) -> Tensor:
@@ -331,7 +331,3 @@ class _Projected(_Base, metaclass=ABCMeta):
         cov = self.cov(x=x)
         var = torch.sqrt(torch.diag(cov))[:, None]
         return cov / (var * var.T)
-
-    def implicit_preimage(self, coeff: Tensor, knn: int = 1):
-        preimage = super(self).implicit_preimage(coeff=coeff, knn=knn)
-        return self.project_sample_revert(preimage)

@@ -18,9 +18,9 @@ from ._implicit import _Implicit, _Projected
 class _Exponential(_Implicit, metaclass=ABCMeta):
     r"""
     :param sigma: Bandwidth :math:`\sigma` of the kernel. If `None`, the value is filled by a heuristic on
-        the sample dataset: 3/10th of the median of the pairwise distances. Computing the heuristic on the full sample
-        dataset can be expensive and `idx_sample` or `prop_sample` could be specified to only compute it on a subset
-        only., defaults to `None`.
+        the sample dataset: half of the square root of the median of the pairwise distances. Computing the heuristic on
+        the full sample dataset can be expensive and `idx_sample` or `prop_sample` could be specified to only compute
+        it on a subset only., defaults to `None`.
     :param sigma_trainable: `True` if the gradient of the bandwidth is to be computed. If so, a graph is computed
         and the bandwidth can be updated. `False` just leads to a static computation., defaults to `False`
     :type sigma: double, optional
@@ -95,7 +95,7 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
 
         # define sigma if not set by the user
         if self._sigma is None:
-            sigma = .3 * torch.median(D)
+            sigma = .5 * torch.sqrt(torch.median(D))
             self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
             self._log.warning(f"Bandwidth sigma not provided and assigned by a heuristic (sigma={self.sigma}).")
 

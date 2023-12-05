@@ -7,7 +7,7 @@ from ._level import _Level
 from kerch import utils
 
 
-class _KPCA(_Level):
+class _KPCA(_Level, metaclass=ABCMeta):
     r"""
     Kernel Principal Component Analysis.
     """
@@ -80,7 +80,7 @@ class _KPCA(_Level):
 
     def relative_variance(self, as_tensor=False) -> Union[float, T]:
         r"""
-        Relative variance learnt by the model given by ```model_variance``/``relative_variance``.
+        Relative variance learnt by the model given by ```model_variance``/``total_variance``.
         This number is always comprised between 0 and 1 and avoids any considerations on normalization.
 
         :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
