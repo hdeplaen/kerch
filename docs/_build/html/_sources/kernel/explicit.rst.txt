@@ -2,7 +2,7 @@
 Explicit Kernel
 ===============
 
-.. autoclass:: kerch.kernel.explicit
+.. autoclass:: kerch.kernel.Explicit
    :members:
    :inherited-members: Module
    :undoc-members:

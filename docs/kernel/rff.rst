@@ -5,7 +5,7 @@ Random Fourier Features Kernel
 Class
 =====
 
-.. autoclass:: kerch.kernel.rff
+.. autoclass:: kerch.kernel.RFF
    :members:
    :inherited-members: Module
    :undoc-members:

@@ -6,7 +6,7 @@ Class
 =====
 
 
-.. autoclass:: kerch.kernel.cosine
+.. autoclass:: kerch.kernel.Cosine
    :members:
    :inherited-members: Module
    :undoc-members:

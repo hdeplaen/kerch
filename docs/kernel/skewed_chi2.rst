@@ -2,7 +2,7 @@
 Skewed Chi Squared Kernel
 =========================
 
-.. autoclass:: kerch.kernel.skewed_chi2
+.. autoclass:: kerch.kernel.SkewedChi2
    :members:
    :inherited-members: Module
    :undoc-members:

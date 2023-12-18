@@ -5,7 +5,7 @@ Linear Kernel
 Class
 =====
 
-.. autoclass:: kerch.kernel.linear
+.. autoclass:: kerch.kernel.Linear
    :members:
    :inherited-members: Module
    :undoc-members:

@@ -5,7 +5,7 @@ Indicator Kernel
 Class
 =====
 
-.. autoclass:: kerch.kernel.indicator
+.. autoclass:: kerch.kernel.Indicator
    :members:
    :inherited-members: Module
    :undoc-members:

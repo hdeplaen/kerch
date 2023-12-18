@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Examples &mdash; kerch 0.2.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css?v=7f9a90b1" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=000c92bf"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> kerch
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            kerch
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,8 +67,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Examples</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -73,10 +79,10 @@
            <div itemprop="articleBody">
              
   <section id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
+<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h1>
 <p>Some examples of what is possible. Please refer to the rest of the documentation for more examples.</p>
 <section id="training-and-tuning-an-ls-svm">
-<h2>Training and tuning an LS-SVM<a class="headerlink" href="#training-and-tuning-an-ls-svm" title="Permalink to this heading"></a></h2>
+<h2>Training and tuning an LS-SVM<a class="headerlink" href="#training-and-tuning-an-ls-svm" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
 
 <span class="n">tr_set</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="s2">&quot;two_moons&quot;</span><span class="p">,</span>   <span class="c1"># which dataset</span>
@@ -93,10 +99,10 @@
 <span class="n">kerch</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_model</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>                             <span class="c1"># plot the model using the built-in method</span>
 </pre></div>
 </div>
-<p>(<a class="reference external" href=".//examples-1.py">Source code</a>)</p>
+<p>(<a class="reference download internal" download="" href="_downloads/38225c478bc33fda02189f9371b42554/examples-1.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>)</p>
 </section>
 <section id="out-of-sample-normalized-and-centered-kernels">
-<h2>Out-of-sample normalized and centered kernels<a class="headerlink" href="#out-of-sample-normalized-and-centered-kernels" title="Permalink to this heading"></a></h2>
+<h2>Out-of-sample normalized and centered kernels<a class="headerlink" href="#out-of-sample-normalized-and-centered-kernels" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -127,7 +133,7 @@
 <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 </pre></div>
 </div>
-<p>(<a class="reference external" href=".//examples-2.py">Source code</a>, <a class="reference external" href=".//examples-2.png">png</a>, <a class="reference external" href=".//examples-2.hires.png">hires.png</a>, <a class="reference external" href=".//examples-2.pdf">pdf</a>)</p>
+<p>(<a class="reference download internal" download="" href="_downloads/357259ddd03691c9ebb864f05d6e9e41/examples-2.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="_downloads/39315b7abb87ed2ccb496b6527419b5d/examples-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="_downloads/afb393e80b367b06ed3e53147a14a47e/examples-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="_downloads/e4153f3fb688cbdb35c04a562a344d72/examples-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <figure class="align-default">
 <img alt="_images/examples-2.png" class="plot-directive" src="_images/examples-2.png" />
 </figure>

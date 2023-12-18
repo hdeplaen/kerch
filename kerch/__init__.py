@@ -11,12 +11,12 @@ _GLOBALS = {"PLOT_ENV": None,
 
 # IMPORTS
 from . import kernel    # ok (tested & documented)
-from . import rkm  # beta
+from . import module  # beta
 from . import model  # alpha
 from . import dataset  # alpha
 from . import plot  # alpha
 from . import opt  # alpha
-from ._logger import set_log_level, get_log_level, _GLOBAL_LOGGER
+from ._Logger import set_log_level, get_log_level, _GLOBAL_LOGGER
 from .utils import set_ftype, set_itype, FTYPE, ITYPE, EPS
 
 # CHECK FUNCTIONALITIES

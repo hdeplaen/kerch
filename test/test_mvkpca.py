@@ -45,7 +45,7 @@ class TestKPCA(unittest.TestCase):
         """
         pass
         # for name in self.dual_types:
-        #     mdl = kerch.rkm.MVKPCA({"name": "x",
+        #     mdl = kerch.level.MVKPCA({"name": "x",
         #                             "name": name,
         #                             "sample": self.x},
         #                            {"name": "y",

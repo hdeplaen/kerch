@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to the Kerch package &mdash; kerch 0.2.2 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css?v=7f9a90b1" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=000c92bf"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="#" class="icon icon-home"> kerch
+
+          
+          
+          <a href="#" class="icon icon-home">
+            kerch
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -41,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="level/index.html">Level Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
@@ -57,8 +64,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>Welcome to the Kerch package</li>
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to the Kerch package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -69,23 +76,23 @@
            <div itemprop="articleBody">
              
   <section id="welcome-to-the-kerch-package">
-<h1>Welcome to the Kerch package<a class="headerlink" href="#welcome-to-the-kerch-package" title="Permalink to this heading"></a></h1>
+<h1>Welcome to the Kerch package<a class="headerlink" href="#welcome-to-the-kerch-package" title="Link to this heading"></a></h1>
 <p>This package is meant for various kernel-based operations. For the moment,
 only the kernel module is available, but a lot of models will follow soon.
 If you experience any bug, please let me now: this is only a pre-alpha version.</p>
 <section id="install">
-<h2>Install<a class="headerlink" href="#install" title="Permalink to this heading"></a></h2>
+<h2>Install<a class="headerlink" href="#install" title="Link to this heading"></a></h2>
 <p>As for now, there are two ways to install the package.</p>
 <section id="using-pip">
-<h3>Using PIP<a class="headerlink" href="#using-pip" title="Permalink to this heading"></a></h3>
+<h3>Using PIP<a class="headerlink" href="#using-pip" title="Link to this heading"></a></h3>
 <p>Using pip, it suffices to run <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">kerch</span></code>. Just rerun this command to update the package to its newest version.</p>
 </section>
 <section id="from-source">
-<h3>From source<a class="headerlink" href="#from-source" title="Permalink to this heading"></a></h3>
+<h3>From source<a class="headerlink" href="#from-source" title="Link to this heading"></a></h3>
 <p>You can also install the package directly from the GitHub repository.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone --recursive https://github.com/hdeplaen/kerch
-<span class="nb">cd</span> kerch
-python setup.py install
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/hdeplaen/kerch
+<span class="nb">cd</span><span class="w"> </span>kerch
+python<span class="w"> </span>setup.py<span class="w"> </span>install
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
@@ -95,6 +102,11 @@ python setup.py install
 <li class="toctree-l2"><a class="reference internal" href="kernel/index.html#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel/index.html#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kernel/index.html#different-kernels">Different Kernels</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="level/index.html">Level Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="level/index.html#single-view">Single-View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="level/index.html#multi-view">Multi-View</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
@@ -107,7 +119,7 @@ python setup.py install
 </section>
 </section>
 <section id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h2>
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>

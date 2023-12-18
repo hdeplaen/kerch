@@ -95,7 +95,7 @@ for idx in tqdm(range(0, NUM_OOR, STEP)):
         input("\nPress Enter to continue...")
 
 
-gifname = 'img/mvkpca-predict-oor' \
+gifname = 'img/mvkpca.rst-predict-oor' \
           + '-STEP_' +  str(STEP) \
           + '-SIGMA_' + str(SIGMA) + '.gif'
 with imageio.get_writer(gifname, mode="I") as writer:

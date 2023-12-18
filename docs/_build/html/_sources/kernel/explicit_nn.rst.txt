@@ -2,7 +2,7 @@
 Explicit Network-based Kernel
 =============================
 
-.. autoclass:: kerch.kernel.explicit_nn
+.. autoclass:: kerch.kernel.ExplicitNN
    :members:
    :inherited-members: Module
    :undoc-members:

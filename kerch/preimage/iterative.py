@@ -1,6 +1,6 @@
 import torch
 from ..kernel import _Base as K
-from .._cache import _Cache
+from .._Cache import _Cache
 from .smoother import smoother
 
 
@@ -30,8 +30,8 @@ def iterative(k_coefficient: torch.Tensor, kernel: K, num_iter: int = 100, lr=1.
     """
 
     # CHECK IF THE CACHE LEVEL HAS TO BE CHANGED
-    cache_level = _Cache.cache_level_switcher[kernel.cache_level]
-    if cache_level > _Cache.cache_level_switcher['lightweight']:
+    cache_level = _Cache._cache_level_switcher[kernel.cache_level]
+    if cache_level > _Cache._cache_level_switcher['lightweight']:
         if lightweight_cache:
             kernel.cache_level = 'lightweight'
         else:
@@ -65,7 +65,7 @@ def iterative(k_coefficient: torch.Tensor, kernel: K, num_iter: int = 100, lr=1.
         optimizer.step(closure)
 
     # SET BACK THE ORIGINAL CACHE LEVEL
-    if (cache_level > _Cache.cache_level_switcher['lightweight']) and lightweight_cache:
+    if (cache_level > _Cache._cache_level_switcher['lightweight']) and lightweight_cache:
         kernel.cache_level = cache_level
 
     # RETURN

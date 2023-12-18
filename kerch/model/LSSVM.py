@@ -1,4 +1,4 @@
-from ..rkm import LSSVM
+from ..module.single_view import LSSVM
 from .Model import Model
 
 

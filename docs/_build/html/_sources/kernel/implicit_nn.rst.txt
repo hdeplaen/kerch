@@ -2,7 +2,7 @@
 Implicit Network-based Kernel
 =============================
 
-.. autoclass:: kerch.kernel.implicit_nn
+.. autoclass:: kerch.kernel.ImplicitNN
    :members:
    :inherited-members: Module
    :undoc-members:

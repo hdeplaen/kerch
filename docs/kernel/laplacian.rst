@@ -2,7 +2,7 @@
 Laplacian Kernel
 ================
 
-.. autoclass:: kerch.kernel.laplacian
+.. autoclass:: kerch.kernel.Laplacian
    :members:
    :inherited-members: Module
    :undoc-members:

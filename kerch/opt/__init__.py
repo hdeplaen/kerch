@@ -11,7 +11,7 @@ import torch
 from .stiefel import stiefel_optimizer
 
 from .. import utils
-from .._module import _Module
+from .._Module import _Module
 
 
 class Optimizer():

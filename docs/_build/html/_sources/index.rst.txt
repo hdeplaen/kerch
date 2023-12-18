@@ -19,6 +19,7 @@ If you experience any bug, please let me now: this is only a pre-alpha version.
    :glob:
 
    kernel/index
+   level/index
    examples
 
 

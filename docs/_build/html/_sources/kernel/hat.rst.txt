@@ -6,7 +6,7 @@ Hat Kernel
 Class
 =====
 
-.. autoclass:: kerch.kernel.hat
+.. autoclass:: kerch.kernel.Hat
    :members:
    :inherited-members: Module
    :undoc-members:

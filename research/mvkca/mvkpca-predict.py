@@ -15,7 +15,7 @@ from ray.air.callbacks.wandb import WandbLoggerCallback
 # from ray.tune.integration.wandb import WandbTrainableMixin, wandb_mixin
 import wandb
 
-# wandb.init(project="mvkpca")
+# wandb.init(project="mvkpca.rst")
 
 ray.init(local_mode=False)
 
@@ -87,7 +87,7 @@ tuner = tune.Tuner(objective,
                    param_space=search_space,
                    run_config=air.RunConfig(
                        callbacks=[
-                           WandbLoggerCallback(project="mvkpca",
+                           WandbLoggerCallback(project="mvkpca.rst",
                                                group='sinc3')
                        ],
                    ),

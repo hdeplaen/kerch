@@ -2,7 +2,7 @@ import unittest
 import torch
 import kerch
 
-from kerch.projections.tree import ProjectionTree
+from kerch.projection.ProjectionTree import ProjectionTree
 from kerch.utils.errors import BijectionError
 
 kerch.set_log_level(40)  # only print errors
@@ -11,7 +11,7 @@ all_projections = ProjectionTree.all_projections.keys()
 
 class TestProjections(unittest.TestCase):
     r"""
-    Tests the various projections
+    Tests the various projection
     """
 
     def __init__(self, *args, **kwargs):

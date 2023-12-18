@@ -2,8 +2,8 @@ import torch
 import logging
 from abc import ABCMeta, abstractmethod
 
-from .._module import _Module
-from .._dataholder import _DataHolder
+from .._Module import _Module
+from .._DataHolder import _DataHolder
 from .. import utils
 
 

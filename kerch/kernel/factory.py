@@ -1,4 +1,4 @@
-from ._projected import _Projected
+from ._Projected import _Projected
 
 
 def factory(type='rbf', **kwargs) -> _Projected:

@@ -5,7 +5,7 @@ RBF Kernel
 Class
 =====
 
-.. autoclass:: kerch.kernel.rbf
+.. autoclass:: kerch.kernel.RBF
    :members:
    :inherited-members: Module
    :undoc-members:

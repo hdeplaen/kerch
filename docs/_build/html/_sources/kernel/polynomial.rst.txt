@@ -5,7 +5,7 @@ Polynomial Kernel
 Class
 =====
 
-.. autoclass:: kerch.kernel.polynomial
+.. autoclass:: kerch.kernel.Polynomial
    :members:
    :inherited-members: Module
    :undoc-members:

@@ -2,7 +2,7 @@
 Base Kernel
 ===========
 
-.. autoclass:: kerch.kernel.base
+.. autoclass:: kerch.kernel._Base
    :members:
    :inherited-members: Module
    :undoc-members:
