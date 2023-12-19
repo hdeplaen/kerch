@@ -11,11 +11,11 @@ import torch
 from torch import Tensor
 from math import sqrt
 
-import kerch.module
+import kerch.level
 from kerch import utils
 from kerch.kernel import factory, _Base
 from kerch._Sample import _Sample
-from kerch.module._View import _View
+from kerch.level._View import _View
 
 
 @utils.extend_docstring(_Sample)

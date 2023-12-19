@@ -1,7 +1,7 @@
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
 
-from kerch.module._Level import _Level
+from kerch.level._Level import _Level
 from .View import View
 from kerch import utils
 

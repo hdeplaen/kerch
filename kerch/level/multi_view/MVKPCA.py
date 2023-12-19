@@ -5,7 +5,7 @@ from typing import List, Union
 
 import kerch.utils
 from .MVLevel import MVLevel
-from kerch.module._KPCA import _KPCA
+from kerch.level._KPCA import _KPCA
 from kerch import utils
 
 

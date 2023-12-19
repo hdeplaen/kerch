@@ -8,8 +8,8 @@ import torch
 from torch import Tensor as T
 
 from kerch import utils
-from kerch.module._View import _View
-from kerch.module.single_view.View import View
+from kerch.level._View import _View
+from kerch.level.single_view.View import View
 from kerch._Stochastic import _Stochastic
 
 

@@ -1,4 +1,4 @@
-from ..module.single_view import LSSVM
+from ..level.single_view import LSSVM
 from .Model import Model
 
 

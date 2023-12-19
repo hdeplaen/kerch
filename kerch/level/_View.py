@@ -126,8 +126,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
         return self._dim_output
 
     @dim_output.setter
-    def dim_output(self, val: int):
-        self._dim_output = val
+    def dim_output(self, val: int) -> None:
+        self._dim_output = int(val)
         self._reset_weight()
         self._reset_hidden()
 

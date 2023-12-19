@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
-from ..module._KPCA import _KPCA
-from ..module._View import _View
+from ..level._KPCA import _KPCA
+from ..level._View import _View
 
 def eigvals(kpca:_KPCA, log=True, ax=None) -> None:
     vals = kpca.vals.detach().cpu()

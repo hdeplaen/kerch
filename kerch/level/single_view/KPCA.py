@@ -2,7 +2,7 @@ import torch
 from torch import Tensor as T
 
 from .Level import Level
-from kerch.module._KPCA import _KPCA
+from kerch.level._KPCA import _KPCA
 from kerch.utils import check_representation, extend_docstring, kwargs_decorator
 
 

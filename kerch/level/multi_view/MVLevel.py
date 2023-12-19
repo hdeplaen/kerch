@@ -1,7 +1,7 @@
 from torch import Tensor as T
 from abc import ABCMeta
 
-from kerch.module._Level import _Level
+from kerch.level._Level import _Level
 from .MultiView import MultiView
 from kerch import utils
 

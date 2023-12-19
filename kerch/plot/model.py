@@ -2,7 +2,7 @@ import numpy as np
 
 from ..model.Model import Model
 from .._Logger import _GLOBAL_LOGGER
-from ..module._Level import _Level
+from ..level._Level import _Level
 from matplotlib import pyplot as plt
 
 def classifier_level(lvl: _Level, dims=None):

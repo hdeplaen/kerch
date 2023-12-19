@@ -11,7 +11,7 @@ _GLOBALS = {"PLOT_ENV": None,
 
 # IMPORTS
 from . import kernel    # ok (tested & documented)
-from . import module  # beta
+from . import level  # beta
 from . import model  # alpha
 from . import dataset  # alpha
 from . import plot  # alpha
