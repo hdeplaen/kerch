@@ -7,10 +7,16 @@ Source code for the RKM toolbox.
 @date: March 2021
 """
 from abc import ABCMeta, abstractmethod
+import sys
 from .._Logger import _Logger
 
 
 class kerchError(Exception, metaclass=ABCMeta):
+    @staticmethod
+    def debugger_is_active() -> bool:
+        """Return if the debugger is currently active"""
+        return hasattr(sys, 'gettrace') and sys.gettrace() is not None
+
     @abstractmethod
     def __init__(self, cls=None):
 
@@ -19,7 +25,8 @@ class kerchError(Exception, metaclass=ABCMeta):
             msg = self.message
 
         if isinstance(cls, _Logger):
-            cls._log.error(msg)
+            if not kerchError.debugger_is_active():
+                cls._log.error(msg)
             msg = "[" + cls.__class__.__name__ + "] " + msg
 
         super(kerchError, self).__init__(msg)

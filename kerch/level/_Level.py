@@ -18,6 +18,8 @@ class _Level(_View, metaclass=ABCMeta):
     :type representation: str, optional
     """
 
+    _parameter_related_cache = []
+
     @utils.extend_docstring(_View)
     @utils.kwargs_decorator({
         "eta": 1.,
@@ -144,4 +146,7 @@ class _Level(_View, metaclass=ABCMeta):
         r"""
             Perform after-step operations, for example a projection of the parameters onto some manifold.
         """
-        pass
+        self._reset_parameter_related_cache()
+
+    def _reset_parameter_related_cache(self) -> None:
+        self._remove_from_cache(self.__class__._parameter_related_cache)

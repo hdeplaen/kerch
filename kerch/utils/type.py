@@ -1,7 +1,7 @@
 import torch
 import logging
 
-FTYPE = torch.float64
+FTYPE = torch.float32
 ITYPE = torch.int16
 
 EPS = 1.e-10

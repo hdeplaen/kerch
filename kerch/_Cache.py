@@ -4,7 +4,7 @@ which can also be ported like torch.nn.Parameters are, on GPU for example.
 """
 
 import torch
-from typing import Union
+from typing import Union, List, Iterable
 from abc import ABCMeta, abstractmethod
 
 from ._Module import _Module
@@ -139,14 +139,21 @@ class _Cache(_Module,
                 if value[0] > max_level:
                     del self._cache[key]
 
-    def _remove_from_cache(self, key: str) -> None:
+    def _remove_from_cache(self, key: Union[str, List[str]]) -> None:
         r"""
         Removes a specific element from the cache.
 
         :param key: Key of the cache element to be removed
         """
-        if key in self._cache:
-            del self._cache[key]
+        def _del_entry(key_item) -> None:
+            if key_item in self._cache:
+                del self._cache[key_item]
+
+        if isinstance(key, list):
+            key = [key]
+
+        for key_item in key:
+            _del_entry(key_item)
 
     def reset(self, children=False) -> None:
         r"""
@@ -158,3 +165,12 @@ class _Cache(_Module,
         for cache in self.children():
             if isinstance(cache, _Cache):
                 cache.reset(children=children)
+
+    def cache_keys(self, private:bool=False) -> Iterable[str]:
+        for key in self._cache.keys():
+            if key[0] is not "_" or private:
+                yield key
+
+    def print_keys(self, private:bool=True) -> None:
+        for key in self.cache_keys(private):
+            print(key)

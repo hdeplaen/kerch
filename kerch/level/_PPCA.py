@@ -4,11 +4,41 @@ from typing import Optional
 from abc import ABCMeta, abstractmethod
 
 from ._Level import _Level
+from .. import utils
 
 
 class _PPCA(_Level, metaclass=ABCMeta):
+    _parameter_related_cache = [*_Level._parameter_related_cache,
+                                "_B_primal", "_B_dual", "_Inv_primal", "_Inv_dual"]
+
+    @utils.kwargs_decorator({'use_mean': False,
+                             'sigma': None})
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.use_mean = kwargs["use_mean"]
+        self.sigma = kwargs["sigma"]
+        self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
+                                        requires_grad=False)
+
+    @property
+    def use_mean(self) -> bool:
+        return self._use_mean
+
+    @use_mean.setter
+    def use_mean(self, val: bool) -> None:
+        self._use_mean = val
+
+    @property
+    def vals(self) -> T:
+        r"""
+        Eigenvalues of the model. The model has to be fitted for these values to exist.
+        """
+        return self._vals
+
+    @vals.setter
+    def vals(self, val):
+        val = utils.castf(val, tensor=False, dev=self._vals.device)
+        self._vals.data = val
 
     @property
     def sigma(self) -> float:
@@ -18,8 +48,11 @@ class _PPCA(_Level, metaclass=ABCMeta):
         return self._sigma
 
     @sigma.setter
-    def sigma(self, val: float) -> None:
-        self._sigma = float(val)
+    def sigma(self, val: Optional[float]) -> None:
+        if val is None:
+            self._sigma = None
+        else:
+            self._sigma = float(val)
 
     @property
     def mu(self) -> torch.nn.Parameter:
@@ -27,17 +60,62 @@ class _PPCA(_Level, metaclass=ABCMeta):
 
     @mu.setter
     def mu(self, val: torch.Tensor) -> None:
-        self._mu.data = val.to(self._mu.device())
+        self._mu.data = utils.castf(val, dev=self.sample.device, tensor=True)
 
-    @abstractmethod
-    def _solve_primal(self) -> None:
-        pass
+    ########################################################################################################
+    @property
+    @torch.no_grad()
+    def _B_primal(self) -> T:
+        def compute() -> T:
+            return torch.cholesky(self.weight @ self.weight.T + self.sigma ** 2 * self._I_primal)
 
-    @abstractmethod
-    def _solve_dual(self) -> None:
-        pass
+        return self._get(key="_B_primal", level='normal', fun=compute)
+
+    @_B_primal.setter
+    def _B_primal(self, val: T) -> None:
+        self._get(key="_B_primal", level='normal', force=True, fun=lambda: val)
+
+    @property
+    @torch.no_grad()
+    def _B_dual(self) -> T:
+        def compute() -> T:
+            return torch.cholesky(self.hidden.T @ self.hidden + self.sigma ** 2 * torch.inv(self.K))
+
+        return self._get(key="_B_primal", level="normal", fun=compute)
+
+    @_B_dual.setter
+    def _B_dual(self, val: T) -> None:
+        self._get(key="_B_dual", level="normal", force=True, fun=lambda: val)
+
+    @property
+    @torch.no_grad()
+    def _Inv_primal(self) -> T:
+        def compute() -> T:
+            return torch.inv(self.weight.T @ self.weight + self.sigma ** 2 * self._I_primal)
+
+        return self._get(key="_Inv_primal", level="normal", fun=compute)
+
+    @_Inv_primal.setter
+    @torch.no_grad()
+    def _Inv_primal(self, val: T) -> None:
+        self._get(key="_Inv_primal", level="normal", fun=lambda: val, force=True)
+
+    @property
+    @torch.no_grad()
+    def _Inv_dual(self) -> T:
+        def compute() -> T:
+            return torch.inv(self.hidden.T @ self.K @ self.hidden + self.sigma ** 2 * self._I_dual)
+
+        return self._get(key="_Inv_dual", level="normal", fun=compute)
+
+    @_Inv_dual.setter
+    @torch.no_grad()
+    def _Inv_dual(self, val: T) -> None:
+        self._get(key="_Inv_dual", level="normal", fun=lambda: val, force=True)
 
     ########################################################################################################################
+
+    @torch.no_grad()
     def h_map(self, phi: Optional[T] = None, k: Optional[T] = None) -> T:
         r"""
         Draws a `h` given the maximum a posteriori of the distribution. By choosing the input, you either
@@ -51,19 +129,13 @@ class _PPCA(_Level, metaclass=ABCMeta):
         """
 
         if phi is not None and k is None:
-            Inv_reg = self._get(key="Inv_reg_primal",
-                                level="normal",
-                                fun=lambda: torch.inv(self.weight.T @ self.weight + self.sigma ** 2 * self._I_primal))
-            return phi @ self.weight @ Inv_reg
+            return phi @ self.weight.T @ self._Inv_primal
         if phi is None and k is not None:
-            Inv_reg = self._get(key="Inv_reg_dual",
-                                level='normal',
-                                fun=lambda: torch.inv(
-                                    self.hidden.T @ self.K @ self.hidden + self.sigma ** 2 * self._I_dual))
-            return k @ self.hidden @ Inv_reg
+            return k @ self.hidden.T @ self._Inv_dual
         else:
             raise AttributeError("One and only one attribute phi or k has to be specified.")
 
+    @torch.no_grad()
     def phi_map(self, h: T) -> T:
         r"""
         Maximum a posteriori of phi given h.
@@ -72,8 +144,11 @@ class _PPCA(_Level, metaclass=ABCMeta):
         :return: MAP of phi given h.
         :rtype: Tensor[N, dim_input]
         """
-        return h @ self.weight + self.mu
+        if self.use_mean:
+            return h @ self.weight.T + self.mu
+        return h @ self.weight.T
 
+    @torch.no_grad()
     def k_map(self, h: T) -> T:
         r"""
         Maximum a posteriori of k given h.
@@ -82,8 +157,11 @@ class _PPCA(_Level, metaclass=ABCMeta):
         :return: MAP of k given h.
         :rtype: Tensor[N, num_idx]
         """
-        return h @ self.hidden @ self.K
+        if self.use_mean:
+            raise NotImplementedError
+        return h @ self.hidden.T @ self.K
 
+    @torch.no_grad()
     def draw_h(self, num: int = 1) -> T:
         r"""
         Draws a h given its prior distribution.
@@ -92,31 +170,52 @@ class _PPCA(_Level, metaclass=ABCMeta):
         :return: Latent representation.
         :rtype: Tensor[num, dim_output]
         """
-        return torch.randn((num, self.dim_output), device=self.sample.device())
+        return torch.randn((num, self.dim_output), device=self.sample.device, dtype=utils.FTYPE)
 
-    def draw_phi(self, num: int = 1) -> T:
+    @torch.no_grad()
+    def draw_phi(self, num: int = 1, posterior: bool = True) -> T:
         r"""
         Draws a primal representation phi given its posterior distribution.
+        :param posterior: Indicates whether phi has to be drawn from its posterior distribution or its conditional
+            given the prior of h. Defaults to True.
         :param num: Number of phi to be sampled, defaults to 1.
         :type num: int, optional
+        :type posterior: bool, optional
         :return: Primal representation.
         :rtype: Tensor[num, dim_input]
         """
+        if posterior:
+            u = torch.randn((num, self.dim_feature), dtype=utils.FTYPE, device=self.sample.device)
+            if self.use_mean:
+                return u @ self._B_primal + self.mu
+            return u @ self._B_primal
         h = self.draw_h(num)
         return self.phi_map(h)
 
-    def draw_k(self, num: int = 1) -> T:
+    @torch.no_grad()
+    def draw_k(self, num: int = 1, posterior: bool = False) -> T:
         r"""
         Draws a dual representation k given its posterior distribution.
+        :param posterior: Indicates whether phi has to be drawn from its posterior distribution or its conditional
+            given the prior of h. Defaults to True.
         :param num: Number of k to be sampled, defaults to 1.
         :type num: int, optional
+        :type posterior: bool, optional
         :return: Dual representation.
         :rtype: Tensor[num, num_idx]
         """
+        if posterior:
+            u = torch.randn((num, self.num_idx), dtype=utils.FTYPE, device=self.sample.device)
+            if self.use_mean:
+                raise NotImplementedError
+            return u @ self._B_dual
         h = self.draw_h(num)
         return self.k_map(h)
 
     ################################################################################################################
+
+    def loss(self, representation=None) -> T:
+        return torch.tensor(0., dtype=utils.FTYPE)
 
     def _euclidean_parameters(self, recurse=True):
         super(_PPCA, self)._euclidean_parameters(recurse)
