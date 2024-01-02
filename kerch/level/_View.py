@@ -175,6 +175,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
                 self._dim_output, self._num_h = self._hidden.shape
                 self._reset_weight()
         else:
+            self._reset_hidden()
+            self._reset_weight()
             self._log.info("The hidden value is unset.")
 
     @property
@@ -253,6 +255,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
                     self._dim_output = self._weight.shape[0]
                 self._reset_hidden()
             else:
+                self._reset_weight()
+                self._reset_weight()
                 self._log.info("The weight is unset.")
 
     @property

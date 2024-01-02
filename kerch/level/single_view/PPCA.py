@@ -73,3 +73,4 @@ class PPCA(_PPCA, Level):
             self.sigma = (torch.trace(K) - torch.sum(v)) / (self.num_idx * (self.num_idx - self.dim_output))
         self.vals = v
         self.hidden = h @ torch.diag(torch.sqrt(1 / self.num_idx - self.sigma ** 2 / v))
+        pass
