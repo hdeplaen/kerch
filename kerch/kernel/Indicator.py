@@ -6,7 +6,7 @@ File containing the indicator kernel class.
 @license: MIT
 @date: May 2022
 """
-
+from typing import Iterator
 from .. import utils
 from ._Implicit import _Implicit, _Projected
 
@@ -142,7 +142,7 @@ class Indicator(_Implicit):
 
         return output
 
-    def _slow_parameters(self, recurse=True):
+    def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         yield self._lag
         yield self._gamma
         yield from super(Indicator, self)._slow_parameters(recurse)

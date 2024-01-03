@@ -66,7 +66,7 @@ class Nystrom(_Explicit):
                                                "_normalize": kwargs["base_normalize"],
                                                "name": kwargs["base_type"],
                                                "kernel_projections": kwargs["base_kernel_projections"]})
-            self._base_kernel.init_sample(sample=self.current_sample, idx_sample=self.idx)
+            self._base_kernel.init_sample(sample=self.current_sample_projected, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel
             assert isinstance(k, _Base), "The provided kernel is not of the kernel class."
@@ -119,7 +119,7 @@ class Nystrom(_Explicit):
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         super(Nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
         if self._base_kernel is not None:
-            self._base_kernel.init_sample(sample=self.current_sample, idx_sample=self.idx)
+            self._base_kernel.init_sample(sample=self.current_sample_projected, idx_sample=self.idx)
 
     def _compute_decomposition(self):
         if "H" not in self._cache:

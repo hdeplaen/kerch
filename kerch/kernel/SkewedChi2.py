@@ -6,7 +6,7 @@ File containing the RBF kernel class.
 @license: MIT
 @date: May 2022
 """
-
+from typing import Iterator
 import torch
 
 from .. import utils
@@ -75,6 +75,6 @@ class SkewedChi2(_Implicit):
 
         return output.squeeze(0)
 
-    def _slow_parameters(self, recurse=True):
+    def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         yield self._p
         yield from super(SkewedChi2, self)._slow_parameters(recurse)

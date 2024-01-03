@@ -190,8 +190,8 @@ class RFF(_Explicit):
     ##############################################################################
 
     @property
-    def current_sample(self) -> torch.Tensor:
-        return super(RFF, self).current_sample / self._sigma
+    def current_sample_projected(self) -> torch.Tensor:
+        return super(RFF, self).current_sample_projected / self._sigma
 
     def project_sample(self, data) -> Union[None, torch.Tensor]:
         if data is None:

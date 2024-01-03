@@ -6,7 +6,7 @@ File containing the implicit kernel class.
 @license: MIT
 @date: March 2021
 """
-
+from typing import Iterator
 from .. import utils
 from ._Implicit import _Implicit, _Projected
 import torch
@@ -53,6 +53,6 @@ class ImplicitNN(_Implicit):
         # x, y = super(ImplicitKernel, self)._implicit(x, y)
         # return self._encoder(x, y)
 
-    def _euclidean_parameters(self, recurse=True):
+    def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         yield from self._network.parameters()
         yield from super(ImplicitNN, self)._euclidean_parameters(recurse)

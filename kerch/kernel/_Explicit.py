@@ -32,7 +32,7 @@ class _Explicit(_Projected, metaclass=ABCMeta):
     def dim_feature(self) -> int:
         if self._dim_feature is None:
             # if it has not been set before, we can compute it with a minimal example
-            self._dim_feature = self._explicit_with_none(x=self.current_sample[0:1, :]).shape[1]
+            self._dim_feature = self._explicit_with_none(x=self.current_sample_projected[0:1, :]).shape[1]
         return self._dim_feature
 
     def _implicit(self, x, y):

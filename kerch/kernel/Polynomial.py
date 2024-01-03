@@ -6,7 +6,7 @@ File containing the polynomial kernel class.
 @license: MIT
 @date: March 2021
 """
-
+from typing import Iterator
 from .. import utils
 from ._Projected import _Projected
 
@@ -97,6 +97,6 @@ class Polynomial(_Projected):
     def explicit_preimage(self, phi):
         raise NotImplementedError
 
-    def _slow_parameters(self, recurse=True):
+    def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         yield self._degree
         yield from super(Polynomial, self)._slow_parameters(recurse)

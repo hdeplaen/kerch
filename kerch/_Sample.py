@@ -2,6 +2,7 @@
 Allows for a sample set manager, with stochastic support.
 """
 
+from typing import Iterator
 import torch
 
 from abc import ABCMeta, abstractmethod
@@ -90,7 +91,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
             self.init_sample()
 
     @property
-    def _empty_sample(self) -> bool:
+    def empty_sample(self) -> bool:
         r"""
         Boolean specifying if the sample is empty or not.
         """
@@ -101,7 +102,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         r"""
         Number of datapoints in the sample set.
         """
-        if self._empty_sample:
+        if self.empty_sample:
             return 0
         return self._num_total
 
@@ -139,7 +140,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         self._sample.requires_grad = self._sample_trainable
 
     @property
-    def current_sample(self) -> Tensor:
+    def current_sample_projected(self) -> Tensor:
         r"""
         Returns the sample that is currently used in the computations and for the normalizing and centering statistics
         if relevant.
@@ -147,7 +148,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         return self.sample_projections.projected_sample
 
     @property
-    def current_sample_unprojectioned(self) -> Tensor:
+    def current_sample(self) -> Tensor:
         return self._sample[self.idx, :]
 
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
@@ -170,37 +171,40 @@ class _Sample(_Stochastic,  # manager stochastic indices
             such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
             `prop_sample` are `None`., defaults to `None`.
         """
-        sample = utils.castf(sample)
+        with torch.no_grad():
+            sample = utils.castf(sample)
 
-        if sample is None:
-            self._log.debug("Initializing new sample with the sample dimensions.")
-            if self._num_total is None or self.dim_input is None:
-                self._log.info(
-                    'The sample cannot be initialized because no sample dataset has been provided nor the '
-                    'sample dimensions have been initialized yet.')
-                return
-            self._sample = torch.nn.Parameter(
-                torch.nn.init.orthogonal_(torch.empty((self._num_total, self._dim_input),
-                                                      dtype=utils.FTYPE,
-                                                      device=self._sample.device)),
-                requires_grad=self._sample_trainable)
-        elif isinstance(sample, torch.nn.Parameter):
-            self._log.debug("Using existing sample defined as an external parameter.")
-            self._num_total, self._dim_input = sample.shape
-            self._sample_trainable = sample.requires_grad
-            self._sample = sample
-        else:
-            self._log.debug("Assigning new sample points based on the given values.")
-            self._num_total, self._dim_input = sample.shape
-            self._sample = torch.nn.Parameter(sample.data,
-                                              requires_grad=self._sample_trainable)
+            if sample is None:
+                self._log.debug("Initializing new sample with the sample dimensions.")
+                if self._num_total is None or self.dim_input is None:
+                    self._log.info(
+                        'The sample cannot be initialized because no sample dataset has been provided nor the '
+                        'sample dimensions have been initialized yet.')
+                    return
+                self._sample = torch.nn.Parameter(
+                    torch.nn.init.orthogonal_(torch.empty((self._num_total, self._dim_input),
+                                                          dtype=utils.FTYPE,
+                                                          device=self._sample.device)),
+                    requires_grad=self._sample_trainable)
+            elif isinstance(sample, torch.nn.Parameter):
+                self._log.debug("Using existing sample defined as an external parameter.")
+                self._num_total, self._dim_input = sample.shape
+                self._sample_trainable = sample.requires_grad
+                self._sample = sample
+            else:
+                self._log.debug("Assigning new sample points based on the given values.")
+                self._num_total, self._dim_input = sample.shape
+                self._sample = torch.nn.Parameter(sample.data,
+                                                  requires_grad=self._sample_trainable)
 
         for sample_module in self.children():
             if isinstance(sample_module, _Sample):
-                sample_module.init_sample(self.current_sample)
+                sample_module.init_sample(self.current_sample_projected)
 
         self.stochastic(idx=idx_sample, prop=prop_sample)
+        self._reset_cache()
 
+    @torch.no_grad()
     def update_sample(self, sample_values, idx_sample=None):
         r"""
         Updates the sample set. In contradiction to `init_samples`, this only updates the values of the sample and sets
@@ -213,12 +217,11 @@ class _Sample(_Stochastic,  # manager stochastic indices
         :type idx_sample: int[], optional
         """
 
-        if self._empty_sample:
+        if self.empty_sample:
             self._log.warning('Cannot update the sample values of a None sample dataset.')
             return
 
         sample_values = utils.castf(sample_values, dev=self._sample.device)
-        self._reset_cache()
 
         # use all indices if unspecified
         if idx_sample is None:
@@ -235,8 +238,10 @@ class _Sample(_Stochastic,  # manager stochastic indices
         if self._sample_trainable:
             self._sample.grad.data[idx_sample, :].zero_()
 
-    def _euclidean_parameters(self, recurse=True):
-        if not self._empty_sample:
+        self._reset_cache()
+
+    def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
+        if not self.empty_sample:
             yield self._sample
         yield from super(_Sample, self)._euclidean_parameters(recurse)
 

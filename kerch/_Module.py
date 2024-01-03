@@ -32,19 +32,19 @@ class _Module(_Logger,
                 child.set_log_level(level)
         return level
 
-    def _euclidean_parameters(self, recurse=True):
+    def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         if recurse:
             for module in self.children():
                 if isinstance(module, _Module):
                     yield from module._euclidean_parameters(recurse)
 
-    def _stiefel_parameters(self, recurse=True):
+    def _stiefel_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         if recurse:
             for module in self.children():
                 if isinstance(module, _Module):
                     yield from module._stiefel_parameters(recurse)
 
-    def _slow_parameters(self, recurse=True):
+    def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         if recurse:
             for module in self.children():
                 if isinstance(module, _Module):

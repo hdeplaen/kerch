@@ -23,8 +23,8 @@ class Optimizer():
                 out.append(p)
         return out
 
-    @utils.kwargs_decorator({"stiefel_lr": 1.e-4,
-                             "euclidean_lr": 1.e-4,
+    @utils.kwargs_decorator({"stiefel_lr": 1.e-3,
+                             "euclidean_lr": 1.e-3,
                              "slow_lr": 1.e-4
                              })
     def __init__(self, mdl: _Module, type="sgd", **kwargs):

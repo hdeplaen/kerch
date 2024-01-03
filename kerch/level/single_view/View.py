@@ -83,7 +83,9 @@ class View(_View, _Sample):
         self._log.debug("View initialized with " + str(self._kernel))
 
     def __str__(self):
-        return "view with " + str(self._kernel)
+        if self.attached:
+            return "view with " + str(self._kernel)
+        return str(self._kernel)
 
     def _reset_weight(self) -> None:
         self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE,

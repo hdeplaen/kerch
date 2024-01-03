@@ -1,3 +1,5 @@
+from typing import Iterator
+
 import torch
 from torch import Tensor as T
 
@@ -99,7 +101,7 @@ class LSSVM(Level):
         self.hidden = hidden
         self.bias = bias
 
-    def _euclidean_parameters(self, recurse=True):
+    def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         super(LSSVM, self)._euclidean_parameters(recurse)
         if self._representation == 'primal':
             if self._weight_exists:

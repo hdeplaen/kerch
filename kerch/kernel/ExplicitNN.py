@@ -7,6 +7,7 @@ File containing the explicit kernel class.
 @date: March 2021
 """
 
+from typing import Iterator
 from .. import utils
 from ._Explicit import _Explicit, _Projected
 import torch
@@ -68,7 +69,7 @@ class ExplicitNN(_Explicit):
     def _explicit(self, x):
         return self._encoder(x)
 
-    def _euclidean_parameters(self, recurse=True):
+    def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         yield from self._encoder.parameters()
         if self._decoder is not None:
             yield self._decoder.parameters()

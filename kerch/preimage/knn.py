@@ -18,7 +18,7 @@ def knn(k_coefficients: torch.Tensor, kernel: _Base, num: int = 1) -> torch.Tens
 
     # PRELIMINARIES
     num_points, num_coefficients = k_coefficients.shape
-    sample = kernel.current_sample
+    sample = kernel.current_sample_projected
     num_sample = kernel.num_idx
 
     # DEFENSIVE

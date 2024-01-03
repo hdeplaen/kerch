@@ -90,9 +90,9 @@ class _Base(_Sample, metaclass=ABCMeta):
     def _implicit_with_none(self, x=None, y=None) -> Tensor:
         # implicit raw
         if x is None:
-            x = self.current_sample
+            x = self.current_sample_projected
         if y is None:
-            y = self.current_sample
+            y = self.current_sample_projected
         return self._implicit(x, y)
 
     def _implicit_self(self, x=None):
@@ -106,7 +106,7 @@ class _Base(_Sample, metaclass=ABCMeta):
     def _explicit_with_none(self, x=None):
         # explicit raw
         if x is None:
-            x = self.current_sample
+            x = self.current_sample_projected
         return self._explicit(x)
 
     def _phi(self):

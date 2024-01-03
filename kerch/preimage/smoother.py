@@ -20,7 +20,7 @@ def smoother(k_coefficients: torch.Tensor, kernel: _Base, num: Union[int, str] =
 
     # PRELIMINARIES
     num_points, num_coefficients = k_coefficients.shape
-    sample = kernel.current_sample
+    sample = kernel.current_sample_projected
     num_sample = kernel.num_idx
 
     # DEFENSIVE

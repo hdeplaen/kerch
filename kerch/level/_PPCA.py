@@ -1,6 +1,6 @@
 import torch
 from torch import Tensor as T
-from typing import Optional
+from typing import Optional, Iterator
 from abc import ABCMeta, abstractmethod
 
 from ._Level import _Level
@@ -217,7 +217,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     def loss(self, representation=None) -> T:
         return torch.tensor(0., dtype=utils.FTYPE)
 
-    def _euclidean_parameters(self, recurse=True):
+    def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         super(_PPCA, self)._euclidean_parameters(recurse)
         if self._representation == 'primal':
             if self._weight_exists:

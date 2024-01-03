@@ -92,8 +92,8 @@ class _Level(_View, metaclass=ABCMeta):
         # execute the corresponding fitting
         switcher = {"primal": self._solve_primal,
                     "dual": self._solve_dual}
-        fun = switcher.get(representation)
-        return fun()
+
+        switcher.get(representation)()
 
     ####################################################################################################################
 

@@ -11,11 +11,12 @@ import torch
 from torch import Tensor
 from math import sqrt
 from abc import ABCMeta, abstractmethod
-from typing import Union
+from typing import Union, Iterator
 
 from kerch import utils
 from kerch.kernel import factory, _Base
 from kerch._Stochastic import _Stochastic
+
 
 @utils.extend_docstring(_Stochastic)
 class _View(_Stochastic, metaclass=ABCMeta):
@@ -109,6 +110,23 @@ class _View(_Stochastic, metaclass=ABCMeta):
                     "dual": init_hidden}
         switcher.get(representation)()
 
+    @property
+    def param_trainable(self) -> bool:
+        r"""
+        Specifies whether the parameters weight and hidden are trainable or not.
+        """
+        return self._param_trainable
+
+    @param_trainable.setter
+    def param_trainable(self, val: bool) -> None:
+        self._hidden.requires_grad = val
+        self._weight.requires_grad = val
+        self._param_trainable = val
+
+    @property
+    def representation(self) -> str:
+        return self._representation
+
     ################################################################"
     @property
     @abstractmethod
@@ -160,17 +178,22 @@ class _View(_Stochastic, metaclass=ABCMeta):
         # sets the parameter to an existing one
         if val is not None:
             if isinstance(val, torch.nn.Parameter):
+                del self._hidden
                 self._hidden = val
                 self._num_h, self._dim_output = self._hidden.shape
             else:  # sets the value to a new one
                 # to work on the stiefel manifold, the parameters are required to have the number of components as
                 # as first dimension
                 val = utils.castf(val, tensor=True, dev=self._hidden.device)
-                self._hidden.data = val.T
-
-                # zeroing the gradients if relevant
-                if self._param_trainable and self._hidden.grad is not None:
-                    self._hidden.grad.sample.zero_()
+                val = val.T
+                if self._hidden_exists and val.shape == self._hidden.shape:
+                    self._hidden.copy_(val)
+                    # zeroing the gradients if relevant
+                    if self._param_trainable and self._hidden.grad is not None:
+                        self._hidden.grad.sample.zero_()
+                else:
+                    del self._hidden
+                    self._hidden = torch.nn.Parameter(val, requires_grad=self._param_trainable)
 
                 self._dim_output, self._num_h = self._hidden.shape
                 self._reset_weight()
@@ -241,15 +264,18 @@ class _View(_Stochastic, metaclass=ABCMeta):
             if val is not None:
                 # sets the parameter to an existing one
                 if isinstance(val, torch.nn.Parameter):
+                    del self._weight
                     self._weight = val
                 else:  # sets the value to a new one
                     val = utils.castf(val, tensor=False, dev=self._weight.device)
-                    if self._weight_exists:
-                        self._weight.data = val.T
+                    val = val.T
+                    if self._weight_exists and self._weight.shape == val.shape:
+                        self._weight.copy_(val)
                         # zeroing the gradients if relevant
                         if self._param_trainable and self._weight.grad is not None:
                             self._weight.grad.sample.zero_()
                     else:
+                        del self._weight
                         self._weight = torch.nn.Parameter(val.T, requires_grad=self._param_trainable)
 
                     self._dim_output = self._weight.shape[0]

@@ -1,7 +1,7 @@
 import torch
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
-from typing import Union
+from typing import Union, Iterator
 
 from ._Level import _Level
 from kerch import utils
@@ -157,7 +157,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
     ######################################################################################
 
-    def _stiefel_parameters(self, recurse=True):
+    def _stiefel_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         # the stiefel optimizer requires the first dimension to be the number of eigenvectors
         super(_KPCA, self)._stiefel_parameters(recurse)
         if self._representation == 'primal':

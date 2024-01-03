@@ -7,6 +7,7 @@ File containing the RBF kernel class.
 @date: March 2021
 """
 
+from typing import Iterator
 import torch
 
 from abc import ABCMeta, abstractmethod
@@ -56,7 +57,7 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         """
         if isinstance(self._sigma, torch.nn.Parameter):
             return self._sigma.data.cpu().numpy()
-        elif self._sigma is None and not self._empty_sample:
+        elif self._sigma is None and not self.empty_sample:
             self.k(explicit=True, projections=[])
             return self.sigma
         return self._sigma
@@ -106,11 +107,11 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
 
     def _implicit_self(self, x=None):
         if x is None:
-            x = self.current_sample
+            x = self.current_sample_projected
 
         return torch.ones(x.shape[0], dtype=utils.FTYPE, device=x.device)
 
-    def _slow_parameters(self, recurse=True):
+    def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         if self._sigma is not None:
             yield self._sigma
         yield from super(_Exponential, self)._slow_parameters(recurse)
