@@ -2,7 +2,7 @@ from typing import Iterator
 import torch
 
 from ..level import Level, factory
-from ..utils import kwargs_decorator
+from ..utils import kwargs_decorator, NotInitializedError
 from .._Sample import _Sample
 
 
@@ -30,7 +30,6 @@ class RKM(_Sample):
         return len(self._levels)
 
     def level(self, num: int) -> Level:
-        assert num >= 0, "Levels start at number 0."
         assert num < len(self._levels), f"Model has less levels ({self.num_levels}) than requested ({int})."
         return self._levels[num]
 
@@ -66,6 +65,33 @@ class RKM(_Sample):
                 f"output dimension of the previous level ({self.level(self.num_levels - 1).dim_output})."
 
         self._levels.append(level)
+
+    def init_levels(self, full: bool = True) -> None:
+        r"""
+        Initializes all levels based on the model sample.
+
+        :param full: If specified to False, the sample initialization is going to randomly initialized for the deeper
+            levels to avoid running a forward on the full dataset. This is relevant in a stochastic setting. Defaults
+            to True.
+        :type full: bool, optional
+        """
+
+        if full:
+            x = self.sample
+            for level in self.levels:
+                level.init_sample(sample=x)
+                level.init_parameters(overwrite=False)
+                x = level(x)
+        else:
+            for level in self.levels:
+                level.num_sample = self.num_sample
+                level.init_parameters(overwrite=False)
+
+    def init_targets(self, targets: torch.Tensor, num_level:int=-1) -> None:
+        try:
+            self.level(num_level).targets = targets
+        except NotInitializedError:
+            raise NotInitializedError(cls=self, message="Please initialize the sample and the levels first.")
 
     def forward(self, x: torch.Tensor | None = None) -> torch.Tensor:
         if self.training:

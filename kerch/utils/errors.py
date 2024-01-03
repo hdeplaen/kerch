@@ -18,11 +18,11 @@ class kerchError(Exception, metaclass=ABCMeta):
         return hasattr(sys, 'gettrace') and sys.gettrace() is not None
 
     @abstractmethod
-    def __init__(self, cls=None):
+    def __init__(self, cls=None, message=""):
 
-        msg = ""
+        msg = message
         if hasattr(self, 'message'):
-            msg = self.message
+            msg = self.message + msg
 
         if isinstance(cls, _Logger):
             if not kerchError.debugger_is_active():
@@ -58,6 +58,11 @@ class BijectionError(kerchError):
         self.message = "Mathematically undefined operation. A projection is not bijective, thus non invertible."
         super(BijectionError, self).__init__(*args, **kwargs)
 
+
+class NotInitializedError(kerchError):
+    def __init__(self, *args, **kwargs):
+        self.message = "The model has not been initialized yet."
+        super(NotInitializedError, self).__init__(*args, **kwargs)
 
 class MultiViewError(kerchError):
     def __init__(self, *args, **kwargs):

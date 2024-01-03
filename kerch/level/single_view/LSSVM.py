@@ -35,9 +35,11 @@ class LSSVM(Level):
         self._reset_hidden()
         self._reset_weight()
 
-    def _center_h(self):
+    def _center_hidden(self):
         if self._hidden_exists:
             self._hidden.sample -= torch.mean(self._hidden.sample, dim=1)
+        else:
+            self._log.debug("The hidden variables cannot be centered as they are not set.")
 
     def _solve_primal(self) -> None:
         C = self.kernel.C
@@ -133,7 +135,7 @@ class LSSVM(Level):
         return reg_loss / self.num_idx + self.gamma * mse_loss
 
     def after_step(self) -> None:
-        self._center_h()
+        self._center_hidden()
 
     def _update_hidden_from_weight(self):
         raise NotImplementedError

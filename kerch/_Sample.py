@@ -197,11 +197,12 @@ class _Sample(_Stochastic,  # manager stochastic indices
                 self._sample = torch.nn.Parameter(sample.data,
                                                   requires_grad=self._sample_trainable)
 
+        self.stochastic(idx=idx_sample, prop=prop_sample)
+
         for sample_module in self.children():
             if isinstance(sample_module, _Sample):
-                sample_module.init_sample(self.current_sample_projected)
+                sample_module.init_sample(self.sample)
 
-        self.stochastic(idx=idx_sample, prop=prop_sample)
         self._reset_cache()
 
     @torch.no_grad()

@@ -159,10 +159,12 @@ class View(_View, _Sample):
         if val is None:
             self._log.debug("Targets set to empty values.")
         else:
+            if self.empty_sample:
+                raise utils.NotInitializedError(cls=self, message="The sample has not been initialized yet.")
             assert self.dim_output == val.shape[1], f"The shape of the given target {val.shape[1]} does not match the" \
                                                     f" required one {self.dim_output}."
             assert self.num_sample == val.shape[0], f"The number of target points {val.shape[0]} does not match the " \
-                                                    f"required one {self.dim_input}."
+                                                    f"required one {self.num_sample}."
         self._targets = torch.nn.Parameter(val)
 
     @property
