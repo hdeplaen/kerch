@@ -135,6 +135,7 @@ class LSSVM(Level):
         return reg_loss / self.num_idx + self.gamma * mse_loss
 
     def after_step(self) -> None:
+        super().after_step()
         self._center_hidden()
 
     def _update_hidden_from_weight(self):

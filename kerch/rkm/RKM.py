@@ -87,7 +87,7 @@ class RKM(_Sample):
                 level.num_sample = self.num_sample
                 level.init_parameters(overwrite=False)
 
-    def init_targets(self, targets: torch.Tensor, num_level:int=-1) -> None:
+    def init_targets(self, targets: torch.Tensor, num_level: int = -1) -> None:
         try:
             self.level(num_level).targets = targets
         except NotInitializedError:
@@ -98,6 +98,8 @@ class RKM(_Sample):
             x = self.current_sample_projected
             for level in self.levels:
                 level.update_sample(x, idx_sample=self._idx_stochastic)
+                if level.param_trainable is False:
+                    level.solve()
                 x = level()
         else:
             for level in self.levels:
@@ -106,15 +108,6 @@ class RKM(_Sample):
 
     def loss(self):
         return sum([level.eta * level.loss() for level in self.levels])
-
-    def euclidean_parameters(self) -> Iterator[torch.nn.Parameter]:
-        for level in self.levels: level._euclidean_parameters(True)
-
-    def stiefel_parameters(self) -> Iterator[torch.nn.Parameter]:
-        for level in self.levels: level._stiefel_parameters(True)
-
-    def slow_parameters(self) -> Iterator[torch.nn.Parameter]:
-        for level in self.levels: level._slow_parameters(True)
 
     def stochastic(self, idx=None, prop=None):
         super().stochastic(idx, prop)
