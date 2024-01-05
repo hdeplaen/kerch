@@ -73,7 +73,7 @@ class _Level(_View, metaclass=ABCMeta):
         :type representation: str, optional
         """
 
-        # self._log.debug("The fitting is always done on the full sample dataset, regardless of the stochastic state.")
+        # self._log.debug("The fitting is always done on the full sample data, regardless of the stochastic state.")
         # set the sample to input (always works for the underlying kernel)
 
         if sample is not None:

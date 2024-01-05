@@ -37,7 +37,7 @@ def general_expe(name, verbose=False):
     def _single_expe(num=0):
         print(f"ITERATION NUMBER {num+1}")
 
-        training, validation, test, info = data.factory(data_params["dataset"],
+        training, validation, test, info = data.factory(data_params["data"],
                                                      data_params["training"],
                                                      data_params["validating"],
                                                      data_params["testing"])

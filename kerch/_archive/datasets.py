@@ -88,9 +88,9 @@ def usps(tot_data, test_data):
     return (x, y), (None, None), info
 
 def pima_indians(tot_data, test_data):
-    with open('kerch/expes/datasets/pima-indians-diabetes.csv') as csvfile:
+    with open('kerch/expes/datasets/diabetes.csv') as csvfile:
         data = pd.read_csv(csvfile, header=None, delimiter=',', lineterminator='\n')
-    print('Pima Indians Diabetes dataset loaded. ')
+    print('Pima Indians Diabetes data loaded. ')
     data = data.to_numpy()
 
     input = data[0:tot_data, 0:8]
@@ -102,9 +102,9 @@ def pima_indians(tot_data, test_data):
     return (input, target), (None, None), info
 
 def bupa_liver_disorder(tot_data, test_data):
-    with open('kerch/expes/datasets/pima-indians-diabetes.csv') as csvfile:
+    with open('kerch/expes/datasets/diabetes.csv') as csvfile:
         data = pd.read_csv(csvfile, header=None, delimiter=',', lineterminator='\n')
-    print('Bupa liver disorder dataset loaded. ')
+    print('Bupa liver disorder data loaded. ')
     data = data.to_numpy()
 
     input = data[0:tot_data, 0:6]
@@ -135,7 +135,7 @@ def adult(tot_data, test_data):
     tr_target = (tr_target == " <=50K").astype(int).values.flatten()
     te_target = (te_target == " <=50K").astype(int).values.flatten()
 
-    print('Adult dataset loaded. ')
+    print('Adult data loaded. ')
 
     info = {"range": None,
             "size": 60}
@@ -149,7 +149,7 @@ def ionoshpere(tot_data, test_data):
     tr_target = data_tr.iloc[:, -1]
     tr_target = (tr_target == "g").astype(int).values.flatten()
 
-    print('Ionosphere dataset loaded. ')
+    print('Ionosphere data loaded. ')
 
     info = {"range": None,
             "size": 34}
@@ -170,13 +170,13 @@ def generate_dataset(fun, tr_size, val_size, test_size, tot_data, test_data):
             tot_data = tr_size + val_size + test_size
         else:
             assert tot_data >= tr_size + val_size + test_size, \
-                "Not enough value in the dataset for the requested sample sizes."
+                "Not enough value in the data for the requested sample sizes."
     else:
         if tot_data is None:
             tot_data = tr_size + val_size
         else:
             assert tot_data >= tr_size + val_size, \
-                "Not enough value in the training dataset for the requested training and validation sizes."
+                "Not enough value in the training data for the requested training and validation sizes."
             assert test_data >= test_size, \
                 "Not enough value in the test set for the requested test size."
 
@@ -217,5 +217,5 @@ def factory(name, tr_size=100, val_size=0, test_size=0):
                 "ion": (ionoshpere, 351, None),
                 "bld": (bupa_liver_disorder, 344, None),
                 "adult": (adult, 32559, 16279)}
-    fun, tot_data, test_data = datasets.get(name, "Please provide the name of a valid dataset.")
+    fun, tot_data, test_data = datasets.get(name, "Please provide the name of a valid data.")
     return generate_dataset(fun, tr_size, val_size, test_size, tot_data, test_data)

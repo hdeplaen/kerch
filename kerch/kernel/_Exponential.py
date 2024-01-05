@@ -19,8 +19,8 @@ from ._Implicit import _Implicit, _Projected
 class _Exponential(_Implicit, metaclass=ABCMeta):
     r"""
     :param sigma: Bandwidth :math:`\sigma` of the kernel. If `None`, the value is filled by a heuristic on
-        the sample dataset: half of the square root of the median of the pairwise distances. Computing the heuristic on
-        the full sample dataset can be expensive and `idx_sample` or `prop_sample` could be specified to only compute
+        the sample data: half of the square root of the median of the pairwise distances. Computing the heuristic on
+        the full sample data can be expensive and `idx_sample` or `prop_sample` could be specified to only compute
         it on a subset only., defaults to `None`.
     :param sigma_trainable: `True` if the gradient of the bandwidth is to be computed. If so, a graph is computed
         and the bandwidth can be updated. `False` just leads to a static computation., defaults to `False`

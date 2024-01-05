@@ -14,8 +14,8 @@ class LSSVM(LSSVM, Model):
 
     def hyperopt(self, params, k: int = 0, max_evals: int = 1000):
         if self._training_data is None:
-            self._log.warning("Cannot optimize a model hyperparameters if no training dataset (and optionally "
-                              "validation dataset) has been set.")
+            self._log.warning("Cannot optimize a model hyperparameters if no training data (and optionally "
+                              "validation data) has been set.")
         self.init_sample(self._training_data)
         return super(LSSVM, self).hyperopt(params, k, max_evals)
 

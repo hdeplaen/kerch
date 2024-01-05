@@ -1,5 +1,5 @@
 import kerch
-import kerch.dataset
+import kerch.data
 from matplotlib import pyplot as plt
 
 ## PRELIMINARIES

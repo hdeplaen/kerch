@@ -181,7 +181,7 @@ class _Base(_Sample, metaclass=ABCMeta):
 
         .. note::
             In the case of centered kernels, this computation is more expensive as it requires to _center according to
-            the sample dataset, which implies computing a statistic on the out-of-sample kernel matrix and thus
+            the sample data, which implies computing a statistic on the out-of-sample kernel matrix and thus
             also computing it.
 
         :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
@@ -257,7 +257,7 @@ class _Base(_Sample, metaclass=ABCMeta):
     @property
     def K(self) -> Tensor:
         r"""
-        Returns the kernel matrix on the sample dataset. Same result as calling :py:func:`k()`, but faster.
+        Returns the kernel matrix on the sample data. Same result as calling :py:func:`k()`, but faster.
         It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
         called.
 

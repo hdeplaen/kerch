@@ -47,9 +47,9 @@ class RKM(_Sample):
         # overwrite param_trainable
         match kwargs['constraint']:
             case "soft":
-                kwargs['param_trainable'] = False
-            case "hard":
                 kwargs['param_trainable'] = True
+            case "hard":
+                kwargs['param_trainable'] = False
             case _:
                 raise NameError('The constraint argument must be either soft or hard.')
 
@@ -71,7 +71,7 @@ class RKM(_Sample):
         Initializes all levels based on the model sample.
 
         :param full: If specified to False, the sample initialization is going to randomly initialized for the deeper
-            levels to avoid running a forward on the full dataset. This is relevant in a stochastic setting. Defaults
+            levels to avoid running a forward on the full data. This is relevant in a stochastic setting. Defaults
             to True.
         :type full: bool, optional
         """

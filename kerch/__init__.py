@@ -13,9 +13,9 @@ _GLOBALS = {"PLOT_ENV": None,
 from . import kernel    # ok (tested & documented)
 from . import level  # beta
 from . import rkm   # alpha
-from . import model  # alpha
-from . import dataset  # alpha
-from . import plot  # alpha
+# from . import model  # alpha
+from . import data  # alpha
+# from . import plot  # alpha
 from . import opt  # alpha
 from ._Logger import set_log_level, get_log_level, _GLOBAL_LOGGER
 from .utils import set_ftype, set_itype, FTYPE, ITYPE, EPS

@@ -85,7 +85,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
     @dim_input.setter
     def dim_input(self, val: int):
         assert self._dim_input is None, "Cannot set the dimension of the sample points after initialization if the " \
-                                        "sample dataset. Use init_sample() instead."
+                                        "sample data. Use init_sample() instead."
         self._dim_input = val
         if self._num_total is not None:
             self.init_sample()
@@ -109,7 +109,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
     @num_sample.setter
     def num_sample(self, val: int):
         assert self._num_total is None, "Cannot set the number of sample points after initialization if the " \
-                                        "sample dataset. Use init_sample() instead."
+                                        "sample data. Use init_sample() instead."
         self._num_total = val
         if self._dim_input is not None:
             self.init_sample()
@@ -130,7 +130,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
     @property
     def sample_trainable(self) -> bool:
         r"""
-        Boolean if the sample dataset can be trained.
+        Boolean if the sample data can be trained.
         """
         return self._sample_trainable
 
@@ -157,7 +157,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
         :param sample: Sample points used for the various computations. When an out-of-sample computation is asked, it
             will be given relative to these samples. In case of overwriting a current sample, `num_sample` and
-            `dim_input` are also overwritten. If `None` is specified, the sample dataset will be initialized according
+            `dim_input` are also overwritten. If `None` is specified, the sample data will be initialized according
             to `num_sample` and `dim_input` specified during the construction. If a previous sample set has been used,
             it will keep the same dimension by consequence. A last case occurs when `sample` is of the class
             `torch.nn.Parameter`: the sample will then use those values, and they can thus be shared with the level
@@ -178,7 +178,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
                 self._log.debug("Initializing new sample with the sample dimensions.")
                 if self._num_total is None or self.dim_input is None:
                     self._log.info(
-                        'The sample cannot be initialized because no sample dataset has been provided nor the '
+                        'The sample cannot be initialized because no sample data has been provided nor the '
                         'sample dimensions have been initialized yet.')
                     return
                 self._sample = torch.nn.Parameter(
@@ -219,7 +219,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         """
 
         if self.empty_sample:
-            self._log.warning('Cannot update the sample values of a None sample dataset.')
+            self._log.warning('Cannot update the sample values of a None sample data.')
             return
 
         sample_values = utils.castf(sample_values, dev=self._sample.device)

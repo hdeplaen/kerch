@@ -71,7 +71,7 @@ class Trainer(_Logger):
     @property
     def shuffle(self) -> bool:
         r"""
-        True if the batch are to be shuffled within the dataset or False if taken in the order of the dataset
+        True if the batch are to be shuffled within the data or False if taken in the order of the data
         """
         return self._shuffle
 
@@ -211,7 +211,7 @@ class Trainer(_Logger):
         if self.use_gpu:
             self.model.to('cuda:0')
 
-        assert self.train_data is not None, 'Please provide a training dataset before training the model.'
+        assert self.train_data is not None, 'Please provide a training data before training the model.'
         self.model.init_sample(self._train_data)
         self.model.init_levels()
         if self.train_labels is not None:

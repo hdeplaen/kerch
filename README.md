@@ -30,7 +30,7 @@ mdl = kerch.model.LSSVM(type="rbf",                 # kernel name
                      representation="dual")         # initiate model
 mdl.set_data_prop(data=data,                        # value
                   labels=labels,                    # corresponding labels
-                  proportions=[1, 0, 0])            # initiate dataset
+                  proportions=[1, 0, 0])            # initiate data
 mdl.hyperopt({"gamma", "sigma"},                    # define which parameters to tune
              max_evals=500,                         # define how many trials
              k=10)                                  # 10-fold cross-validation

@@ -3,11 +3,11 @@ import logging
 from abc import ABCMeta, abstractmethod
 
 from .._Module import _Module
-from .._DataHolder import _DataHolder
+from kerch.rkm._Dataset import _Dataset
 from .. import utils
 
 
-class Model(_DataHolder, _Module, metaclass=ABCMeta):
+class Model(_Dataset, _Module, metaclass=ABCMeta):
     @abstractmethod
     @utils.kwargs_decorator({
         "loss": torch.nn.MSELoss(reduction='sum'),
@@ -15,7 +15,7 @@ class Model(_DataHolder, _Module, metaclass=ABCMeta):
     })
     def __init__(self, **kwargs):
         _Module.__init__(self, **kwargs)
-        _DataHolder.__init__(self, **kwargs)
+        _Dataset.__init__(self, **kwargs)
         self._loss = kwargs["loss"]
         self.set_log_level()
 

@@ -76,7 +76,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
         pass
 
     def _init_hidden(self) -> None:
-        assert self._num_total is not None, "No dataset has been initialized yet."
+        assert self._num_total is not None, "No data has been initialized yet."
         assert self._dim_output is not None, "No output dimension has been provided."
         self.hidden = torch.nn.init.orthogonal_(torch.empty((self._num_total, self.dim_output),
                                                             dtype=utils.FTYPE, device=self._hidden.device))
