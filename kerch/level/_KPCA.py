@@ -159,7 +159,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
     def _stiefel_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         # the stiefel optimizer requires the first dimension to be the number of eigenvectors
-        super(_KPCA, self)._stiefel_parameters(recurse)
+        yield from super(_KPCA, self)._stiefel_parameters(recurse)
         if self._representation == 'primal':
             if self._weight_exists:
                 yield self._weight

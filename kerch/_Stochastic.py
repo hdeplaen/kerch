@@ -55,6 +55,7 @@ class _Stochastic(_Cache,  # creates a transportable cache (e.g. for GPU)
         in evaluation mode (`False`), all the sample points are used for the computations, regardless of
         the previously specified indices.
         """
+        super().train(mode)
         if not mode:
             self.stochastic()
         return self

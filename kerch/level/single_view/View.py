@@ -33,7 +33,8 @@ class View(_View, _Sample):
 
     @utils.kwargs_decorator({
         "kernel": None,
-        "bias": False,
+        "bias": None,
+        "requires_bias": False,
         "bias_trainable": False,
         "kappa": 1.,
         "targets" : None
@@ -49,11 +50,15 @@ class View(_View, _Sample):
         self._kappa_sqrt = sqrt(self._kappa)
         self._mask = None
 
+        bias = kwargs["bias"]
+
         # BIAS
         self._bias_trainable = kwargs["bias_trainable"]
-        self._requires_bias = kwargs["bias"]
+        self._requires_bias = kwargs["requires_bias"]
         self._bias = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
-                                        requires_grad=self._bias_trainable)
+                                        requires_grad=self._requires_bias and self._param_trainable)
+        if bias is not None and self._requires_bias:
+            self.bias = bias
 
 
         # KERNEL INIT
@@ -78,14 +83,35 @@ class View(_View, _Sample):
             self._dim_output = targets.shape[1]
         self.targets = targets
 
-
-
         self._log.debug("View initialized with " + str(self._kernel))
 
     def __str__(self):
         if self.attached:
             return "view with " + str(self._kernel)
         return str(self._kernel)
+
+    def init_parameters(self, representation=None, overwrite=True) -> None:
+        super().init_parameters(representation=representation, overwrite=overwrite)
+        if self.requires_bias and (not self._bias_exists or overwrite):
+            self._init_bias()
+
+    def _init_bias(self):
+        assert self._num_total is not None, "No data has been initialized yet."
+        assert self._dim_output is not None, "No output dimension has been provided."
+        self.bias = torch.zeros((self.dim_output), dtype=utils.FTYPE, device=self._bias.device)
+
+    @property
+    def _bias_exists(self) -> bool:
+        return self._bias.nelement() != 0
+
+    @property
+    def requires_bias(self) -> bool:
+        return self._requires_bias
+
+    @requires_bias.setter
+    def requires_bias(self, val: bool):
+        self._requires_bias = val
+        self._bias.requires_grad = val and self._param_trainable
 
     def _reset_weight(self) -> None:
         self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE,
@@ -107,6 +133,7 @@ class View(_View, _Sample):
         self._log.debug("No bias has been initialized yet.")
 
     @bias.setter
+    @torch.no_grad()
     def bias(self, val):
         if val is not None:
             val = utils.castf(val, dev=self._bias.device).squeeze()
@@ -120,8 +147,7 @@ class View(_View, _Sample):
                                 "This operation is thus discarded.")
             # setting the value
             if self._bias.nelement() == 0:
-                self._bias = torch.nn.Parameter(val,
-                                                requires_grad=self._bias_trainable)
+                self._bias = torch.nn.Parameter(val, requires_grad=self.bias_trainable)
             else:
                 self._bias.data = val
                 # zeroing the gradients if relevant
@@ -130,16 +156,7 @@ class View(_View, _Sample):
 
     @property
     def bias_trainable(self) -> bool:
-        return self._bias_trainable
-
-    @bias_trainable.setter
-    def bias_trainable(self, val: bool):
-        self._bias_trainable = val
-        self._bias.requires_grad = self._bias_trainable
-
-    @property
-    def _bias_exists(self) -> bool:
-        return self._bias.nelement() != 0
+        return self._requires_bias and self._param_trainable
 
     ####################################################################################################################
     ## TARGETS
@@ -225,7 +242,7 @@ class View(_View, _Sample):
 
     def forward(self, x=None, representation=None):
         representation = utils.check_representation(representation, default=self._representation)
-        if self._bias_exists:
-            return self.phiw(x, representation) + self._kappa_sqrt * self._bias[:, None]
+        if self.requires_bias:
+            return self.phiw(x, representation) + self._kappa_sqrt * self._bias[None, :]
         else:
             return self.phiw(x, representation)

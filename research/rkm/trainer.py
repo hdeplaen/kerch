@@ -1,20 +1,13 @@
 import kerch
 import torch
 
-n, d = 50, 10
-x = torch.randn((n, d))
-t = torch.randn((n, 1))
+learning_set = kerch.data.factory(dataset="pima", num_training=200, num_validation=0, num_test=50)
 
-x_test = torch.randn((n,d))
-t_test = torch.randn((n,1))
+rkm = kerch.rkm.RKM(sample_projections=['center', 'normalize'])
+rkm.append_level(level_type='kpca', constraint='soft', representation='dual', dim_output=5, sigma_trainble=True)
+rkm.append_level(level_type='kpca', constraint='soft', representation='dual', dim_output=2, sigma_trainble=True)
+rkm.append_level(level_type='lssvm', constraint='soft', representation='dual', dim_output=1, sigma_trainble=True)
 
-rkm = kerch.rkm.RKM()
-rkm.append_level(level_type='kpca', constraint='soft', representation='dual', dim_output=5)
-rkm.append_level(level_type='kpca', constraint='soft', representation='dual', dim_output=2)
-rkm.append_level(level_type='lssvm', constraint='soft', representation='dual', dim_output=1)
 
-trainer = kerch.rkm.Trainer(model=rkm)
-trainer.train_data = x
-trainer.train_labels = t
-trainer.test_data = x_test
-trainer.test_labels = t_test
+trainer = kerch.rkm.Trainer(model=rkm, learning_set=learning_set, epochs=1000)
+trainer.fit()

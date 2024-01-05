@@ -6,11 +6,11 @@ import torch
 class Ridge(LSSVM):
     @utils.extend_docstring(LSSVM)
     @utils.kwargs_decorator({
-        "bias": False
+        "requires_bias": False
     })
     def __init__(self, **kwargs):
-        if kwargs["bias"]:
-            kwargs["bias"] = False
+        if kwargs["requires_bias"]:
+            kwargs["requires_bias"] = False
             self._log.warning('A ridge regression has no bias term. '
                               'The bias parameter is overwritten to False.')
         super(Ridge, self).__init__(**kwargs)

@@ -1,39 +1,29 @@
 import torch
-from torch.utils.data import DataLoader
+from torch.utils.data import SequentialSampler, BatchSampler
 import tqdm
 
 from .RKM import RKM
 from .._Logger import _Logger
-from ..utils import kwargs_decorator, castf
+from ..utils import kwargs_decorator
 from ..opt import Optimizer
+from ..data import _LearningSet
 
 
 class Trainer(_Logger):
     @kwargs_decorator({'problem': 'regression',
-                       'train_data': None,
-                       'train_labels': None,
-                       'test_data': None,
-                       'test_labels': None,
                        'epochs': 100,
                        'batch_size': 'all',
-                       'shuffle': True,
                        'use_gpu': False,
                        'stiefel_lr': 1e-3,
                        'euclidean_lr': 1e-3,
                        'slow_lr': 1e-4})
-    def __init__(self, *args, **kwargs):
-        super(Trainer, self).__init__(*args, **kwargs)
-        self._model: RKM = kwargs["model"]
+    def __init__(self, model: RKM, learning_set: _LearningSet, **kwargs):
+        super(Trainer, self).__init__(**kwargs)
+        self._learning_set: _LearningSet = learning_set
+        self._model: RKM = model
         self.problem = kwargs["problem"]
         self.batch_size = kwargs["batch_size"]
-        self.shuffle = kwargs["shuffle"]
         self.epochs = kwargs["epochs"]
-
-        self.train_data = kwargs["train_data"]
-        self.train_labels = kwargs["train_labels"]
-        self.test_data = kwargs["test_data"]
-        self.test_labels = kwargs["test_labels"]
-
         self.use_gpu = kwargs["use_gpu"]
         self.stiefel_lr = kwargs["stiefel_lr"]
         self.euclidean_lr = kwargs["euclidean_lr"]
@@ -45,7 +35,7 @@ class Trainer(_Logger):
 
     @problem.setter
     def problem(self, val: str):
-        msg = "The problem argument can iether be set to the strings 'regression' or 'classification'."
+        msg = "The problem argument can either be set to the strings 'regression' or 'classification'."
         assert isinstance(val, str), msg
         if val == 'regression':
             self._loss = torch.nn.MSELoss(reduction='mean')
@@ -69,96 +59,55 @@ class Trainer(_Logger):
         self._epochs = val
 
     @property
-    def shuffle(self) -> bool:
-        r"""
-        True if the batch are to be shuffled within the data or False if taken in the order of the data
-        """
-        return self._shuffle
-
-    @shuffle.setter
-    def shuffle(self, val: bool):
-        self._shuffle = val
-
-    @property
     def batch_size(self) -> int | str:
         return self._batch_size
 
     @batch_size.setter
     def batch_size(self, val: int | str):
         msg = "The batch_size argument can only take an integer or the string 'all' as valid option."
+        num = len(self._learning_set.training_set)
         if isinstance(val, str):
             assert val == 'all', msg
-
+            self._sampler = torch.utils.data.BatchSampler(SequentialSampler(range(num)),
+                                                          batch_size=num, drop_last=False)
         else:
             assert isinstance(val, int), msg
-            assert val > 0, 'Only positive values for the batch size are allowed'
+            assert val > 0, \
+                f"Only positive values for the batch size are allowed ({val} given)."
+            assert val <= num, \
+                f"The batch size ({val}) cannot be greater than the number of elements in the training set ({num})."
+            self._sampler = torch.utils.data.BatchSampler(SequentialSampler(range(num)),
+                                                          batch_size=val, drop_last=False)
         self._batch_size = val
 
-    @property
-    def train_data(self) -> torch.Tensor | None:
-        return self._train_data.dataset
-
-    @train_data.setter
-    def train_data(self, val):
-        val = castf(val)
-        if val is None:
-            self._train_data = None
-            return
-        batch_size = self.batch_size
-        if batch_size == 'all':
-            batch_size = val.shape[0]
-        self._train_data = DataLoader(val,
-                                      batch_size=batch_size,
-                                      shuffle=self.shuffle,
-                                      num_workers=1)
 
     @property
-    def num_train(self) -> int | None:
-        if self._train_data is None:
-            return None
-        return len(self._train_data.dataset)
+    def _mask_batch_progress(self) -> bool:
+        return self.batch_size == 'all'
 
     @property
-    def train_labels(self) -> torch.Tensor | None:
-        return self._train_labels
-
-    @train_labels.setter
-    def train_labels(self, val):
-        val = castf(val)
-        if val is not None:
-            assert self.num_train is not None, 'Please assign the training labels first.'
-            assert val.shape[0] == self.num_train, \
-                (f"The number of training labels ({val.shape[0]}) does not correspond to the number of labels given "
-                 f"({self.num_train})")
-            self._train_labels = val
+    def _training_data(self) -> torch.Tensor:
+        return (self._learning_set.training_set[:])[0]
 
     @property
-    def test_data(self) -> torch.Tensor | None:
-        return self._test_data
-
-    @test_data.setter
-    def test_data(self, val):
-        self._test_data = castf(val)
+    def _training_labels(self) -> torch.Tensor:
+        return (self._learning_set.training_set[:])[1]
 
     @property
-    def num_test(self) -> int | None:
-        if self._test_data is None:
-            return None
-        return self._test_data.shape[0]
+    def _validation_data(self) -> torch.Tensor:
+        return (self._learning_set.validation_set[:])[0]
 
     @property
-    def test_labels(self) -> torch.Tensor | None:
-        return self._test_labels
+    def _validation_labels(self) -> torch.Tensor:
+        return (self._learning_set.validation_set[:])[1]
 
-    @test_labels.setter
-    def test_labels(self, val):
-        val = castf(val)
-        if val is not None:
-            assert self.num_test is not None, 'Please assign the testing labels first.'
-            assert val.shape[0] == self.num_test, \
-                (f"The number of testing labels ({val.shape[0]}) does not correspond to the number of labels given "
-                 f"({self.num_test})")
-            self._test_labels = val
+    @property
+    def _test_data(self) -> torch.Tensor:
+        return (self._learning_set.test_set[:])[0]
+
+    @property
+    def _test_labels(self) -> torch.Tensor:
+        return (self._learning_set.test_set[:])[1]
 
     @property
     def use_gpu(self) -> bool:
@@ -211,28 +160,36 @@ class Trainer(_Logger):
         if self.use_gpu:
             self.model.to('cuda:0')
 
-        assert self.train_data is not None, 'Please provide a training data before training the model.'
-        self.model.init_sample(self._train_data)
+        self.model.init_sample(self._training_data)
         self.model.init_levels()
-        if self.train_labels is not None:
-            self.model.init_targets(self.train_labels)
+        self.model.init_targets(self._training_labels)
 
         self._optimizer = Optimizer(mdl=self.model,
                                     stiefel_lr=self._stiefel_lr,
                                     euclidean_lr=self._euclidean_lr,
                                     slow_lr=self._slow_lr)
 
+    @torch.no_grad()
     def _problem_loss(self, data, labels) -> float:
+        if len(data) == 0:
+            return 0.
         self.model.eval()
         pred = self.model(data)
+        self.model.train()
         return self._loss(pred, labels)
+
 
     def fit(self) -> RKM:
         self._init_fit()
         self.model.train()
 
-        epoch_progress = tqdm.tqdm(range(self.epochs))
-        batch_progress = tqdm.tqdm()
+        epoch_progress = tqdm.tqdm(range(self.epochs),
+                                   position=0,
+                                   desc="Epoch")
+        batch_progress = tqdm.tqdm(self._sampler,
+                                   leave=False,
+                                   disable=self._mask_batch_progress,
+                                   desc="Batch")
 
         def closure():
             self.model()
@@ -247,16 +204,16 @@ class Trainer(_Logger):
             self._optimizer.zero_grad()
             if self.use_gpu:
                 torch.cuda.empty_cache()
-
             # forward and backward
-            for batch in batch_progress:
+            for idx_batch in batch_progress:
+                self.model.stochastic(idx=idx_batch)
                 self._optimizer.step(closure)
-                for level in self._model.levels:
-                    level.after_step()
+                self.model.after_step()
 
             # validation and test
-            # val_loss = self._problem_loss()
-            test_loss = self._problem_loss(self.test_data, self.test_labels)
+            train_loss = self._problem_loss(self._training_data, self._training_labels)
+            val_loss = self._problem_loss(self._validation_data, self._validation_labels)
+            test_loss = self._problem_loss(self._test_data, self._test_labels)
 
         self.model.eval()
         return self.model

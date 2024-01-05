@@ -113,3 +113,24 @@ class RKM(_Sample):
         super().stochastic(idx, prop)
         for level in self.levels:
             level.stochastic(idx=self._idx_stochastic)
+
+    def after_step(self):
+        for level in self.levels:
+            level.after_step()
+
+    def _stiefel_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
+        for level in self.levels:
+            yield from level._stiefel_parameters(recurse=recurse)
+
+    def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
+        for level in self.levels:
+            yield from level._euclidean_parameters(recurse=recurse)
+
+    def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
+        for level in self.levels:
+            yield from level._slow_parameters(recurse=recurse)
+
+    def train(self, mode=True):
+        super().train(mode)
+        for level in self.levels:
+            level.train(mode)

@@ -32,8 +32,8 @@ class Optimizer():
         self._type = type
 
         euclidean_params = Optimizer.param_state(mdl.manifold_parameters(type='euclidean'))
-        slow_params = Optimizer.param_state(mdl.manifold_parameters(type='slow'))
         stiefel_params = Optimizer.param_state(mdl.manifold_parameters(type='stiefel'))
+        slow_params = Optimizer.param_state(mdl.manifold_parameters(type='slow'))
 
         self._dict = []
         self._opt = None

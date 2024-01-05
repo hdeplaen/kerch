@@ -18,8 +18,6 @@ class _Level(_View, metaclass=ABCMeta):
     :type representation: str, optional
     """
 
-    _parameter_related_cache = []
-
     @utils.extend_docstring(_View)
     @utils.kwargs_decorator({
         "eta": 1.,
@@ -27,6 +25,7 @@ class _Level(_View, metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
         super(_Level, self).__init__(*args, **kwargs)
         self.eta = kwargs["eta"]
+        self._parameter_related_cache = []
 
     @property
     def _I_primal(self) -> T:
@@ -149,4 +148,4 @@ class _Level(_View, metaclass=ABCMeta):
         self._reset_parameter_related_cache()
 
     def _reset_parameter_related_cache(self) -> None:
-        self._remove_from_cache(self.__class__._parameter_related_cache)
+        self._remove_from_cache(self._parameter_related_cache)

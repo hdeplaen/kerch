@@ -149,7 +149,7 @@ class _Cache(_Module,
             if key_item in self._cache:
                 del self._cache[key_item]
 
-        if isinstance(key, list):
+        if not hasattr(key, '__iter__'):
             key = [key]
 
         for key_item in key:

@@ -9,9 +9,15 @@ def factory(dataset='gaussians', **kwargs) -> _LearningSet:
                 return getattr(obj, a)
         return None
 
+    dataset = dataset.replace("_","")
+    dataset = dataset.replace(" ","")
+
+    if dataset.lower() == "pima":
+        dataset = "pimaindians"
+
     import kerch.data
-    kernel = case_insensitive_getattr(kerch.data, dataset)
-    if kernel is None:
+    learning_set = case_insensitive_getattr(kerch.data, dataset)
+    if learning_set is None:
         raise NameError("Invalid dataset.")
 
-    return kernel(**kwargs)
+    return learning_set(**kwargs)

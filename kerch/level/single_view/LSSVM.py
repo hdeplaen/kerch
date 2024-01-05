@@ -14,7 +14,8 @@ class LSSVM(Level):
 
     @utils.extend_docstring(Level)
     @utils.kwargs_decorator({
-        "gamma": 1.
+        "gamma": 1.,
+        "requires_bias": True
     })
     def __init__(self, **kwargs):
         super(LSSVM, self).__init__(**kwargs)
@@ -37,7 +38,7 @@ class LSSVM(Level):
 
     def _center_hidden(self):
         if self._hidden_exists:
-            self._hidden.sample -= torch.mean(self._hidden.sample, dim=1)
+            self._hidden.data -= torch.mean(self._hidden.data, dim=1)
         else:
             self._log.debug("The hidden variables cannot be centered as they are not set.")
 
@@ -104,13 +105,15 @@ class LSSVM(Level):
         self.bias = bias
 
     def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
-        super(LSSVM, self)._euclidean_parameters(recurse)
+        yield from super(LSSVM, self)._euclidean_parameters(recurse)
         if self._representation == 'primal':
             if self._weight_exists:
                 yield self._weight
+                yield self._bias
         else:
             if self._hidden_exists:
                 yield self._hidden
+                yield self._bias
 
     def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
         # LS-SVMs require the target value to be defined. This is verified.

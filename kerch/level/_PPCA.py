@@ -8,9 +8,6 @@ from .. import utils
 
 
 class _PPCA(_Level, metaclass=ABCMeta):
-    _parameter_related_cache = [*_Level._parameter_related_cache,
-                                "_B_primal", "_B_dual", "_Inv_primal", "_Inv_dual"]
-
     @utils.kwargs_decorator({'use_mean': False,
                              'sigma': None})
     def __init__(self, *args, **kwargs):
@@ -19,6 +16,8 @@ class _PPCA(_Level, metaclass=ABCMeta):
         self.sigma = kwargs["sigma"]
         self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                         requires_grad=False)
+        self._parameter_related_cache = [*self._parameter_related_cache,
+                                         "_B_primal", "_B_dual", "_Inv_primal", "_Inv_dual"]
 
     @property
     def use_mean(self) -> bool:

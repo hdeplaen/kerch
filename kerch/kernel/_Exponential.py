@@ -112,6 +112,6 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         return torch.ones(x.shape[0], dtype=utils.FTYPE, device=x.device)
 
     def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
+        yield from super(_Exponential, self)._slow_parameters(recurse)
         if self._sigma is not None:
             yield self._sigma
-        yield from super(_Exponential, self)._slow_parameters(recurse)
