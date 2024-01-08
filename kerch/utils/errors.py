@@ -8,26 +8,26 @@ Source code for the RKM toolbox.
 """
 from abc import ABCMeta, abstractmethod
 import sys
-from .._Logger import _Logger
+from kerch._module._Logger import _Logger
 
 
 class kerchError(Exception, metaclass=ABCMeta):
-    @staticmethod
-    def debugger_is_active() -> bool:
-        """Return if the debugger is currently active"""
-        return hasattr(sys, 'gettrace') and sys.gettrace() is not None
+    # @staticmethod
+    # def debugger_is_active() -> bool:
+    #     """Return if the debugger is currently active"""
+    #     return hasattr(sys, 'gettrace') and sys.gettrace() is not None
 
     @abstractmethod
     def __init__(self, cls=None, message=""):
-
         msg = message
-        if hasattr(self, 'message'):
-            msg = self.message + msg
+        if msg == "" and hasattr(self, 'message'):
+            msg = self.message
 
         if isinstance(cls, _Logger):
-            if not kerchError.debugger_is_active():
-                cls._log.error(msg)
             msg = "[" + cls.__class__.__name__ + "] " + msg
+
+        # if not kerchError.debugger_is_active():
+        #     cls._log.error(msg)
 
         super(kerchError, self).__init__(msg)
 
@@ -53,6 +53,7 @@ class RepresentationError(kerchError):
         self.message = "Unrecognized or unspecified representation (must be primal or dual)."
         super(RepresentationError, self).__init__(*args, **kwargs)
 
+
 class BijectionError(kerchError):
     def __init__(self, *args, **kwargs):
         self.message = "Mathematically undefined operation. A projection is not bijective, thus non invertible."
@@ -63,6 +64,7 @@ class NotInitializedError(kerchError):
     def __init__(self, *args, **kwargs):
         self.message = "The model has not been initialized yet."
         super(NotInitializedError, self).__init__(*args, **kwargs)
+
 
 class MultiViewError(kerchError):
     def __init__(self, *args, **kwargs):

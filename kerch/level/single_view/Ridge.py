@@ -1,5 +1,5 @@
 from .LSSVM import LSSVM
-from kerch import utils
+from ... import utils
 import torch
 
 
@@ -8,12 +8,12 @@ class Ridge(LSSVM):
     @utils.kwargs_decorator({
         "requires_bias": False
     })
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         if kwargs["requires_bias"]:
             kwargs["requires_bias"] = False
             self._log.warning('A ridge regression has no bias term. '
                               'The bias parameter is overwritten to False.')
-        super(Ridge, self).__init__(**kwargs)
+        super(Ridge, self).__init__(*args, **kwargs)
 
     def _solve_primal(self, target=None) -> None:
         C = self.kernel.C

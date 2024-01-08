@@ -1,19 +1,16 @@
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
 
-from kerch.level._Level import _Level
+from .._Level import _Level
 from .View import View
-from kerch import utils
+from ... import utils
 
-
-class Level(_Level, View, metaclass=ABCMeta):
+class Level(View, _Level, metaclass=ABCMeta):
 
     @utils.extend_docstring(_Level)
     @utils.extend_docstring(View)
     def __init__(self, *args, **kwargs):
         super(Level, self).__init__(*args, **kwargs)
-
-    ####################################################################################################################
 
     def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
         r"""
@@ -47,8 +44,6 @@ class Level(_Level, View, metaclass=ABCMeta):
                                         target=target,
                                         representation=representation,
                                         **kwargs)
-
-    ####################################################################################################################
 
     @abstractmethod
     def loss(self, representation=None) -> T:

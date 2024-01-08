@@ -1,0 +1,1 @@
+DEFAULT_KERNEL_TYPE = 'rbf'

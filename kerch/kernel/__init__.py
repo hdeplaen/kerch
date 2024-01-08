@@ -1,5 +1,5 @@
-from ._Base import _Base
-from ._Projected import _Projected
+from ._BaseKernel import _BaseKernel
+from ._Kernel import _Kernel
 from ._Implicit import _Implicit
 from ._Explicit import _Explicit
 from ._Exponential import _Exponential

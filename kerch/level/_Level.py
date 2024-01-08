@@ -2,9 +2,8 @@ import torch
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
 
-import kerch.opt
 from ._View import _View
-from kerch import utils
+from .. import utils, opt
 
 
 class _Level(_View, metaclass=ABCMeta):
@@ -63,6 +62,7 @@ class _Level(_View, metaclass=ABCMeta):
         """
         pass
 
+    @torch.no_grad()
     def solve(self, sample=None, targets=None, representation=None, **kwargs) -> None:
         r"""
         Fits the model according to the input ``sample`` and output ``target``. Many models have both a primal and
@@ -82,7 +82,7 @@ class _Level(_View, metaclass=ABCMeta):
 
         # verify that the sample has been initialized
         if self._num_total is None:
-            self._log.error("Cannot perform fitting as no input has been provided nor a sample already exists")
+            self._log.error("Cannot solve as no input has been provided nor a sample already exists")
             return
 
         # check the representation is correct and set it to the default Level value if None
@@ -93,47 +93,6 @@ class _Level(_View, metaclass=ABCMeta):
                     "dual": self._solve_dual}
 
         switcher.get(representation)()
-
-    ####################################################################################################################
-
-    @utils.kwargs_decorator({
-        "method": "exact",
-    })
-    def fit(self, **kwargs):
-        switcher = {"exact": self.solve,
-                    "optimize": self.optimize}
-        switcher.get(kwargs["method"], 'Invalid method name (must be solve or optimize')(**kwargs)
-
-    @utils.kwargs_decorator({
-        "representation": None,
-        # "loss": "classic",
-        "maxiter": 10000,
-        "verbose": True
-    })
-    def optimize(self, **kwargs) -> None:
-        representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
-
-        # PRELIMINARIES
-        self.init_parameters(representation, overwrite=False)
-        opt = kerch.opt.Optimizer(self, **kwargs)
-
-        # TRAINING LOOP
-        verbose = kwargs["verbose"]
-        maxiter = kwargs["maxiter"]
-        if verbose:
-            from tqdm import trange
-            bar = trange(maxiter)
-        else:
-            bar = range(maxiter)
-        for epoch in bar:
-            l = self.loss()
-            opt.zero_grad()
-            l.backward()
-            opt.step()
-            self.after_step()
-
-            if epoch % 50 == 0 and verbose:
-                bar.set_description(f"loss: {l}")
 
     ####################################################################################################################
 

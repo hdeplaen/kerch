@@ -10,10 +10,10 @@ File containing the RBF kernel class.
 import torch
 
 from .. import utils
-from ._Implicit import _Implicit, _Projected
+from ._Implicit import _Implicit, _Kernel
 
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class AdditiveChi2(_Implicit):
     r"""
     Additive Chi Squared kernel. Often used in computer vision.
@@ -23,8 +23,8 @@ class AdditiveChi2(_Implicit):
 
     """
 
-    def __init__(self, **kwargs):
-        super(AdditiveChi2, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(AdditiveChi2, self).__init__(*args, **kwargs)
 
     def __str__(self):
         return f"Additive Chi Squared kernel."

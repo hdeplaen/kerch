@@ -9,13 +9,11 @@ Abstract RKM View class.
 
 import torch
 from torch import Tensor
-from math import sqrt
 from abc import ABCMeta, abstractmethod
-from typing import Union, Iterator
+from typing import Union
 
 from kerch import utils
-from kerch.kernel import factory, _Base
-from kerch._Stochastic import _Stochastic
+from .._module._Stochastic import _Stochastic
 
 
 @utils.extend_docstring(_Stochastic)
@@ -141,6 +139,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
         r"""
         Output dimension.
         """
+        if self._dim_output is None:
+            raise utils.NotInitializedError(cls=self, message="The output dimension has not been initialized yet.")
         return self._dim_output
 
     @dim_output.setter
@@ -159,18 +159,16 @@ class _View(_Stochastic, metaclass=ABCMeta):
         """
         if self._hidden_exists:
             return self._hidden.T[self.idx, :]
-        self._log.debug("No hidden values have been initialized yet.")
+        raise utils.NotInitializedError(cls=self, message="No hidden values have been initialized or computed yet.")
 
     def update_hidden(self, val: Tensor, idx_sample=None) -> None:
         # first verify the existence of the hidden values before updating them.
         if not self._hidden_exists:
-            self._log.warning("Could not update hidden values as these do not exist. "
-                              "Please set the values for hidden first.")
-            return
+            self._init_hidden()
 
         if idx_sample is None:
             idx_sample = self._all_sample()
-        self._hidden.data.T[idx_sample, :] = val.data
+        self._hidden.data.T[idx_sample, :].copy_(val.data)
         self._reset_weight()
 
     @hidden.setter
@@ -229,7 +227,10 @@ class _View(_Stochastic, metaclass=ABCMeta):
         r"""
         Boolean indicating whether the view is attached to another multi_view.
         """
-        return self._attached_weight is not None
+        try:
+            return self._attached_weight is not None
+        except AttributeError:
+            return False
 
     def attach_to(self, weight_fn) -> None:
         self._log.debug(self.__repr__() + " is attached to a multi-view.")
@@ -253,7 +254,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
         else:
             if self._weight_exists:
                 return self._weight.T
-            self._log.debug("No weight has been initialized yet.")
+            raise utils.NotInitializedError(cls=self, message="No weight has been initialized or computed yet.")
 
     @weight.setter
     def weight(self, val):
@@ -282,7 +283,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
                 self._reset_hidden()
             else:
                 self._reset_weight()
-                self._reset_weight()
+                self._reset_hidden()
                 self._log.info("The weight is unset.")
 
     @property
@@ -326,8 +327,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
             if self._hidden_exists:
                 return self.hidden
             else:
-                self._log.warning("No hidden values exist or have been initialized.")
-                raise utils.ImplicitError(self)
+                raise utils.ImplicitError(cls=self, message="No hidden values exist or have been initialized.")
         raise NotImplementedError
 
     def w(self, x=None) -> Union[Tensor, torch.nn.Parameter]:
@@ -378,5 +378,5 @@ class _View(_Stochastic, metaclass=ABCMeta):
         return self.phiw()
 
     @abstractmethod
-    def forward(self, x=None, representation="dual"):
+    def forward(self, x=None, representation=None):
         pass

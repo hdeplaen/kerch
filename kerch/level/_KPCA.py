@@ -4,7 +4,7 @@ from abc import ABCMeta, abstractmethod
 from typing import Union, Iterator
 
 from ._Level import _Level
-from kerch import utils
+from .. import utils
 
 
 class _KPCA(_Level, metaclass=ABCMeta):
@@ -128,6 +128,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
         self.vals = v
 
     @utils.extend_docstring(_Level.solve)
+    @torch.no_grad()
     def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
         r"""
         Solves the model by decomposing the kernel matrix or the covariance matrix in principal components
@@ -135,7 +136,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
         """
         # KPCA models don't require the target to be defined. This is verified.
         if target is not None:
-            self._log.warning("The target value is discarded when fitting a KPCA model.")
+            self._log.warning("The target value is not used when fitting a KPCA model.")
         return _Level.solve(self,
                             sample=sample,
                             target=None,
@@ -168,8 +169,8 @@ class _KPCA(_Level, metaclass=ABCMeta):
                 yield self._hidden
 
     @utils.kwargs_decorator({"representation":None})
-    def optimize(self, **kwargs) -> None:
-        super(_KPCA, self).optimize(**kwargs)
+    def optimize(self, *args, **kwargs) -> None:
+        super(_KPCA, self).optimize(*args, **kwargs)
 
         # once the optimization is done, the eigenvalues still have to be defined
         representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
@@ -181,7 +182,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
     @utils.kwargs_decorator({
         "representation": None
     })
-    def fit(self, **kwargs):
+    def fit(self, *args, **kwargs):
         if not self.attached:
             if self.dim_output is None:
                 representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
@@ -189,7 +190,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
                     self._dim_output = self.dim_feature
                 else:
                     self._dim_output = self.num_idx
-            super(_KPCA, self).fit(**kwargs)
+            super(_KPCA, self).fit(*args, **kwargs)
 
     ####################################################################################################################
 

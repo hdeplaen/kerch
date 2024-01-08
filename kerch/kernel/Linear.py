@@ -25,8 +25,8 @@ class Linear(_Explicit):
     """
 
     @utils.kwargs_decorator({})
-    def __init__(self, **kwargs):
-        super(Linear, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Linear, self).__init__(*args, **kwargs)
         if self.normalized == True:
             self._log.info("A normalized linear kernel also corresponds to a cosine kernel.")
 

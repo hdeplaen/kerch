@@ -1,7 +1,7 @@
 import numpy as np
 
-from ..model.Model import Model
-from .._Logger import _GLOBAL_LOGGER
+from _archive import Model
+from kerch._module._Logger import _GLOBAL_LOGGER
 from ..level._Level import _Level
 from matplotlib import pyplot as plt
 

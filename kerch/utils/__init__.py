@@ -5,3 +5,4 @@ from .doc import *
 from .math import *
 from .errors import *
 from .tensor import *
+from .defaults import *

@@ -23,8 +23,8 @@ class Cosine(Linear):
     projected onto a hypersphere.
     """
 
-    def __init__(self, **kwargs):
-        super(Cosine, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Cosine, self).__init__(*args, **kwargs)
 
     @property
     def _required_projections(self):

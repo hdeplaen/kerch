@@ -8,23 +8,23 @@ File containing the RBF kernel class.
 """
 
 from .. import utils
-from ._Projected import _Projected
+from ._Kernel import _Kernel
 from torch import Tensor as T
 
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 from ..utils import ExplicitError, extend_docstring
 
 
-@extend_docstring(_Projected)
-class _Implicit(_Projected, metaclass=ABCMeta):
+@extend_docstring(_Kernel)
+class _Implicit(_Kernel, metaclass=ABCMeta):
     @utils.kwargs_decorator(
         {"sigma": 1., "sigma_trainable": False})
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         :param sigma: bandwidth of the kernel (default 1.)
         :param sigma_trainable: True if sigma can be trained (default False)
         """
-        super(_Implicit, self).__init__(**kwargs)
+        super(_Implicit, self).__init__(*args, **kwargs)
 
     def __str__(self):
         return f"Implicit kernel."

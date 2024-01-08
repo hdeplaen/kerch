@@ -1,9 +1,10 @@
+import torch
 from torch import Tensor as T
 from abc import ABCMeta
 
-from kerch.level._Level import _Level
+from .._Level import _Level
 from .MultiView import MultiView
-from kerch import utils
+from ... import utils
 
 
 class MVLevel(_Level, MultiView, metaclass=ABCMeta):
@@ -12,14 +13,16 @@ class MVLevel(_Level, MultiView, metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
         super(MVLevel, self).__init__(*args, **kwargs)
 
-    def solve(self, sample=None, target=None, representation=None) -> None:
+    @torch.no_grad()
+    def solve(self, sample=None, targets=None, representation=None, **kwargs) -> None:
         if sample is not None:
             self._log.warning("It is not possible to directly change sample in multi-view models as for now. "
                               "The default values will be used.")
 
         return super(_Level, self).solve(sample=None,
-                                         target=target,
-                                         representation=representation)
+                                         targets=targets,
+                                         representation=representation,
+                                         **kwargs)
 
     ####################################################################################################################
 

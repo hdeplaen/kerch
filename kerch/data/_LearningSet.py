@@ -19,9 +19,6 @@ class _LearningSet(metaclass=ABCMeta):
         return self._name + \
             f" (Training: {len(self.training_set)}, Validation: {len(self.validation_set)}, Test: {len(self.test_set)})"
 
-    def __repr__(self):
-        return self.__str__()
-
     def _init_datasets(self,
                        training_data, training_labels,
                        validation_data, validation_labels,

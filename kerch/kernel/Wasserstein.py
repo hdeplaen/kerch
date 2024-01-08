@@ -29,8 +29,8 @@ class Wasserstein(_Exponential):
 
     @utils.kwargs_decorator({'cost': 'euclidean',
                              'reg': 1e-1})
-    def __init__(self, **kwargs):
-        super(Wasserstein, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Wasserstein, self).__init__(*args, **kwargs)
         self.cost = kwargs['cost']
         self.reg = kwargs['reg']
 
@@ -60,7 +60,7 @@ class Wasserstein(_Exponential):
         self._reg = float(val)
 
     def _dist(self, x, y) -> torch.Tensor:
-        return self._get("W_dist", "lightweight", lambda: _wass_dist(x,y))
+        return self._get("W_dist", "lightweight", lambda: self._wass_dist(x,y))
 
     def _wass_dist(self, x, y) -> torch.Tensor:
         raise NotImplementedError

@@ -2,7 +2,7 @@ from .single_view.Level import Level
 def factory(level_type='kpca', **kwargs) -> Level:
     r"""
     Creates a kernel based on the specified name with the specified arguments. This is the same as
-    calling `kerch.kernel.name(**kwargs)` (if `name` is not a string here). This allows for the creation of kernel where
+    calling `kerch.kernel.name(*args, **kwargs)` (if `name` is not a string here). This allows for the creation of kernel where
     the name of kernel is passed as a string.
 
     :param level_type: Type of level chosen. For the possible choices, please refer to the (non-abstract) classes
@@ -28,8 +28,8 @@ def factory(level_type='kpca', **kwargs) -> Level:
         return None
 
     import kerch.level.single_view
-    kernel = case_insensitive_getattr(kerch.level, level_type)
-    if kernel is None:
+    level = case_insensitive_getattr(kerch.level.single_view, level_type)
+    if level is None:
         raise NameError("Invalid level type.")
 
-    return kernel(**kwargs)
+    return level(**kwargs)

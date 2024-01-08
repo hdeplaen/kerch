@@ -1,12 +1,9 @@
 import torch
-from tqdm import trange
 from torch import Tensor as T
-from typing import List, Union
 
-import kerch.utils
 from .MVLevel import MVLevel
-from kerch.level._KPCA import _KPCA
-from kerch import utils
+from .._KPCA import _KPCA
+from ... import utils
 
 
 class MVKPCA(_KPCA, MVLevel):

@@ -3,13 +3,13 @@ from typing import Union, Tuple
 from abc import ABCMeta, abstractmethod
 
 import torch
-from kerch._Cache import _Cache
+from kerch._module._Cache import _Cache
 from kerch.utils.errors import BijectionError, ImplicitError
 
 
 class _Projection(_Cache, metaclass=ABCMeta):
     def __init__(self, explicit: bool, name: str, default_path: bool = False, **kwargs):
-        super(_Projection, self).__init__(**kwargs)
+        super(_Projection, self).__init__(*args, **kwargs)
         self._parent = None
         self._offspring: dict = {}
         self._name: str = name

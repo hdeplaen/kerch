@@ -8,9 +8,9 @@ import torch
 from torch import Tensor as T
 
 from kerch import utils
-from kerch.level._View import _View
-from kerch.level.single_view.View import View
-from kerch._Stochastic import _Stochastic
+from .._View import _View
+from ..single_view.View import View
+from ..._module._Stochastic import _Stochastic
 
 
 @utils.extend_docstring(_Stochastic)
@@ -23,7 +23,7 @@ class MultiView(_View):
         "prop": None
     })
     def __init__(self, *views, **kwargs):
-        super(MultiView, self).__init__(**kwargs)
+        super(MultiView, self).__init__(*args, **kwargs)
         self._views = OrderedDict()
         self._num_views = 0
 

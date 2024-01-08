@@ -9,16 +9,16 @@ File containing the linear kernel class.
 
 import torch
 from .. import utils
-from ._Projected import _Projected
+from ._Kernel import _Kernel
 from abc import ABCMeta, abstractmethod
 
 
-@utils.extend_docstring(_Projected)
-class _Explicit(_Projected, metaclass=ABCMeta):
+@utils.extend_docstring(_Kernel)
+class _Explicit(_Kernel, metaclass=ABCMeta):
 
     @utils.kwargs_decorator({})
-    def __init__(self, **kwargs):
-        super(_Explicit, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(_Explicit, self).__init__(*args, **kwargs)
         self._dim_feature = None
 
     def __str__(self):
@@ -66,38 +66,3 @@ class _Explicit(_Projected, metaclass=ABCMeta):
     @abstractmethod
     def _explicit_preimage(self, phi):
         pass
-
-    ## DIRECT ATTRIBUTES
-    @property
-    def C(self) -> torch.Tensor:
-        r"""
-        Returns the explicit matrix on the sample datapoints.
-
-        .. math::
-            C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.
-        """
-        return self._C()
-
-    @property
-    def Phi(self) -> torch.Tensor:
-        r"""
-        Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling
-        :py:func:`phi()`, but faster.
-        It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
-        called.
-        """
-        return self._phi()
-
-    @property
-    def Cov(self) -> torch.Tensor:
-        r"""
-        Returns the covariance matrix of the sample. Same as calling self.cov().
-        """
-        return self.cov()
-
-    @property
-    def Corr(self) -> torch.Tensor:
-        r"""
-        Returns the correlation matrix of the sample. Same as calling self.corr().
-        """
-        return self.corr()

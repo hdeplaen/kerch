@@ -11,7 +11,7 @@ def _get_file_path(name: str):
 
 class TwoMoons(_LearningSetTrain):
     @kwargs_decorator({'noise': .1})
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(TwoMoons, self).__init__(name="Two Moons",
                                        dim_data=2,
                                        dim_labels=1,
@@ -30,7 +30,7 @@ class TwoMoons(_LearningSetTrain):
 
 
 class PimaIndians(_LearningSetTrain):
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(PimaIndians, self).__init__(name="Pima Indian Diabetes",
                                           dim_data=8,
                                           dim_labels=1,
@@ -46,7 +46,7 @@ class PimaIndians(_LearningSetTrain):
 
 
 class Spiral(_LearningSetTrain):
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(Spiral, self).__init__(name="Spiral",
                                           dim_data=2,
                                           dim_labels=1,
@@ -82,7 +82,7 @@ class Spiral(_LearningSetTrain):
         return data, labels
 
 class Gaussians(_LearningSetTrain):
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(Gaussians, self).__init__(name="Gaussians",
                                         dim_data=2,
                                         dim_labels=1,
@@ -101,7 +101,7 @@ class Gaussians(_LearningSetTrain):
         return data, labels
 
 class Iris(_LearningSetTrain):
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(Iris, self).__init__(name="Fisher's Iris",
                                    dim_data=4,
                                    dim_labels=3,

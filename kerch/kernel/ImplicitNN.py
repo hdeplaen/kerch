@@ -8,11 +8,11 @@ File containing the implicit kernel class.
 """
 from typing import Iterator
 from .. import utils
-from ._Implicit import _Implicit, _Projected
+from ._Implicit import _Implicit, _Kernel
 import torch
 
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class ImplicitNN(_Implicit):
     r"""
     _Implicit kernel class, parametrized by a neural network.
@@ -32,11 +32,11 @@ class ImplicitNN(_Implicit):
 
     @utils.kwargs_decorator(
         {"network": None})
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         :param network: torch.nn.Module explicit kernel
         """
-        super(ImplicitNN, self).__init__(**kwargs)
+        super(ImplicitNN, self).__init__(*args, **kwargs)
         self._network: torch.nn.Module = kwargs["network"]
         assert isinstance(self._network, torch.nn.Module), "Torch network level must be specified."
 

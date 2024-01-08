@@ -11,11 +11,11 @@ import torch
 
 
 from .. import utils
-from ._Explicit import _Explicit, _Projected
-from ._Base import _Base
+from ._Explicit import _Explicit, _Kernel
+from ._BaseKernel import _BaseKernel
 from .factory import factory
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class Nystrom(_Explicit):
     r"""
     Nyström kernel. Constructs an explicit feature map based on the eigendecomposition of any kernel matrix based on
@@ -50,7 +50,7 @@ class Nystrom(_Explicit):
         "base_kernel": None,
         "base_kernel_projections": []
     })
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         assert kwargs["base_type"].lower() != "nystrom", 'Cannot create a Nyström kernel based on another Nyström ' \
                                                          'kernel.'
         self._base_kernel = None
@@ -59,7 +59,7 @@ class Nystrom(_Explicit):
         assert not isinstance(k, str), "base_kernel must be of kernel type (use base_type instead)."
         if k is None:
             # normal case with a kernel created from the factory
-            super(Nystrom, self).__init__(**kwargs)
+            super(Nystrom, self).__init__(*args, **kwargs)
 
             self._base_kernel = factory(**{**kwargs,
                                                "_center": kwargs["base_center"],
@@ -69,7 +69,7 @@ class Nystrom(_Explicit):
             self._base_kernel.init_sample(sample=self.current_sample_projected, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel
-            assert isinstance(k, _Base), "The provided kernel is not of the kernel class."
+            assert isinstance(k, _BaseKernel), "The provided kernel is not of the kernel class."
             super(Nystrom, self).__init__(**{**kwargs,
                                              "sample":k.sample,
                                              "sample_trainable": k.sample_trainable,

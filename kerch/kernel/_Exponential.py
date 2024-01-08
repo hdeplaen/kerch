@@ -12,7 +12,7 @@ import torch
 
 from abc import ABCMeta, abstractmethod
 from .. import utils
-from ._Implicit import _Implicit, _Projected
+from ._Implicit import _Implicit
 
 
 @utils.extend_docstring(_Implicit)
@@ -30,41 +30,45 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
 
     @utils.kwargs_decorator(
         {"sigma": None, "sigma_trainable": False})
-    def __init__(self, **kwargs):
-        self._sigma = kwargs["sigma"]
-        # _Exponential kernels are always naturally normalized
+    def __init__(self, *args, **kwargs):
+        self._sigma_defined = False
+        super(_Exponential, self).__init__(*args, **kwargs)
 
-        super(_Exponential, self).__init__(**kwargs)
-
+        sigma = kwargs["sigma"]
         self._sigma_trainable = kwargs["sigma_trainable"]
-        if self._sigma is not None:
-            sigma = torch.tensor(self._sigma, dtype=utils.FTYPE)
-            self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
+        self._sigma_defined = sigma is not None
+        self._sigma = torch.nn.Parameter(torch.ones(1, dtype=utils.FTYPE), requires_grad=self._sigma_trainable)
+        if self._sigma_defined:
+            self.sigma = sigma
 
     def __str__(self):
-        if self._sigma is None:
-            return f"exponential kernel (sigma undefined)"
-        return f"exponential kernel (sigma: {str(self.sigma)})"
+        if self._sigma_defined:
+            return f"exponential kernel (sigma: {str(self.sigma)})"
+        return f"exponential kernel (sigma undefined)"
 
     @property
     def _naturally_normalized(self) -> bool:
+        # _Exponential kernels are always naturally normalized
         return True
+
 
     @property
     def sigma(self):
         r"""
         Bandwidth :math:`\sigma` of the kernel.
         """
-        if isinstance(self._sigma, torch.nn.Parameter):
+        if self._sigma_defined:
             return self._sigma.data.cpu().numpy()
-        elif self._sigma is None and not self.empty_sample:
-            self.k(explicit=True, projections=[])
+        elif not self._sigma_defined and not self.empty_sample:
+            self.k(explicit=True)
             return self.sigma
-        return self._sigma
+        raise utils.NotInitializedError(cls=self, message='The sigma value is unset. It cannot be deduced based on a '
+                                                          'heuristic as the sample is also unset.')
 
     @sigma.setter
     def sigma(self, val):
         self._reset_cache()
+        self._sigma_defined = True
         self._sigma.data = utils.castf(val, tensor=False, dev=self._sigma.device)
 
     @property
@@ -96,9 +100,10 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
 
         # define sigma if not set by the user
         if self._sigma is None:
-            sigma = .5 * torch.sqrt(torch.median(D))
-            self._sigma = torch.nn.Parameter(sigma, requires_grad=self._sigma_trainable)
-            self._log.warning(f"Bandwidth sigma not provided and assigned by a heuristic (sigma={self.sigma}).")
+            with torch.no_grad():
+                sigma = .5 * torch.sqrt(torch.median(D))
+                self.sigma = sigma
+                self._log.warning(f"Bandwidth sigma not provided and assigned by a heuristic (sigma={self.sigma}).")
 
         fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(D, -fact))
@@ -113,5 +118,4 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
 
     def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         yield from super(_Exponential, self)._slow_parameters(recurse)
-        if self._sigma is not None:
-            yield self._sigma
+        yield self._sigma

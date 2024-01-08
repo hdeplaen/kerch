@@ -12,10 +12,10 @@ from math import sqrt
 from typing import Union
 
 from .. import utils
-from ._Explicit import _Explicit, _Projected
+from ._Explicit import _Explicit, _Kernel
 
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class RFF(_Explicit):
     r"""
     Random Fourier Features kernel.
@@ -54,8 +54,8 @@ class RFF(_Explicit):
          "weights_trainable": False,
          "sigma": 1.,
          "sigma_trainable": False})
-    def __init__(self, **kwargs):
-        super(RFF, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(RFF, self).__init__(*args, **kwargs)
         self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                            kwargs["weights_trainable"])
 
@@ -193,10 +193,10 @@ class RFF(_Explicit):
     def current_sample_projected(self) -> torch.Tensor:
         return super(RFF, self).current_sample_projected / self._sigma
 
-    def project_sample(self, data) -> Union[None, torch.Tensor]:
+    def project_input(self, data) -> Union[None, torch.Tensor]:
         if data is None:
             return None
-        return super(RFF, self).project_sample(data) / self._sigma
+        return super(RFF, self).project_input(data) / self._sigma
 
     def project_sample_revert(self, data) -> torch.Tensor:
         return super(RFF, self).project_sample_revert(data) * self._sigma

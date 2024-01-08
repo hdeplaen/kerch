@@ -12,10 +12,10 @@ from math import sqrt
 from typing import Union
 
 from .. import utils
-from ._Explicit import _Explicit, _Projected
+from ._Explicit import _Explicit, _Kernel
 
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class RandomFeatures(_Explicit):
     r"""
     Random Features kernel.
@@ -49,8 +49,8 @@ class RandomFeatures(_Explicit):
         {"num_weights": 1,
          "weights": None,
          "weights_trainable": False})
-    def __init__(self, **kwargs):
-        super(RandomFeatures, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(RandomFeatures, self).__init__(*args, **kwargs)
         self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                            kwargs["weights_trainable"])
 

@@ -109,7 +109,7 @@ class ProjectionTree(_Projection):
 
         self._diag_fun = diag_fun
 
-    def __repr__(self):
+    def __str__(self):
         output = "Projections: \n"
         if len(self._default_projections) == 0:
             return output + "\t" + "None (default)"

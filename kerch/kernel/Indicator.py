@@ -8,13 +8,13 @@ File containing the indicator kernel class.
 """
 from typing import Iterator
 from .. import utils
-from ._Implicit import _Implicit, _Projected
+from ._Implicit import _Implicit, _Kernel
 
 import torch
 
 
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class Indicator(_Implicit):
     r"""
     Indicator kernel.
@@ -58,13 +58,13 @@ class Indicator(_Implicit):
          "gamma": None,
          "lag_trainable": False,
          "gamma_trainable": False})
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         :param lag: bandwidth of the kernel (default 1)
         :param gamma: value on the diagonal (default 2 * lag + 1, which ensures PSD in most cases)
         """
         self._lag = kwargs["lag"]
-        super(Indicator, self).__init__(**kwargs)
+        super(Indicator, self).__init__(*args, **kwargs)
         assert self._dim_input == 1, "The indicator kernel is only defined for 1-dimensional entries."
 
         self._lag_trainable = kwargs["lag_trainable"]

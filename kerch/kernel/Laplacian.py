@@ -27,13 +27,13 @@ class Laplacian(_Exponential):
 
     """
 
-    def __init__(self, **kwargs):
-        super(Laplacian, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Laplacian, self).__init__(*args, **kwargs)
 
     def __str__(self):
-        if self._sigma is None:
-            return f"Laplacian kernel (sigma undefined)"
-        return f"Laplacian kernel (sigma: {str(self.sigma)})"
+        if self._sigma_defined:
+            return f"Laplacian kernel (sigma: {str(self.sigma)})"
+        return f"Laplacian kernel (sigma undefined)"
 
     @property
     def hparams(self):

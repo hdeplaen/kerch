@@ -10,11 +10,11 @@ from typing import Iterator
 import torch
 
 from .. import utils
-from ._Implicit import _Implicit, _Projected
+from ._Implicit import _Implicit, _Kernel
 
 
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class SkewedChi2(_Implicit):
     r"""
     Skewed Chi Squared kernel. Often used in computer vision.
@@ -31,9 +31,9 @@ class SkewedChi2(_Implicit):
 
     @utils.kwargs_decorator(
         {"p": 0., "p_trainable": False})
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         self._p = kwargs["p"]
-        super(SkewedChi2, self).__init__(**kwargs)
+        super(SkewedChi2, self).__init__(*args, **kwargs)
 
         self._p_trainable = kwargs["p_trainable"]
         self._p = torch.nn.Parameter(

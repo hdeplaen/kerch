@@ -2,8 +2,8 @@ import torch
 from torch import Tensor as T
 
 from .Level import Level
-from kerch.level._KPCA import _KPCA
-from kerch.utils import check_representation, extend_docstring, kwargs_decorator
+from .._KPCA import _KPCA
+from ...utils import check_representation, extend_docstring, kwargs_decorator
 
 
 class KPCA(_KPCA, Level):

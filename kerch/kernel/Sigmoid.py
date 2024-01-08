@@ -8,12 +8,12 @@ File containing the sigmoid kernel class.
 """
 
 from .. import utils
-from ._Implicit import _Implicit, _Projected
+from ._Implicit import _Implicit, _Kernel
 
 import torch
 
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class Sigmoid(_Implicit):
     r"""
     Sigmoid kernel.
@@ -37,8 +37,8 @@ class Sigmoid(_Implicit):
 
     @utils.kwargs_decorator(
         {"a": 1., "b": 0., "params_trainable": False})
-    def __init__(self, **kwargs):
-        super(Sigmoid, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Sigmoid, self).__init__(*args, **kwargs)
 
         self._params_trainable = kwargs["params_trainable"]
         self._a = torch.nn.Parameter(

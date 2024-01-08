@@ -9,11 +9,11 @@ File containing the explicit kernel class.
 
 from typing import Iterator
 from .. import utils
-from ._Explicit import _Explicit, _Projected
+from ._Explicit import _Explicit, _Kernel
 import torch
 
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class ExplicitNN(_Explicit):
     r"""
     _Implicit kernel class, parametrized by a neural network.
@@ -35,12 +35,12 @@ class ExplicitNN(_Explicit):
         {"encoder": None,
          "decoder": None,
          "kernels_trainable": False})
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         :param encoder: torch.nn.Module explicit kernel
         :param kernels_trainable: True if support vectors / kernel are trainable (default False)
         """
-        super(ExplicitNN, self).__init__(**kwargs)
+        super(ExplicitNN, self).__init__(*args, **kwargs)
 
         self._encoder: torch.nn.Module = kwargs["encoder"]
         assert self._encoder is not None, "Encoder level must be specified."

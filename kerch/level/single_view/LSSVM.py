@@ -4,7 +4,7 @@ import torch
 from torch import Tensor as T
 
 from .Level import Level
-from kerch import utils
+from ... import utils
 
 
 class LSSVM(Level):
@@ -17,8 +17,8 @@ class LSSVM(Level):
         "gamma": 1.,
         "requires_bias": True
     })
-    def __init__(self, **kwargs):
-        super(LSSVM, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(LSSVM, self).__init__(*args, **kwargs)
         self._gamma = torch.nn.Parameter(torch.tensor(kwargs["gamma"], dtype=utils.FTYPE))
         self._mse_loss = torch.nn.MSELoss(reduction='mean')
 
@@ -64,8 +64,8 @@ class LSSVM(Level):
         B = torch.cat((Y, S), dim=0)
 
         sol = torch.linalg.solve(A, B)
-        weight = sol[0:-1].sample
-        bias = sol[-1].sample
+        weight = sol[0:-1].data
+        bias = sol[-1].data
 
         self.weight = weight
         self.bias = bias
@@ -98,10 +98,10 @@ class LSSVM(Level):
         B = torch.cat((N2, Zeros), dim=0)
 
         sol = torch.linalg.solve(A, B)
-        hidden = sol[0:-1].sample
-        bias = sol[-1].sample
+        hidden = sol[0:-1].data
+        bias = sol[-1].data
 
-        self.hidden = hidden
+        self.update_hidden(hidden, idx_sample=self.idx)
         self.bias = bias
 
     def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
@@ -114,13 +114,6 @@ class LSSVM(Level):
             if self._hidden_exists:
                 yield self._hidden
                 yield self._bias
-
-    def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
-        # LS-SVMs require the target value to be defined. This is verified.
-        return super(LSSVM, self).solve(sample=sample,
-                                        target=target,
-                                        representation=representation,
-                                        **kwargs)
 
     def loss(self, representation=None) -> T:
         representation = utils.check_representation(representation, self._representation, self)

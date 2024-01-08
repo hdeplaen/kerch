@@ -8,13 +8,13 @@ File containing the polynomial kernel class.
 """
 from typing import Iterator
 from .. import utils
-from ._Projected import _Projected
+from ._Kernel import _Kernel
 
 import torch
 
 
-@utils.extend_docstring(_Projected)
-class Polynomial(_Projected):
+@utils.extend_docstring(_Kernel)
+class Polynomial(_Kernel):
     r"""
     Polynomial kernel. Projection onto a hypershpere.
 
@@ -33,9 +33,9 @@ class Polynomial(_Projected):
 
     @utils.kwargs_decorator(
         {"degree": 2., "degree_trainable": False})
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         self._degree = kwargs["degree"]
-        super(Polynomial, self).__init__(**kwargs)
+        super(Polynomial, self).__init__(*args, **kwargs)
 
         self._degree_trainable = kwargs["degree_trainable"]
         self._degree = torch.nn.Parameter(torch.tensor(self._degree),

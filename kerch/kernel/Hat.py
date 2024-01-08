@@ -8,13 +8,13 @@ File containing the indicator kernel class.
 """
 from typing import Iterator
 from .. import utils
-from ._Implicit import _Implicit, _Projected
+from ._Implicit import _Implicit, _Kernel
 
 import torch
 
 
 
-@utils.extend_docstring(_Projected)
+@utils.extend_docstring(_Kernel)
 class Hat(_Implicit):
     r"""
     Hat kernel.
@@ -37,9 +37,9 @@ class Hat(_Implicit):
     @utils.kwargs_decorator(
         {"lag": 1,
          "lag_trainable": False})
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         self._lag = kwargs["lag"]
-        super(Hat, self).__init__(**kwargs)
+        super(Hat, self).__init__(*args, **kwargs)
 
         assert self._dim_input == 1, "The hat kernel is only defined for 1-dimensional entries."
 

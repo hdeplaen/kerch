@@ -6,38 +6,57 @@ Abstract RKM View class.
 @license: MIT
 @date: March 2021, rewritten in June 2022
 """
+from abc import ABCMeta
 
 import torch
 from torch import Tensor
 from math import sqrt
 
-import kerch.level
-from kerch import utils
-from kerch.kernel import factory, _Base
-from kerch._Sample import _Sample
-from kerch.level._View import _View
+from .._View import _View
+from ...kernel._Kernel import _Kernel
+from ...kernel.factory import class_factory
+from ...utils import DEFAULT_KERNEL_TYPE, extend_docstring, kwargs_decorator, check_representation, \
+    castf, NotInitializedError, FTYPE
 
 
-@utils.extend_docstring(_Sample)
-class View(_View, _Sample):
+class MetaView(type):
     r"""
-    :param kernel: Initiates a View based on an existing kernel object. If the value is not `None`, all other
-        parameters are neglected and inherited from the provided kernel., defaults to `None`
+    :param kernel_type: Represents which kernel to use if kernel_class is not specified.
+        Defaults to kerch.DEFAULT_KERNEL_TYPE.
+    :param kernel_class: Instead of specifying the kernel type (which is restricted to the kernels implemented by
+        default), a specific class can be specified here. This is relevant for example in the case of a
+        self-implemented kernel. It must however inherit from kerch.kernel._Kernel. If not specified, the kernel_type
+        argument is used to specify the kernel.
+    :type kernel_type: str, optional
+    :type kernel_class: kerch.kernel._Kernel, optional
+    """
+    pass
+
+
+
+@extend_docstring(_View)
+@extend_docstring(_Kernel)
+class View(_Kernel, _View):
+    r"""
+
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 
-    :type kernel: kerch.kernel._Projected, optional
     :type bias: bool, optional
     :type bias_trainable: bool, optional
     """
+    def __new__(cls, *args, **kwargs):
+        kernel_type = kwargs.pop('kernel_type', DEFAULT_KERNEL_TYPE)
+        kernel_class = kwargs.pop('kernel_class', None)
 
-    @utils.kwargs_decorator({
-        "kernel": None,
-        "bias": None,
-        "requires_bias": False,
-        "bias_trainable": False,
-        "kappa": 1.,
-        "targets" : None
+        if kernel_class is None:
+            kernel_class = class_factory(kernel_type)
+        assert issubclass(kernel_class, _Kernel), 'The provided kernel_class argument is not a valid kernel class.'
+        new_cls = type(cls.__name__, (cls, kernel_class, ), dict(cls.__dict__))
+        return object.__new__(new_cls)
+
+    @kwargs_decorator({
+        # "kernel": None,
     })
     def __init__(self, *args, **kwargs):
         """
@@ -46,59 +65,44 @@ class View(_View, _Sample):
         super(View, self).__init__(*args, **kwargs)
 
         # KAPPA
-        self._kappa = kwargs["kappa"]
+        self._kappa = kwargs.pop("kappa", 1.)
         self._kappa_sqrt = sqrt(self._kappa)
         self._mask = None
 
-        bias = kwargs["bias"]
+        bias = kwargs.pop('bias', None)
 
         # BIAS
-        self._bias_trainable = kwargs["bias_trainable"]
-        self._requires_bias = kwargs["requires_bias"]
-        self._bias = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
+        self._bias_trainable = kwargs.pop('bias_trainable', False)
+        self._requires_bias = kwargs.pop('requires_bias', False)
+        self._bias = torch.nn.Parameter(torch.empty(0, dtype=FTYPE),
                                         requires_grad=self._requires_bias and self._param_trainable)
         if bias is not None and self._requires_bias:
             self.bias = bias
 
-
-        # KERNEL INIT
-        # always share sample with kernel
-        kernel = kwargs["kernel"]
-        if kernel is None:
-            self._kernel = factory(**{**kwargs,
-                                      "sample": self.sample,
-                                      "idx_sample": self.idx})
-        elif isinstance(kernel, _Base):
-            self._log.info("Initiating View _Based on existing kernel and overwriting its sample.")
-            self._kernel = kernel
-            self._kernel.init_sample(sample=self.sample,
-                                     idx_sample=self.idx)
-        else:
-            raise TypeError("Argument kernel is not of the kernel class.")
-
         # TARGETS
-        targets = kwargs["targets"]
-        targets = utils.castf(targets, tensor=True)
+        self._targets = None
+        targets = kwargs.pop('targets', None)
+        targets = castf(targets)
         if self._dim_output is None and targets is not None:
             self._dim_output = targets.shape[1]
         self.targets = targets
 
-        self._log.debug("View initialized with " + str(self._kernel))
+        self._log.debug("View initialized with " + self.kernel.__str__())
 
     def __str__(self):
         if self.attached:
-            return "view with " + str(self._kernel)
-        return str(self._kernel)
+            return "view with " + self.kernel.__str__()
+        return self.kernel.__str__()
 
     def init_parameters(self, representation=None, overwrite=True) -> None:
-        super().init_parameters(representation=representation, overwrite=overwrite)
+        super(View, self).init_parameters(representation=representation, overwrite=overwrite)
         if self.requires_bias and (not self._bias_exists or overwrite):
             self._init_bias()
 
     def _init_bias(self):
         assert self._num_total is not None, "No data has been initialized yet."
         assert self._dim_output is not None, "No output dimension has been provided."
-        self.bias = torch.zeros((self.dim_output), dtype=utils.FTYPE, device=self._bias.device)
+        self.bias = torch.zeros((self.dim_output), dtype=FTYPE, device=self._bias.device)
 
     @property
     def _bias_exists(self) -> bool:
@@ -114,7 +118,7 @@ class View(_View, _Sample):
         self._bias.requires_grad = val and self._param_trainable
 
     def _reset_weight(self) -> None:
-        self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE,
+        self._weight = torch.nn.Parameter(torch.empty(0, dtype=FTYPE,
                                                       device=self._weight.device),
                                           requires_grad=self._weight.requires_grad)
 
@@ -123,7 +127,7 @@ class View(_View, _Sample):
         return self._kappa
 
     @kappa.setter
-    def kappa(self, val:float):
+    def kappa(self, val: float):
         self._kappa = val
 
     @property
@@ -136,7 +140,7 @@ class View(_View, _Sample):
     @torch.no_grad()
     def bias(self, val):
         if val is not None:
-            val = utils.castf(val, dev=self._bias.device).squeeze()
+            val = castf(val, dev=self._bias.device).squeeze()
             dim_val = len(val.shape)
 
             # verifying the shape of the bias
@@ -158,65 +162,58 @@ class View(_View, _Sample):
     def bias_trainable(self) -> bool:
         return self._requires_bias and self._param_trainable
 
-    ####################################################################################################################
-    ## TARGETS
-
     @property
-    def targets(self) -> Tensor:
+    def param_trainable(self) -> bool:
         r"""
-            Targets to be matched to.
+        Specifies whether the parameters weight and hidden are trainable or not.
         """
-        if self._targets is None:
-            self._log.warning("Empty target values.")
-        return self._targets
+        return self._param_trainable
 
-    @targets.setter
-    def targets(self, val):
-        val = utils.castf(val, dev=self._sample.device, tensor=True)
-        if val is None:
-            self._log.debug("Targets set to empty values.")
-        else:
-            if self.empty_sample:
-                raise utils.NotInitializedError(cls=self, message="The sample has not been initialized yet.")
-            assert self.dim_output == val.shape[1], f"The shape of the given target {val.shape[1]} does not match the" \
-                                                    f" required one {self.dim_output}."
-            assert self.num_sample == val.shape[0], f"The number of target points {val.shape[0]} does not match the " \
-                                                    f"required one {self.num_sample}."
-        self._targets = torch.nn.Parameter(val)
-
-    @property
-    def current_targets(self) -> Tensor:
-        r"""
-            Returns the targets that are currently used in the computations and for the normalizing and centering
-            statistics if relevant.
-        """
-        return self.targets[self.idx, :]
+    @param_trainable.setter
+    def param_trainable(self, val: bool) -> None:
+        self._param_trainable = val
+        self._hidden.requires_grad = val
+        self._weight.requires_grad = val
+        self._bias.requires_grad = self.bias_trainable
 
 
-    ########################################################################
     @property
     def dim_feature(self) -> int:
         return self.kernel.dim_feature
 
     @property
-    def kernel(self) -> _Base:
+    def targets(self) -> Tensor:
         r"""
-        The kernel used by the model or View.
+        Targets to be matched to.
         """
-        return self._kernel
+        if self._targets is None:
+            raise NotInitializedError(cls=self, message="The target values have not been set (yet).")
+        return self._targets
 
-    def set_kernel(self, val: _Base):
+    @targets.setter
+    def targets(self, val):
+        val = castf(val, dev=self._sample.device, tensor=True)
+        if val is None:
+            self._log.debug("Targets set to empty values.")
+        else:
+            if self.empty_sample:
+                raise NotInitializedError(cls=self, message="The sample has not been initialized yet.")
+            assert self.dim_output == val.shape[
+                1], f"The shape of the given target {val.shape[1]} does not match the" \
+                    f" required one {self.dim_output}."
+            assert self.num_sample == val.shape[
+                0], f"The number of target points {val.shape[0]} does not match the " \
+                    f"required one {self.num_sample}."
+            self._targets = torch.nn.Parameter(val)
+
+    @property
+    def current_targets(self) -> Tensor:
         r"""
-        For some obscure reason, this does not work as a setter (@kernel.setter).
-        TODO: find out why and solve
+        Returns the targets that are currently used in the computations, taking the stochastic aspect into account
+        if relevant.
         """
-        self._log.info("Updating View _Based on an external kernel and overwriting its sample.")
-        self._kernel = val
-        self._kernel.init_sample(sample=self.sample,
-                                 idx_sample=self.idx)
+        return self.targets[self.idx, :]
 
-    #########################################################################
-    ## WEIGHT
     def _update_weight_from_hidden(self):
         if self._hidden_exists:
             # will return a ExplicitError if not available
@@ -229,20 +226,23 @@ class View(_View, _Sample):
         raise NotImplementedError
 
     ## MATHS
+    def phi(self, x=None, projections=None) -> Tensor:
+        return self._kappa_sqrt * self.kernel.phi(x, projections)
 
-    def phi(self, x=None) -> Tensor:
-        return self._kappa_sqrt * self.kernel.phi(x)
-
-    def k(self, x=None) -> Tensor:
-        return self.kappa * self.kernel.k(x)
+    def k(self, x=None, y=None, explicit=None, projections=None) -> Tensor:
+        return self.kappa * self.kernel.k(x, y, explicit, projections)
 
     @property
     def K(self) -> Tensor:
         return self.kappa * self.kernel.K
 
     def forward(self, x=None, representation=None):
-        representation = utils.check_representation(representation, default=self._representation)
+        representation = check_representation(representation, default=self._representation)
         if self.requires_bias:
             return self.phiw(x, representation) + self._kappa_sqrt * self._bias[None, :]
         else:
             return self.phiw(x, representation)
+
+    @property
+    def kernel(self) -> _Kernel:
+        return super(View, self)
