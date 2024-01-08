@@ -32,26 +32,25 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
 
     @abstractmethod
     @utils.kwargs_decorator({
-        "kernel_projections": [],
         "center": False,
         "normalize": False
     })
     def __init__(self, *args, **kwargs):
         super(_Kernel, self).__init__(*args, **kwargs)
 
-        projections = kwargs["kernel_projections"]
+        kernel_projections = kwargs.pop('kernel_projections', [])
 
         # LEGACY SUPPORT
         if kwargs["center"]:
             self._log.warning("Argument center kept for legacy and will be removed in a later version. Please use the "
                               "more versatile kernel_projections parameter instead.")
-            projections.append("mean_centering")
+            kernel_projections.append("mean_centering")
         if kwargs["normalize"]:
             self._log.warning("Argument normalize kept for legacy and will be removed in a later version. Please use "
                               "the more versatile kernel_projections parameter instead.")
-            projections.append("unit_sphere_normalization")
+            kernel_projections.append("unit_sphere_normalization")
 
-        self._default_kernel_projections = self._simplify_projections(projections)
+        self._default_kernel_projections = self._simplify_projections(kernel_projections)
 
     @property
     def kernel_projections(self) -> ProjectionTree:
@@ -131,7 +130,7 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
                                   sample=self._explicit_with_none,
                                   default_projections=self._default_kernel_projections,
                                   cache_level=self._cache_level)
-        return self._get("explicit_projection", "oblivious", fun)
+        return self._get("explicit_projection", level_key="kernel_explicit_projections", fun=fun)
 
     @property
     def _implicit_projection(self) -> ProjectionTree:
@@ -141,7 +140,7 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
                                   default_projections=self._default_kernel_projections,
                                   cache_level=self._cache_level,
                                   implicit_self=self._implicit_self)
-        return self._get("implicit_projection", "oblivious", fun)
+        return self._get("implicit_projection", level_key="kernel_implicit_projections", fun=fun)
 
     def _phi(self):
         r"""
@@ -151,18 +150,18 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         def fun():
             self._check_sample()
             return self._explicit_projection.projected_sample
-        return self._get("phi", "lightweight", fun)
+        return self._get("phi", level_key="sample_phi", fun=fun)
 
     def _C(self) -> Tensor:
         r"""
         Returns the covariance matrix with default centering and normalization. If already computed, it is recovered
         from the cache.
                 """
-        if "C" not in self._cache:
+        def fun():
             scale = 1 / self.num_idx
             phi = self._phi()
-            self._cache["C"] = scale * phi.T @ phi
-        return self._cache["C"]
+            return scale * phi.T @ phi
+        return self._get("C", level_key="sample_C", fun=fun)
 
     def _K(self, explicit=None, overwrite: bool = False) -> Tensor:
         r"""
@@ -182,7 +181,7 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
                 return phi @ phi.T
             else:
                 return self._implicit_projection.projected_sample
-        return self._get("K", "lightweight", lambda: fun(explicit), force=False, overwrite=overwrite)
+        return self._get("K", level_key="sample_K", fun=lambda: fun(explicit), overwrite=overwrite)
 
     # ACCESSIBLE METHODS
     def phi(self, x=None, projections=None) -> Tensor:
@@ -304,13 +303,14 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         r"""
         Returns the covariance matrix fo the provided input.
 
-        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
-        :type x: Tensor(N,dim_input), optional
+        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used.
+            Defaults to `None`.
+        :type x: Tensor[N, dim_input], optional
 
         :return: Covariance matrix
-        :rtype: Tensor(dim_feature, dim_feature)
+        :rtype: Tensor[dim_feature, dim_feature]
         """
-        projections = self._default_kernel_projections
+        projections = self._default_kernel_projections.copy()
         try:
             if not (self._default_kernel_projections[-1] == 'center'):
                 projections.append('center')
@@ -325,10 +325,10 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         Returns the correlation matrix fo the provided input.
 
         :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
-        :type x: Tensor(N,dim_input), optional
+        :type x: Tensor[N, dim_input], optional
 
         :return: Correlation matrix
-        :rtype: Tensor(dim_feature, dim_feature)
+        :rtype: Tensor[dim_feature, dim_feature]
         """
         cov = self.cov(x=x)
         var = torch.sqrt(torch.diag(cov))[:, None]

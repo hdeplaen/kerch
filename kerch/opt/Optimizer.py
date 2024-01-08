@@ -27,13 +27,14 @@ class Optimizer():
                              "euclidean_lr": 1.e-3,
                              "slow_lr": 1.e-4
                              })
-    def __init__(self, mdl: _Module, type="sgd", **kwargs):
+    def __init__(self, module: _Module, type="sgd", **kwargs):
         self._kwargs = kwargs
         self._type = type
+        self._module = module
 
-        euclidean_params = Optimizer.param_state(mdl.manifold_parameters(type='euclidean'))
-        stiefel_params = Optimizer.param_state(mdl.manifold_parameters(type='stiefel'))
-        slow_params = Optimizer.param_state(mdl.manifold_parameters(type='slow'))
+        euclidean_params = Optimizer.param_state(module.manifold_parameters(type='euclidean'))
+        stiefel_params = Optimizer.param_state(module.manifold_parameters(type='stiefel'))
+        slow_params = Optimizer.param_state(module.manifold_parameters(type='slow'))
 
         self._dict = []
         self._opt = None
@@ -76,6 +77,10 @@ class Optimizer():
     def params(self):
         return self._kwargs
 
+    @property
+    def module(self) -> _Module:
+        return self._module
+
     def reduce(self, rate):
         if self._opt is not None:
             for params in self._opt.param_groups:
@@ -84,6 +89,7 @@ class Optimizer():
     def step(self, closure=None):
         if self._opt is not None: self._opt.step(closure)
         else: closure()
+        self.module.after_step()
 
     def zero_grad(self):
         if self._opt is not None: self._opt.zero_grad()

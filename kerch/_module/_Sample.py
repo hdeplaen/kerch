@@ -264,7 +264,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
                                   sample=self._sample[self.idx, :],
                                   default_projections=self._default_sample_projections,
                                   cache_level=self._cache_level)
-        return self._get("sample_projections", "oblivious", fun)
+        return self._get("sample_projections", level_key="sample_projections", fun=fun)
 
     def project_input(self, data) -> Union[Tensor, None]:
         r"""

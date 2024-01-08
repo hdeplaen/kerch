@@ -338,7 +338,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
             return self.weight
         raise NotImplementedError
 
-    def phiw(self, x=None, representation="dual") -> Tensor:
+    def phiw(self, x=None, representation=None) -> Tensor:
         def primal(x):
             return self.phi(x) @ self.W
 
@@ -378,5 +378,18 @@ class _View(_Stochastic, metaclass=ABCMeta):
         return self.phiw()
 
     @abstractmethod
-    def forward(self, x=None, representation=None):
+    def _forward(self, representation, x=None):
         pass
+
+    def forward(self, x=None, representation=None):
+        representation = utils.check_representation(representation, default=self._representation)
+        name = f"forward_{id(x)}_{representation}"
+        def get_level_key() -> str:
+            if representation == self._representation:
+                level_key = "forward_sample_default_representation" if x is None \
+                    else "forward_oos_default_representation"
+            else:
+                level_key = "forward_sample_other_representation" if x is None \
+                    else "forward_oos_other_representation"
+            return level_key
+        return self._get(name, level_key=lambda: get_level_key(), fun=lambda: self._forward(representation, x))

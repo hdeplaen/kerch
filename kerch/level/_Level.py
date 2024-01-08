@@ -32,9 +32,7 @@ class _Level(_View, metaclass=ABCMeta):
             To avoid multiple reinitializations, certainly when working on GPU, the value is stored in memory the first
             time it is called, to be re-used later."
         """
-        if "I_primal" not in self._cache:
-            self._cache["I_primal"] = torch.eye(self.dim_feature, dtype=utils.FTYPE)
-        return self._cache["I_primal"]
+        return self._get("_I_primal", level_key="I_primal", fun=lambda: torch.eye(self.dim_feature, dtype=utils.FTYPE))
 
     @property
     def _I_dual(self) -> T:
@@ -42,9 +40,7 @@ class _Level(_View, metaclass=ABCMeta):
                 To avoid multiple reinitializations, certainly when working on GPU, the value is stored in memory the first
                 time it is called, to be re-used later."
         """
-        if "I_dual" not in self._cache:
-            self._cache["I_dual"] = torch.eye(self.num_idx, dtype=utils.FTYPE)
-        return self._cache["I_dual"]
+        return self._get("_I_dual", level_key="I_dual", fun=lambda: torch.eye(self.num_idx, dtype=utils.FTYPE))
 
     ####################################################################################################################
 
@@ -63,7 +59,7 @@ class _Level(_View, metaclass=ABCMeta):
         pass
 
     @torch.no_grad()
-    def solve(self, sample=None, targets=None, representation=None, **kwargs) -> None:
+    def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
         r"""
         Fits the model according to the input ``sample`` and output ``target``. Many models have both a primal and
         a dual formulation to be fitted.
@@ -77,8 +73,8 @@ class _Level(_View, metaclass=ABCMeta):
 
         if sample is not None:
             self.init_sample(sample)
-        if targets is not None:
-            self.targets = targets
+        if target is not None:
+            self.target = target
 
         # verify that the sample has been initialized
         if self._num_total is None:

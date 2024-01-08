@@ -116,7 +116,7 @@ class _BaseKernel(_Sample, metaclass=ABCMeta):
         """
         if self.empty_sample:
             raise utils.NotInitializedError('The sample has not been initialized yet.')
-        return self._get("phi", "lightweight", self.explicit)
+        return self._get("phi", level_key="sample_phi", fun=self.explicit)
 
     def _C(self) -> Tensor:
         r"""
@@ -131,7 +131,7 @@ class _BaseKernel(_Sample, metaclass=ABCMeta):
             scale = 1 / self.num_idx
             phi = self._phi()
             return scale * phi.T @ phi
-        return self._get("C", "lightweight", fun)
+        return self._get("C", level_key="sample_C", fun=fun)
 
     def _K(self, explicit=None, force : bool=False) -> Tensor:
         r"""
@@ -151,7 +151,7 @@ class _BaseKernel(_Sample, metaclass=ABCMeta):
                 return phi @ phi.T
             else:
                 return self._explicit_with_none()
-        return self._get("K", "lightweight", lambda: fun(explicit))
+        return self._get("K", level_key="sample_K", fun=lambda: fun(explicit))
 
     # ACCESSIBLE METHODS
     def phi(self, x=None) -> Tensor:
@@ -315,13 +315,13 @@ class _BaseKernel(_Sample, metaclass=ABCMeta):
         match method.lower():
             case 'knn':
                 from kerch.kernel.preimage import knn
-                return knn(k_coefficient, self, *args, **kwargs)
+                return knn(k_coefficient, self, **kwargs)
             case 'smoother':
                 from kerch.kernel.preimage import smoother
-                return smoother(k_coefficient, self, *args, **kwargs)
+                return smoother(k_coefficient, self, **kwargs)
             case 'iterative':
                 from kerch.kernel.preimage import iterative
-                return iterative(k_coefficient, self, *args, **kwargs)
+                return iterative(k_coefficient, self, **kwargs)
             case _:
                 raise AttributeError('Unknown or non-implemented preimage method.')
 

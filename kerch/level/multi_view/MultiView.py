@@ -219,5 +219,5 @@ class MultiView(_View):
     def K(self) -> T:
         return sum(self.Ks)
 
-    def forward(self, x=None, representation="dual"):
+    def _forward(self, representation, x=None):
         raise NotImplementedError

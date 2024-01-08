@@ -60,7 +60,7 @@ class Wasserstein(_Exponential):
         self._reg = float(val)
 
     def _dist(self, x, y) -> torch.Tensor:
-        return self._get("W_dist", "lightweight", lambda: self._wass_dist(x,y))
+        return self._get("W_dist", level_key="Wasserstein_kernel_dist", fun=lambda: self._wass_dist(x,y))
 
     def _wass_dist(self, x, y) -> torch.Tensor:
         raise NotImplementedError

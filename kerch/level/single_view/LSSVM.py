@@ -10,16 +10,19 @@ from ... import utils
 class LSSVM(Level):
     r"""
     Least squares support vector machine.
+
+    :param gamma: Regularization parameter of the LSSVM. Defaults to 1.
+    :type gamma: float, optional
     """
 
     @utils.extend_docstring(Level)
     @utils.kwargs_decorator({
-        "gamma": 1.,
         "requires_bias": True
     })
     def __init__(self, *args, **kwargs):
         super(LSSVM, self).__init__(*args, **kwargs)
-        self._gamma = torch.nn.Parameter(torch.tensor(kwargs["gamma"], dtype=utils.FTYPE))
+        gamma = kwargs.pop('gamma', 1.)
+        self._gamma = torch.nn.Parameter(torch.tensor(gamma, dtype=utils.FTYPE))
         self._mse_loss = torch.nn.MSELoss(reduction='mean')
 
     def __str__(self):
@@ -48,18 +51,15 @@ class LSSVM(Level):
         dev = C.device
         dim_output = phi.shape[1]
 
-        I = torch.eye(dim_output,
-                      dtype=utils.FTYPE,
-                      device=dev)
         N = torch.tensor([[self.num_sample]],
                          dtype=utils.FTYPE,
                          device=dev)
 
         P = torch.sum(phi, dim=0, keepdim=True)
-        S = torch.sum(self.current_targets, dim=0, keepdim=True)
-        Y = phi.t() @ self.current_targets
+        S = torch.sum(self.current_target, dim=0, keepdim=True)
+        Y = phi.t() @ self.current_target
 
-        A = torch.cat((torch.cat((C + (1 / self._gamma) * I, P.t()), dim=1),
+        A = torch.cat((torch.cat((C + (1 / self._gamma) * self._I_primal, P.t()), dim=1),
                        torch.cat((P, N), dim=1)), dim=0)
         B = torch.cat((Y, S), dim=0)
 
@@ -74,10 +74,6 @@ class LSSVM(Level):
         K = self.kernel.K
         dev = K.device
 
-        I = torch.eye(self.num_sample,
-                      dtype=utils.FTYPE,
-                      device=dev)
-
         Ones = torch.ones((self.num_sample, 1),
                           dtype=utils.FTYPE,
                           device=dev)
@@ -91,9 +87,9 @@ class LSSVM(Level):
                             device=dev)
 
         N1 = Ones
-        N2 = self.current_targets
+        N2 = self.current_target
 
-        A = torch.cat((torch.cat((K + (1 / self._gamma) * I, N1), dim=1),
+        A = torch.cat((torch.cat((K + (1 / self._gamma) * self._I_dual, N1), dim=1),
                        torch.cat((N1.t(), Zero), dim=1)), dim=0)
         B = torch.cat((N2, Zeros), dim=0)
 
@@ -116,9 +112,8 @@ class LSSVM(Level):
                 yield self._bias
 
     def loss(self, representation=None) -> T:
-        representation = utils.check_representation(representation, self._representation, self)
-        pred = self.forward(representation=representation)
-        mse_loss = self._mse_loss(pred, self.current_targets)
+        pred = self._forward(representation=representation)
+        mse_loss = self._mse_loss(pred, self.current_target)
         if representation == 'primal':
             weight = self.weight
             reg_loss = torch.trace(weight.T @ weight)
@@ -131,7 +126,7 @@ class LSSVM(Level):
         return reg_loss / self.num_idx + self.gamma * mse_loss
 
     def after_step(self) -> None:
-        super().after_step()
+        super(LSSVM, self).after_step()
         self._center_hidden()
 
     def _update_hidden_from_weight(self):

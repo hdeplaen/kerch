@@ -27,15 +27,12 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
     :type sigma: double, optional
     :type sigma_trainable: bool, optional
     """
-
-    @utils.kwargs_decorator(
-        {"sigma": None, "sigma_trainable": False})
     def __init__(self, *args, **kwargs):
         self._sigma_defined = False
         super(_Exponential, self).__init__(*args, **kwargs)
 
-        sigma = kwargs["sigma"]
-        self._sigma_trainable = kwargs["sigma_trainable"]
+        sigma = kwargs.pop('sigma', None)
+        self._sigma_trainable = kwargs.pop('sigma_trainable', False)
         self._sigma_defined = sigma is not None
         self._sigma = torch.nn.Parameter(torch.ones(1, dtype=utils.FTYPE), requires_grad=self._sigma_trainable)
         if self._sigma_defined:
@@ -60,7 +57,7 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         if self._sigma_defined:
             return self._sigma.data.cpu().numpy()
         elif not self._sigma_defined and not self.empty_sample:
-            self.k(explicit=True)
+            self.k()
             return self.sigma
         raise utils.NotInitializedError(cls=self, message='The sigma value is unset. It cannot be deduced based on a '
                                                           'heuristic as the sample is also unset.')
@@ -99,7 +96,7 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         D = self._dist(x, y)
 
         # define sigma if not set by the user
-        if self._sigma is None:
+        if not self._sigma_defined:
             with torch.no_grad():
                 sigma = .5 * torch.sqrt(torch.median(D))
                 self.sigma = sigma

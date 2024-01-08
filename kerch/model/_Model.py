@@ -81,13 +81,13 @@ class _Model(_Stochastic, metaclass=ABCMeta):
                 level.num_sample = self.num_sample
                 level.init_parameters(overwrite=False)
 
-    def init_targets(self, targets: torch.Tensor, num_level: int = -1) -> None:
+    def init_target(self, target: torch.Tensor, num_level: int = -1) -> None:
         if num_level == -1:
             level = self._last_level
         else:
             level = self.level(num_level)
         try:
-            level.targets = targets
+            level.target = target
         except NotInitializedError:
             raise NotInitializedError(cls=self, message="Please initialize the sample and the levels first.")
 
@@ -143,7 +143,7 @@ class _Model(_Stochastic, metaclass=ABCMeta):
         try:
             _ = level.dim_output
         except NotInitializedError:
-            raise AssertionError("The argument dim_output is not specified. This is not required targets are "
+            raise AssertionError("The argument dim_output is not specified. This is not required target are "
                                  "explicitly specified during initialization.")
 
         # verify the correct assignment of the input dimension

@@ -11,7 +11,7 @@ import sys
 from kerch._module._Logger import _Logger
 
 
-class kerchError(Exception, metaclass=ABCMeta):
+class KerchError(Exception, metaclass=ABCMeta):
     # @staticmethod
     # def debugger_is_active() -> bool:
     #     """Return if the debugger is currently active"""
@@ -29,16 +29,16 @@ class kerchError(Exception, metaclass=ABCMeta):
         # if not kerchError.debugger_is_active():
         #     cls._log.error(msg)
 
-        super(kerchError, self).__init__(msg)
+        super(KerchError, self).__init__(msg)
 
 
-class ImplicitError(kerchError):
+class ImplicitError(KerchError):
     def __init__(self, *args, **kwargs):
         self.message = "Implicit representation not available."
         super(ImplicitError, self).__init__(*args, **kwargs)
 
 
-class ExplicitError(kerchError):
+class ExplicitError(KerchError):
     def __init__(self, *args, **kwargs):
         self.message = "Explicit representation not available.\n" \
                        "[Example 1]: The explicit representation does not exist as it lies in an infinite " \
@@ -48,25 +48,25 @@ class ExplicitError(kerchError):
         super(ExplicitError, self).__init__(*args, **kwargs)
 
 
-class RepresentationError(kerchError):
+class RepresentationError(KerchError):
     def __init__(self, *args, **kwargs):
         self.message = "Unrecognized or unspecified representation (must be primal or dual)."
         super(RepresentationError, self).__init__(*args, **kwargs)
 
 
-class BijectionError(kerchError):
+class BijectionError(KerchError):
     def __init__(self, *args, **kwargs):
         self.message = "Mathematically undefined operation. A projection is not bijective, thus non invertible."
         super(BijectionError, self).__init__(*args, **kwargs)
 
 
-class NotInitializedError(kerchError):
+class NotInitializedError(KerchError):
     def __init__(self, *args, **kwargs):
         self.message = "The model has not been initialized yet."
         super(NotInitializedError, self).__init__(*args, **kwargs)
 
 
-class MultiViewError(kerchError):
+class MultiViewError(KerchError):
     def __init__(self, *args, **kwargs):
         self.message = "Primal operations are not defined a multi-view context. You must ask them for the different " \
                        "known separately, if it exists for it."

@@ -13,8 +13,8 @@ class _KPCA(_Level, metaclass=ABCMeta):
     """
 
     @utils.extend_docstring(_Level)
-    @utils.kwargs_decorator({})
     def __init__(self, *args, **kwargs):
+        kwargs['kernel_projections'] = kwargs.pop('kernel_projections', []).append('mean_centering')
         super(_KPCA, self).__init__(*args, **kwargs)
         self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                         requires_grad=False)

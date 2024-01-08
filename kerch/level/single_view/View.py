@@ -6,8 +6,6 @@ Abstract RKM View class.
 @license: MIT
 @date: March 2021, rewritten in June 2022
 """
-from abc import ABCMeta
-
 import torch
 from torch import Tensor
 from math import sqrt
@@ -19,7 +17,9 @@ from ...utils import DEFAULT_KERNEL_TYPE, extend_docstring, kwargs_decorator, ch
     castf, NotInitializedError, FTYPE
 
 
-class MetaView(type):
+@extend_docstring(_View)
+@extend_docstring(_Kernel)
+class View(_Kernel, _View):
     r"""
     :param kernel_type: Represents which kernel to use if kernel_class is not specified.
         Defaults to kerch.DEFAULT_KERNEL_TYPE.
@@ -27,23 +27,13 @@ class MetaView(type):
         default), a specific class can be specified here. This is relevant for example in the case of a
         self-implemented kernel. It must however inherit from kerch.kernel._Kernel. If not specified, the kernel_type
         argument is used to specify the kernel.
-    :type kernel_type: str, optional
-    :type kernel_class: kerch.kernel._Kernel, optional
-    """
-    pass
-
-
-
-@extend_docstring(_View)
-@extend_docstring(_Kernel)
-class View(_Kernel, _View):
-    r"""
-
     :param bias: Bias
     :param bias_trainable: defaults to `False`
 
     :type bias: bool, optional
     :type bias_trainable: bool, optional
+    :type kernel_type: str, optional
+    :type kernel_class: kerch.kernel._Kernel, optional
     """
     def __new__(cls, *args, **kwargs):
         kernel_type = kwargs.pop('kernel_type', DEFAULT_KERNEL_TYPE)
@@ -79,13 +69,13 @@ class View(_Kernel, _View):
         if bias is not None and self._requires_bias:
             self.bias = bias
 
-        # TARGETS
-        self._targets = None
-        targets = kwargs.pop('targets', None)
-        targets = castf(targets)
-        if self._dim_output is None and targets is not None:
-            self._dim_output = targets.shape[1]
-        self.targets = targets
+        # target
+        self._target = None
+        target = kwargs.pop('target', None)
+        target = castf(target)
+        if self._dim_output is None and target is not None:
+            self._dim_output = target.shape[1]
+        self.target = target
 
         self._log.debug("View initialized with " + self.kernel.__str__())
 
@@ -182,19 +172,19 @@ class View(_Kernel, _View):
         return self.kernel.dim_feature
 
     @property
-    def targets(self) -> Tensor:
+    def target(self) -> Tensor:
         r"""
-        Targets to be matched to.
+        target to be matched to.
         """
-        if self._targets is None:
+        if self._target is None:
             raise NotInitializedError(cls=self, message="The target values have not been set (yet).")
-        return self._targets
+        return self._target
 
-    @targets.setter
-    def targets(self, val):
+    @target.setter
+    def target(self, val):
         val = castf(val, dev=self._sample.device, tensor=True)
         if val is None:
-            self._log.debug("Targets set to empty values.")
+            self._log.debug("target set to empty values.")
         else:
             if self.empty_sample:
                 raise NotInitializedError(cls=self, message="The sample has not been initialized yet.")
@@ -204,15 +194,15 @@ class View(_Kernel, _View):
             assert self.num_sample == val.shape[
                 0], f"The number of target points {val.shape[0]} does not match the " \
                     f"required one {self.num_sample}."
-            self._targets = torch.nn.Parameter(val)
+            self._target = torch.nn.Parameter(val, requires_grad=False)
 
     @property
-    def current_targets(self) -> Tensor:
+    def current_target(self) -> Tensor:
         r"""
-        Returns the targets that are currently used in the computations, taking the stochastic aspect into account
+        Returns the target that are currently used in the computations, taking the stochastic aspect into account
         if relevant.
         """
-        return self.targets[self.idx, :]
+        return self.target[self.idx, :]
 
     def _update_weight_from_hidden(self):
         if self._hidden_exists:
@@ -236,12 +226,14 @@ class View(_Kernel, _View):
     def K(self) -> Tensor:
         return self.kappa * self.kernel.K
 
-    def forward(self, x=None, representation=None):
-        representation = check_representation(representation, default=self._representation)
+    def _forward(self, representation, x=None):
         if self.requires_bias:
             return self.phiw(x, representation) + self._kappa_sqrt * self._bias[None, :]
         else:
             return self.phiw(x, representation)
+
+    def forward(self, x=None, representation=None) -> Tensor:
+        return _View.forward(self, x, representation)
 
     @property
     def kernel(self) -> _Kernel:

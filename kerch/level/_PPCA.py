@@ -68,11 +68,11 @@ class _PPCA(_Level, metaclass=ABCMeta):
         def compute() -> T:
             return torch.cholesky(self.weight @ self.weight.T + self.sigma ** 2 * self._I_primal)
 
-        return self._get(key="_B_primal", level='normal', fun=compute)
+        return self._get(key="_B_primal", level_key="PPCA_B_primal", fun=compute)
 
     @_B_primal.setter
     def _B_primal(self, val: T) -> None:
-        self._get(key="_B_primal", level='normal', force=True, fun=lambda: val)
+        self._get(key="_B_primal", level_key="PPCA_B_primal", force=True, fun=lambda: val)
 
     @property
     @torch.no_grad()
@@ -80,11 +80,11 @@ class _PPCA(_Level, metaclass=ABCMeta):
         def compute() -> T:
             return torch.cholesky(self.hidden.T @ self.hidden + self.sigma ** 2 * torch.inv(self.K))
 
-        return self._get(key="_B_primal", level="normal", fun=compute)
+        return self._get(key="_B_dual", level_key="PPCA_B_dual", fun=compute)
 
     @_B_dual.setter
     def _B_dual(self, val: T) -> None:
-        self._get(key="_B_dual", level="normal", force=True, fun=lambda: val)
+        self._get(key="_B_dual", level_key="PPCA_B_dual", force=True, fun=lambda: val)
 
     @property
     @torch.no_grad()
@@ -92,12 +92,12 @@ class _PPCA(_Level, metaclass=ABCMeta):
         def compute() -> T:
             return torch.inv(self.weight.T @ self.weight + self.sigma ** 2 * self._I_primal)
 
-        return self._get(key="_Inv_primal", level="normal", fun=compute)
+        return self._get(key="_Inv_primal", level_key="PPCA_Inv_primal", fun=compute)
 
     @_Inv_primal.setter
     @torch.no_grad()
     def _Inv_primal(self, val: T) -> None:
-        self._get(key="_Inv_primal", level="normal", fun=lambda: val, force=True)
+        self._get(key="_Inv_primal", level_key="PPCA_Inv_primal", fun=lambda: val, overwrite=True)
 
     @property
     @torch.no_grad()
@@ -105,12 +105,12 @@ class _PPCA(_Level, metaclass=ABCMeta):
         def compute() -> T:
             return torch.inv(self.hidden.T @ self.K @ self.hidden + self.sigma ** 2 * self._I_dual)
 
-        return self._get(key="_Inv_dual", level="normal", fun=compute)
+        return self._get(key="_Inv_dual", level_key="PPCA_Inv_dual", fun=compute)
 
     @_Inv_dual.setter
     @torch.no_grad()
     def _Inv_dual(self, val: T) -> None:
-        self._get(key="_Inv_dual", level="normal", fun=lambda: val, force=True)
+        self._get(key="_Inv_dual", level_key="PPCA_Inv_dual", fun=lambda: val, overwrite=True)
 
     ########################################################################################################################
 

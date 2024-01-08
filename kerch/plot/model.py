@@ -14,7 +14,7 @@ def classifier_level(lvl: _Level, dims=None):
         sample = lvl.sample.detach().cpu().numpy()
         x = sample[:,dims[0]]
         y = sample[:,dims[1]]
-        t = lvl.targets.detach().cpu().numpy()
+        t = lvl.target.detach().cpu().numpy()
     except AttributeError:
         _GLOBAL_LOGGER._log.warning("Could not plot based on the training points as these seem not "
                                     "to exist.")

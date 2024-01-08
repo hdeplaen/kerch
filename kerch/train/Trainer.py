@@ -162,9 +162,9 @@ class Trainer(_Logger):
 
         self.model.init_sample(self._training_data)
         self.model.init_levels()
-        self.model.init_targets(self._training_labels)
+        self.model.init_target(self._training_labels)
 
-        self._optimizer = Optimizer(mdl=self.model,
+        self._optimizer = Optimizer(module=self.model,
                                     stiefel_lr=self._stiefel_lr,
                                     euclidean_lr=self._euclidean_lr,
                                     slow_lr=self._slow_lr)

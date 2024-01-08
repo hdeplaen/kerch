@@ -61,3 +61,6 @@ class _Module(_Logger,
             if p not in memo:
                 memo.add(p)
                 yield p
+
+    def after_step(self) -> None:
+        pass
