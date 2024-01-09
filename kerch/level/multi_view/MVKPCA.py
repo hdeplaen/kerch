@@ -88,14 +88,14 @@ class MVKPCA(_KPCA, MVLevel):
     )
     def predict(self, known, **kwargs):
         representation = utils.check_representation(kwargs["representation"], default=self._representation, cls=self)
-        projection, to_predict = self._project(known, representation)
+        transform, to_predict = self._project(known, representation)
         method = kwargs["method"]
 
         sol = {}
         if representation == 'primal':
             dim = 0
             for view, name in zip(self.views_by_name(to_predict), to_predict):
-                view_phi = projection[:, dim:view.dim_feature]
+                view_phi = transform[:, dim:view.dim_feature]
                 dim = view.dim_feature
                 if method == 'smoother':
                     sol[name] = view.kernel.implicit_preimage(view_phi @ view.phi().T, kwargs["knn"])
@@ -106,7 +106,7 @@ class MVKPCA(_KPCA, MVLevel):
         elif representation == 'dual':
             for view, name in zip(self.views_by_name(to_predict), to_predict):
                 if method == 'smoother':
-                    sol[name] = view.kernel.implicit_preimage(projection, kwargs["knn"])
+                    sol[name] = view.kernel.implicit_preimage(transform, kwargs["knn"])
                 else:
                     raise NotImplementedError
 

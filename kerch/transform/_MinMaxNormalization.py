@@ -1,11 +1,11 @@
-from ._Projection import _Projection
+from ._Transform import _Transform
 from ._MinimumCentering import _MinimumCentering
 from kerch.utils.type import EPS
 
 import torch
 
 
-class _MinMaxNormalization(_Projection):
+class _MinMaxNormalization(_Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
         super(_MinMaxNormalization, self).__init__(explicit=explicit,
                                                    name="Min Max Normalization", default_path=default_path)

@@ -59,7 +59,7 @@ class LSSVM(Level):
         S = torch.sum(self.current_target, dim=0, keepdim=True)
         Y = phi.t() @ self.current_target
 
-        A = torch.cat((torch.cat((C + (1 / self._gamma) * self._I_primal, P.t()), dim=1),
+        A = torch.cat((torch.cat((C + self._gamma * self._I_primal, P.t()), dim=1),
                        torch.cat((P, N), dim=1)), dim=0)
         B = torch.cat((Y, S), dim=0)
 
@@ -89,7 +89,7 @@ class LSSVM(Level):
         N1 = Ones
         N2 = self.current_target
 
-        A = torch.cat((torch.cat((K + (1 / self._gamma) * self._I_dual, N1), dim=1),
+        A = torch.cat((torch.cat((K + self._gamma * self._I_dual, N1), dim=1),
                        torch.cat((N1.t(), Zero), dim=1)), dim=0)
         B = torch.cat((N2, Zeros), dim=0)
 

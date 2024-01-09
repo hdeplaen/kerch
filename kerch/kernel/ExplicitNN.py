@@ -77,7 +77,7 @@ class ExplicitNN(_Explicit):
 
     def decode(self, x=None) -> torch.Tensor:
         decoded = self.decoder(self(x))
-        return self.sample_projections.revert(decoded)
+        return self.sample_transform.revert(decoded)
 
     def _explicit(self, x):
         return self._encoder(x)

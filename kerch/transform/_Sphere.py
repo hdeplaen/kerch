@@ -1,8 +1,8 @@
 import torch
-from ._Projection import _Projection
+from ._Transform import _Transform
 from kerch.utils.type import EPS
 
-class _UnitSphereNormalization(_Projection):
+class _UnitSphereNormalization(_Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
         super(_UnitSphereNormalization, self).__init__(explicit=explicit, name="Unit Sphere Normalization",
                                                        default_path=default_path)

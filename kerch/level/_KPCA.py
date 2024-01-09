@@ -14,7 +14,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
     @utils.extend_docstring(_Level)
     def __init__(self, *args, **kwargs):
-        kwargs['kernel_projections'] = kwargs.pop('kernel_projections', []).append('mean_centering')
+        kwargs['kernel_transform'] = kwargs.pop('kernel_transform', []).append('mean_centering')
         super(_KPCA, self).__init__(*args, **kwargs)
         self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                         requires_grad=False)
@@ -31,7 +31,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
         val = utils.castf(val, tensor=False, dev=self._vals.device)
         self._vals.data = val
 
-    def total_variance(self, as_tensor=False, normalize=True) -> Union[float, T]:
+    def total_variance(self, as_tensor=False, normalize=True, representation=None) -> Union[float, T]:
         r"""
         Total variance contained in the feature map. In primal formulation,
         this is given by :math:`\DeclareMathOperator{\tr}{tr}\tr(C)`, where :math:`C = \sum\phi(x)\phi(x)^\top` is
@@ -47,12 +47,13 @@ class _KPCA(_Level, metaclass=ABCMeta):
             has to be normalized. In that case however, the total variance will amount to the dimension of the feature
             map in primal and the number of datapoints in dual.
         """
-        if "_total_variance" not in self._cache:
-            if self._representation == 'primal':
-                self._cache["_total_variance"] = torch.trace(self.C)
-            else:
-                self._cache["_total_variance"] = torch.trace(self.K)
-        var = self._cache["_total_variance"]
+        representation = utils.check_representation(representation=representation, default=self._representation)
+        level_key = "KPCA_total_variance_default_representation" if representation == self._representation \
+            else "KPCA_total_variance_other_representation"
+        if representation == 'primal':
+            var = self._get("total_variance_primal", level_key=level_key, fun=lambda: torch.trace(self.C))
+        else:
+            var = self._get("total_variance_dual", level_key=level_key, fun=lambda: torch.trace(self.K))
         if normalize:
             var /= self.num_idx
         if as_tensor:
@@ -78,6 +79,10 @@ class _KPCA(_Level, metaclass=ABCMeta):
             return var
         return var.detach().cpu().numpy()
 
+    def _reset_hidden(self) -> None:
+        super(_KPCA, self)._reset_hidden()
+        self._remove_from_cache(["total_variance_primal","total_variance_dual"])
+
     def relative_variance(self, as_tensor=False) -> Union[float, T]:
         r"""
         Relative variance learnt by the model given by ```model_variance``/``total_variance``.
@@ -96,9 +101,12 @@ class _KPCA(_Level, metaclass=ABCMeta):
     def _solve_primal(self) -> None:
         C = self.C
 
-        if self.dim_output is None:
+        if self._dim_output is None:
             self._dim_output = self.dim_feature
-        elif self.dim_output > self.dim_feature:
+            self._log.warning(f"The output dimension has not been set and is now set to its maximum possible "
+                              f"value. In primal formulation, this corresponds to the feature dimension "
+                              f"(dim_output=dim_feature={self.dim_output}).")
+        elif self._dim_output > self.dim_feature:
             self._log.warning(f"In primal, the output dimension {self.dim_output} (the number of "
                               f"eigenvectors) must not exceed the feature dimension {self.dim_feature} (the dimension "
                               f"of the correlation matrix to be diagonalized). As this is the case here, the output "
@@ -113,9 +121,12 @@ class _KPCA(_Level, metaclass=ABCMeta):
     def _solve_dual(self) -> None:
         K = self.K
 
-        if self.dim_output is None:
+        if self._dim_output is None:
             self._dim_output = self.num_idx
-        elif self.dim_output > self.num_idx:
+            self._log.warning(f"The output dimension has not been set and is now set to its maximum possible "
+                              f"value. In dual formulation, this corresponds to the number of datapoints in the "
+                              f"current sample (dim_output=num_idx={self.dim_output}).")
+        elif self._dim_output > self.num_idx:
             self._log.warning(f"In dual, the output dimension {self.dim_output} (the number of "
                               f"eigenvectors) must not exceed the number of samples {self.num_idx} (the dimension "
                               f"of the kernel matrix to be diagonalized). As this is the case here, the output "
@@ -124,7 +135,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
         v, h = utils.eigs(K, k=self.dim_output, psd=True)
 
-        self.hidden = h
+        self.update_hidden(h)
         self.vals = v
 
     @utils.extend_docstring(_Level.solve)
@@ -168,7 +179,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
             if self._hidden_exists:
                 yield self._hidden
 
-    @utils.kwargs_decorator({"representation":None})
+    @utils.kwargs_decorator({"representation": None})
     def optimize(self, *args, **kwargs) -> None:
         super(_KPCA, self).optimize(*args, **kwargs)
 
@@ -200,12 +211,10 @@ class _KPCA(_Level, metaclass=ABCMeta):
         """
         representation = utils.check_representation(representation, self._representation, self)
         if representation == 'primal':
-            U = self._weight    # transposed compared to weight
+            U = self._weight  # transposed compared to weight
             M = self.C
         else:
-            U = self._hidden    # transposed compared to hidden
+            U = self._hidden  # transposed compared to hidden
             M = self.K
         loss = torch.trace(M) - torch.trace(U.T @ U @ M)
         return loss
-
-

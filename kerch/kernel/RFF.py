@@ -186,7 +186,7 @@ class RFF(_Explicit):
                                          torch.sin(wx)), dim=1)
 
     ##############################################################################
-    # OVERWRITING SAMPLE IN ORDER TO INTEGRATE SIGMA ARTIFICIALLY AS A projection #
+    # OVERWRITING SAMPLE IN ORDER TO INTEGRATE SIGMA ARTIFICIALLY AS A transform #
     ##############################################################################
 
     @property

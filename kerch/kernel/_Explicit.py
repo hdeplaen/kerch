@@ -61,7 +61,7 @@ class _Explicit(_Kernel, metaclass=ABCMeta):
             phi = self.phi()
         phi = self._explicit_Projected.revert(phi)
         x_tilde = self._explicit_preimage(phi)
-        return self.sample_projections.revert(x_tilde)
+        return self.sample_transform.revert(x_tilde)
 
     @abstractmethod
     def _explicit_preimage(self, phi):

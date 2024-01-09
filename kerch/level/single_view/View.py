@@ -216,11 +216,11 @@ class View(_Kernel, _View):
         raise NotImplementedError
 
     ## MATHS
-    def phi(self, x=None, projections=None) -> Tensor:
-        return self._kappa_sqrt * self.kernel.phi(x, projections)
+    def phi(self, x=None, transform=None) -> Tensor:
+        return self._kappa_sqrt * self.kernel.phi(x, transform)
 
-    def k(self, x=None, y=None, explicit=None, projections=None) -> Tensor:
-        return self.kappa * self.kernel.k(x, y, explicit, projections)
+    def k(self, x=None, y=None, explicit=None, transform=None) -> Tensor:
+        return self.kappa * self.kernel.k(x, y, explicit, transform)
 
     @property
     def K(self) -> Tensor:

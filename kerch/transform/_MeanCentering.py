@@ -1,7 +1,7 @@
-from ._Projection import _Projection
+from ._Transform import _Transform
 import torch
 
-class _MeanCentering(_Projection):
+class _MeanCentering(_Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
         super(_MeanCentering, self).__init__(explicit=explicit, name="Mean centering", default_path=default_path)
 

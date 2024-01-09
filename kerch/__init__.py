@@ -17,7 +17,7 @@ from . import data  # alpha
 # from . import plot  # alpha
 from . import opt  # alpha
 from kerch._module._Logger import set_log_level, get_log_level, _GLOBAL_LOGGER
-from .utils import set_ftype, set_itype, FTYPE, ITYPE, EPS, DEFAULT_KERNEL_TYPE
+from .utils import set_ftype, set_itype, FTYPE, ITYPE, EPS, DEFAULT_KERNEL_TYPE, DEFAULT_CACHE_LEVEL
 
 # CHECK FUNCTIONALITIES
 def gpu_available() -> bool:

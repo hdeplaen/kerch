@@ -13,7 +13,7 @@ from kerch import utils
 from ._Cache import _Cache
 from ._Logger import _Logger
 from ._Stochastic import _Stochastic
-from ..projection import ProjectionTree
+from ..transform import TransformTree
 
 @utils.extend_docstring(_Stochastic)
 class _Sample(_Stochastic,  # manager stochastic indices
@@ -45,8 +45,8 @@ class _Sample(_Stochastic,  # manager stochastic indices
     :type idx_sample: int[], optional
     :type idx_sample: float, optional
 
-    :param sample_projection: TODO
-    :type sample_projection: List[str]
+    :param sample_transform: TODO
+    :type sample_transform: List[str]
     """
 
     @abstractmethod
@@ -57,7 +57,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         "dim_input": None,
         "idx_sample": None,
         "prop_sample": None,
-        "sample_projections": []})
+        "sample_transform": []})
     def __init__(self, *args, **kwargs):
         super(_Sample, self).__init__(*args, **kwargs)
 
@@ -73,7 +73,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         self._sample_trainable = kwargs["sample_trainable"]
 
         self.init_sample(sample, idx_sample=kwargs["idx_sample"], prop_sample=kwargs["prop_sample"])
-        self._default_sample_projections = kwargs["sample_projections"]
+        self._default_sample_transform = kwargs["sample_transform"]
 
     @property
     def dim_input(self) -> int:
@@ -120,7 +120,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
     @property
     def sample(self) -> torch.nn.Parameter:
         r"""
-        Full original raw sample without any projection or potential stochastic selection.
+        Full original raw sample without any transform or potential stochastic selection.
         """
         self._check_sample()
         return self._sample
@@ -149,12 +149,13 @@ class _Sample(_Stochastic,  # manager stochastic indices
         Returns the sample that is currently used in the computations and for the normalizing and centering statistics
         if relevant.
         """
-        return self.sample_projections.projected_sample
+        return self.sample_transform.projected_sample
 
     @property
     def current_sample(self) -> Tensor:
         return self._sample[self.idx, :]
 
+    @torch.no_grad()
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         r"""
         Initializes the sample set (and the stochastic indices).
@@ -175,38 +176,32 @@ class _Sample(_Stochastic,  # manager stochastic indices
             such that :math:`0 <` `prop_sample` :math:`\leq 1`. All indices are considered if both `idx_sample` and
             `prop_sample` are `None`., defaults to `None`.
         """
-        with torch.no_grad():
-            sample = utils.castf(sample)
+        sample = utils.castf(sample)
 
-            if sample is None:
-                self._log.debug("Initializing new sample with the sample dimensions.")
-                if self._num_total is None or self.dim_input is None:
-                    self._log.info(
-                        'The sample cannot be initialized because no sample data has been provided nor the '
-                        'sample dimensions have been initialized yet.')
-                    return
-                self._sample = torch.nn.Parameter(
-                    torch.nn.init.orthogonal_(torch.empty((self._num_total, self._dim_input),
-                                                          dtype=utils.FTYPE,
-                                                          device=self._sample.device)),
-                    requires_grad=self._sample_trainable)
-            elif isinstance(sample, torch.nn.Parameter):
-                self._log.debug("Using existing sample defined as an external parameter.")
-                self._num_total, self._dim_input = sample.shape
-                self._sample_trainable = sample.requires_grad
-                self._sample = sample
-            else:
-                self._log.debug("Assigning new sample points based on the given values.")
-                self._num_total, self._dim_input = sample.shape
-                self._sample = torch.nn.Parameter(sample.data,
-                                                  requires_grad=self._sample_trainable)
+        if sample is None:
+            self._log.debug("Initializing new sample with the sample dimensions.")
+            if self._num_total is None or self.dim_input is None:
+                self._log.info(
+                    'The sample cannot be initialized because no sample data has been provided nor the '
+                    'sample dimensions have been initialized yet.')
+                return
+            self._sample = torch.nn.Parameter(
+                torch.nn.init.orthogonal_(torch.empty((self._num_total, self._dim_input),
+                                                      dtype=utils.FTYPE,
+                                                      device=self._sample.device)),
+                requires_grad=self._sample_trainable)
+        elif isinstance(sample, torch.nn.Parameter):
+            self._log.debug("Using existing sample defined as an external parameter.")
+            self._num_total, self._dim_input = sample.shape
+            self._sample_trainable = sample.requires_grad
+            self._sample = sample
+        else:
+            self._log.debug("Assigning new sample points based on the given values.")
+            self._num_total, self._dim_input = sample.shape
+            self._sample = torch.nn.Parameter(sample.data,
+                                              requires_grad=self._sample_trainable)
 
-            self.stochastic(idx=idx_sample, prop=prop_sample)
-
-        for sample_module in self.children():
-            if isinstance(sample_module, _Sample):
-                sample_module.init_sample(self.sample)
-
+        self.stochastic(idx=idx_sample, prop=prop_sample)
         self._reset_cache()
 
     @torch.no_grad()
@@ -251,33 +246,33 @@ class _Sample(_Stochastic,  # manager stochastic indices
         yield from super(_Sample, self)._euclidean_parameters(recurse)
 
     @property
-    def sample_projections(self) -> ProjectionTree:
+    def sample_transform(self) -> TransformTree:
         r"""
-        Default projection used by the sample.
+        Default transform used by the sample.
         """
-        return self._sample_projections
+        return self._sample_transform
 
     @property
-    def _sample_projections(self) -> ProjectionTree:
+    def _sample_transform(self) -> TransformTree:
         def fun():
-            return ProjectionTree(explicit=True,
+            return TransformTree(explicit=True,
                                   sample=self._sample[self.idx, :],
-                                  default_projections=self._default_sample_projections,
+                                  default_transform=self._default_sample_transform,
                                   cache_level=self._cache_level)
-        return self._get("sample_projections", level_key="sample_projections", fun=fun)
+        return self._get("sample_transform", level_key="sample_transform", fun=fun)
 
     def project_input(self, data) -> Union[Tensor, None]:
         r"""
-        Apply to value the same projection as on the sample.
+        Apply to value the same transform as on the sample.
         """
         if data is None:
             return None
-        return self.sample_projections.apply(data)
+        return self.sample_transform.apply(data)
 
-    def projection_sample_revert(self, data) -> Tensor:
+    def transform_sample_revert(self, data) -> Tensor:
         r"""
-        Get back the original value from a projected value, by using the same projection as the sample,
-        but in reverse. This is not always feasible, depending on the projection used (normalizations are
-        typically not invertible as they are projection which are not bijective).
+        Get back the original value from a projected value, by using the same transform as the sample,
+        but in reverse. This is not always feasible, depending on the transform used (normalizations are
+        typically not invertible as they are transform which are not bijective).
         """
-        return self.sample_projections.revert(data)
+        return self.sample_transform.revert(data)

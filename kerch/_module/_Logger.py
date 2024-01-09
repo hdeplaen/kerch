@@ -8,14 +8,9 @@ Date: June 2022
 
 import logging
 from abc import ABCMeta
+import sys
 
 from .. import _GLOBALS, utils
-
-_LOGGING_FORMAT = "Kerch %(levelname)s [%(name)s]: %(message)s [%(pathname)s:%(lineno)d]"
-
-_kerch_format = logging.Formatter(_LOGGING_FORMAT)
-_kerch_handler = logging.StreamHandler()
-_kerch_handler.setFormatter(_kerch_format)
 
 
 class _Logger(metaclass=ABCMeta):
@@ -24,6 +19,16 @@ class _Logger(metaclass=ABCMeta):
         for the toolbox., defaults to None.
     :type log_level: str or int
     """
+
+    if hasattr(sys, 'gettrace') and sys.gettrace() is not None: # debugger is active
+        _LOGGING_FORMAT = "Kerch %(levelname)s [%(name)s]: %(message)s [%(pathname)s:%(lineno)d]"
+    else:
+        _LOGGING_FORMAT = "Kerch %(levelname)s [%(name)s]: %(message)s"
+
+    _kerch_format = logging.Formatter(_LOGGING_FORMAT)
+    _kerch_handler = logging.StreamHandler()
+    _kerch_handler.setFormatter(_kerch_format)
+
     @utils.kwargs_decorator({
         "log_level": None,
         "name": None
@@ -38,7 +43,7 @@ class _Logger(metaclass=ABCMeta):
         else:
             log_name = class_name
         self._log = logging.getLogger(name=log_name)
-        self._log.addHandler(_kerch_handler)
+        self._log.addHandler(_Logger._kerch_handler)
         self.set_log_level(kwargs["log_level"])
 
     def set_log_level(self, level: int = None) -> int:

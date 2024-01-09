@@ -16,7 +16,7 @@ import torch
 @utils.extend_docstring(_Kernel)
 class Polynomial(_Kernel):
     r"""
-    Polynomial kernel. Projection onto a hypershpere.
+    Polynomial kernel. Transform onto a hypershpere.
 
     .. math::
         k(x,y) = \left(x^\top y + 1\right)^\texttt{degree}.

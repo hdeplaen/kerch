@@ -1,5 +1,5 @@
 """
-File containing the abstract kernel classes with projections.
+File containing the abstract kernel classes with transform.
 
 @author: HENRI DE PLAEN
 @copyright: KU LEUVEN
@@ -15,19 +15,19 @@ from torch import Tensor
 
 from .. import utils
 from ._BaseKernel import _BaseKernel
-from ..projection import ProjectionTree
-from ..projection._Sphere import _UnitSphereNormalization
+from ..transform import TransformTree
+from ..transform._Sphere import _UnitSphereNormalization
 
 
 @utils.extend_docstring(_BaseKernel)
 class _Kernel(_BaseKernel, metaclass=ABCMeta):
     r"""
-    :param kernel_projections: A list composed of the elements `'normalize'` or `'center'`. For example a centered
+    :param kernel_transform: A list composed of the elements `'normalize'` or `'center'`. For example a centered
         cosine kernel which is centered and normalized in order to get a covariance matrix for example can be obtained
-        by invoking a linear kernel with `default_projections = ['normalize', 'center', 'normalize']` or just a cosine
-        kernel with `default_projections = ['center', 'normalize']`. Redundancy is automatically handled., defaults
+        by invoking a linear kernel with `default_transform = ['normalize', 'center', 'normalize']` or just a cosine
+        kernel with `default_transform = ['center', 'normalize']`. Redundancy is automatically handled., defaults
         to `[]`.
-    :type kernel_projections: List[str]
+    :type kernel_transform: List[str]
     """
 
     @abstractmethod
@@ -38,29 +38,29 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
         super(_Kernel, self).__init__(*args, **kwargs)
 
-        kernel_projections = kwargs.pop('kernel_projections', [])
+        kernel_transform = kwargs.pop('kernel_transform', [])
 
         # LEGACY SUPPORT
         if kwargs["center"]:
             self._log.warning("Argument center kept for legacy and will be removed in a later version. Please use the "
-                              "more versatile kernel_projections parameter instead.")
-            kernel_projections.append("mean_centering")
+                              "more versatile kernel_transform parameter instead.")
+            kernel_transform.append("mean_centering")
         if kwargs["normalize"]:
             self._log.warning("Argument normalize kept for legacy and will be removed in a later version. Please use "
-                              "the more versatile kernel_projections parameter instead.")
-            kernel_projections.append("unit_sphere_normalization")
+                              "the more versatile kernel_transform parameter instead.")
+            kernel_transform.append("unit_sphere_normalization")
 
-        self._default_kernel_projections = self._simplify_projections(kernel_projections)
+        self._default_kernel_transform = self._simplify_transform(kernel_transform)
 
     @property
-    def kernel_projections(self) -> ProjectionTree:
+    def kernel_transform(self) -> TransformTree:
         r"""
-        Default projection performed on the kernel
+        Default transform performed on the kernel
         """
         if self.explicit:
-            return self._explicit_projection
+            return self._kernel_explicit_transform
         else:
-            return self._implicit_projection
+            return self._kernel_implicit_transform
 
     @property
     def _naturally_centered(self) -> bool:
@@ -71,33 +71,33 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         return False
 
     @property
-    def _required_projections(self) -> Union[List, None]:
+    def _required_transform(self) -> Union[List, None]:
         return None
 
-    def _simplify_projections(self, projections=None) -> List:
-        if projections is None:
-            projections = []
+    def _simplify_transform(self, transform=None) -> List:
+        if transform is None:
+            transform = []
 
         # add requirements
-        if self._required_projections is not None:
-            projections.append(self._required_projections)
+        if self._required_transform is not None:
+            transform.append(self._required_transform)
 
         # remove same following elements
-        projections = ProjectionTree.beautify_projections(projections)
+        transform = TransformTree.beautify_transform(transform)
 
         # remove unnecessary operation if kernel does it by default
         try:
-            if self._naturally_normalized and projections[0] == _UnitSphereNormalization:
-                projections.pop(0)
+            if self._naturally_normalized and transform[0] == _UnitSphereNormalization:
+                transform.pop(0)
         except IndexError:
             pass
 
-        return projections
+        return transform
 
-    def _get_projections(self, projections=None) -> List:
-        if projections is None:
-            return self._default_kernel_projections
-        return self._simplify_projections(projections)
+    def _get_transform(self, transform=None) -> List:
+        if transform is None:
+            return self._default_kernel_transform
+        return self._simplify_transform(transform)
 
     @property
     def centered(self) -> bool:
@@ -106,7 +106,7 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         """
         if not self._naturally_centered:
             try:
-                return self._default_kernel_projections[0] == 'center'
+                return self._default_kernel_transform[0] == 'center'
             except IndexError:
                 return False
         return True
@@ -118,29 +118,29 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         """
         if not self._naturally_normalized:
             try:
-                return self._default_kernel_projections[0] == 'normalize'
+                return self._default_kernel_transform[0] == 'normalize'
             except IndexError:
                 return False
         return True
 
     @property
-    def _explicit_projection(self) -> ProjectionTree:
+    def _kernel_explicit_transform(self) -> TransformTree:
         def fun():
-            return ProjectionTree(explicit=True,
+            return TransformTree(explicit=True,
                                   sample=self._explicit_with_none,
-                                  default_projections=self._default_kernel_projections,
+                                  default_transform=self._default_kernel_transform,
                                   cache_level=self._cache_level)
-        return self._get("explicit_projection", level_key="kernel_explicit_projections", fun=fun)
+        return self._get("kernel_explicit_transform", level_key="kernel_explicit_transform", fun=fun)
 
     @property
-    def _implicit_projection(self) -> ProjectionTree:
+    def _kernel_implicit_transform(self) -> TransformTree:
         def fun():
-            return ProjectionTree(explicit=False,
+            return TransformTree(explicit=False,
                                   sample=self._implicit_with_none,
-                                  default_projections=self._default_kernel_projections,
+                                  default_transform=self._default_kernel_transform,
                                   cache_level=self._cache_level,
                                   implicit_self=self._implicit_self)
-        return self._get("implicit_projection", level_key="kernel_implicit_projections", fun=fun)
+        return self._get("kernel_implicit_transform", level_key="kernel_implicit_transform", fun=fun)
 
     def _phi(self):
         r"""
@@ -149,7 +149,7 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         """
         def fun():
             self._check_sample()
-            return self._explicit_projection.projected_sample
+            return self._kernel_explicit_transform.projected_sample
         return self._get("phi", level_key="sample_phi", fun=fun)
 
     def _C(self) -> Tensor:
@@ -180,11 +180,11 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
                 phi = self._phi()
                 return phi @ phi.T
             else:
-                return self._implicit_projection.projected_sample
+                return self._kernel_implicit_transform.projected_sample
         return self._get("K", level_key="sample_K", fun=lambda: fun(explicit), overwrite=overwrite)
 
     # ACCESSIBLE METHODS
-    def phi(self, x=None, projections=None) -> Tensor:
+    def phi(self, x=None, transform=None) -> Tensor:
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the specified points.
 
@@ -194,10 +194,10 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         :raises: ExplicitError
         """
         x = utils.castf(x)
-        projections = self._get_projections(projections)
-        return self._explicit_projection.apply(oos=self._explicit_with_none, x=self.project_input(x), projections=projections)
+        transform = self._get_transform(transform)
+        return self._kernel_explicit_transform.apply(oos=self._explicit_with_none, x=self.project_input(x), transform=transform)
 
-    def k(self, x=None, y=None, explicit=None, projections=None) -> Tensor:
+    def k(self, x=None, y=None, explicit=None, transform=None) -> Tensor:
         """
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
@@ -231,28 +231,28 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
 
         x = utils.castf(x)
         y = utils.castf(y)
-        projections = self._get_projections(projections)
+        transform = self._get_transform(transform)
         if explicit:
-            phi_x = self._explicit_projection.apply(x=self.project_input(x),
-                                                    projections=projections)
+            phi_x = self._kernel_explicit_transform.apply(x=self.project_input(x),
+                                                          transform=transform)
             if utils.equal(x, y):
                 phi_y = phi_x
             else:
-                phi_y = self._explicit_projection.apply(y=self.project_input(y),
-                                                        projections=projections)
+                phi_y = self._kernel_explicit_transform.apply(y=self.project_input(y),
+                                                              transform=transform)
             return phi_x @ phi_y.T
         else: # implicit
             if utils.equal(x, y):
                 x = self.project_input(x)
-                return self._implicit_projection.apply(x=x,
-                                                       y=x,
-                                                       projections=projections)
+                return self._kernel_implicit_transform.apply(x=x,
+                                                             y=x,
+                                                             transform=transform)
             else:
-                return self._implicit_projection.apply(x=self.project_input(x),
-                                                       y=self.project_input(y),
-                                                       projections=projections)
+                return self._kernel_implicit_transform.apply(x=self.project_input(x),
+                                                             y=self.project_input(y),
+                                                             transform=transform)
 
-    def c(self, x=None, projections=None) -> Tensor:
+    def c(self, x=None, transform=None) -> Tensor:
         r"""
         Out-of-sample explicit matrix.
 
@@ -266,8 +266,8 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         :rtype: Tensor(dim_feature,dim_feature)
         """
 
-        projections = self._get_projections(projections)
-        phi = self._explicit_projection.apply(oos=self._explicit_with_none, x=self.project_input(x), projections=projections)
+        transform = self._get_transform(transform)
+        phi = self._kernel_explicit_transform.apply(oos=self._explicit_with_none, x=self.project_input(x), transform=transform)
         scale = 1 / x.shape[0]
         return scale * phi.T @ phi
 
@@ -310,15 +310,15 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         :return: Covariance matrix
         :rtype: Tensor[dim_feature, dim_feature]
         """
-        projections = self._default_kernel_projections.copy()
+        transform = self._default_kernel_transform.copy()
         try:
-            if not (self._default_kernel_projections[-1] == 'center'):
-                projections.append('center')
+            if not (self._default_kernel_transform[-1] == 'center'):
+                transform.append('center')
         except IndexError:
-            projections.append('center')
+            transform.append('center')
 
-        projections = self._simplify_projections(projections)
-        return self.c(x=x, projections=projections)
+        transform = self._simplify_transform(transform)
+        return self.c(x=x, transform=transform)
 
     def corr(self, x=None) -> Tensor:
         """

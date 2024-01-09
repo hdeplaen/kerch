@@ -7,9 +7,9 @@ from kerch._module._Cache import _Cache
 from kerch.utils.errors import BijectionError, ImplicitError
 
 
-class _Projection(_Cache, metaclass=ABCMeta):
+class _Transform(_Cache, metaclass=ABCMeta):
     def __init__(self, explicit: bool, name: str, default_path: bool = False, **kwargs):
-        super(_Projection, self).__init__(**kwargs)
+        super(_Transform, self).__init__(**kwargs)
         self._parent = None
         self._offspring: dict = {}
         self._name: str = name
@@ -19,15 +19,15 @@ class _Projection(_Cache, metaclass=ABCMeta):
 
         # CACHE LEVELS
         if self._default:
-            self._sample_data_level = "projections_sample_data_default"
-            self._sample_statistics_level = "projections_sample_statistics_default"
-            self._oos_data_level = "projections_oos_data_default"
-            self._oos_statistics_level = "projections_oos_statistics_default"
+            self._sample_data_level = "transform_sample_data_default"
+            self._sample_statistics_level = "transform_sample_statistics_default"
+            self._oos_data_level = "transform_oos_data_default"
+            self._oos_statistics_level = "transform_oos_statistics_default"
         else:
-            self._sample_data_level = "projections_sample_data_nondefault"
-            self._sample_statistics_level = "projections_sample_statistics_nondefault"
-            self._oos_data_level = "projections_oos_data_nondefault"
-            self._oos_statistics_level = "projections_oos_statistics_nondefault"
+            self._sample_data_level = "transform_sample_data_nondefault"
+            self._sample_statistics_level = "transform_sample_statistics_nondefault"
+            self._oos_data_level = "transform_oos_data_nondefault"
+            self._oos_statistics_level = "transform_oos_statistics_nondefault"
 
     def __str__(self):
         if self._default:
@@ -47,7 +47,7 @@ class _Projection(_Cache, metaclass=ABCMeta):
         return str(x_name), str(y_name)
 
     @property
-    def parent(self) -> Union[_Projection, None]:
+    def parent(self) -> Union[_Transform, None]:
         return self._parent
 
     @property
@@ -66,7 +66,7 @@ class _Projection(_Cache, metaclass=ABCMeta):
     def offspring(self) -> dict:
         return self._offspring
 
-    def add_offspring(self, val: _Projection) -> None:
+    def add_offspring(self, val: _Transform) -> None:
         # add offspring to parent
         if type(val) in self.offspring:
             self._log.debug(f"Overwriting offspring of type {type(val)} in parent {type(self._parent)}.")
@@ -77,7 +77,7 @@ class _Projection(_Cache, metaclass=ABCMeta):
             self._log.debug(f"Overwriting parent of offspring {type(self)}.")
         val._parent = self
 
-    def add_parent(self, val: _Projection) -> None:
+    def add_parent(self, val: _Transform) -> None:
         val.add_offspring(self)
 
     @property
@@ -135,7 +135,7 @@ class _Projection(_Cache, metaclass=ABCMeta):
         raise BijectionError
 
     def statistics_oos(self, x=None, y=None, oos=None) -> Union[torch.Tensor, (torch.Tensor, torch.Tensor)]:
-        x_name, y_name = _Projection._get_names(x, y)
+        x_name, y_name = _Transform._get_names(x, y)
 
         if self.explicit:
             if x is None:
@@ -167,7 +167,7 @@ class _Projection(_Cache, metaclass=ABCMeta):
             return (x_stat, y_stat)
 
     def oos(self, x=None, y=None) -> torch.Tensor:
-        x_name, y_name = _Projection._get_names(x, y)
+        x_name, y_name = _Transform._get_names(x, y)
 
         if self.explicit:
             if x is None:

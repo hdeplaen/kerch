@@ -29,18 +29,30 @@ class _Level(_View, metaclass=ABCMeta):
     @property
     def _I_primal(self) -> T:
         r"""
-            To avoid multiple reinitializations, certainly when working on GPU, the value is stored in memory the first
-            time it is called, to be re-used later."
+        To avoid multiple reinitializations, certainly when working on GPU, the value is stored in memory the first
+        time it is called, to be re-used later.
         """
-        return self._get("_I_primal", level_key="I_primal", fun=lambda: torch.eye(self.dim_feature, dtype=utils.FTYPE))
+        level_key = "Level_I_default_representation" if self._representation == 'primal' \
+            else "Level_I_other_representation"
+        fun = lambda: torch.eye(self.dim_feature, dtype=utils.FTYPE, device=self._param_device)
+        _I_primal = self._get("Level_I_primal", level_key=level_key, fun=fun, persisting=True)
+        if _I_primal.shape[0] != self.dim_feature:
+            _I_primal = self._get("Level_I_primal", level_key=level_key, fun=fun, overwrite=True, persisting=True)
+        return _I_primal
 
     @property
     def _I_dual(self) -> T:
         r"""
-                To avoid multiple reinitializations, certainly when working on GPU, the value is stored in memory the first
-                time it is called, to be re-used later."
+        To avoid multiple reinitializations, certainly when working on GPU, the value is stored in memory the first
+        time it is called, to be re-used later.
         """
-        return self._get("_I_dual", level_key="I_dual", fun=lambda: torch.eye(self.num_idx, dtype=utils.FTYPE))
+        level_key = "Level_I_default_representation" if self._representation == 'dual' \
+            else "Level_I_other_representation"
+        fun = lambda: torch.eye(self.num_idx, dtype=utils.FTYPE, device=self._param_device)
+        _I_dual = self._get("Level_I_dual", level_key=level_key, fun=fun, persisting=True)
+        if _I_dual.shape[0] != self.num_idx:
+            _I_dual = self._get("Level_I_dual", level_key=level_key, fun=fun, overwrite=True, persisting=True)
+        return _I_dual
 
     ####################################################################################################################
 
@@ -98,7 +110,7 @@ class _Level(_View, metaclass=ABCMeta):
 
     def after_step(self) -> None:
         r"""
-            Perform after-step operations, for example a projection of the parameters onto some manifold.
+            Perform after-step operations, for example a transform of the parameters onto some manifold.
         """
         self._reset_parameter_related_cache()
 

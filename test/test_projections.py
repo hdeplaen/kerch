@@ -2,7 +2,7 @@ import unittest
 import torch
 import kerch
 
-from kerch.projection.ProjectionTree import ProjectionTree
+from kerch.transform.TransformTree import ProjectionTree
 from kerch.utils.errors import BijectionError
 
 kerch.set_log_level(40)  # only print errors
@@ -11,7 +11,7 @@ all_projections = ProjectionTree.all_projections.keys()
 
 class TestProjections(unittest.TestCase):
     r"""
-    Tests the various projection
+    Tests the various transform
     """
 
     def __init__(self, *args, **kwargs):
@@ -27,7 +27,7 @@ class TestProjections(unittest.TestCase):
 
 
     def test_sphere(self):
-        """Verifies the consistency of the projection onto the unit sphere."""
+        """Verifies the consistency of the transform onto the unit sphere."""
         TT = ProjectionTree(sample=self.sample, default_projections=["unit_sphere_normalization"], explicit=True)
         t_sample = TT.projected_sample
         t_oos = TT.apply(self.oos)

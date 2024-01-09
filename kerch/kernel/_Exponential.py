@@ -59,8 +59,8 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         elif not self._sigma_defined and not self.empty_sample:
             self.k()
             return self.sigma
-        raise utils.NotInitializedError(cls=self, message='The sigma value is unset. It cannot be deduced based on a '
-                                                          'heuristic as the sample is also unset.')
+        raise utils.NotInitializedError(cls=self, message='The kernel bandwidth sigma value is unset. It cannot be '
+                                                          'deduced based on a heuristic as the sample is also unset.')
 
     @sigma.setter
     def sigma(self, val):
@@ -100,7 +100,8 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
             with torch.no_grad():
                 sigma = .5 * torch.sqrt(torch.median(D))
                 self.sigma = sigma
-                self._log.warning(f"Bandwidth sigma not provided and assigned by a heuristic (sigma={self.sigma}).")
+                self._log.warning(f"The kernel bandwidth sigma has not been provided and is assigned by a "
+                                  f"heuristic (sigma={self.sigma}).")
 
         fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(D, -fact))

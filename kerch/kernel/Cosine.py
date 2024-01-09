@@ -27,7 +27,7 @@ class Cosine(Linear):
         super(Cosine, self).__init__(*args, **kwargs)
 
     @property
-    def _required_projections(self):
+    def _required_transform(self):
         return "unit_sphere_normalization"
 
     def __str__(self):

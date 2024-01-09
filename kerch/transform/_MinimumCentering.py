@@ -1,7 +1,7 @@
-from ._Projection import _Projection
+from ._Transform import _Transform
 import torch
 
-class _MinimumCentering(_Projection):
+class _MinimumCentering(_Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
         super(_MinimumCentering, self).__init__(explicit=explicit,
                                                 name="Minimum Centering", default_path=default_path)

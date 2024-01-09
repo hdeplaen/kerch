@@ -12,11 +12,6 @@ from kerch._module._Logger import _Logger
 
 
 class KerchError(Exception, metaclass=ABCMeta):
-    # @staticmethod
-    # def debugger_is_active() -> bool:
-    #     """Return if the debugger is currently active"""
-    #     return hasattr(sys, 'gettrace') and sys.gettrace() is not None
-
     @abstractmethod
     def __init__(self, cls=None, message=""):
         msg = message
@@ -25,9 +20,6 @@ class KerchError(Exception, metaclass=ABCMeta):
 
         if isinstance(cls, _Logger):
             msg = "[" + cls.__class__.__name__ + "] " + msg
-
-        # if not kerchError.debugger_is_active():
-        #     cls._log.error(msg)
 
         super(KerchError, self).__init__(msg)
 
@@ -56,7 +48,7 @@ class RepresentationError(KerchError):
 
 class BijectionError(KerchError):
     def __init__(self, *args, **kwargs):
-        self.message = "Mathematically undefined operation. A projection is not bijective, thus non invertible."
+        self.message = "Mathematically undefined operation. A transform is not bijective, thus non invertible."
         super(BijectionError, self).__init__(*args, **kwargs)
 
 

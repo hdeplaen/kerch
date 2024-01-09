@@ -19,39 +19,41 @@ from .._module._Stochastic import _Stochastic
 @utils.extend_docstring(_Stochastic)
 class _View(_Stochastic, metaclass=ABCMeta):
     r"""
-    A view consists of a kernel and weights (primal) and hidden variables (dual). It also constains the various
-    dimensions and gives access to various linear combinations.
+    :param dim_output: Output dimension. If None, it will later be assigned by the target is relevant. Defaults to None.
+    :param representation: Specifies if the level works in primal or dual representation. The dual representation
+        ('dual') is guaranteed to always have a finite dimensional formulation (the RKHS is finite dimensional as the
+        sample has a finite number of datapoints). If the primal formulation ('primal') is available, the number of
+        parameters (proportional to the property `dim_feature`) will potentially be smaller than for the dual
+        (proportional to the number of sample datapoints, hence the formulation will be lighter hence faster.
+        Defaults to 'dual'.
+    :param weight: Weight values to start with. This is most of the cases not necessary if the level is meant to be
+        trained based on a gradient or fitted. Defaults to None.
+    :param hidden: Hidden values to start with. This is most of the cases not necessary if the level is meant to be
+        trained based on a gradient or fitted. Defaults to None.
+    :param_trainable: Boolean specifying whether the model parameters (weight, hidden and bias if applicable) are meant
+        to have a gradient available. This is relevant is the level is to be trained based on a gradient. This is
+        irrelevant if the model is meant to be fitted by a linear system. Defaults to False.
 
-
-    :param kernel: Initiates a View based on an existing kernel object. If the value is not `None`, all other
-        parameters are neglected and inherited from the provided kernel., default to `None`
-    :param bias: Bias
-    :param bias_trainable: defaults to `False`
-
-    :type bias: bool, optional
-    :type bias_trainable: bool, optional
+    :type dim_output: int, optional
+    :type representation: str, optional
+    :type weight: Tensor[dim_feature, dim_output], optional
+    :type hidden: Tensor[num_sample, dim_output], optional
+    :param_trainable: bool, optional
     """
 
-    @utils.kwargs_decorator({
-        "dim_output": None,
-        "hidden": None,
-        "weight": None,
-        "param_trainable": True,
-        "representation": "dual"
-    })
     def __init__(self, *args, **kwargs):
         """
         A View is made of a kernel and primal or dual variables. This second part is handled by the daughter classes.
         """
         super(_View, self).__init__(*args, **kwargs)
-        self._dim_output = kwargs["dim_output"]
-        self._representation = utils.check_representation(kwargs["representation"], cls=self)
+        self._dim_output = kwargs.pop('dim_output', None)
+        self._representation = utils.check_representation(kwargs.pop('representation', 'dual'), cls=self)
 
-        weight = kwargs["weight"]
-        hidden = kwargs["hidden"]
+        weight = kwargs.pop('weight', None)
+        hidden = kwargs.pop('hidden', None)
 
         # INITIATE
-        self._param_trainable = kwargs["param_trainable"]
+        self._param_trainable = kwargs.pop('param_trainable', False)
         self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE), self._param_trainable)
         self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE), self._param_trainable)
         if weight is not None and hidden is not None:
@@ -66,7 +68,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
     def _reset_hidden(self) -> None:
         self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE,
-                                                      device=self._hidden.device),
+                                                      device=self._param_device),
                                           requires_grad=self._hidden.requires_grad)
 
     @abstractmethod
@@ -77,12 +79,12 @@ class _View(_Stochastic, metaclass=ABCMeta):
         assert self._num_total is not None, "No data has been initialized yet."
         assert self._dim_output is not None, "No output dimension has been provided."
         self.hidden = torch.nn.init.orthogonal_(torch.empty((self._num_total, self.dim_output),
-                                                            dtype=utils.FTYPE, device=self._hidden.device))
+                                                            dtype=utils.FTYPE, device=self._param_device))
 
     def _init_weight(self) -> None:
         assert self._dim_output is not None, "No output dimension has been provided."
         self.weight = torch.nn.init.orthogonal_(torch.empty((self.dim_feature, self.dim_output),
-                                                            dtype=utils.FTYPE, device=self._weight.device))
+                                                            dtype=utils.FTYPE, device=self._param_device))
 
     def init_parameters(self, representation=None, overwrite=True) -> None:
         """
@@ -163,13 +165,16 @@ class _View(_Stochastic, metaclass=ABCMeta):
 
     def update_hidden(self, val: Tensor, idx_sample=None) -> None:
         # first verify the existence of the hidden values before updating them.
-        if not self._hidden_exists:
-            self._init_hidden()
+        with torch.no_grad():
+            if not self._hidden_exists:
+                self._init_hidden()
 
-        if idx_sample is None:
-            idx_sample = self._all_sample()
-        self._hidden.data.T[idx_sample, :].copy_(val.data)
-        self._reset_weight()
+            if idx_sample is None:
+                idx_sample = self.idx
+            self._hidden.copy_(val.data[idx_sample, :].T)
+            if self._param_trainable and self._hidden.grad is not None:
+                self._hidden.grad.sample.zero_()
+            self._reset_weight()
 
     @hidden.setter
     def hidden(self, val):
@@ -180,20 +185,22 @@ class _View(_Stochastic, metaclass=ABCMeta):
                 self._hidden = val
                 self._num_h, self._dim_output = self._hidden.shape
             else:  # sets the value to a new one
-                # to work on the stiefel manifold, the parameters are required to have the number of components as
-                # as first dimension
-                val = utils.castf(val, tensor=True, dev=self._hidden.device)
-                val = val.T
-                if self._hidden_exists and val.shape == self._hidden.shape:
-                    self._hidden.copy_(val)
-                    # zeroing the gradients if relevant
-                    if self._param_trainable and self._hidden.grad is not None:
-                        self._hidden.grad.sample.zero_()
-                else:
-                    del self._hidden
-                    self._hidden = torch.nn.Parameter(val, requires_grad=self._param_trainable)
+                with torch.no_grad():
+                    # to work on the stiefel manifold, the parameters are required to have the number of components as
+                    # first dimension
+                    val = utils.castf(val, dev=self._param_device)
+                    val = val.T
+                    if self._hidden_exists and val.shape == self._hidden.shape:
+                        self._hidden.copy_(val)
+                        # zeroing the gradients if relevant
+                        if self._param_trainable and self._hidden.grad is not None:
+                            self._hidden.grad.sample.zero_()
+                    else:
+                        del self._hidden
+                        # torch.no_grad() does not affect the constructor
+                        self._hidden = torch.nn.Parameter(val, requires_grad=self._param_trainable)
 
-                self._dim_output, self._num_h = self._hidden.shape
+                    self._dim_output, self._num_h = self._hidden.shape
                 self._reset_weight()
         else:
             self._reset_hidden()
@@ -268,18 +275,20 @@ class _View(_Stochastic, metaclass=ABCMeta):
                     del self._weight
                     self._weight = val
                 else:  # sets the value to a new one
-                    val = utils.castf(val, tensor=False, dev=self._weight.device)
-                    val = val.T
-                    if self._weight_exists and self._weight.shape == val.shape:
-                        self._weight.copy_(val)
-                        # zeroing the gradients if relevant
-                        if self._param_trainable and self._weight.grad is not None:
-                            self._weight.grad.sample.zero_()
-                    else:
-                        del self._weight
-                        self._weight = torch.nn.Parameter(val.T, requires_grad=self._param_trainable)
+                    with torch.no_grad():
+                        val = utils.castf(val, tensor=False, dev=self._weight.device)
+                        val = val.T
+                        if self._weight_exists and self._weight.shape == val.shape:
+                            self._weight.copy_(val.T)
+                            # zeroing the gradients if relevant
+                            if self._param_trainable and self._weight.grad is not None:
+                                self._weight.grad.sample.zero_()
+                        else:
+                            del self._weight
+                            # torch.no_grad() does not affect the constructor
+                            self._weight = torch.nn.Parameter(val.T, requires_grad=self._param_trainable)
 
-                    self._dim_output = self._weight.shape[0]
+                        self._dim_output = self._weight.shape[0]
                 self._reset_hidden()
             else:
                 self._reset_weight()
@@ -300,6 +309,10 @@ class _View(_Stochastic, metaclass=ABCMeta):
     @abstractmethod
     def _update_hidden_from_weight(self):
         pass
+
+    @property
+    def _param_device(self) -> torch.device:
+        return self._hidden.device
 
     ## MATHS
 
@@ -327,7 +340,8 @@ class _View(_Stochastic, metaclass=ABCMeta):
             if self._hidden_exists:
                 return self.hidden
             else:
-                raise utils.ImplicitError(cls=self, message="No hidden values exist or have been initialized.")
+                raise utils.ImplicitError(cls=self, message="No hidden values exist or have been initialized. "
+                                                            "Please initialize the parameters or solve the model.")
         raise NotImplementedError
 
     def w(self, x=None) -> Union[Tensor, torch.nn.Parameter]:
@@ -384,6 +398,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
     def forward(self, x=None, representation=None):
         representation = utils.check_representation(representation, default=self._representation)
         name = f"forward_{id(x)}_{representation}"
+
         def get_level_key() -> str:
             if representation == self._representation:
                 level_key = "forward_sample_default_representation" if x is None \
@@ -392,4 +407,5 @@ class _View(_Stochastic, metaclass=ABCMeta):
                 level_key = "forward_sample_other_representation" if x is None \
                     else "forward_oos_other_representation"
             return level_key
+
         return self._get(name, level_key=lambda: get_level_key(), fun=lambda: self._forward(representation, x))

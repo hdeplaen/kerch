@@ -1,8 +1,8 @@
 from kerch.utils.type import EPS
-from ._Projection import _Projection
+from ._Transform import _Transform
 import torch
 
-class _UnitVarianceNormalization(_Projection):
+class _UnitVarianceNormalization(_Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
         super(_UnitVarianceNormalization, self).__init__(explicit=explicit,
                                                          name="Unit Variance Normalization", default_path=default_path)

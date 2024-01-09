@@ -48,7 +48,7 @@ class Nystrom(_Explicit):
         "base_center": False,
         "base_normalize": False,
         "base_kernel": None,
-        "base_kernel_projections": []
+        "base_kernel_transform": []
     })
     def __init__(self, *args, **kwargs):
         assert kwargs["base_type"].lower() != "nystrom", 'Cannot create a Nyström kernel based on another Nyström ' \
@@ -65,7 +65,7 @@ class Nystrom(_Explicit):
                                                "_center": kwargs["base_center"],
                                                "_normalize": kwargs["base_normalize"],
                                                "name": kwargs["base_type"],
-                                               "kernel_projections": kwargs["base_kernel_projections"]})
+                                               "kernel_transform": kwargs["base_kernel_transform"]})
             self._base_kernel.init_sample(sample=self.current_sample_projected, idx_sample=self.idx)
         else:
             # nystromizing some existing kernel
@@ -75,7 +75,7 @@ class Nystrom(_Explicit):
                                              "sample_trainable": k.sample_trainable,
                                              "idx_sample": k.idx})
             self._base_kernel = k
-            self._log.info("Keeping original kernel projection (no overwriting, so base_kernel_projections is "
+            self._log.info("Keeping original kernel transform (no overwriting, so base_kernel_transform is "
                            "neglected).")
 
         self._dim = kwargs["dim"]
