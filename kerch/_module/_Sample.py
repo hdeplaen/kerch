@@ -202,7 +202,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
                                               requires_grad=self._sample_trainable)
 
         self.stochastic(idx=idx_sample, prop=prop_sample)
-        self._reset_cache()
+        self._reset_cache(reset_persisting=False)
 
     @torch.no_grad()
     def update_sample(self, sample_values, idx_sample=None):
@@ -238,7 +238,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         if self._sample_trainable:
             self._sample.grad.data[idx_sample, :].zero_()
 
-        self._reset_cache()
+        self._reset_cache(reset_persisting=False)
 
     def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         if not self.empty_sample:

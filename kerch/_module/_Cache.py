@@ -67,6 +67,7 @@ class _Cache(_Module,
         return level
 
     def _apply(self, fn):
+
         r"""
         This if the native function by torch.nn.Module when ported. Here, the sole porting
         of the cache is also added. This is used for example to port the data to the gpu or cpu.
@@ -93,8 +94,8 @@ class _Cache(_Module,
         :param force: if the value is True, the element will nevertheless be saved whatever level
         :param overwrite: forces the recomputation of the memory element and overwriting if a previous value has been
             saved.
-        :param persisting: These values are meant to persisting after a cache reset, unless specified otherwise when calling
-            _cache_reset(reset_persisting=True). Defaults to False.
+        :param persisting: These values are meant to persisting after a cache reset when calling
+            _cache_reset(reset_persisting=False). Defaults to False.
 
         :type key: str
         :type level_key: str, optional
@@ -129,7 +130,7 @@ class _Cache(_Module,
             self._cache[key] = (level, persisting, val)
         return val
 
-    def _reset_cache(self, reset_persisting=False) -> None:
+    def _reset_cache(self, reset_persisting=True) -> None:
         r"""
         this just resets the cache and makes it empty. If refilled, the new elements
         will be on the same support as the rest of the level as created by its parameters.
@@ -180,13 +181,13 @@ class _Cache(_Module,
         for key_item in key:
             _del_entry(key_item)
 
-    def reset(self, children=False, reset_persisting=False) -> None:
+    def reset(self, children=False, reset_persisting=True) -> None:
         r"""
         Resets the cache to empty.
 
         :param children: TODO
         :param reset_persisting: Indicates whether the elements for which persisting=True should also be resetted.
-            Defaults to False.
+            Defaults to True.
         :type reset_persisting: bool, optional
         """
         self._reset_cache(reset_persisting=reset_persisting)

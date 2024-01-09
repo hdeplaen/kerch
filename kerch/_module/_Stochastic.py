@@ -79,7 +79,7 @@ class _Stochastic(_Cache,  # creates a transportable cache (e.g. for GPU)
             self._log.info("Setting stochastic indices cannot work before any value or dimensions have been fed.")
             return
 
-        self._reset_cache()
+        self._reset_cache(reset_persisting=False)
         assert idx is None or prop is None, "Both idx_stochastic and prop_stochastic are not None. " \
                                                           "Please choose one non-None parameter only."
 

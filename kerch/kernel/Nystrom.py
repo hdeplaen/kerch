@@ -95,7 +95,7 @@ class Nystrom(_Explicit):
             assert val <= self._num_total, 'Cannot construct an explicit feature map of greater dimension than ' \
                                            'the number of sample points.'
         self._dim = utils.casti(val)
-        self._reset_cache()
+        self._reset_cache(reset_persisting=False)
 
     @property
     def dim_feature(self) -> int:

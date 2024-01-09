@@ -78,7 +78,7 @@ class RFF(_Explicit):
 
     @sigma.setter
     def sigma(self, val):
-        self._reset_cache()
+        self._reset_cache(reset_persisting=False)
         self._sigma.data = utils.castf(val, tensor=False, dev=self._sigma.device)
 
     @property

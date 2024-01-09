@@ -63,7 +63,7 @@ class Hat(_Implicit):
 
     @lag.setter
     def lag(self, val):
-        self._reset_cache()
+        self._reset_cache(reset_persisting=False)
         self._lag.data = utils.castf(val, tensor=False, dev=self._lag.device)
 
     @property
