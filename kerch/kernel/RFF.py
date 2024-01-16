@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the RFF kernel class.
 
@@ -12,11 +13,11 @@ from math import sqrt
 from typing import Union
 
 from .. import utils
-from ._Explicit import _Explicit, _Kernel
+from .Explicit import Explicit, Kernel
 
 
-@utils.extend_docstring(_Kernel)
-class RFF(_Explicit):
+@utils.extend_docstring(Kernel)
+class RFF(Explicit):
     r"""
     Random Fourier Features kernel.
 

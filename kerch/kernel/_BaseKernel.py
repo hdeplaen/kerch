@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the abstract kernel classes.
 
@@ -12,7 +13,7 @@ from torch import Tensor
 from abc import ABCMeta, abstractmethod
 
 from .. import utils
-from .._module._Sample import _Sample
+from ..module._Sample import _Sample
 
 
 @utils.extend_docstring(_Sample)

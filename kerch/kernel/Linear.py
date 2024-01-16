@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the linear kernel class.
 
@@ -10,11 +11,11 @@ File containing the linear kernel class.
 import torch
 
 from .. import utils
-from ._Explicit import _Explicit
+from .Explicit import Explicit
 
 
-@utils.extend_docstring(_Explicit)
-class Linear(_Explicit):
+@utils.extend_docstring(Explicit)
+class Linear(Explicit):
     r"""
     Linear kernel.
 

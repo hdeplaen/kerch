@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the RBF kernel class.
 
@@ -12,11 +13,11 @@ import torch
 
 from abc import ABCMeta, abstractmethod
 from .. import utils
-from ._Implicit import _Implicit
+from .Implicit import Implicit
 
 
-@utils.extend_docstring(_Implicit)
-class _Exponential(_Implicit, metaclass=ABCMeta):
+@utils.extend_docstring(Implicit)
+class Exponential(Implicit, metaclass=ABCMeta):
     r"""
     :param sigma: Bandwidth :math:`\sigma` of the kernel. If `None`, the value is filled by a heuristic on
         the sample data: half of the square root of the median of the pairwise distances. Computing the heuristic on
@@ -29,7 +30,7 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
     """
     def __init__(self, *args, **kwargs):
         self._sigma_defined = False
-        super(_Exponential, self).__init__(*args, **kwargs)
+        super(Exponential, self).__init__(*args, **kwargs)
 
         sigma = kwargs.pop('sigma', None)
         self._sigma_trainable = kwargs.pop('sigma_trainable', False)
@@ -86,7 +87,7 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
 
     @property
     def hparams(self):
-        return {"Trainable sigma": self.sigma_trainable, **super(_Exponential, self).hparams}
+        return {"Trainable sigma": self.sigma_trainable, **super(Exponential, self).hparams}
 
     @abstractmethod
     def _dist(self, x, y):
@@ -115,5 +116,5 @@ class _Exponential(_Implicit, metaclass=ABCMeta):
         return torch.ones(x.shape[0], dtype=utils.FTYPE, device=x.device)
 
     def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
-        yield from super(_Exponential, self)._slow_parameters(recurse)
+        yield from super(Exponential, self)._slow_parameters(recurse)
         yield self._sigma

@@ -6,7 +6,7 @@ import torch
 
 from ..level import Level, factory
 from ..utils import NotInitializedError, kwargs_decorator
-from .._module._Stochastic import _Stochastic
+from ..module._Stochastic import _Stochastic
 
 
 class _Model(_Stochastic, metaclass=ABCMeta):
@@ -172,6 +172,9 @@ class _Model(_Stochastic, metaclass=ABCMeta):
                 f"output dimension of the previous level ({self.level(self.num_levels - 1).dim_output})."
 
         self._levels.append(level)
+
+    def plot(self, return_as_dict:bool = False):
+        raise NotImplementedError
 
     def reset(self, children=False, reset_persisting=True) -> None:
         for level in self.levels:

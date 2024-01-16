@@ -10,7 +10,7 @@ from torch import Tensor as T
 from kerch import utils
 from .._View import _View
 from ..single_view.View import View
-from ..._module._Stochastic import _Stochastic
+from ...module._Stochastic import _Stochastic
 
 
 @utils.extend_docstring(_Stochastic)

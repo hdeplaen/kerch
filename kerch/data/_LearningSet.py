@@ -1,3 +1,4 @@
+# coding=utf-8
 from abc import ABCMeta, abstractmethod
 from random import shuffle
 from torch.utils.data import TensorDataset
@@ -13,7 +14,7 @@ class _LearningSet(metaclass=ABCMeta):
         self._dim_data = dim_data
         self._dim_labels = dim_labels
         self._plot_range: list[int] | None = plot_range
-        self._shuffle: bool = kwargs['shuffle']
+        self._shuffle: bool = kwargs.pop('shuffle', True)
 
     def __str__(self):
         return self._name + \

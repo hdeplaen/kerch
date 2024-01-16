@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the RBF kernel class.
 
@@ -10,11 +11,11 @@ File containing the RBF kernel class.
 import torch
 
 from .. import utils
-from ._Exponential import _Exponential
+from .Exponential import Exponential
 
 
-@utils.extend_docstring(_Exponential)
-class Laplacian(_Exponential):
+@utils.extend_docstring(Exponential)
+class Laplacian(Exponential):
     r"""
     Laplacian kernel.
 

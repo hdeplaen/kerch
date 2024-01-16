@@ -7,8 +7,7 @@ Source code for the RKM toolbox.
 @date: March 2021
 """
 from abc import ABCMeta, abstractmethod
-import sys
-from kerch._module._Logger import _Logger
+from ..module._Logger import _Logger
 
 
 class KerchError(Exception, metaclass=ABCMeta):

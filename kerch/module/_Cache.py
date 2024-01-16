@@ -41,7 +41,7 @@ class _Cache(_Module,
         r"""
         Cache level possible values (defaults to `"normal"`):
 
-        * `"none"`: the cache is inexistent and everything is computed on the go.
+        * `"none"`: the cache is non-existent and everything is computed on the go.
         * `"light"`: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.
         * `"normal"`: same as light, but the statistics of the out-of-sample points are also saved.
         * `"heavy"`: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.

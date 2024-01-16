@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the RBF kernel class.
 
@@ -10,12 +11,12 @@ from typing import Iterator
 import torch
 
 from .. import utils
-from ._Implicit import _Implicit, _Kernel
+from .Implicit import Implicit, Kernel
 
 
 
-@utils.extend_docstring(_Kernel)
-class SkewedChi2(_Implicit):
+@utils.extend_docstring(Kernel)
+class SkewedChi2(Implicit):
     r"""
     Skewed Chi Squared kernel. Often used in computer vision.
 

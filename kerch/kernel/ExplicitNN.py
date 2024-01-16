@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the explicit kernel class.
 
@@ -9,12 +10,13 @@ File containing the explicit kernel class.
 
 from typing import Iterator
 from .. import utils
-from ._Explicit import _Explicit, _Kernel
+from .Explicit import Explicit, Kernel
 import torch
+import lazy_loader
 
 
-@utils.extend_docstring(_Kernel)
-class ExplicitNN(_Explicit):
+@utils.extend_docstring(Kernel)
+class ExplicitNN(Explicit):
     r"""
     _Implicit kernel class, parametrized by a neural network.
 
@@ -36,14 +38,18 @@ class ExplicitNN(_Explicit):
     def __init__(self, *args, **kwargs):
         """
         :param encoder: torch.nn.Module explicit kernel
+        :param decoder: torch.nn.Module explicit kernel pseudo-inverse
         :param kernels_trainable: True if support vectors / kernel are trainable (default False)
         :param recon_loss_fun: Instance of the reconstruction loss function for the encoder/decoder pair.
             Defaults to torch.nn.MSELoss(reduction='mean').
         """
+        self._encoder = None
+        self._decoder = None
+
         super(ExplicitNN, self).__init__(*args, **kwargs)
 
         self._encoder = kwargs.pop('encoder', None)
-        assert self._encoder is not None, "Encoder level must be specified."
+        assert self._encoder is not None, "The argument encoder must be specified."
         assert isinstance(self._encoder, torch.nn.Module), "Encoder must be an instance of torch.nn.Module."
 
         self._decoder = kwargs.pop('decoder', None)
@@ -53,7 +59,10 @@ class ExplicitNN(_Explicit):
         self._recon_loss_func = kwargs.pop('recon_loss_fun', torch.nn.MSELoss()) # reduction='mean' is the default
 
     def __str__(self):
-        encoder = f"encoder: {self.encoder.__class__.__name__}"
+        if self._encoder is not None:
+            encoder = f"encoder: {self.encoder.__class__.__name__}"
+        else:
+            encoder = 'encoder undefined'
         if self._decoder is not None:
             decoder = f"decoder: {self.decoder.__class__.__name__}"
         else:
@@ -93,8 +102,8 @@ class ExplicitNN(_Explicit):
         super(ExplicitNN, self)._euclidean_parameters(recurse)
 
     def _explicit_preimage(self, phi) -> torch.Tensor:
-        from ..level.single_view.View import View
-        if not isinstance(self, View):
+        View = lazy_loader.load('..level.single_view.View', error_on_import=True)
+        if not isinstance(self, View.View):
             return self.decoder(phi)
         else:
             raise utils.KerchError('The decoder is not a pre-image of the explicit representation, but of the model '

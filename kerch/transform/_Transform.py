@@ -3,7 +3,7 @@ from typing import Union, Tuple
 from abc import ABCMeta, abstractmethod
 
 import torch
-from kerch._module._Cache import _Cache
+from kerch.module._Cache import _Cache
 from kerch.utils.errors import BijectionError, ImplicitError
 
 

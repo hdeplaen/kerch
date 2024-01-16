@@ -1,5 +1,5 @@
 import torch
-from kerch._module._Logger import _GLOBAL_LOGGER
+from ..module._Logger import _GLOBAL_LOGGER
 
 
 def eigs(A, k=None, B=None, psd=True, sym=True):

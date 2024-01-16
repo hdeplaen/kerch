@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the RBF kernel class.
 
@@ -10,11 +11,11 @@ File containing the RBF kernel class.
 import torch
 
 from .. import utils
-from ._Implicit import _Implicit, _Kernel
+from .Implicit import Implicit, Kernel
 
 
-@utils.extend_docstring(_Kernel)
-class AdditiveChi2(_Implicit):
+@utils.extend_docstring(Kernel)
+class AdditiveChi2(Implicit):
     r"""
     Additive Chi Squared kernel. Often used in computer vision.
 

@@ -1,21 +1,4 @@
-from ._BaseKernel import _BaseKernel
-from ._Kernel import _Kernel
-from ._Implicit import _Implicit
-from ._Explicit import _Explicit
-from ._Exponential import _Exponential
-from .Linear import Linear
-from .RBF import RBF
-from .RFF import RFF
-from .Laplacian import Laplacian
-from .Cosine import Cosine
-from .Hat import Hat
-from .Sigmoid import Sigmoid
-from .Indicator import Indicator
-from .Nystrom import Nystrom
-from .Polynomial import Polynomial
-from .ExplicitNN import ExplicitNN
-from .ImplicitNN import ImplicitNN
-from .AdditiveChi2 import AdditiveChi2
-from .SkewedChi2 import SkewedChi2
-from .RandomFeatures import RandomFeatures
-from .factory import factory
+# coding=utf-8
+import lazy_loader as lazy
+
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

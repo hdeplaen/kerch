@@ -1,8 +1,9 @@
-from ._Kernel import _Kernel
+# coding=utf-8
+from .Kernel import Kernel
 from ..utils import DEFAULT_KERNEL_TYPE
 
 
-def factory(kernel_type=DEFAULT_KERNEL_TYPE, **kwargs) -> _Kernel:
+def factory(kernel_type=DEFAULT_KERNEL_TYPE, **kwargs) -> Kernel:
     r"""
     Creates a kernel based on the specified name with the specified arguments. This is the same as
     calling `kerch.kernel.name(*args, **kwargs)` (if `name` is not a string here). This allows for the creation of kernel where
@@ -18,11 +19,11 @@ def factory(kernel_type=DEFAULT_KERNEL_TYPE, **kwargs) -> _Kernel:
     :return: An instantiation of the specified kernel.
     """
 
-    kernel = class_factory(kernel_type, **kwargs)
+    kernel = class_factory(kernel_type)
     return kernel(**kwargs)
 
 
-def class_factory(kernel_type=DEFAULT_KERNEL_TYPE, **kwargs):
+def class_factory(kernel_type=DEFAULT_KERNEL_TYPE):
     def case_insensitive_getattr(obj, attr):
         for a in dir(obj):
             if a.lower() == attr.lower():

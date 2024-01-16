@@ -10,7 +10,7 @@ import logging
 from abc import ABCMeta
 import sys
 
-from .. import _GLOBALS, utils
+from .. import _GLOBALS
 
 
 class _Logger(metaclass=ABCMeta):
@@ -29,12 +29,8 @@ class _Logger(metaclass=ABCMeta):
     _kerch_handler = logging.StreamHandler()
     _kerch_handler.setFormatter(_kerch_format)
 
-    @utils.kwargs_decorator({
-        "log_level": None,
-        "name": None
-    })
     def __init__(self, *args, **kwargs):
-        self._name = kwargs["name"]
+        self._name = kwargs.pop('name', None)
         class_name = self.__class__.__name__
         if self._name is not None and class_name != "_Logger":
             log_name = self._name + ' ' + class_name
@@ -44,7 +40,7 @@ class _Logger(metaclass=ABCMeta):
             log_name = class_name
         self._log = logging.getLogger(name=log_name)
         self._log.addHandler(_Logger._kerch_handler)
-        self.set_log_level(kwargs["log_level"])
+        self.set_log_level(kwargs.pop('log_level', None))
 
     def set_log_level(self, level: int = None) -> int:
         r"""

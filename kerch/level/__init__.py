@@ -1,3 +1,3 @@
-from .single_view import *
-from .multi_view import *
-from .factory import factory
+# coding=utf-8
+import lazy_loader
+__getattr__, __dir__, __all__ = lazy_loader.attach_stub(__name__, __file__)

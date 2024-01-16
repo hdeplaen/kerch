@@ -1,12 +1,13 @@
+# coding=utf-8
 import torch
 from torch.utils.data import SequentialSampler
 import tqdm
 
-from kerch.model._Model import _Model
-from kerch._module._Logger import _Logger
-from kerch.utils import kwargs_decorator
-from kerch.opt import Optimizer
-from kerch.data import _LearningSet
+from ..model._Model import _Model
+from ..module._Logger import _Logger
+from ..utils import kwargs_decorator
+from ..opt import Optimizer
+from ..data import _LearningSet
 
 
 class Trainer(_Logger):
@@ -18,7 +19,7 @@ class Trainer(_Logger):
                        'euclidean_lr': 1e-3,
                        'slow_lr': 1e-4})
     def __init__(self, model: _Model, learning_set: _LearningSet, **kwargs):
-        super(Trainer, self).__init__(*args, **kwargs)
+        super(Trainer, self).__init__(**kwargs)
         self._learning_set: _LearningSet = learning_set
         self._model: _Model = model
         self.problem = kwargs["problem"]

@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the cosine kernel class.
 

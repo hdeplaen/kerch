@@ -1,8 +1,3 @@
-from .decorators import *
-from .cast import *
-from .type import *
-from .doc import *
-from .math import *
-from .errors import *
-from .tensor import *
-from .defaults import *
+# coding=utf-8
+import lazy_loader
+__getattr__, __dir__, __all__ = lazy_loader.attach_stub(__name__, __file__)

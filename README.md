@@ -1,10 +1,19 @@
 # Kerch
-[![PyPI version](https://badge.fury.io/py/kerch.svg)](https://badge.fury.io/py/kerch)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI version](https://img.shields.io/pypi/v/kerch
+)](https://pypi.org/project/kerch/)
+[![PyPi downloads](https://img.shields.io/pypi/dw/kerch
+)](https://pypi.org/project/kerch/)
+[![License: LGPL-3.0](https://img.shields.io/github/license/hdeplaen/kerch
+)](https://www.gnu.org/licenses/lgpl-3.0.html)
+[![Size of the repository](https://img.shields.io/github/repo-size/hdeplaen/kerch
+)](https://github.com/hdeplaen/kerch)
+[![Total number of commits](https://img.shields.io/github/commit-activity/t/hdeplaen/kerch
+)](https://github.com/hdeplaen/kerch/commits/master/)
+
 
 Kerch is a Python package meant for various kernel methods, and in particular Deep Restricted Kernel Machines. You can natively perform SVMs, LS-SVMs, (K)PCA with various kernels, automatic centering, out-of-sample, etc.
 
-The package is built on PyTorch and supports GPU acceleration.
+The package is built upon PyTorch and supports GPU acceleration.
 
 <!-- toc -->
 
@@ -26,6 +35,7 @@ This is done by first instantiating a model, setting its dataset, searching for 
 parameters and plotting. The implementation can be found [here](research/misc/lssvm-tuning.py).
 
 ```python
+import kerch                                        # importation is fast as the modules are only loaded when called
 mdl = kerch.model.LSSVM(type="rbf",                 # kernel name
                      representation="dual")         # initiate model
 mdl.set_data_prop(data=data,                        # value

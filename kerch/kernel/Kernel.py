@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the abstract kernel classes with transform.
 
@@ -20,7 +21,7 @@ from ..transform._Sphere import _UnitSphereNormalization
 
 
 @utils.extend_docstring(_BaseKernel)
-class _Kernel(_BaseKernel, metaclass=ABCMeta):
+class Kernel(_BaseKernel, metaclass=ABCMeta):
     r"""
     :param kernel_transform: A list composed of the elements `'normalize'` or `'center'`. For example a centered
         cosine kernel which is centered and normalized in order to get a covariance matrix for example can be obtained
@@ -36,7 +37,7 @@ class _Kernel(_BaseKernel, metaclass=ABCMeta):
         "normalize": False
     })
     def __init__(self, *args, **kwargs):
-        super(_Kernel, self).__init__(*args, **kwargs)
+        super(Kernel, self).__init__(*args, **kwargs)
 
         kernel_transform = kwargs.pop('kernel_transform', [])
 

@@ -13,7 +13,7 @@ from abc import ABCMeta, abstractmethod
 from typing import Union
 
 from kerch import utils
-from .._module._Stochastic import _Stochastic
+from ..module._Stochastic import _Stochastic
 
 
 @utils.extend_docstring(_Stochastic)

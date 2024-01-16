@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the sigmoid kernel class.
 
@@ -8,13 +9,13 @@ File containing the sigmoid kernel class.
 """
 
 from .. import utils
-from ._Implicit import _Implicit, _Kernel
+from .Implicit import Implicit, Kernel
 
 import torch
 
 
-@utils.extend_docstring(_Kernel)
-class Sigmoid(_Implicit):
+@utils.extend_docstring(Kernel)
+class Sigmoid(Implicit):
     r"""
     Sigmoid kernel.
 

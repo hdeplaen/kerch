@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the indicator kernel class.
 
@@ -8,14 +9,14 @@ File containing the indicator kernel class.
 """
 from typing import Iterator
 from .. import utils
-from ._Implicit import _Implicit, _Kernel
+from .Implicit import Implicit, Kernel
 
 import torch
 
 
 
-@utils.extend_docstring(_Kernel)
-class Indicator(_Implicit):
+@utils.extend_docstring(Kernel)
+class Indicator(Implicit):
     r"""
     Indicator kernel.
 

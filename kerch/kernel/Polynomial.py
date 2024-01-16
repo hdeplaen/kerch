@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the polynomial kernel class.
 
@@ -8,13 +9,13 @@ File containing the polynomial kernel class.
 """
 from typing import Iterator
 from .. import utils
-from ._Kernel import _Kernel
+from .Kernel import Kernel
 
 import torch
 
 
-@utils.extend_docstring(_Kernel)
-class Polynomial(_Kernel):
+@utils.extend_docstring(Kernel)
+class Polynomial(Kernel):
     r"""
     Polynomial kernel. Transform onto a hypershpere.
 

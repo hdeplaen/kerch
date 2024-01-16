@@ -2,7 +2,7 @@ import torch
 import logging
 from abc import ABCMeta, abstractmethod
 
-from kerch._module._Module import _Module
+from kerch.module._Module import _Module
 from kerch.model._Dataset import _Dataset
 from kerch import utils
 

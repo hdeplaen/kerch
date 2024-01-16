@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the feature kernel class.
 
@@ -11,12 +12,12 @@ import torch
 
 
 from .. import utils
-from ._Explicit import _Explicit, _Kernel
+from .Explicit import Explicit, Kernel
 from ._BaseKernel import _BaseKernel
 from .factory import factory
 
-@utils.extend_docstring(_Kernel)
-class Nystrom(_Explicit):
+@utils.extend_docstring(Kernel)
+class Nystrom(Explicit):
     r"""
     Nyström kernel. Constructs an explicit feature map based on the eigendecomposition of any kernel matrix based on
     some sample.

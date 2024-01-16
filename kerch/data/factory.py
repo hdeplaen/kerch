@@ -1,3 +1,4 @@
+# coding=utf-8
 from ._LearningSet import _LearningSet
 def factory(dataset='gaussians', **kwargs) -> _LearningSet:
     r"""

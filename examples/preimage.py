@@ -1,3 +1,4 @@
+# coding=utf-8
 import kerch
 from sklearn.datasets import load_digits
 from matplotlib import pyplot as plt

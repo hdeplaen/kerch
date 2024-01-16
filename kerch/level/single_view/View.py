@@ -11,15 +11,15 @@ from torch import Tensor
 from math import sqrt
 
 from .._View import _View
-from ...kernel._Kernel import _Kernel
+from ...kernel.Kernel import Kernel
 from ...kernel.factory import class_factory
 from ...utils import DEFAULT_KERNEL_TYPE, extend_docstring, kwargs_decorator, check_representation, \
     castf, NotInitializedError, FTYPE
 
 
 @extend_docstring(_View)
-@extend_docstring(_Kernel)
-class View(_Kernel, _View):
+@extend_docstring(Kernel)
+class View(Kernel, _View):
     r"""
     :param kernel_type: Represents which kernel to use if kernel_class is not specified.
         Defaults to kerch.DEFAULT_KERNEL_TYPE.
@@ -41,7 +41,7 @@ class View(_Kernel, _View):
 
         if kernel_class is None:
             kernel_class = class_factory(kernel_type)
-        assert issubclass(kernel_class, _Kernel), 'The provided kernel_class argument is not a valid kernel class.'
+        assert issubclass(kernel_class, Kernel), 'The provided kernel_class argument is not a valid kernel class.'
         new_cls = type(cls.__name__, (cls, kernel_class, ), dict(cls.__dict__))
         return object.__new__(new_cls)
 
@@ -236,5 +236,5 @@ class View(_Kernel, _View):
         return _View.forward(self, x, representation)
 
     @property
-    def kernel(self) -> _Kernel:
+    def kernel(self) -> Kernel:
         return super(View, self)

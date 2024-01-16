@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the linear kernel class.
 
@@ -9,16 +10,16 @@ File containing the linear kernel class.
 
 import torch
 from .. import utils
-from ._Kernel import _Kernel
+from .Kernel import Kernel
 from abc import ABCMeta, abstractmethod
 
 
-@utils.extend_docstring(_Kernel)
-class _Explicit(_Kernel, metaclass=ABCMeta):
+@utils.extend_docstring(Kernel)
+class Explicit(Kernel, metaclass=ABCMeta):
 
     @utils.kwargs_decorator({})
     def __init__(self, *args, **kwargs):
-        super(_Explicit, self).__init__(*args, **kwargs)
+        super(Explicit, self).__init__(*args, **kwargs)
         self._dim_feature = None
 
     def __str__(self):

@@ -1,8 +1,8 @@
 import numpy as np
 
 from _archive import Model
-from kerch._module._Logger import _GLOBAL_LOGGER
-from ..level._Level import _Level
+from kerch.module._Logger import _GLOBAL_LOGGER
+from kerch.level._Level import _Level
 from matplotlib import pyplot as plt
 
 def classifier_level(lvl: _Level, dims=None):

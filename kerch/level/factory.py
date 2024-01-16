@@ -1,3 +1,4 @@
+# coding=utf-8
 from .single_view.Level import Level
 def factory(level_type='kpca', **kwargs) -> Level:
     r"""

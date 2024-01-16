@@ -1,3 +1,4 @@
+# coding=utf-8
 import torch
 from .type import ITYPE, FTYPE
 from .errors import RepresentationError
