@@ -7,6 +7,7 @@ def run(**kwargs):
     verbose = kwargs.pop('verbose')
     filename = kwargs.pop('filename')
     expe_kwargs = get_kwargs(filename)
+    expe_name = filename[:-len('.yaml')]
 
     # LOADING DATA
     if verbose: print('Loading data...', end=" ")
@@ -18,7 +19,8 @@ def run(**kwargs):
 
     # LOADING TRAINER
     if verbose: print('Done'), print('Initializing training...', end=" ")
-    trainer = train.Trainer(model=mdl, learning_set=dataset, verbose=verbose, **expe_kwargs['train'])
+    trainer = train.Trainer(model=mdl, learning_set=dataset, verbose=verbose, expe_name=expe_name,
+                            **expe_kwargs['train'])
 
     # TRAIN
     if verbose: print('Done'), print('Start training...')

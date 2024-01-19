@@ -127,9 +127,11 @@ class Model(Stochastic, metaclass=ABCMeta):
 
     def forward(self, x: torch.Tensor | None = None) -> torch.Tensor:
         if self.training:
-            x = self.current_sample_projected
             for level in self.levels:
-                level.update_sample(x, idx_sample=self._idx_stochastic)
+                if x is None:
+                    level.stochastic(idx=self._idx_stochastic)
+                else:
+                    level.update_sample(x, idx_sample=self._idx_stochastic)
                 if level.param_trainable is False:
                     level.solve()
                 x = level()

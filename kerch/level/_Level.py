@@ -160,8 +160,8 @@ class _Level(_View, metaclass=ABCMeta):
         r"""
         Performs steps required before each training step.
         """
-        sublosses_keys = self.sublosses().keys()
-        self._remove_from_cache(sublosses_keys)
+        losses_keys = self.losses().keys()
+        self._remove_from_cache(losses_keys)
 
     def after_step(self) -> None:
         r"""

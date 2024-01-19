@@ -44,11 +44,11 @@ class Watcher(metaclass=ABCMeta):
         assert isinstance(model, Model), 'The model argument is not a correct Kerch Model.'
 
         # DIRECTORY
-        current_time = datetime.now().strftime('%b%d_%_H-%M-%S')
+        current_time = datetime.now().strftime('%b%d_%H-%M-%S')
         self._id = current_time + '_' + socket.gethostname()
         assert isinstance(expe_name, str), 'The expe_name argument must be a string.'
         self._expe_name = expe_name
-        self._expe_id = self._model.__class__.__name__ + self._id
+        self._expe_id = self._id
         self._dir_project = os.path.join("kerch", self._expe_name, self._expe_id)
         self._dir_model = os.path.join(self._dir_project, "model")
 
@@ -96,7 +96,7 @@ class Watcher(metaclass=ABCMeta):
         """
         return self._dir_project
 
-    def save_model(self, epoch: int | None = None) -> str:
+    def save_model(self, epoch: int) -> str:
         r"""
         Saves the model current state.
 
@@ -108,8 +108,8 @@ class Watcher(metaclass=ABCMeta):
         if not os.path.exists(self._dir_model):
             os.makedirs(self._dir_model)
 
-        save_name = 'final' if epoch is None else 'epoch-' + str(epoch)
-        save_path = os.path.join(self._dir_model, save_name + '.pt')
+        save_name = 'epoch-' + str(epoch)
+        save_path = os.path.join(self._dir_model, save_name + '.pth')
         torch.save(self._model.state_dict(), save_path)
         return save_path
 
@@ -120,11 +120,13 @@ class Watcher(metaclass=ABCMeta):
         :return: The relative path where the final model has been saved.
         :rtype: str
         """
-        final_name = 'final.pt'
-        filelist = [f for f in os.listdir(self._dir_model) if f != final_name]
+        filelist = os.listdir(self._dir_model)
+        last_epoch = max((int(file[len('epoch-'):-len('.pth')]) for file in filelist))
+        last_file = 'epoch-' + str(last_epoch) + '.pth'
+        filelist = {file for file in filelist if file != last_file}
         for f in filelist:
             os.remove(os.path.join(self._dir_model, f))
-        return os.path.join(self._dir_model, final_name)
+        return os.path.relpath(os.path.join(self._dir_model, last_file))
 
     @abstractmethod
     def update(self,

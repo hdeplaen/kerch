@@ -33,11 +33,12 @@ class WandB(Plotter):
         self._wandb_run.config.update(hparams)
 
     @property
-    def _plotter_name(self) -> str:
-        return 'wandb'
+    def _plotter_name(self) -> str | None:
+        return None
 
     def finish(self) -> str:
         filepath = super(WandB, self).finish()
+        print(filepath)
         self._wandb_run.log_model(path=filepath, name="final")
         self._wandb_run.finish(quiet=not self.verbose)
         return filepath
@@ -52,13 +53,12 @@ class WandB(Plotter):
         if epoch % self._num_epochs_save == 0:
             self.save_model(epoch)
         if epoch % self._num_epochs_params == 0:
-            self._wandb_run.log(data=self.model.params, step=epoch, commit=False)
+            self._wandb_run.log(data=self.model.params, step=epoch)
         if epoch % self._num_epochs_loss == 0:
-            self._wandb_run.log(data=self.model.losses, step=epoch, commit=False)
+            self._wandb_run.log(data=self.model.losses, step=epoch)
             self._wandb_run.log(data={'objective_loss': objective_loss,
                                       'training_error': training_error,
                                       'validation_error': validation_error,
-                                      'test_error': test_error}, step=epoch, commit=False)
+                                      'test_error': test_error}, step=epoch)
         if epoch % self._num_epochs_plot == 0:
-            self._wandb_run.log(data=self.model.watched_properties, step=epoch, commit=False)
-        self._wandb_run.log(step=epoch)
+            self._wandb_run.log(data=self.model.watched_properties, step=epoch)

@@ -24,6 +24,6 @@ model:
     dim_output: 1
     watch_properties: ['K']
 train:
+  epochs: 5
   watcher:
-    expe_name: 'test'
     watcher_type: 'wandb'

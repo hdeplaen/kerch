@@ -72,7 +72,7 @@ class Optimizer():
 
     @property
     def hparams(self):
-        return {'[Optimizer] ' + key: val for key, val in self._kwargs}
+        return {'[Optimizer] ' + key: val for key, val in self._kwargs.items()}
 
     @property
     def module(self) -> Module:

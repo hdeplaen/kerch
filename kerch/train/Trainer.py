@@ -27,6 +27,7 @@ class Trainer(Logger):
         self.slow_lr = kwargs.pop('slow_lr', 1e-4)
         self._verbose = kwargs.pop('verbose', False)
         self._watcher_kwargs = kwargs.pop('watcher', dict())
+        self._expe_name = kwargs.pop('expe_name', 'expe')
 
     @property
     def problem(self) -> str:
@@ -78,7 +79,6 @@ class Trainer(Logger):
             self._sampler = torch.utils.data.BatchSampler(SequentialSampler(range(num)),
                                                           batch_size=val, drop_last=False)
         self._batch_size = val
-
 
     @property
     def _mask_batch_progress(self) -> bool:
@@ -175,7 +175,6 @@ class Trainer(Logger):
         self.model.train()
         return self._loss(pred, labels)
 
-
     def fit(self) -> Model:
         self._init_fit()
         self.model.train()
@@ -191,7 +190,7 @@ class Trainer(Logger):
                                    disable=self._mask_batch_progress or not self._verbose,
                                    desc="Batch")
 
-        watcher = watch.factory(model=self.model, opt=self._optimizer,
+        watcher = watch.factory(model=self.model, opt=self._optimizer, expe_name=self._expe_name,
                                 verbose=self._verbose, **self._watcher_kwargs)
 
         def closure():
