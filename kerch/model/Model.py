@@ -55,9 +55,11 @@ class Model(Stochastic, metaclass=ABCMeta):
 
     @property
     def hparams(self) -> dict:
+        val = dict()
         for num, level in enumerate(self.levels):
             name = f"[LEVEL{num} {level.__class__.__name__}] "
-            return {name + key: val for key, val in level.hparams.items()}
+            val = {**val, **{name + key: val for key, val in level.hparams.items()}}
+        return val
 
     @property
     def params(self) -> dict:
@@ -68,11 +70,11 @@ class Model(Stochastic, metaclass=ABCMeta):
         return val
 
     @property
-    def sublosses(self) -> dict:
+    def losses(self) -> dict:
         val = dict()
         for num, level in enumerate(self.levels):
             name = f"[LEVEL{num} {level.__class__.__name__}] "
-            val = {**val, **{name + key: val for key, val in level.sublosses().items()}}
+            val = {**val, **{name + key: val for key, val in level.losses().items()}}
         return val
 
     @property
@@ -101,6 +103,7 @@ class Model(Stochastic, metaclass=ABCMeta):
             to True.
         :type full: bool, optional
         """
+        self._first_level.init_parameters(overwrite=False)
         if full:
             x = self._first_level()
             for level in self._levels[1:]:

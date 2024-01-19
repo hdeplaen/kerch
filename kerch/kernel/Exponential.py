@@ -56,7 +56,7 @@ class Exponential(Implicit, metaclass=ABCMeta):
         Bandwidth :math:`\sigma` of the kernel.
         """
         if self._sigma_defined:
-            return self._sigma.data.cpu().numpy()
+            return self._sigma.data.detach().cpu().item()
         elif not self._sigma_defined and not self.empty_sample:
             self.k()
             return self.sigma
@@ -83,7 +83,7 @@ class Exponential(Implicit, metaclass=ABCMeta):
 
     @property
     def params(self):
-        return {'Kernel parameter sigma': self.sigma, **super(Exponential, self).hparams}
+        return {'Kernel parameter sigma': self.sigma, **super(Exponential, self).params}
 
     @property
     def hparams(self):

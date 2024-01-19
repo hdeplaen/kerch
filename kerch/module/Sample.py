@@ -287,7 +287,7 @@ class Sample(Stochastic,  # manager stochastic indices
 
     @property
     def hparams(self) -> dict:
-        return {'Input dimension': self.input_dim,
+        return {'Input dimension': self.dim_input,
                 'Trainable sample': self._sample_trainable,
                 'Default sample transforms': self._default_sample_transform,
                 **super(Sample, self).hparams}

@@ -1,6 +1,7 @@
+# coding=utf-8
 import torch
 from torch import Tensor as T
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 from typing import Union, Iterator
 
 from ._Level import _Level
@@ -155,22 +156,6 @@ class _KPCA(_Level, metaclass=ABCMeta):
                             target=None,
                             representation=representation)
 
-    ######################################################################################
-
-    def _primal_obj(self, x=None) -> T:
-        P = self.weight @ self.weight.T  # primal projector
-        R = self._I_primal - P  # reconstruction
-        C = self.c(x)  # covariance
-        return torch.trace(R * C)  # reconstruction error on the covariance
-
-    def _dual_obj(self, x=None) -> T:
-        P = self.hidden @ self.hidden.T  # dual projector
-        R = self._I_dual - P  # reconstruction
-        K = self.k(x)  # kernel matrix
-        return torch.trace(R * K)  # reconstruction error on the kernel
-
-    ######################################################################################
-
     def _stiefel_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         # the stiefel optimizer requires the first dimension to be the number of eigenvectors
         yield from super(_KPCA, self)._stiefel_parameters(recurse)
@@ -181,39 +166,14 @@ class _KPCA(_Level, metaclass=ABCMeta):
             if self._hidden_exists:
                 yield self._hidden
 
-    @utils.kwargs_decorator({"representation": None})
-    def optimize(self, *args, **kwargs) -> None:
-        super(_KPCA, self).optimize(*args, **kwargs)
-
-        # once the optimization is done, the eigenvalues still have to be defined
-        representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
-        if representation == 'primal':
-            self.vals = torch.diag(self.weight.T @ self.C @ self.weight)
-        else:
-            self.vals = torch.diag(self.hidden.T @ self.K @ self.hidden)
-
-    @utils.kwargs_decorator({
-        "representation": None
-    })
-    def fit(self, *args, **kwargs):
-        if not self.attached:
-            if self.dim_output is None:
-                representation = utils.check_representation(kwargs["representation"], self._representation, cls=self)
-                if representation == "primal":
-                    self._dim_output = self.dim_feature
-                else:
-                    self._dim_output = self.num_idx
-            super(_KPCA, self).fit(*args, **kwargs)
-
-    ####################################################################################################################
-
     def loss(self, representation=None) -> T:
         r"""
         Reconstruction error on the sample.
         """
-        return self._subloss_original(representation) - self._subloss_projected(representation)
+        return self._loss_original(representation=representation) \
+            - self._loss_projected(representation=representation)
 
-    def _subloss_original(self, representation=None) -> T:
+    def _loss_original(self, representation=None) -> T:
         representation = utils.check_representation(representation, self._representation, self)
         level_key = "Level_subloss_default_representation" if self._representation == representation \
             else "Level_subloss_representation"
@@ -225,10 +185,10 @@ class _KPCA(_Level, metaclass=ABCMeta):
                 M = self.K
             return torch.trace(M)
 
-        return self._cache.get(key='subloss_original_' + representation,
-                               level_key=level_key, fun=fun)
+        return self._get(key='subloss_original_' + representation,
+                         level_key=level_key, fun=fun)
 
-    def _subloss_projected(self, representation=None) -> T:
+    def _loss_projected(self, representation=None) -> T:
         representation = utils.check_representation(representation, self._representation, self)
         level_key = "Level_subloss_default_representation" if self._representation == representation \
             else "Level_subloss_representation"
@@ -242,10 +202,10 @@ class _KPCA(_Level, metaclass=ABCMeta):
                 M = self.K
             return torch.trace(U.T @ U @ M)
 
-        return self._cache.get(key='subloss_projected_' + representation,
-                               level_key=level_key, fun=fun)
+        return self._get(key='subloss_projected_' + representation,
+                         level_key=level_key, fun=fun)
 
-    def sublosses(self, representation=None) -> dict:
-        return {'Original': self._subloss_original().data.detach().cpu(),
-                'Projected': self._subloss_projected().data.detach().cpu(),
-                **super(_KPCA, self).sublosses()}
+    def losses(self, representation=None) -> dict:
+        return {'Original': self._loss_original().data.detach().cpu().item(),
+                'Projected': self._loss_projected().data.detach().cpu().item(),
+                **super(_KPCA, self).losses()}

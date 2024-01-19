@@ -54,7 +54,7 @@ class WandB(Plotter):
         if epoch % self._num_epochs_params == 0:
             self._wandb_run.log(data=self.model.params, step=epoch, commit=False)
         if epoch % self._num_epochs_loss == 0:
-            self._wandb_run.log(data=self.model.sublosses, step=epoch, commit=False)
+            self._wandb_run.log(data=self.model.losses, step=epoch, commit=False)
             self._wandb_run.log(data={'objective_loss': objective_loss,
                                       'training_error': training_error,
                                       'validation_error': validation_error,

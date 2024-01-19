@@ -68,9 +68,11 @@ class _View(Stochastic, metaclass=ABCMeta):
 
     @property
     def hparams(self) -> dict:
+        constraint = 'soft' if self._param_trainable else 'hard'
         return {'Output dimension': self.dim_output,
                 'Representation': self.representation,
                 'Parameters trainable': self._param_trainable,
+                'Constraint': constraint,
                 **super(_View, self).hparams}
 
     def _reset_hidden(self) -> None:

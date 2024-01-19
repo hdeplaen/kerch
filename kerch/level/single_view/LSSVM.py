@@ -113,10 +113,10 @@ class LSSVM(Level):
 
     def loss(self, representation=None) -> T:
         fact = 1 / self.num_idx
-        return fact * self._subloss_regularization(representation) \
-            + self.gamma * self._subloss_mse(representation)
+        return fact * self._loss_regularization(representation) \
+            + self.gamma * self._loss_mse(representation)
 
-    def _subloss_regularization(self, representation=None):
+    def _loss_regularization(self, representation=None):
         representation = utils.check_representation(representation, self._representation, self)
         level_key = "Level_subloss_default_representation" if self._representation == representation \
             else "Level_subloss_representation"
@@ -131,10 +131,10 @@ class LSSVM(Level):
                 return torch.einsum('ji,jk,ki',hidden,self.K,hidden)
                 # torch.trace(hidden.T @ self.K @ hidden)
 
-        return self._cache.get(key='subloss_regularization_' + representation,
+        return self._get(key='subloss_regularization_' + representation,
                                level_key=level_key, fun=fun)
 
-    def _subloss_mse(self, representation=None):
+    def _loss_mse(self, representation=None):
         representation = utils.check_representation(representation, self._representation, self)
         level_key = "Level_subloss_default_representation" if self._representation == representation \
             else "Level_subloss_representation"
@@ -142,13 +142,13 @@ class LSSVM(Level):
         def fun():
             pred = self._forward(representation=representation)
             return self._mse_loss(pred, self.current_target)
-        return self._cache.get(key='subloss_mse_' + representation,
+        return self._get(key='subloss_mse_' + representation,
                                level_key=level_key, fun=fun)
 
-    def sublosses(self, representation=None) -> dict:
-        return {'Regularization': self._subloss_regularization().data.detach().cpu(),
-                'MSE': self._subloss_mse().data.detach().cpu(),
-                **super(LSSVM, self).sublosses()}
+    def losses(self, representation=None) -> dict:
+        return {'Regularization': self._loss_regularization().data.detach().cpu().item(),
+                'MSE': self._loss_mse().data.detach().cpu().item(),
+                **super(LSSVM, self).losses()}
 
 
     def after_step(self) -> None:

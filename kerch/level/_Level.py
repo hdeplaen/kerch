@@ -27,13 +27,13 @@ class _Level(_View, metaclass=ABCMeta):
 
     @property
     def hparams(self) -> dict:
-        return {'Level eta': self.eta,
+        return {'Level type': self.__class__.__name__,
+                'Level eta': self.eta,
                 **super(_Level, self).hparams}
 
     @property
     def params(self) -> dict:
-        return {'Loss': self.loss(),
-                **super(_Level, self).hparams}
+        return {**super(_Level, self).params}
 
     @property
     def watch_properties(self) -> list[str]:
@@ -137,11 +137,11 @@ class _Level(_View, metaclass=ABCMeta):
     def loss(self, representation=None) -> T:
         pass
 
-    def sublosses(self, representation=None) -> dict:
+    def losses(self, representation=None) -> dict:
         r"""
         Different components of the losses.
         """
-        return {'Level loss': self.loss().data.detach().cpu()}
+        return {'Level loss': self.loss().data.detach().cpu().item()}
 
     @property
     def watched_properties(self) -> dict:
