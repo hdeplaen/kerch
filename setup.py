@@ -1,5 +1,5 @@
+# coding=utf-8
 import setuptools
-import pathlib
 import kerch
 import os
 
@@ -44,6 +44,7 @@ setuptools.setup(
     platforms=['linux', 'macosx', 'windows'],
     license=license,
     install_requires=requirements,
+    scripts=['bin/kerch'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: GPU :: NVIDIA CUDA',

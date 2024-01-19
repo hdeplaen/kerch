@@ -17,7 +17,7 @@ from torch import Tensor
 from .. import utils
 from ._BaseKernel import _BaseKernel
 from ..transform import TransformTree
-from ..transform._Sphere import _UnitSphereNormalization
+from ..transform.all.Sphere import UnitSphereNormalization
 
 
 @utils.extend_docstring(_BaseKernel)
@@ -64,6 +64,10 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
             return self._kernel_implicit_transform
 
     @property
+    def hparams(self) -> dict:
+        return {'Default kernel transforms': self._default_kernel_transform, **super(Kernel, self).hparams}
+
+    @property
     def _naturally_centered(self) -> bool:
         return False
 
@@ -88,7 +92,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
 
         # remove unnecessary operation if kernel does it by default
         try:
-            if self._naturally_normalized and transform[0] == _UnitSphereNormalization:
+            if self._naturally_normalized and transform[0] == UnitSphereNormalization:
                 transform.pop(0)
         except IndexError:
             pass

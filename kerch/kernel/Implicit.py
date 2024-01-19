@@ -18,13 +18,8 @@ from ..utils import ExplicitError, extend_docstring
 
 @extend_docstring(Kernel)
 class Implicit(Kernel, metaclass=ABCMeta):
-    @utils.kwargs_decorator(
-        {"sigma": 1., "sigma_trainable": False})
+
     def __init__(self, *args, **kwargs):
-        """
-        :param sigma: bandwidth of the kernel (default 1.)
-        :param sigma_trainable: True if sigma can be trained (default False)
-        """
         super(Implicit, self).__init__(*args, **kwargs)
 
     def __str__(self):

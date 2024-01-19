@@ -13,11 +13,11 @@ from torch import Tensor
 from abc import ABCMeta, abstractmethod
 
 from .. import utils
-from ..module._Sample import _Sample
+from ..module.Sample import Sample
 
 
-@utils.extend_docstring(_Sample)
-class _BaseKernel(_Sample, metaclass=ABCMeta):
+@utils.extend_docstring(Sample)
+class _BaseKernel(Sample, metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
         super(_BaseKernel, self).__init__(*args, **kwargs)
         self._log.debug("Initializing " + str(self))
@@ -40,14 +40,14 @@ class _BaseKernel(_Sample, metaclass=ABCMeta):
         r"""
         Dictionnary containing the hyper-parameters and their values. This can be relevant for monitoring.
         """
-        return {}
+        return {**super(_BaseKernel, self).hparams}
 
     @property
     def params(self) -> dict:
         r"""
         Dictionnary containing the parameters and their values. This can be relevant for monitoring.
         """
-        return {}
+        return {**super(_BaseKernel, self).params}
 
     @property
     @abstractmethod

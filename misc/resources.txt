@@ -1,1 +1,2 @@
 https://github.com/AliOsm/Talzeeq
+https://pyqtgraph.readthedocs.io/en/latest/api_reference/flowchart/index.html

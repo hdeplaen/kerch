@@ -1,20 +1,21 @@
+# coding=utf-8
 from typing import Union, List
 
 import kerch
 import torch
 from torch import Tensor
 from torch.nn import Parameter
-from ._Transform import _Transform
 
-from ._MinimumCentering import _MinimumCentering
-from ._MeanCentering import _MeanCentering
-from ._Sphere import _UnitSphereNormalization
-from ._Variance import _UnitVarianceNormalization
-from ._MinMaxNormalization import _MinMaxNormalization
+from .Transform import Transform
+from .all import (UnitSphereNormalization,
+                  MinimumCentering,
+                  MeanCentering,
+                  UnitVarianceNormalization,
+                  MinMaxNormalization)
 
 
-@kerch.utils.extend_docstring(_Transform)
-class TransformTree(_Transform):
+@kerch.utils.extend_docstring(Transform)
+class TransformTree(Transform):
     r"""
     Creates a tree of transform for efficient computing, with cache management.
 
@@ -30,23 +31,23 @@ class TransformTree(_Transform):
     :type diag_fun: Function handle
     """
 
-    all_transform = {"normalize": _UnitSphereNormalization,  # for legacy
-                     "center": _MeanCentering,  # for legacy
-                     "sphere": _UnitSphereNormalization,
-                     "min": _MinimumCentering,
-                     "variance": _UnitVarianceNormalization,
-                     "standard": [_MeanCentering, _UnitVarianceNormalization],
-                     "minmax": _MinMaxNormalization,
-                     "unit_sphere_normalization": _UnitSphereNormalization,
-                     "mean_centering": _MeanCentering,
-                     "minimum_centering": _MinimumCentering,
-                     "unit_variance_normalization": _UnitVarianceNormalization,
-                     "minmax_normalization": _MinMaxNormalization,
-                     "standardize": [_MeanCentering, _UnitVarianceNormalization],
-                     "minmax_rescaling": [_MinimumCentering, _MinMaxNormalization]}
+    all_transform = {"normalize": UnitSphereNormalization,  # for legacy
+                     "center": MeanCentering,  # for legacy
+                     "sphere": UnitSphereNormalization,
+                     "min": MinimumCentering,
+                     "variance": UnitVarianceNormalization,
+                     "standard": [MeanCentering, UnitVarianceNormalization],
+                     "minmax": MinMaxNormalization,
+                     "unit_sphere_normalization": UnitSphereNormalization,
+                     "mean_centering": MeanCentering,
+                     "minimum_centering": MinimumCentering,
+                     "unit_variance_normalization": UnitVarianceNormalization,
+                     "minmax_normalization": MinMaxNormalization,
+                     "standardize": [MeanCentering, UnitVarianceNormalization],
+                     "minmax_rescaling": [MinimumCentering, MinMaxNormalization]}
 
     @staticmethod
-    def beautify_transform(transform) -> Union[None, List[_Transform]]:
+    def beautify_transform(transform) -> Union[None, List[Transform]]:
         r"""
         Creates a list of _Transform classes and removes duplicates.
 
@@ -59,7 +60,7 @@ class TransformTree(_Transform):
             transform_classes = []
             for transform in transform:
                 try:
-                    if issubclass(transform, _Transform):
+                    if issubclass(transform, Transform):
                         transform_classes.append(transform)
                 except TypeError:
                     new_transform = TransformTree.all_transform.get(
@@ -69,7 +70,7 @@ class TransformTree(_Transform):
                     elif isinstance(new_transform, List):
                         for tr in new_transform:
                             transform_classes.append(tr)
-                    elif issubclass(new_transform, _Transform):
+                    elif issubclass(new_transform, Transform):
                         transform_classes.append(new_transform)
                     else:
                         kerch._GLOBAL_LOGGER._log.error("Error while creating TransformTree list of transform")
@@ -188,7 +189,7 @@ class TransformTree(_Transform):
     def _revert_implicit(self, oos):
         return oos
 
-    def _get_tree(self, transform: List[str] = None) -> List[_Transform]:
+    def _get_tree(self, transform: List[str] = None) -> List[Transform]:
         transform = TransformTree.beautify_transform(transform)
         if transform is None:
             transform = self._default_transform

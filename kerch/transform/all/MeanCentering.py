@@ -1,9 +1,10 @@
-from ._Transform import _Transform
+# coding=utf-8
+from ..Transform import Transform
 import torch
 
-class _MeanCentering(_Transform):
+class MeanCentering(Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
-        super(_MeanCentering, self).__init__(explicit=explicit, name="Mean centering", default_path=default_path)
+        super(MeanCentering, self).__init__(explicit=explicit, name="Mean centering", default_path=default_path)
 
     def _explicit_statistics(self, sample):
         return torch.mean(sample, dim=0)

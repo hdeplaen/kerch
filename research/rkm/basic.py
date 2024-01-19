@@ -5,7 +5,7 @@ n, d = 50, 10
 x = torch.randn((n, d))
 t = torch.randn((n, 1))
 
-rkm = kerch.rkm._Model()
+rkm = kerch.rkm.Model()
 rkm.append_level(level_type='kpca', constraint='soft', representation='dual', dim_output=5)
 rkm.append_level(level_type='kpca', constraint='soft', representation='dual', dim_output=2)
 rkm.append_level(level_type='lssvm', constraint='soft', representation='dual', dim_output=1)

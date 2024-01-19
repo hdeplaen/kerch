@@ -83,7 +83,7 @@ class Exponential(Implicit, metaclass=ABCMeta):
 
     @property
     def params(self):
-        return {'Sigma': self.sigma}
+        return {'Kernel parameter sigma': self.sigma, **super(Exponential, self).hparams}
 
     @property
     def hparams(self):

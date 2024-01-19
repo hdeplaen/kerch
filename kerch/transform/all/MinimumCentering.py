@@ -1,10 +1,11 @@
-from ._Transform import _Transform
+# coding=utf-8
+from ..Transform import Transform
 import torch
 
-class _MinimumCentering(_Transform):
+class MinimumCentering(Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
-        super(_MinimumCentering, self).__init__(explicit=explicit,
-                                                name="Minimum Centering", default_path=default_path)
+        super(MinimumCentering, self).__init__(explicit=explicit,
+                                               name="Minimum Centering", default_path=default_path)
 
     def _explicit_statistics(self, sample):
         return torch.min(sample, dim=0).values

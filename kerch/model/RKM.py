@@ -1,12 +1,25 @@
+# coding=utf-8
 from __future__ import annotations
+import nested_dict
 
-from ._Model import _Model
-from ..utils import capitalize_only_first
+from .Model import Model
+from ..utils import capitalize_only_first, KerchError
 
 
-class RKM(_Model):
+class RKM(Model):
     def __init__(self, *args, **kwargs):
         super(RKM, self).__init__(*args, **kwargs)
+        level = 0
+        while True:
+            try:
+                level_kwargs = kwargs[f"level{level}"]
+                self.append_level(**level_kwargs)
+                level += 1
+            except KeyError:
+                break
+        if level == 0:
+           raise KerchError(cls=self, message='The RKM model does not contain any level. '
+                                              'Please add one or check if the arguments are correct.')
 
     def __str__(self):
         description = f"[Model] RKM with the following levels:"

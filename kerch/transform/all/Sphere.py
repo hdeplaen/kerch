@@ -1,11 +1,12 @@
+# coding=utf-8
 import torch
-from ._Transform import _Transform
+from ..Transform import Transform
 from kerch.utils.type import EPS
 
-class _UnitSphereNormalization(_Transform):
+class UnitSphereNormalization(Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
-        super(_UnitSphereNormalization, self).__init__(explicit=explicit, name="Unit Sphere Normalization",
-                                                       default_path=default_path)
+        super(UnitSphereNormalization, self).__init__(explicit=explicit, name="Unit Sphere Normalization",
+                                                      default_path=default_path)
 
     def _explicit_statistics(self, sample):
         return torch.norm(sample, dim=1, keepdim=True)

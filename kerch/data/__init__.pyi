@@ -4,4 +4,4 @@ from .datasets import (TwoMoons as TwoMoons,
                        Spiral as Spiral,
                        Gaussians as Gaussians,
                        Iris as Iris)
-from .factory import factory
+from .factory import factory as factory

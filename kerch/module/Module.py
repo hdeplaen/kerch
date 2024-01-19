@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Abstract class defining a general level in the toolbox.
 """
@@ -6,48 +7,48 @@ import torch
 from typing import Iterator
 from abc import ABCMeta, abstractmethod
 
-from ._Logger import _Logger
+from .Logger import Logger
 from ..utils import capitalize_only_first, extend_docstring
 
 
-@extend_docstring(_Logger)
-class _Module(_Logger,
-              torch.nn.Module,
-              object,
-              metaclass=ABCMeta):
+@extend_docstring(Logger)
+class Module(Logger,
+             torch.nn.Module,
+             object,
+             metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, *args, **kwargs):
         # for some obscure reason, calling the super init does not lead to the call of both classes.
         # by consequence, we make the calls manually to each parents
         torch.nn.Module.__init__(self)
-        _Logger.__init__(self, *args, **kwargs)
+        Logger.__init__(self, *args, **kwargs)
 
     def __repr__(self):
         return capitalize_only_first(self.__str__())
 
     def set_log_level(self, level: int = None) -> int:
-        level = super(_Module, self).set_log_level(level)
+        level = super(Module, self).set_log_level(level)
         for child in self.children():
-            if isinstance(child, _Logger):
+            if isinstance(child, Logger):
                 child.set_log_level(level)
         return level
 
     def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         if recurse:
             for module in self.children():
-                if isinstance(module, _Module):
+                if isinstance(module, Module):
                     yield from module._euclidean_parameters(recurse)
 
     def _stiefel_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         if recurse:
             for module in self.children():
-                if isinstance(module, _Module):
+                if isinstance(module, Module):
                     yield from module._stiefel_parameters(recurse)
 
     def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         if recurse:
             for module in self.children():
-                if isinstance(module, _Module):
+                if isinstance(module, Module):
                     yield from module._slow_parameters(recurse)
 
     def manifold_parameters(self, recurse=True, type='euclidean') -> Iterator[torch.nn.Parameter]:
@@ -62,5 +63,16 @@ class _Module(_Logger,
                 memo.add(p)
                 yield p
 
+    def before_step(self) -> None:
+        pass
+
     def after_step(self) -> None:
         pass
+
+    @property
+    def params(self) -> dict:
+        return {}
+
+    @property
+    def hparams(self) -> dict:
+        return {}

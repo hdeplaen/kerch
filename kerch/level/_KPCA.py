@@ -18,6 +18,8 @@ class _KPCA(_Level, metaclass=ABCMeta):
         super(_KPCA, self).__init__(*args, **kwargs)
         self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                         requires_grad=False)
+        self._subloss_projected = None
+        self._subloss_original = None
 
     @property
     def vals(self) -> T:
@@ -81,7 +83,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
     def _reset_hidden(self) -> None:
         super(_KPCA, self)._reset_hidden()
-        self._remove_from_cache(["total_variance_primal","total_variance_dual"])
+        self._remove_from_cache(["total_variance_primal", "total_variance_dual"])
 
     def relative_variance(self, as_tensor=False) -> Union[float, T]:
         r"""
@@ -209,12 +211,41 @@ class _KPCA(_Level, metaclass=ABCMeta):
         r"""
         Reconstruction error on the sample.
         """
+        return self._subloss_original(representation) - self._subloss_projected(representation)
+
+    def _subloss_original(self, representation=None) -> T:
         representation = utils.check_representation(representation, self._representation, self)
-        if representation == 'primal':
-            U = self._weight  # transposed compared to weight
-            M = self.C
-        else:
-            U = self._hidden  # transposed compared to hidden
-            M = self.K
-        loss = torch.trace(M) - torch.trace(U.T @ U @ M)
-        return loss
+        level_key = "Level_subloss_default_representation" if self._representation == representation \
+            else "Level_subloss_representation"
+
+        def fun():
+            if representation == 'primal':
+                M = self.C
+            else:
+                M = self.K
+            return torch.trace(M)
+
+        return self._cache.get(key='subloss_original_' + representation,
+                               level_key=level_key, fun=fun)
+
+    def _subloss_projected(self, representation=None) -> T:
+        representation = utils.check_representation(representation, self._representation, self)
+        level_key = "Level_subloss_default_representation" if self._representation == representation \
+            else "Level_subloss_representation"
+
+        def fun():
+            if representation == 'primal':
+                U = self._weight  # transposed compared to weight
+                M = self.C
+            else:
+                U = self._hidden  # transposed compared to hidden
+                M = self.K
+            return torch.trace(U.T @ U @ M)
+
+        return self._cache.get(key='subloss_projected_' + representation,
+                               level_key=level_key, fun=fun)
+
+    def sublosses(self, representation=None) -> dict:
+        return {'Original': self._subloss_original().data.detach().cpu(),
+                'Projected': self._subloss_projected().data.detach().cpu(),
+                **super(_KPCA, self).sublosses()}

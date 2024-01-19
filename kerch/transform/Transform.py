@@ -1,15 +1,16 @@
+# coding=utf-8
 from __future__ import annotations
 from typing import Union, Tuple
 from abc import ABCMeta, abstractmethod
 
 import torch
-from kerch.module._Cache import _Cache
+from kerch.module.Cache import Cache
 from kerch.utils.errors import BijectionError, ImplicitError
 
 
-class _Transform(_Cache, metaclass=ABCMeta):
+class Transform(Cache, metaclass=ABCMeta):
     def __init__(self, explicit: bool, name: str, default_path: bool = False, **kwargs):
-        super(_Transform, self).__init__(**kwargs)
+        super(Transform, self).__init__(**kwargs)
         self._parent = None
         self._offspring: dict = {}
         self._name: str = name
@@ -47,7 +48,7 @@ class _Transform(_Cache, metaclass=ABCMeta):
         return str(x_name), str(y_name)
 
     @property
-    def parent(self) -> Union[_Transform, None]:
+    def parent(self) -> Union[Transform, None]:
         return self._parent
 
     @property
@@ -66,7 +67,7 @@ class _Transform(_Cache, metaclass=ABCMeta):
     def offspring(self) -> dict:
         return self._offspring
 
-    def add_offspring(self, val: _Transform) -> None:
+    def add_offspring(self, val: Transform) -> None:
         # add offspring to parent
         if type(val) in self.offspring:
             self._log.debug(f"Overwriting offspring of type {type(val)} in parent {type(self._parent)}.")
@@ -77,7 +78,7 @@ class _Transform(_Cache, metaclass=ABCMeta):
             self._log.debug(f"Overwriting parent of offspring {type(self)}.")
         val._parent = self
 
-    def add_parent(self, val: _Transform) -> None:
+    def add_parent(self, val: Transform) -> None:
         val.add_offspring(self)
 
     @property
@@ -135,7 +136,7 @@ class _Transform(_Cache, metaclass=ABCMeta):
         raise BijectionError
 
     def statistics_oos(self, x=None, y=None, oos=None) -> Union[torch.Tensor, (torch.Tensor, torch.Tensor)]:
-        x_name, y_name = _Transform._get_names(x, y)
+        x_name, y_name = Transform._get_names(x, y)
 
         if self.explicit:
             if x is None:
@@ -167,7 +168,7 @@ class _Transform(_Cache, metaclass=ABCMeta):
             return (x_stat, y_stat)
 
     def oos(self, x=None, y=None) -> torch.Tensor:
-        x_name, y_name = _Transform._get_names(x, y)
+        x_name, y_name = Transform._get_names(x, y)
 
         if self.explicit:
             if x is None:

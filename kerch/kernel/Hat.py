@@ -81,7 +81,7 @@ class Hat(Implicit):
 
     @property
     def params(self):
-        return {'Lag': self.lag}
+        return {'Kernel lag': self.lag}
 
     @property
     def hparams(self):

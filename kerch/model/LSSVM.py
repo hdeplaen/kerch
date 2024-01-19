@@ -1,6 +1,6 @@
-from ._Model import _Model
+from .Model import Model
 
-class LSSVM(_Model):
+class LSSVM(Model):
     def __init__(self, *args, **kwargs):
         super(LSSVM, self).__init__(*args, **kwargs)
         kwargs['level_type'] = 'lssvm'

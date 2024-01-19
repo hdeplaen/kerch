@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Source code for the RKM toolbox.
 
@@ -7,7 +8,7 @@ Source code for the RKM toolbox.
 @date: March 2021
 """
 from abc import ABCMeta, abstractmethod
-from ..module._Logger import _Logger
+from ..module.Logger import Logger
 
 
 class KerchError(Exception, metaclass=ABCMeta):
@@ -17,7 +18,7 @@ class KerchError(Exception, metaclass=ABCMeta):
         if msg == "" and hasattr(self, 'message'):
             msg = self.message
 
-        if isinstance(cls, _Logger):
+        if isinstance(cls, Logger):
             msg = "[" + cls.__class__.__name__ + "] " + msg
 
         super(KerchError, self).__init__(msg)

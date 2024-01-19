@@ -1,11 +1,12 @@
+# coding=utf-8
 from kerch.utils.type import EPS
-from ._Transform import _Transform
+from ..Transform import Transform
 import torch
 
-class _UnitVarianceNormalization(_Transform):
+class UnitVarianceNormalization(Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
-        super(_UnitVarianceNormalization, self).__init__(explicit=explicit,
-                                                         name="Unit Variance Normalization", default_path=default_path)
+        super(UnitVarianceNormalization, self).__init__(explicit=explicit,
+                                                        name="Unit Variance Normalization", default_path=default_path)
 
     def _explicit_statistics(self, sample):
         return torch.std(sample, dim=0)

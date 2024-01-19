@@ -21,4 +21,4 @@ def factory(dataset='gaussians', **kwargs) -> _LearningSet:
     if learning_set is None:
         raise NameError("Invalid dataset.")
 
-    return learning_set(*args, **kwargs)
+    return learning_set(**kwargs)

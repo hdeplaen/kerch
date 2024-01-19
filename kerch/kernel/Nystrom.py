@@ -115,7 +115,9 @@ class Nystrom(Explicit):
         return self._base_kernel
 
     def hparams(self):
-        return {"Kernel": "Feature", **super(Nystrom, self).hparams}
+        return {"Kernel": "Nystrom",
+                "Base Kernel": self._base_kernel.hparams['Kernel'],
+                **super(Nystrom, self).hparams}
 
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         super(Nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)

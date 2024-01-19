@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 File containing the abstract kernel classes.
 
@@ -13,15 +14,15 @@ from abc import ABCMeta, abstractmethod
 from torch import Tensor
 
 from kerch import utils
-from ._Cache import _Cache
+from .Cache import Cache
 
 
-@utils.extend_docstring(_Cache)
-class _Stochastic(_Cache,  # creates a transportable cache (e.g. for GPU)
-                  metaclass=ABCMeta):
+@utils.extend_docstring(Cache)
+class Stochastic(Cache,  # creates a transportable cache (e.g. for GPU)
+                 metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, *args, **kwargs):
-        super(_Stochastic, self).__init__(*args, **kwargs)
+        super(Stochastic, self).__init__(*args, **kwargs)
         self._num_total = None
         self._idx_stochastic = None
 
@@ -100,5 +101,5 @@ class _Stochastic(_Cache,  # creates a transportable cache (e.g. for GPU)
             self._idx_stochastic = self._all_idx
 
         for stochastic_module in self.children():
-            if isinstance(stochastic_module, _Stochastic):
+            if isinstance(stochastic_module, Stochastic):
                 stochastic_module.stochastic(idx=self._idx_stochastic)

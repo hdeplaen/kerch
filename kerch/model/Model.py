@@ -1,17 +1,18 @@
+# coding=utf-8
 from __future__ import annotations
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 
 from typing import Iterator
 import torch
 
 from ..level import Level, factory
 from ..utils import NotInitializedError, kwargs_decorator
-from ..module._Stochastic import _Stochastic
+from ..module.Stochastic import Stochastic
 
 
-class _Model(_Stochastic, metaclass=ABCMeta):
+class Model(Stochastic, metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
-        super(_Model, self).__init__(*args, **kwargs)
+        super(Model, self).__init__(*args, **kwargs)
         self._levels: list[Level] = list()
 
     @property
@@ -52,6 +53,36 @@ class _Model(_Stochastic, metaclass=ABCMeta):
     def num_sample(self) -> int:
         return self._first_level.num_sample
 
+    @property
+    def hparams(self) -> dict:
+        for num, level in enumerate(self.levels):
+            name = f"[LEVEL{num} {level.__class__.__name__}] "
+            return {name + key: val for key, val in level.hparams.items()}
+
+    @property
+    def params(self) -> dict:
+        val = dict()
+        for num, level in enumerate(self.levels):
+            name = f"[LEVEL{num} {level.__class__.__name__}] "
+            val = {**val, **{name + key: val for key, val in level.params.items()}}
+        return val
+
+    @property
+    def sublosses(self) -> dict:
+        val = dict()
+        for num, level in enumerate(self.levels):
+            name = f"[LEVEL{num} {level.__class__.__name__}] "
+            val = {**val, **{name + key: val for key, val in level.sublosses().items()}}
+        return val
+
+    @property
+    def watched_properties(self) -> dict:
+        val = dict()
+        for num, level in enumerate(self.levels):
+            name = f"[LEVEL{num} {level.__class__.__name__}] "
+            val = {**val, **{name + key: val for key, val in level.watched_properties.items()}}
+        return val
+
     def init_sample(self, sample=None):
         self._first_level.init_sample(sample=sample)
         self._num_total = self._first_level.num_sample
@@ -72,12 +103,12 @@ class _Model(_Stochastic, metaclass=ABCMeta):
         """
         if full:
             x = self._first_level()
-            for level in self.levels[1:]:
+            for level in self._levels[1:]:
                 level.init_sample(sample=x)
                 level.init_parameters(overwrite=False)
                 x = level()
         else:
-            for level in self.levels[:1]:
+            for level in self._levels[1:]:
                 level.num_sample = self.num_sample
                 level.init_parameters(overwrite=False)
 
@@ -112,6 +143,10 @@ class _Model(_Stochastic, metaclass=ABCMeta):
         for level in self.levels:
             level.stochastic(idx=self._idx_stochastic)
 
+    def before_step(self):
+        for level in self.levels:
+            level.before_step()
+
     def after_step(self):
         for level in self.levels:
             level.after_step()
@@ -143,7 +178,7 @@ class _Model(_Stochastic, metaclass=ABCMeta):
         try:
             _ = level.dim_output
         except NotInitializedError:
-            raise AssertionError("The argument dim_output is not specified. This is not required target are "
+            raise AssertionError("The argument dim_output is not specified. This is not required if targets are "
                                  "explicitly specified during initialization.")
 
         # verify the correct assignment of the input dimension
@@ -151,7 +186,9 @@ class _Model(_Stochastic, metaclass=ABCMeta):
             _ = level.dim_input
         except NotInitializedError:
             if self.num_levels > 0:
-                kwargs["dim_input"] = self.level(self.num_levels - 1).dim_output
+                level.dim_input = self.level(self.num_levels - 1).dim_output
+
+
 
 
         # overwrite param_trainable
@@ -172,9 +209,6 @@ class _Model(_Stochastic, metaclass=ABCMeta):
                 f"output dimension of the previous level ({self.level(self.num_levels - 1).dim_output})."
 
         self._levels.append(level)
-
-    def plot(self, return_as_dict:bool = False):
-        raise NotImplementedError
 
     def reset(self, children=False, reset_persisting=True) -> None:
         for level in self.levels:

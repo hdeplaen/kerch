@@ -13,11 +13,11 @@ from abc import ABCMeta, abstractmethod
 from typing import Union
 
 from kerch import utils
-from ..module._Stochastic import _Stochastic
+from ..module.Stochastic import Stochastic
 
 
-@utils.extend_docstring(_Stochastic)
-class _View(_Stochastic, metaclass=ABCMeta):
+@utils.extend_docstring(Stochastic)
+class _View(Stochastic, metaclass=ABCMeta):
     r"""
     :param dim_output: Output dimension. If None, it will later be assigned by the target is relevant. Defaults to None.
     :param representation: Specifies if the level works in primal or dual representation. The dual representation
@@ -27,7 +27,7 @@ class _View(_Stochastic, metaclass=ABCMeta):
         (proportional to the number of sample datapoints, hence the formulation will be lighter hence faster.
         Defaults to 'dual'.
     :param weight: Weight values to start with. This is most of the cases not necessary if the level is meant to be
-        trained based on a gradient or fitted. Defaults to None.
+        trained based on a gr+adient or fitted. Defaults to None.
     :param hidden: Hidden values to start with. This is most of the cases not necessary if the level is meant to be
         trained based on a gradient or fitted. Defaults to None.
     :param_trainable: Boolean specifying whether the model parameters (weight, hidden and bias if applicable) are meant
@@ -65,6 +65,13 @@ class _View(_Stochastic, metaclass=ABCMeta):
             self.weight = weight
 
         self._attached_weight = None
+
+    @property
+    def hparams(self) -> dict:
+        return {'Output dimension': self.dim_output,
+                'Representation': self.representation,
+                'Parameters trainable': self._param_trainable,
+                **super(_View, self).hparams}
 
     def _reset_hidden(self) -> None:
         self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE,
@@ -127,7 +134,6 @@ class _View(_Stochastic, metaclass=ABCMeta):
     def representation(self) -> str:
         return self._representation
 
-    ################################################################"
     @property
     @abstractmethod
     def dim_feature(self) -> int:
@@ -227,8 +233,6 @@ class _View(_Stochastic, metaclass=ABCMeta):
         """
         return self._hidden.nelement() != 0
 
-    ####################################################################################################################
-    ## ATTACH
     @property
     def attached(self) -> bool:
         r"""
@@ -314,8 +318,6 @@ class _View(_Stochastic, metaclass=ABCMeta):
     def _param_device(self) -> torch.device:
         return self._hidden.device
 
-    ## MATHS
-
     @abstractmethod
     def phi(self, x=None) -> Tensor:
         pass
@@ -390,6 +392,39 @@ class _View(_Stochastic, metaclass=ABCMeta):
     @property
     def PhiW(self) -> Tensor:
         return self.phiw()
+
+    @property
+    def hidden_correlation(self) -> Tensor:
+        r"""
+        Correlation of the hidden variables :math:`\mathbf{h}^\top \mathbf{h}`. This should be the identity provided
+        that the hidden variables lie on the Stiefel manifold.
+        """
+        return self.hidden.T @ self.hidden
+
+    @property
+    def weight_correlation(self) -> Tensor:
+        r"""
+        Correlation of the weights :math:`\mathbf{w}^\top \mathbf{w}`. This should be the identity provided
+        that the weights lie on the Stiefel manifold.
+        """
+        return self.weight.T @ self.weight
+
+    @property
+    def hidden_projector(self) -> Tensor:
+        r"""
+        Projector on the subspace spanned by the hidden variables :math:`\mathbf{h}\mathbf{h}^\top`.
+        This is a rigorous projector provided its determinant is unity, e.g. when the hidden variables lie on the
+        Stiefel manifold.
+        """
+        return self.hidden @ self.hidden.T
+
+    @property
+    def weight_projector(self) -> Tensor:
+        r"""
+        Projector on the subspace spanned by the weights :math:`\mathbf{w}\mathbf{w}^\top`.
+        This is a rigorous projector provided its determinant is unity, e.g. when the weights lie on the Stiefel manifold.
+        """
+        return self.weight @ self.weight.T
 
     @abstractmethod
     def _forward(self, representation, x=None):

@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Abstract class allowing for torch.nn.Modules to also host a cache of torch objects
 which can also be ported like torch.nn.Parameters are, on GPU for example.
@@ -7,13 +8,13 @@ import torch
 from typing import Union, List, Iterable
 from abc import ABCMeta, abstractmethod
 
-from ._Module import _Module
+from .Module import Module
 from ..utils import kwargs_decorator, extend_docstring, DEFAULT_CACHE_LEVEL
 
 
-@extend_docstring(_Module)
-class _Cache(_Module,
-             metaclass=ABCMeta):
+@extend_docstring(Module)
+class Cache(Module,
+            metaclass=ABCMeta):
     r"""
     :param cache_level: level for a cache, defaults to 'normal'.
     :type cache_level: str
@@ -30,7 +31,7 @@ class _Cache(_Module,
         "cache_level": "normal"
     })
     def __init__(self, *args, **kwargs):
-        super(_Cache, self).__init__(*args, **kwargs)
+        super(Cache, self).__init__(*args, **kwargs)
 
         # we initiate the cache
         self._cache = {}
@@ -47,7 +48,7 @@ class _Cache(_Module,
         * `"heavy"`: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.
         * `"total"`: every step of any computation is saved.
         """
-        switcher = _Cache._cache_level_switcher
+        switcher = Cache._cache_level_switcher
         inv_switcher = {switcher[k]: k for k in switcher}
         return inv_switcher[self._cache_level]
 
@@ -63,7 +64,7 @@ class _Cache(_Module,
         if level is None:
             return self._cache_level
         if isinstance(level, str):
-            level = _Cache._cache_level_switcher.get(level, "Unrecognized cache level.")
+            level = Cache._cache_level_switcher.get(level, "Unrecognized cache level.")
         return level
 
     def _apply(self, fn):
@@ -77,9 +78,9 @@ class _Cache(_Module,
                 cache_entry = value[2]
                 if isinstance(cache_entry, torch.Tensor):
                     cache_entry.data = fn(cache_entry)
-                elif isinstance(cache_entry, _Cache):
+                elif isinstance(cache_entry, Cache):
                     cache_entry._apply(fn)
-        return super(_Cache, self)._apply(fn)
+        return super(Cache, self)._apply(fn)
 
     def _get(self, key, fun, level_key=None, default_level: str = 'total', force: bool = False,
              overwrite: bool = False, persisting=False):
@@ -192,7 +193,7 @@ class _Cache(_Module,
         """
         self._reset_cache(reset_persisting=reset_persisting)
         for cache in self.children():
-            if isinstance(cache, _Cache):
+            if isinstance(cache, Cache):
                 cache.reset(children=children, reset_persisting=reset_persisting)
 
     def cache_keys(self, private: bool = False) -> Iterable[str]:

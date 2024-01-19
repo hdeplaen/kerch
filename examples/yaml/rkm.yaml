@@ -1,0 +1,29 @@
+data:
+  dataset: 'pima'
+  num_training: 500
+  num_validation: 100
+  num_test: 150
+model:
+  model_type: 'rkm'
+  level0:
+    level_type: 'kpca'
+    kernel_type: 'rbf'
+    representation: 'dual'
+    dim_output: 5
+    watch_properties: ['K', 'hidden_correlation']
+  level1:
+    level_type: 'kpca'
+    kernel_type: 'rbf'
+    representation: 'dual'
+    dim_output: 3
+    watch_properties: ['K', 'hidden_correlation']
+  level2:
+    level_type: 'lssvm'
+    kernel_type: 'rbf'
+    representation: 'dual'
+    dim_output: 1
+    watch_properties: ['K']
+train:
+  watcher:
+    expe_name: 'test'
+    watcher_type: 'wandb'

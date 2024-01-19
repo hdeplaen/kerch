@@ -1,34 +1,32 @@
 # coding=utf-8
+from __future__ import annotations
+
 import torch
 from torch.utils.data import SequentialSampler
 import tqdm
 
-from ..model._Model import _Model
-from ..module._Logger import _Logger
+from ..model.Model import Model
+from ..module.Logger import Logger
 from ..utils import kwargs_decorator
 from ..opt import Optimizer
 from ..data import _LearningSet
+from .. import watch
 
 
-class Trainer(_Logger):
-    @kwargs_decorator({'problem': 'regression',
-                       'epochs': 100,
-                       'batch_size': 'all',
-                       'use_gpu': False,
-                       'stiefel_lr': 1e-3,
-                       'euclidean_lr': 1e-3,
-                       'slow_lr': 1e-4})
-    def __init__(self, model: _Model, learning_set: _LearningSet, **kwargs):
+class Trainer(Logger):
+    def __init__(self, model: Model, learning_set: _LearningSet, **kwargs):
         super(Trainer, self).__init__(**kwargs)
         self._learning_set: _LearningSet = learning_set
-        self._model: _Model = model
-        self.problem = kwargs["problem"]
-        self.batch_size = kwargs["batch_size"]
-        self.epochs = kwargs["epochs"]
-        self.use_gpu = kwargs["use_gpu"]
-        self.stiefel_lr = kwargs["stiefel_lr"]
-        self.euclidean_lr = kwargs["euclidean_lr"]
-        self.slow_lr = kwargs["slow_lr"]
+        self._model: Model = model
+        self.problem = kwargs.pop('problem', 'regression')
+        self.batch_size = kwargs.pop('batch_size', 'all')
+        self.epochs = kwargs.pop('epochs', 100)
+        self.use_gpu = kwargs.pop('use_gpu', False)
+        self.stiefel_lr = kwargs.pop('stiefel_lr', 1e-3)
+        self.euclidean_lr = kwargs.pop('euclidean_lr', 1e-3)
+        self.slow_lr = kwargs.pop('slow_lr', 1e-4)
+        self._verbose = kwargs.pop('verbose', False)
+        self._watcher_kwargs = kwargs.pop('watcher', dict())
 
     @property
     def problem(self) -> str:
@@ -47,7 +45,7 @@ class Trainer(_Logger):
         self._problem = val
 
     @property
-    def model(self) -> _Model:
+    def model(self) -> Model:
         return self._model
 
     @property
@@ -146,7 +144,7 @@ class Trainer(_Logger):
     @property
     def slow_lr(self) -> float:
         r"""
-        Learning rate for specific hyperparameters than are better trained slower, i.e. the bandwidth of
+        Learning rate for specific hyperparameters that are better trained slower, i.e. the bandwidth of
         an RBF kernel.
         """
         return self._slow_lr
@@ -154,8 +152,6 @@ class Trainer(_Logger):
     @slow_lr.setter
     def slow_lr(self, val: float):
         self._slow_lr = val
-
-    ############################################################################################################
 
     def _init_fit(self):
         if self.use_gpu:
@@ -180,17 +176,23 @@ class Trainer(_Logger):
         return self._loss(pred, labels)
 
 
-    def fit(self) -> _Model:
+    def fit(self) -> Model:
         self._init_fit()
         self.model.train()
 
         epoch_progress = tqdm.tqdm(range(self.epochs),
                                    position=0,
-                                   desc="Epoch")
+                                   leave=True,
+                                   desc="Epoch",
+                                   disable=not self._verbose)
         batch_progress = tqdm.tqdm(self._sampler,
+                                   position=0,
                                    leave=False,
-                                   disable=self._mask_batch_progress,
+                                   disable=self._mask_batch_progress or not self._verbose,
                                    desc="Batch")
+
+        watcher = watch.factory(model=self.model, opt=self._optimizer,
+                                verbose=self._verbose, **self._watcher_kwargs)
 
         def closure():
             self.model()
@@ -205,16 +207,24 @@ class Trainer(_Logger):
             self._optimizer.zero_grad()
             if self.use_gpu:
                 torch.cuda.empty_cache()
+            batch_loss = 0.
             # forward and backward
             for idx_batch in batch_progress:
+                self.model.before_step()
                 self.model.stochastic(idx=idx_batch)
-                self._optimizer.step(closure)
+                batch_loss += self._optimizer.step(closure)
                 self.model.after_step()
 
             # validation and test
             train_loss = self._problem_loss(self._training_data, self._training_labels)
             val_loss = self._problem_loss(self._validation_data, self._validation_labels)
             test_loss = self._problem_loss(self._test_data, self._test_labels)
+            watcher.update(epoch=epoch,
+                           objective_loss=batch_loss,
+                           training_error=train_loss,
+                           validation_error=val_loss,
+                           test_error=test_loss)
 
+        watcher.finish()
         self.model.eval()
         return self.model

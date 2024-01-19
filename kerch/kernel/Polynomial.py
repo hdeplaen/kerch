@@ -82,7 +82,7 @@ class Polynomial(Kernel):
 
     @property
     def params(self):
-        return {'Degree': self.degree}
+        return {'Kernel degree': self.degree}
 
     @property
     def hparams(self):

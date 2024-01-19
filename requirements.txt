@@ -1,9 +1,10 @@
-kerch; python_version>="3.7"
+kerch; python_version>="3.6"
 torch>=1.8
 numpy
 pyyaml
 tqdm
 nested_dict
-hyperopt
+optuna
 matplotlib
 lazy_loader
+wandb

@@ -1,3 +1,4 @@
+# coding=utf-8
 DEFAULT_KERNEL_TYPE = 'rbf'
 DEFAULT_CACHE_LEVEL = {"forward_sample_default_representation": "light",
                        "forward_sample_other_representation": "light",
@@ -14,6 +15,8 @@ DEFAULT_CACHE_LEVEL = {"forward_sample_default_representation": "light",
                        "PPCA_Inv_dual": "normal",
                        "KPCA_total_variance_default_representation": "normal",
                        "KPCA_total_variance_other_representation": "total",
+                       "Level_subloss_default_representation": "normal",
+                       "Level_subloss_other_representation": "total",
                        "sample_transform": "none",
                        "kernel_explicit_transform": "none",
                        "kernel_implicit_transform": "none",

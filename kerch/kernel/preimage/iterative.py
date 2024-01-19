@@ -1,6 +1,6 @@
 import torch
 from kerch.kernel import _BaseKernel as K
-from kerch.module._Cache import _Cache
+from kerch.module.Cache import Cache
 from .smoother import smoother
 
 
@@ -30,8 +30,8 @@ def iterative(k_coefficient: torch.Tensor, kernel: K, num_iter: int = 100, lr=1.
     """
 
     # CHECK IF THE CACHE LEVEL HAS TO BE CHANGED
-    cache_level = _Cache._cache_level_switcher[kernel.cache_level]
-    if cache_level > _Cache._cache_level_switcher['light']:
+    cache_level = Cache._cache_level_switcher[kernel.cache_level]
+    if cache_level > Cache._cache_level_switcher['light']:
         if light_cache:
             kernel.cache_level = 'light'
         else:
@@ -65,7 +65,7 @@ def iterative(k_coefficient: torch.Tensor, kernel: K, num_iter: int = 100, lr=1.
         optimizer.step(closure)
 
     # SET BACK THE ORIGINAL CACHE LEVEL
-    if (cache_level > _Cache._cache_level_switcher['light']) and light_cache:
+    if (cache_level > Cache._cache_level_switcher['light']) and light_cache:
         kernel.cache_level = cache_level
 
     # RETURN

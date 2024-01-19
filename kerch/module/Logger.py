@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 This abstract class has only one purpose, add a self._log property meant to log various information across the toolbox.
 Doing it this way allows to get the name of the class instantiated and print more precise messages.
@@ -13,7 +14,7 @@ import sys
 from .. import _GLOBALS
 
 
-class _Logger(metaclass=ABCMeta):
+class Logger(metaclass=ABCMeta):
     r"""
     :param log_level: The logging level of this specific instance. If None, it will be the default logging level set
         for the toolbox., defaults to None.
@@ -39,7 +40,7 @@ class _Logger(metaclass=ABCMeta):
         else:
             log_name = class_name
         self._log = logging.getLogger(name=log_name)
-        self._log.addHandler(_Logger._kerch_handler)
+        self._log.addHandler(Logger._kerch_handler)
         self.set_log_level(kwargs.pop('log_level', None))
 
     def set_log_level(self, level: int = None) -> int:
@@ -76,7 +77,7 @@ class _Logger(metaclass=ABCMeta):
         self._log.error("The name cannot be changed after initialization.")
 
 
-_GLOBAL_LOGGER = _Logger(name="global")
+_GLOBAL_LOGGER = Logger(name="global")
 
 
 def set_log_level(level: int):

@@ -1,18 +1,19 @@
-from ._Transform import _Transform
-from ._MinimumCentering import _MinimumCentering
+# coding=utf-8
+from ..Transform import Transform
+from .MinimumCentering import MinimumCentering
 from kerch.utils.type import EPS
 
 import torch
 
 
-class _MinMaxNormalization(_Transform):
+class MinMaxNormalization(Transform):
     def __init__(self, explicit: bool, default_path: bool = False):
-        super(_MinMaxNormalization, self).__init__(explicit=explicit,
-                                                   name="Min Max Normalization", default_path=default_path)
+        super(MinMaxNormalization, self).__init__(explicit=explicit,
+                                                  name="Min Max Normalization", default_path=default_path)
 
     def _explicit_statistics(self, sample):
         max_sample = torch.max(sample, dim=0).values
-        if type(self.parent) is _MinimumCentering:
+        if type(self.parent) is MinimumCentering:
             return max_sample  # new min is 0
         else:
             min_sample = torch.min(sample, dim=0).values

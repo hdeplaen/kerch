@@ -1,5 +1,6 @@
+# coding=utf-8
 import torch
-from ..module._Logger import _GLOBAL_LOGGER
+from ..module.Logger import _GLOBAL_LOGGER
 
 
 def eigs(A, k=None, B=None, psd=True, sym=True):

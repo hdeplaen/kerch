@@ -38,7 +38,7 @@ class PimaIndians(_LearningSetTrain):
                                           **kwargs)
 
     def _training(self, num):
-        path = _get_file_path('diabetes.csv')
+        path = _get_file_path('pima.csv')
         diabetes = np.genfromtxt(path, delimiter=',')
         data = diabetes[:, :self._dim_data]
         labels = diabetes[:, self._dim_data:]

@@ -6,12 +6,13 @@ Custom optimizer for RKMs
 @license: MIT
 @date: March 2021
 """
+from __future__ import annotations
 
 import torch
 from .stiefel import stiefel_optimizer
 
 from .. import utils
-from kerch.module._Module import _Module
+from kerch.module.Module import Module
 
 
 class Optimizer():
@@ -27,7 +28,7 @@ class Optimizer():
                              "euclidean_lr": 1.e-3,
                              "slow_lr": 1.e-4
                              })
-    def __init__(self, module: _Module, type="sgd", **kwargs):
+    def __init__(self, module: Module, type="sgd", **kwargs):
         self._kwargs = kwargs
         self._type = type
         self._module = module
@@ -71,14 +72,10 @@ class Optimizer():
 
     @property
     def hparams(self):
-        return {'name': self._type, **self._kwargs}
+        return {'[Optimizer] ' + key: val for key, val in self._kwargs}
 
     @property
-    def params(self):
-        return self._kwargs
-
-    @property
-    def module(self) -> _Module:
+    def module(self) -> Module:
         return self._module
 
     def reduce(self, rate):
@@ -86,10 +83,10 @@ class Optimizer():
             for params in self._opt.param_groups:
                 params['lr'] *= rate
 
-    def step(self, closure=None):
-        if self._opt is not None: self._opt.step(closure)
-        else: closure()
-        self.module.after_step()
+    def step(self, closure=None) -> float | None:
+        if self._opt is not None: loss = self._opt.step(closure)
+        else: loss = closure()
+        return loss
 
     def zero_grad(self):
         if self._opt is not None: self._opt.zero_grad()

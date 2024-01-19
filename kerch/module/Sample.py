@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Allows for a sample set manager, with stochastic support.
 """
@@ -10,16 +11,18 @@ from torch import Tensor
 from typing import Union
 
 from kerch import utils
-from ._Cache import _Cache
-from ._Logger import _Logger
-from ._Stochastic import _Stochastic
+from .Cache import Cache
+from .Logger import Logger
+from .Stochastic import Stochastic
 from ..transform import TransformTree
+from ..utils import NotInitializedError
 
-@utils.extend_docstring(_Stochastic)
-class _Sample(_Stochastic,  # manager stochastic indices
-              _Cache,  # creates a transportable cache (e.g. for GPU)
-              _Logger,  # allows logging actions and errors
-              metaclass=ABCMeta):
+
+@utils.extend_docstring(Stochastic)
+class Sample(Stochastic,  # manager stochastic indices
+             Cache,  # creates a transportable cache (e.g. for GPU)
+             Logger,  # allows logging actions and errors
+             metaclass=ABCMeta):
     r"""
     :param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
         be given relative to these samples., defaults to `None`
@@ -59,7 +62,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
         "prop_sample": None,
         "sample_transform": []})
     def __init__(self, *args, **kwargs):
-        super(_Sample, self).__init__(*args, **kwargs)
+        super(Sample, self).__init__(*args, **kwargs)
 
         sample = kwargs["sample"]
         if sample is not None:
@@ -80,6 +83,10 @@ class _Sample(_Stochastic,  # manager stochastic indices
         r"""
         Dimension of each datapoint.
         """
+        if self._dim_input is None:
+            raise NotInitializedError(cls=self, message="The input dimension has been initialized yet. "
+                                                        "Please initialize it explicitly or assign a sample to "
+                                                        "determine it.")
         return self._dim_input
 
     @dim_input.setter
@@ -111,7 +118,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
 
     @num_sample.setter
     def num_sample(self, val: int):
-        assert self._num_total is None, "Cannot set the number of sample points after initialization if the " \
+        assert self._num_total is None, "Cannot set the number of sample points after initialization of the " \
                                         "sample data. Use init_sample() instead."
         self._num_total = val
         if self._dim_input is not None:
@@ -243,7 +250,7 @@ class _Sample(_Stochastic,  # manager stochastic indices
     def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         if not self.empty_sample:
             yield self._sample
-        yield from super(_Sample, self)._euclidean_parameters(recurse)
+        yield from super(Sample, self)._euclidean_parameters(recurse)
 
     @property
     def sample_transform(self) -> TransformTree:
@@ -256,9 +263,10 @@ class _Sample(_Stochastic,  # manager stochastic indices
     def _sample_transform(self) -> TransformTree:
         def fun():
             return TransformTree(explicit=True,
-                                  sample=self._sample[self.idx, :],
-                                  default_transform=self._default_sample_transform,
-                                  cache_level=self._cache_level)
+                                 sample=self._sample[self.idx, :],
+                                 default_transform=self._default_sample_transform,
+                                 cache_level=self._cache_level)
+
         return self._get("sample_transform", level_key="sample_transform", fun=fun)
 
     def project_input(self, data) -> Union[Tensor, None]:
@@ -276,3 +284,14 @@ class _Sample(_Stochastic,  # manager stochastic indices
         typically not invertible as they are transform which are not bijective).
         """
         return self.sample_transform.revert(data)
+
+    @property
+    def hparams(self) -> dict:
+        return {'Input dimension': self.input_dim,
+                'Trainable sample': self._sample_trainable,
+                'Default sample transforms': self._default_sample_transform,
+                **super(Sample, self).hparams}
+
+    @property
+    def params(self) -> dict:
+        return {**super(Sample, self).params}

@@ -167,12 +167,10 @@ class RFF(Explicit):
         return "RFF kernel"
 
     @property
-    def params(self):
-        return {"Dimension": self.num_weights}
-
-    @property
     def hparams(self):
-        return {"Kernel": "Random Fourier Features", **super(RFF, self).hparams}
+        return {"Kernel": "Random Fourier Features",
+                "RFF number of weights": self.num_weights,
+                **super(RFF, self).hparams}
 
     def _explicit_preimage(self, phi) -> torch.Tensor:
         phi = phi * sqrt(self.num_weights)

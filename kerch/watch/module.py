@@ -1,17 +1,15 @@
 # coding=utf-8
-import matplotlib.pyplot as plt
 import torch
 
-from .elements import *
-from ..module._Sample import _Sample
+from kerch.plot.matplotlib import *
+from ..module.Sample import Sample
 from ..kernel._BaseKernel import _BaseKernel
 from ..level._View import _View
 from ..level._KPCA import _KPCA
-from ..utils import NotInitializedError
 
 
-def current_sample(sample: _Sample, labels: bool = False) -> plt.Figure:
-    assert isinstance(sample, _Sample), 'The sample argument does not contain any sample.'
+def current_sample(sample: Sample, labels: bool = False) -> plt.Figure:
+    assert isinstance(sample, Sample), 'The sample argument does not contain any sample.'
     return plot_sample(sample.current_sample, labels=labels)
 
 

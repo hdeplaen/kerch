@@ -53,8 +53,8 @@ class Sigmoid(Implicit):
 
     @property
     def params(self):
-        return {'a': self._a,
-                'b': self._b}
+        return {'Kernel parameter a': self._a,
+                'Kernel parameter b': self._b}
 
     @property
     def hparams(self):

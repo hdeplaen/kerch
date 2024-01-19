@@ -10,10 +10,10 @@ from torch import Tensor as T
 from kerch import utils
 from .._View import _View
 from ..single_view.View import View
-from ...module._Stochastic import _Stochastic
+from ...module.Stochastic import Stochastic
 
 
-@utils.extend_docstring(_Stochastic)
+@utils.extend_docstring(Stochastic)
 class MultiView(_View):
     r"""
     TODO

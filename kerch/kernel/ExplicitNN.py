@@ -70,7 +70,7 @@ class ExplicitNN(Explicit):
         return f"explicit kernel ({encoder}, {decoder})"
 
     def hparams(self):
-        return {"Kernel": "_Explicit", **super(ExplicitNN, self).hparams}
+        return {"Kernel": "Explicit Neural Network Based", **super(ExplicitNN, self).hparams}
 
     @property
     def encoder(self) -> torch.nn.Module:

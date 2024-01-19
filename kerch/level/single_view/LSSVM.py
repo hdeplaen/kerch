@@ -23,7 +23,7 @@ class LSSVM(Level):
         super(LSSVM, self).__init__(*args, **kwargs)
         gamma = kwargs.pop('gamma', 1.)
         self._gamma = torch.nn.Parameter(torch.tensor(gamma, dtype=utils.FTYPE))
-        self._mse_loss = torch.nn.MSELoss(reduction='mean')
+        self._mse_loss = torch.nn.MSELoss()
 
     def __str__(self):
         return "LSSVM with " + Level.__str__(self)
@@ -112,18 +112,44 @@ class LSSVM(Level):
                 yield self._bias
 
     def loss(self, representation=None) -> T:
-        pred = self._forward(representation=representation)
-        mse_loss = self._mse_loss(pred, self.current_target)
-        if representation == 'primal':
-            weight = self.weight
-            reg_loss = torch.trace(weight.T @ weight)
-            # replace by einsum to avoid unnecessary computations
-            # torch.einsum('ij,ji',weight, weight)
-        else:
-            hidden = self.hidden
-            reg_loss = torch.trace(hidden.T @ self.K @ hidden)
-            # torch.einsum('ji,jk,ki',hidden,self.K,hidden)
-        return reg_loss / self.num_idx + self.gamma * mse_loss
+        fact = 1 / self.num_idx
+        return fact * self._subloss_regularization(representation) \
+            + self.gamma * self._subloss_mse(representation)
+
+    def _subloss_regularization(self, representation=None):
+        representation = utils.check_representation(representation, self._representation, self)
+        level_key = "Level_subloss_default_representation" if self._representation == representation \
+            else "Level_subloss_representation"
+
+        def fun():
+            if representation == 'primal':
+                weight = self.weight
+                return torch.einsum('ij,ji',weight, weight)
+                # torch.trace(weight.T @ weight)
+            else:
+                hidden = self.hidden
+                return torch.einsum('ji,jk,ki',hidden,self.K,hidden)
+                # torch.trace(hidden.T @ self.K @ hidden)
+
+        return self._cache.get(key='subloss_regularization_' + representation,
+                               level_key=level_key, fun=fun)
+
+    def _subloss_mse(self, representation=None):
+        representation = utils.check_representation(representation, self._representation, self)
+        level_key = "Level_subloss_default_representation" if self._representation == representation \
+            else "Level_subloss_representation"
+
+        def fun():
+            pred = self._forward(representation=representation)
+            return self._mse_loss(pred, self.current_target)
+        return self._cache.get(key='subloss_mse_' + representation,
+                               level_key=level_key, fun=fun)
+
+    def sublosses(self, representation=None) -> dict:
+        return {'Regularization': self._subloss_regularization().data.detach().cpu(),
+                'MSE': self._subloss_mse().data.detach().cpu(),
+                **super(LSSVM, self).sublosses()}
+
 
     def after_step(self) -> None:
         super(LSSVM, self).after_step()

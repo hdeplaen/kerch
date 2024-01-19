@@ -1,6 +1,6 @@
-from ._Model import _Model
+from .Model import Model
 
-class KPCA(_Model):
+class KPCA(Model):
     def __init__(self, *args, **kwargs):
         super(KPCA, self).__init__(*args, **kwargs)
         kwargs['level_type'] = 'kpca'

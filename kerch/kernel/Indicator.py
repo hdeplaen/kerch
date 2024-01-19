@@ -86,8 +86,8 @@ class Indicator(Implicit):
 
     @property
     def params(self):
-        return {'Lag': self.lag,
-                'Gamma': self.gamma}
+        return {'Kernel lag': self.lag,
+                'Kernel gamma': self.gamma}
 
     @property
     def lag(self):

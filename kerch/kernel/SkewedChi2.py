@@ -60,7 +60,7 @@ class SkewedChi2(Implicit):
 
     @property
     def params(self):
-        return {'p': self.p}
+        return {'Kernel parameter p': self.p}
 
     @property
     def hparams(self):

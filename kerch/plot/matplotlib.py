@@ -24,7 +24,8 @@ def _plot_matrix(m: T,
                  ax: plt.Axes | None = None) -> plt.Figure:
     fig, ax = _get_fig_ax(ax)
     im = ax.imshow(m.data.detach().cpu())
-    ax.axis('off')
+    ax.set_xticks([])
+    ax.set_yticks([])
 
     # title and labels
     if title is not None and labels:

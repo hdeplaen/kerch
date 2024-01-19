@@ -1,16 +1,17 @@
+# coding=utf-8
 import torch
 from torch import Tensor as T
 from abc import ABCMeta, abstractmethod
 
 from ._View import _View
-from .. import utils, opt
+from .. import utils
 
 
 class _Level(_View, metaclass=ABCMeta):
     r"""
     A level consists in a view (kernel + weight/hidden) with various optimization attributes.
 
-    :param eta: :math:`\eta`., defaults to 1.
+    :param eta: level weight :math:`\eta`., defaults to 1.
     :param representation: Chosen representation, "primal" or "dual"., defaults to "dual".
 
     :type eta: double, optional
@@ -18,13 +19,43 @@ class _Level(_View, metaclass=ABCMeta):
     """
 
     @utils.extend_docstring(_View)
-    @utils.kwargs_decorator({
-        "eta": 1.,
-    })
     def __init__(self, *args, **kwargs):
         super(_Level, self).__init__(*args, **kwargs)
-        self.eta = kwargs["eta"]
+        self._eta = kwargs.pop('eta', 1.)
+        self.watch_properties = kwargs.pop('watch_properties', [])
         self._parameter_related_cache = []
+
+    @property
+    def hparams(self) -> dict:
+        return {'Level eta': self.eta,
+                **super(_Level, self).hparams}
+
+    @property
+    def params(self) -> dict:
+        return {'Loss': self.loss(),
+                **super(_Level, self).hparams}
+
+    @property
+    def watch_properties(self) -> list[str]:
+        r"""
+        Properties to be watched (monitored). Their values can be accessed through the property `watched_properties`.
+        This is relevant e.g. in case of training.
+        """
+        return self._watch_properties
+
+    @watch_properties.setter
+    def watch_properties(self, val: list[str]):
+        assert isinstance(val, list), 'The watch argument must be a list of strings.'
+        for name in val:
+            assert name in dir(self), f"The watch element {name} does not exist for this level."
+        self._watch_properties = val
+
+    @property
+    def eta(self) -> float:
+        r"""
+        Level weight :math:`\eta`, e.g. for the weight of the loss.
+        """
+        return self._eta
 
     @property
     def _I_primal(self) -> T:
@@ -53,8 +84,6 @@ class _Level(_View, metaclass=ABCMeta):
         if _I_dual.shape[0] != self.num_idx:
             _I_dual = self._get("Level_I_dual", level_key=level_key, fun=fun, overwrite=True, persisting=True)
         return _I_dual
-
-    ####################################################################################################################
 
     @abstractmethod
     def _solve_primal(self) -> None:
@@ -108,11 +137,34 @@ class _Level(_View, metaclass=ABCMeta):
     def loss(self, representation=None) -> T:
         pass
 
+    def sublosses(self, representation=None) -> dict:
+        r"""
+        Different components of the losses.
+        """
+        return {'Level loss': self.loss().data.detach().cpu()}
+
+    @property
+    def watched_properties(self) -> dict:
+        r"""
+        A dictionary containing the values of the properties that are specified in `watch_properties`.
+        """
+        props = dict()
+        for name in self.watch_properties:
+            val = getattr(self, name)
+            if isinstance(val, T):
+                val = val.data.detach().cpu()
+            props[name] = val
+        return props
+
+    def before_step(self) -> None:
+        r"""
+        Performs steps required before each training step.
+        """
+        sublosses_keys = self.sublosses().keys()
+        self._remove_from_cache(sublosses_keys)
+
     def after_step(self) -> None:
         r"""
-            Perform after-step operations, for example a transform of the parameters onto some manifold.
+        Performs after-step operations, for example a transform of the parameters onto some manifold.
         """
-        self._reset_parameter_related_cache()
-
-    def _reset_parameter_related_cache(self) -> None:
         self._remove_from_cache(self._parameter_related_cache)
