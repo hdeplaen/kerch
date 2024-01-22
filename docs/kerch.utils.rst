@@ -4,14 +4,6 @@ kerch.utils package
 Submodules
 ----------
 
-kerch.utils.arch module
------------------------
-
-.. automodule:: kerch.utils.arch
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 kerch.utils.cast module
 -----------------------
 

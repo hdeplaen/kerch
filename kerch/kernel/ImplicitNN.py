@@ -16,7 +16,7 @@ import torch
 @utils.extend_docstring(Kernel)
 class ImplicitNN(Implicit):
     r"""
-    _Implicit kernel class, parametrized by a neural network.
+    Implicit kernel class, parametrized by a neural network.
 
     .. math::
         k(x,y) = NN\left( [x, y] \right).
@@ -46,7 +46,7 @@ class ImplicitNN(Implicit):
 
     @property
     def hparams(self):
-        return {"Kernel": "_Implicit", **super(ImplicitNN, self).hparams}
+        return {"Kernel": "Implicit NN", **super(ImplicitNN, self).hparams}
 
     def _implicit(self, x, y):
         raise NotImplementedError

@@ -2,7 +2,7 @@
 Least-Squares Support Vector Machine
 ====================================
 
-.. autoclass:: kerch.module.LSSVM
+.. autoclass:: kerch.level.LSSVM
    :members:
    :inherited-members: Module
    :undoc-members:

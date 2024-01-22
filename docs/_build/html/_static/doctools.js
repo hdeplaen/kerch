@@ -26,7 +26,7 @@ const _ready = (callback) => {
 };
 
 /**
- * Small JavaScript level for the documentation.
+ * Small JavaScript module for the documentation.
  */
 const Documentation = {
   init: () => {

@@ -2,7 +2,7 @@
 Multi-View Kernel Principal Component Analysis
 ==============================================
 
-.. autoclass:: kerch.module.MVKPCA
+.. autoclass:: kerch.level.MVKPCA
    :members:
    :inherited-members: Module
    :undoc-members:

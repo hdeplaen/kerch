@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 import wandb
+import torch
 
 from .Plotter import Plotter, Watcher
 from ..utils import extend_docstring
@@ -15,6 +16,7 @@ class WandB(Plotter):
         os.environ['WANDB_SILENT'] = "true"
 
         # INITIALIZE WANDB
+        if self.verbose: print('Initializing Weights and Biases...', end=" ")
         if not os.path.exists(self.dir_plotter):
             os.makedirs(self.dir_plotter)
         self._wandb_run = wandb.init(name=self.expe_name,
@@ -32,13 +34,14 @@ class WandB(Plotter):
         hparams = {**opt_hparams, **model_hparams}
         self._wandb_run.config.update(hparams)
 
+        if self.verbose: print('Done')
+
     @property
     def _plotter_name(self) -> str | None:
         return None
 
     def finish(self) -> str:
         filepath = super(WandB, self).finish()
-        print(filepath)
         self._wandb_run.log_model(path=filepath, name="final")
         self._wandb_run.finish(quiet=not self.verbose)
         return filepath
@@ -53,7 +56,10 @@ class WandB(Plotter):
         if epoch % self._num_epochs_save == 0:
             self.save_model(epoch)
         if epoch % self._num_epochs_params == 0:
-            self._wandb_run.log(data=self.model.params, step=epoch)
+            wandb_data = dict()
+            for key, val in self.model.params.items():
+                wandb_data[key] = wandb.Image(val) if isinstance(val, torch.Tensor) else val
+            self._wandb_run.log(data=wandb_data, step=epoch)
         if epoch % self._num_epochs_loss == 0:
             self._wandb_run.log(data=self.model.losses, step=epoch)
             self._wandb_run.log(data={'objective_loss': objective_loss,

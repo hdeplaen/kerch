@@ -6,7 +6,7 @@ x = np.sin(np.arange(50) / np.pi)
 plt.figure(0)
 plt.plot(x)
 
-k = kerch.kernel.rbf(sample=x)
+k = kerch.kernel.RBF(sample=x)
 
 plt.figure(1)
 plt.imshow(k.K)

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kernel Module &mdash; kerch 0.2.2 documentation</title>
+    <title>Kernel Module &mdash; kerch 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css?v=7f9a90b1" />
@@ -16,7 +16,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../_static/documentation_options.js?v=b489f392"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -87,8 +87,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#abstract-kernels">Abstract Kernels</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="exponential.html">Exponential Kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="explicit.html">Explicit Kernel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="implicit.html">Implicit Kernel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="base.html">Base Kernel</a></li>
+    <li class="toctree-l4"><a class="reference internal" href="implicit.html">Implicit Kernel Mother Class</a></li>
+    <li class="toctree-l4"><a class="reference internal" href="base.html">Kernel Mother Class</a></li>
 </ul>
 </li>
 </ul>
@@ -149,15 +149,24 @@ formulation which can be computed otherwise than with an inner product of the ex
 <h3>Kernel Factory<a class="headerlink" href="#kernel-factory" title="Link to this heading"></a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.kernel.factory">
-<span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span class="sig-name descname"><span class="pre">factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_Projected</span></span></span><a class="headerlink" href="#kerch.kernel.factory" title="Link to this definition"></a></dt>
+    <span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span
+        class="sig-name descname"><span class="pre">factory</span></span><span class="sig-paren">(</span><em
+        class="sig-param"><span class="n"><span class="pre">kernel_type</span></span><span class="o"><span
+        class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em
+        class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span
+        class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
+        class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Kernel</span></span></span><a
+        class="headerlink" href="#kerch.kernel.factory" title="Link to this definition"></a></dt>
 <dd><p>Creates a kernel based on the specified name with the specified arguments. This is the same as
-calling <cite>kerch.kernel.name(**kwargs)</cite> (if <cite>name</cite> is not a string here). This allows for the creation of kernel where
+    calling <cite>kerch.kernel.name(*args, **kwargs)</cite> (if <cite>name</cite> is not a string here). This allows for
+    the creation of kernel where
 the name of kernel is passed as a string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of kernel chosen. For the possible choices, please refer to the (non-abstract) classes
-herebelow., defaults to <cite>rbf</cite></p></li>
+    <li><p><strong>kernel_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of kernel chosen. For the
+        possible choices, please refer to the (non-abstract) classes
+        herebelow. Defaults to kerch.DEFAULT_KERNEL_TYPE.</p></li>
 <li><p><strong>**kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Arguments to be passed to the kernel constructor, such as <cite>sample</cite> or <cite>sigma</cite>. If an argument is
 passed that does not exist (e.g. <cite>sigma</cite> to a <cite>linear</cite> kernel), it will just be neglected. For the default
 values, please refer to the default values of the requested kernel.</p></li>
@@ -261,8 +270,8 @@ all time, or in other words that the kernels are translational invariant. We typ
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="exponential.html">Exponential Kernel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="explicit.html">Explicit Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="implicit.html">Implicit Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html">Base Kernel</a></li>
+    <li class="toctree-l1"><a class="reference internal" href="implicit.html">Implicit Kernel Mother Class</a></li>
+    <li class="toctree-l1"><a class="reference internal" href="base.html">Kernel Mother Class</a></li>
 </ul>
 </div>
 </section>

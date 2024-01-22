@@ -4,10 +4,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laplacian Kernel &mdash; kerch 0.2.2 documentation</title>
+    <title>Laplacian Kernel &mdash; kerch 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css?v=7f9a90b1" />
+    <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
 
   
   <!--[if lt IE 9]>
@@ -16,7 +16,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../_static/documentation_options.js?v=b489f392"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -104,8 +104,17 @@
 <h1>Laplacian Kernel<a class="headerlink" href="#laplacian-kernel" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span class="sig-name descname"><span class="pre">Laplacian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Exponential</span></code></p>
+    <em class="property"><span class="pre">class</span><span class="w"> </span></em><span
+        class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span
+        class="sig-name descname"><span class="pre">Laplacian</span></span><span class="sig-paren">(</span><em
+        class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>,
+    <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span
+            class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink"
+                                                                                    href="#kerch.kernel.Laplacian"
+                                                                                    title="Link to this definition"></a>
+</dt>
+    <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span
+            class="pre">Exponential</span></code></p>
 <p>Laplacian kernel.</p>
 <div class="math notranslate nohighlight">
 \[k(x,y) = \exp\left( -\frac{\lVert x-y \rVert_2}{2\sigma^2} \right).\]</div>
@@ -117,15 +126,19 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sigma</strong> (<em>double</em><em>, </em><em>optional</em>) – Bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span> of the kernel. If <cite>None</cite>, the value is filled by a heuristic on
-the sample dataset: half of the square root of the median of the pairwise distances. Computing the heuristic on
-the full sample dataset can be expensive and <cite>idx_sample</cite> or <cite>prop_sample</cite> could be specified to only compute
+    the sample data: half of the square root of the median of the pairwise distances. Computing the heuristic on
+    the full sample data can be expensive and <cite>idx_sample</cite> or <cite>prop_sample</cite> could be specified to
+    only compute
 it on a subset only., defaults to <cite>None</cite>.</p></li>
 <li><p><strong>sigma_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradient of the bandwidth is to be computed. If so, a graph is computed
 and the bandwidth can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
-<li><p><strong>kernel_projections</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list composed of the elements <cite>‘normalize’</cite> or <cite>‘center’</cite>. For example a centered
+    <li><p><strong>kernel_transform</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list composed of the
+        elements <cite>‘normalize’</cite> or <cite>‘center’</cite>. For example a centered
 cosine kernel which is centered and normalized in order to get a covariance matrix for example can be obtained
-by invoking a linear kernel with <cite>default_projections = [‘normalize’, ‘center’, ‘normalize’]</cite> or just a cosine
-kernel with <cite>default_projections = [‘center’, ‘normalize’]</cite>. Redundancy is automatically handled., defaults
+        by invoking a linear kernel with <cite>default_transform = [‘normalize’, ‘center’, ‘normalize’]</cite> or just a
+        cosine
+        kernel with <cite>default_transform = [‘center’, ‘normalize’]</cite>. Redundancy is automatically handled.,
+        defaults
 to <cite>[]</cite>.</p></li>
 <li><p><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
 be given relative to these samples., defaults to <cite>None</cite></p></li>
@@ -141,26 +154,79 @@ overwritten by the dimension of the sample points., defaults to 1</p></li>
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
 such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>. All indices are considered if both <cite>idx_stochastic</cite> and
 <cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</p></li>
-<li><p><strong>sample_projection</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – TODO</p></li>
+    <li><p><strong>sample_transform</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – TODO</p></li>
 <li><p><strong>cache_level</strong> (<em>str</em>) – level for a cache, defaults to ‘normal’.</p></li>
 <li><p><strong>log_level</strong> (<em>str</em><em> or </em><em>int</em>) – The logging level of this specific instance. If None, it will be the default logging level set
 for the toolbox., defaults to None.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py property">
+        <dl class="py property">
+            <dt class="sig sig-object py" id="kerch.kernel.Laplacian.Corr">
+                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                    class="sig-name descname"><span class="pre">Corr</span></span><em class="property"><span
+                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                    class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.Corr"
+                                                     title="Link to this definition"></a></dt>
+            <dd><p>Returns the correlation matrix of the sample. Same as calling self.corr().</p>
+            </dd>
+        </dl>
+
+        <dl class="py property">
+            <dt class="sig sig-object py" id="kerch.kernel.Laplacian.Cov">
+                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                    class="sig-name descname"><span class="pre">Cov</span></span><em class="property"><span
+                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                    class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.Cov"
+                                                     title="Link to this definition"></a></dt>
+            <dd><p>Returns the covariance matrix of the sample. Same as calling self.cov().</p>
+            </dd>
+        </dl>
+
+        <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.K">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.K" title="Link to this definition"></a></dt>
-<dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#kerch.kernel.Laplacian.k" title="kerch.kernel.Laplacian.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
-It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
+            <dd><p>Returns the kernel matrix on the sample data. Same result as calling <a class="reference internal"
+                                                                                           href="#kerch.kernel.Laplacian.k"
+                                                                                           title="kerch.kernel.Laplacian.k"><code
+                    class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but
+                faster.
+                It is loaded from memory if already computed and unchanged since then, to avoid re-computation when
+                recurrently
 called.</p>
 <div class="math notranslate nohighlight">
 \[K_{ij} = k(x_i,x_j).\]</div>
 </dd></dl>
 
-<dl class="py method">
+        <dl class="py property">
+            <dt class="sig sig-object py" id="kerch.kernel.Laplacian.Phi">
+                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                    class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span
+                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                    class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.Phi"
+                                                     title="Link to this definition"></a></dt>
+            <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of
+                the sample datapoints. Same as calling
+                <code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code>, but
+                faster.
+                It is loaded from memory if already computed and unchanged since then, to avoid re-computation when
+                recurrently
+                called.</p>
+            </dd>
+        </dl>
+
+        <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.c">
-<span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.c" title="Link to this definition"></a></dt>
+    <span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em
+        class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+        class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span
+        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+        class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+        class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                    href="#kerch.kernel.Laplacian.c"
+                                                                                    title="Link to this definition"></a>
+</dt>
 <dd><p>Out-of-sample explicit matrix.</p>
 <div class="math notranslate nohighlight">
 \[C = \frac1M\sum_{i}^{M} \phi(x_i)\phi(x_i)^\top.\]</div>
@@ -177,23 +243,42 @@ called.</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
+        <dl class="py method">
+            <dt class="sig sig-object py" id="kerch.kernel.Laplacian.cache_keys">
+                <span class="sig-name descname"><span class="pre">cache_keys</span></span><span
+                    class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+                    class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span
+                    class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span
+                    class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span
+                    class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
+                    class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+                    class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span
+                    class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a
+                    class="headerlink" href="#kerch.kernel.Laplacian.cache_keys" title="Link to this definition"></a>
+            </dt>
+            <dd><p>Returns an iterable containing the different cache keys.</p>
+                <dl class="field-list simple">
+                    <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+                    <dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some
+                        cache elements are private and are not returned unless set to True. Defaults to False.</p>
+                    </dd>
+                </dl>
+            </dd>
+        </dl>
+
+        <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.cache_level">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.cache_level" title="Link to this definition"></a></dt>
 <dd><p>Cache level possible values (defaults to <cite>“normal”</cite>):</p>
 <ul class="simple">
-<li><p><cite>“oblivious”</cite>: the cache is inexistent and everything is computed on the go.</p></li>
-<li><p><cite>“lightweight”</cite>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</p></li>
-<li><p><cite>“normal”</cite>: same as lightweight, but the statistics of the out-of-sample points are also saved.</p></li>
+    <li><p><cite>“none”</cite>: the cache is non-existent and everything is computed on the go.</p></li>
+    <li><p><cite>“light”</cite>: the cache is very light. For example, only the kernel matrix and statistics of the
+        sample points are saved.</p></li>
+    <li><p><cite>“normal”</cite>: same as light, but the statistics of the out-of-sample points are also saved.</p></li>
 <li><p><cite>“heavy”</cite>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</p></li>
 <li><p><cite>“total”</cite>: every step of any computation is saved.</p></li>
 </ul>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.call_super_init">
-<span class="sig-name descname"><span class="pre">call_super_init</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.call_super_init" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.centered">
@@ -207,13 +292,16 @@ called.</p>
 <dd><p>Returns the correlation matrix fo the provided input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>N</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p>
+    <dd class="field-odd"><p><strong>x</strong>
+        (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) –
+        Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to
+        <cite>None</cite></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Correlation matrix</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tensor(dim_feature, dim_feature)</p>
+    <dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -224,13 +312,16 @@ called.</p>
 <dd><p>Returns the covariance matrix fo the provided input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>N</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p>
+    <dd class="field-odd"><p><strong>x</strong>
+        (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) –
+        Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.
+        Defaults to <cite>None</cite>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Covariance matrix</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tensor(dim_feature, dim_feature)</p>
+    <dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -238,14 +329,20 @@ called.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.current_sample">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.current_sample" title="Link to this definition"></a></dt>
+    <dd></dd>
+</dl>
+
+        <dl class="py property">
+            <dt class="sig sig-object py" id="kerch.kernel.Laplacian.current_sample_projected">
+                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                    class="sig-name descname"><span class="pre">current_sample_projected</span></span><em
+                    class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                    class="pre">Tensor</span></em><a class="headerlink"
+                                                     href="#kerch.kernel.Laplacian.current_sample_projected"
+                                                     title="Link to this definition"></a></dt>
 <dd><p>Returns the sample that is currently used in the computations and for the normalizing and centering statistics
 if relevant.</p>
 </dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.current_sample_unprojectioned">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample_unprojectioned</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.current_sample_unprojectioned" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.dim_feature">
@@ -259,7 +356,18 @@ if relevant.</p>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
-<dl class="py property">
+        <dl class="py property">
+            <dt class="sig sig-object py" id="kerch.kernel.Laplacian.empty_sample">
+                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                    class="sig-name descname"><span class="pre">empty_sample</span></span><em class="property"><span
+                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                    class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.empty_sample"
+                                                   title="Link to this definition"></a></dt>
+            <dd><p>Boolean specifying if the sample is empty or not.</p>
+            </dd>
+        </dl>
+
+        <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.explicit">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explicit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.explicit" title="Link to this definition"></a></dt>
 <dd><p>True if the method has an explicit formulation, False otherwise.</p>
@@ -291,12 +399,6 @@ if relevant.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.get_log_level">
-<span class="sig-name descname"><span class="pre">get_log_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.get_log_level" title="Link to this definition"></a></dt>
-<dd><p>Returns the log Level used by this object.</p>
-</dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.hparams">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams</span></span><a class="headerlink" href="#kerch.kernel.Laplacian.hparams" title="Link to this definition"></a></dt>
@@ -323,7 +425,8 @@ if relevant.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sample</strong> (<em>Tensor</em><em>, </em><em>optional</em>) – Sample points used for the various computations. When an out-of-sample computation is asked, it
 will be given relative to these samples. In case of overwriting a current sample, <cite>num_sample</cite> and
-<cite>dim_input</cite> are also overwritten. If <cite>None</cite> is specified, the sample dataset will be initialized according
+    <cite>dim_input</cite> are also overwritten. If <cite>None</cite> is specified, the sample data will be initialized
+    according
 to <cite>num_sample</cite> and <cite>dim_input</cite> specified during the construction. If a previous sample set has been used,
 it will keep the same dimension by consequence. A last case occurs when <cite>sample</cite> is of the class
 <cite>torch.nn.Parameter</cite>: the sample will then use those values, and they can thus be shared with the level
@@ -341,7 +444,20 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.k" title="Link to this definition"></a></dt>
+    <span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em
+        class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+        class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span
+        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+        class="sig-param"><span class="n"><span class="pre">explicit</span></span><span class="o"><span
+        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+        class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span
+        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+        class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+        class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                    href="#kerch.kernel.Laplacian.k"
+                                                                                    title="Link to this definition"></a>
+</dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
@@ -350,7 +466,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>In the case of centered kernels, this computation is more expensive as it requires to _center according to
-the sample dataset, which implies computing a statistic on the out-of-sample kernel matrix and thus
+    the sample data, which implies computing a statistic on the out-of-sample kernel matrix and thus
 also computing it.</p>
 </div>
 <dl class="field-list simple">
@@ -373,20 +489,13 @@ also computing it.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.kernel_projections">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kernel_projections</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ProjectionTree</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.kernel_projections" title="Link to this definition"></a></dt>
-<dd><p>Default projection performed on the kernel</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.manifold_parameters">
-<span class="sig-name descname"><span class="pre">manifold_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euclidean'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Parameter</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.manifold_parameters" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#kerch.kernel.Laplacian.name" title="Link to this definition"></a></dt>
-<dd><p>Name of the level. This is relevant in some applications</p>
+    <dt class="sig sig-object py" id="kerch.kernel.Laplacian.kernel_transform">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">kernel_transform</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span
+            class="pre">TransformTree</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.kernel_transform"
+                                                    title="Link to this definition"></a></dt>
+    <dd><p>Default transform performed on the kernel</p>
 </dd></dl>
 
 <dl class="py property">
@@ -415,26 +524,59 @@ training.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.project_sample">
-<span class="sig-name descname"><span class="pre">project_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.project_sample" title="Link to this definition"></a></dt>
-<dd><p>Apply to value the same projection as on the sample.</p>
+    <dt class="sig sig-object py" id="kerch.kernel.Laplacian.print_cache_keys">
+        <span class="sig-name descname"><span class="pre">print_cache_keys</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span
+            class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span
+            class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span
+            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">None</span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.print_cache_keys"
+                                                    title="Link to this definition"></a></dt>
+    <dd><p>Prints different cache keys.</p>
+        <dl class="field-list simple">
+            <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+            <dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some cache
+                elements are private and are not printed unless set to True. Defaults to False.</p>
+            </dd>
+        </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.projection_sample_revert">
-<span class="sig-name descname"><span class="pre">projection_sample_revert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.projection_sample_revert" title="Link to this definition"></a></dt>
-<dd><p>Get back the original value from a projected value, by using the same projection as the sample,
-but in reverse. This is not always feasible, depending on the projection used (normalizations are
-typically not invertible as they are projection which are not bijective).</p>
+    <dt class="sig sig-object py" id="kerch.kernel.Laplacian.project_input">
+        <span class="sig-name descname"><span class="pre">project_input</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span>
+        <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+                class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+                class="w"> </span><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                href="#kerch.kernel.Laplacian.project_input"
+                                                                                title="Link to this definition"></a>
+    </dt>
+    <dd><p>Apply to value the same transform as on the sample.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.reset" title="Link to this definition"></a></dt>
+    <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em
+        class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span
+        class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em
+        class="sig-param"><span class="n"><span class="pre">reset_persisting</span></span><span class="o"><span
+        class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span
+        class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+        class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                  href="#kerch.kernel.Laplacian.reset"
+                                                                                  title="Link to this definition"></a>
+</dt>
 <dd><p>Resets the cache to empty.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>children</strong> – TODO</p>
+    <dd class="field-odd">
+        <ul class="simple">
+            <li><p><strong>children</strong> – TODO</p></li>
+            <li><p><strong>reset_persisting</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the
+                elements for which persisting=True should also be resetted.
+                Defaults to True.</p></li>
+        </ul>
 </dd>
 </dl>
 </dd></dl>
@@ -442,35 +584,24 @@ typically not invertible as they are projection which are not bijective).</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.sample">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.sample" title="Link to this definition"></a></dt>
-<dd><p>Raw sample before any projectionation.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.sample_projections">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_projections</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ProjectionTree</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.sample_projections" title="Link to this definition"></a></dt>
-<dd><p>Default projection used by the sample.</p>
+    <dd><p>Full original raw sample without any transform or potential stochastic selection.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.sample_trainable">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.sample_trainable" title="Link to this definition"></a></dt>
-<dd><p>Boolean if the sample dataset can be trained.</p>
+    <dd><p>Boolean if the sample data can be trained.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.kernel.Laplacian.set_log_level">
-<span class="sig-name descname"><span class="pre">set_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.set_log_level" title="Link to this definition"></a></dt>
-<dd><p>Sets a specific log Level to this object. It serves as a way to use specific log Level for a specific class,
-different than the current general kerch log Level.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>level</strong> – If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current general kerch log Level will be used (WARNING if not
-specified otherwise)., defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>name</strong> – int, optional</p></li>
-</ul>
-</dd>
-</dl>
+        <dl class="py property">
+            <dt class="sig sig-object py" id="kerch.kernel.Laplacian.sample_transform">
+                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                    class="sig-name descname"><span class="pre">sample_transform</span></span><em class="property"><span
+                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                    class="pre">TransformTree</span></em><a class="headerlink"
+                                                            href="#kerch.kernel.Laplacian.sample_transform"
+                                                            title="Link to this definition"></a></dt>
+            <dd><p>Default transform used by the sample.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -511,7 +642,13 @@ specified during initialization.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.switcher">
-<span class="sig-name descname"><span class="pre">switcher</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'heavy':</span> <span class="pre">3,</span> <span class="pre">'lightweight':</span> <span class="pre">1,</span> <span class="pre">'normal':</span> <span class="pre">2,</span> <span class="pre">'oblivious':</span> <span class="pre">0,</span> <span class="pre">'total':</span> <span class="pre">4}</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.switcher" title="Link to this definition"></a></dt>
+    <span class="sig-name descname"><span class="pre">switcher</span></span><em class="property"><span
+        class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'heavy':</span>
+    <span class="pre">3,</span> <span class="pre">'light':</span> <span class="pre">1,</span> <span
+            class="pre">'none':</span> <span class="pre">0,</span> <span class="pre">'normal':</span> <span class="pre">2,</span>
+    <span class="pre">'total':</span> <span class="pre">4}</span></em><a class="headerlink"
+                                                                         href="#kerch.kernel.Laplacian.switcher"
+                                                                         title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -522,6 +659,21 @@ gradients and other things, we refer to the <cite>torch.nn.Module</cite> documen
 in evaluation mode (<cite>False</cite>), all the sample points are used for the computations, regardless of
 the previously specified indices.</p>
 </dd></dl>
+
+        <dl class="py method">
+            <dt class="sig sig-object py" id="kerch.kernel.Laplacian.transform_sample_revert">
+                <span class="sig-name descname"><span class="pre">transform_sample_revert</span></span><span
+                    class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span
+                    class="sig-paren">)</span> <span class="sig-return"><span
+                    class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+                    class="pre">Tensor</span></span></span><a class="headerlink"
+                                                              href="#kerch.kernel.Laplacian.transform_sample_revert"
+                                                              title="Link to this definition"></a></dt>
+            <dd><p>Get back the original value from a projected value, by using the same transform as the sample,
+                but in reverse. This is not always feasible, depending on the transform used (normalizations are
+                typically not invertible as they are transform which are not bijective).</p>
+            </dd>
+        </dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.update_sample">

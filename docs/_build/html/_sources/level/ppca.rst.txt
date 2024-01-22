@@ -2,7 +2,7 @@
 Probabilistic Principal Component Analysis
 ==========================================
 
-.. autoclass:: kerch.module.PPCA
+.. autoclass:: kerch.level.PPCA
    :members:
    :inherited-members: Module
    :undoc-members:

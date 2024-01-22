@@ -203,7 +203,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         return self._kernel_explicit_transform.apply(oos=self._explicit_with_none, x=self.project_input(x), transform=transform)
 
     def k(self, x=None, y=None, explicit=None, transform=None) -> Tensor:
-        """
+        r"""
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
         .. math::

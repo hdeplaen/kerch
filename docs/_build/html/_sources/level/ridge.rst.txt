@@ -2,7 +2,7 @@
 Ridge Regression
 ================
 
-.. autoclass:: kerch.module.PPCA
+.. autoclass:: kerch.level.Ridge
    :members:
    :inherited-members: Module
    :undoc-members:

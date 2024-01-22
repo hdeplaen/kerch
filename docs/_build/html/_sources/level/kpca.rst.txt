@@ -2,7 +2,7 @@
 Kernel Principal Component Analysis
 ===================================
 
-.. autoclass:: kerch.module.KPCA
+.. autoclass:: kerch.level.KPCA
    :members:
    :inherited-members: Module
    :undoc-members:

@@ -29,7 +29,7 @@ Sine
     plt.figure(0)
     plt.plot(x)
 
-    k = kerch.kernel.rbf(sample=x)
+    k = kerch.kernel.RBF(sample=x)
 
     plt.figure(1)
     plt.imshow(k.K)
@@ -52,7 +52,7 @@ Time
     import kerch
     from matplotlib import pyplot as plt
 
-    k = kerch.kernel.rbf(sample=range(10), sigma=3)
+    k = kerch.kernel.RBF(sample=range(10), sigma=3)
 
     plt.imshow(k.K)
     plt.colorbar()

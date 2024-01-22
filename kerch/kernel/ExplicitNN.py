@@ -18,7 +18,7 @@ import lazy_loader
 @utils.extend_docstring(Kernel)
 class ExplicitNN(Explicit):
     r"""
-    _Implicit kernel class, parametrized by a neural network.
+    Explicit kernel class, parametrized by a neural network.
 
     .. math::
         k(x,y) = NN\left(x\right)^\top NN\left(y\right).

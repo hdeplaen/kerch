@@ -70,7 +70,7 @@ const _highlightText = (thisNode, text, className) => {
 };
 
 /**
- * Small JavaScript level for the documentation.
+ * Small JavaScript module for the documentation.
  */
 const SphinxHighlight = {
 

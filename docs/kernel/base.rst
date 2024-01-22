@@ -1,8 +1,8 @@
-===========
-Base Kernel
-===========
+===================
+Kernel Mother Class
+===================
 
-.. autoclass:: kerch.kernel._Base
+.. autoclass:: kerch.kernel.Kernel
    :members:
    :inherited-members: Module
    :undoc-members:

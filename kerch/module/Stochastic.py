@@ -58,7 +58,7 @@ class Stochastic(Cache,  # creates a transportable cache (e.g. for GPU)
         return self
 
     def stochastic(self, idx=None, prop=None):
-        """
+        r"""
         Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
         case of stochastic training.
 

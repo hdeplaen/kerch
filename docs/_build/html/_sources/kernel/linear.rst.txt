@@ -32,7 +32,7 @@ Sine
     plt.figure(0)
     plt.plot(x)
 
-    k = kerch.kernel.linear(sample=x)
+    k = kerch.kernel.Linear(sample=x)
     plt.figure(1)
     plt.imshow(k.K)
     plt.colorbar()

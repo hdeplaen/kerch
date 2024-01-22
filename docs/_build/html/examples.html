@@ -4,10 +4,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; kerch 0.2.2 documentation</title>
+    <title>Examples &mdash; kerch 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css?v=7f9a90b1" />
+    <link href="_static/plot_directive.css" rel="stylesheet" type="text/css"/>
 
   
   <!--[if lt IE 9]>
@@ -16,13 +16,13 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=000c92bf"></script>
+    <script src="_static/documentation_options.js?v=b489f392"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Base Kernel" href="kernel/base.html" /> 
+    <link href="level/mvkpca.html" rel="prev" title="Multi-View Kernel Principal Component Analysis"/>
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="kernel/index.html">Kernel Module</a></li>
+    <li class="toctree-l1"><a class="reference internal" href="level/index.html">Level Module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#training-and-tuning-an-ls-svm">Training and tuning an LS-SVM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#out-of-sample-normalized-and-centered-kernels">Out-of-sample normalized and centered kernels</a></li>
@@ -83,23 +84,6 @@
 <p>Some examples of what is possible. Please refer to the rest of the documentation for more examples.</p>
 <section id="training-and-tuning-an-ls-svm">
 <h2>Training and tuning an LS-SVM<a class="headerlink" href="#training-and-tuning-an-ls-svm" title="Link to this heading"></a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
-
-<span class="n">tr_set</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="s2">&quot;two_moons&quot;</span><span class="p">,</span>   <span class="c1"># which dataset</span>
-                                     <span class="n">tr_size</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>      <span class="c1"># training size</span>
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">LSSVM</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span>                    <span class="c1"># kernel type</span>
-                     <span class="n">representation</span><span class="o">=</span><span class="s2">&quot;dual&quot;</span><span class="p">)</span>            <span class="c1"># initiate model</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">set_data_prop</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">tr_set</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>                      <span class="c1"># data</span>
-                  <span class="n">labels</span><span class="o">=</span><span class="n">tr_set</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>                    <span class="c1"># corresponding labels</span>
-                  <span class="n">proportions</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>               <span class="c1"># initiate dataset</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">hyperopt</span><span class="p">({</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">},</span>                       <span class="c1"># define which parameters to tune</span>
-             <span class="n">max_evals</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>                            <span class="c1"># define how many trials</span>
-             <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>                                     <span class="c1"># 10-fold cross-validation</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>                                              <span class="c1"># fit the optimal parameters found</span>
-<span class="n">kerch</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_model</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>                             <span class="c1"># plot the model using the built-in method</span>
-</pre></div>
-</div>
-<p>(<a class="reference download internal" download="" href="_downloads/38225c478bc33fda02189f9371b42554/examples-1.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>)</p>
 </section>
 <section id="out-of-sample-normalized-and-centered-kernels">
 <h2>Out-of-sample normalized and centered kernels<a class="headerlink" href="#out-of-sample-normalized-and-centered-kernels" title="Link to this heading"></a></h2>
@@ -133,9 +117,20 @@
 <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="_downloads/357259ddd03691c9ebb864f05d6e9e41/examples-2.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="_downloads/39315b7abb87ed2ccb496b6527419b5d/examples-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="_downloads/afb393e80b367b06ed3e53147a14a47e/examples-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="_downloads/e4153f3fb688cbdb35c04a562a344d72/examples-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+    <p>(<a class="reference download internal" download=""
+           href="_downloads/38225c478bc33fda02189f9371b42554/examples-1.py"><code
+            class="xref download docutils literal notranslate"><span class="pre">Source</span> <span
+            class="pre">code</span></code></a>, <a class="reference download internal" download=""
+                                                   href="_downloads/7f7a115c2b83c92f47f29b447e7a0f78/examples-1.png"><code
+            class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a
+            class="reference download internal" download=""
+            href="_downloads/f357af9ab8fba986b6976abb05d714f3/examples-1.hires.png"><code
+            class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a
+            class="reference download internal" download=""
+            href="_downloads/d4bf4759f1ce7bdde4b883993ae5b9ec/examples-1.pdf"><code
+            class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <figure class="align-default">
-<img alt="_images/examples-2.png" class="plot-directive" src="_images/examples-2.png" />
+    <img alt="_images/examples-1.png" class="plot-directive" src="_images/examples-1.png"/>
 </figure>
 </section>
 </section>
@@ -144,7 +139,9 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="kernel/base.html" class="btn btn-neutral float-left" title="Base Kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+              <a accesskey="p" class="btn btn-neutral float-left"
+                 href="level/mvkpca.html" rel="prev" title="Multi-View Kernel Principal Component Analysis"><span
+                      aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
     </div>
 
   <hr/>

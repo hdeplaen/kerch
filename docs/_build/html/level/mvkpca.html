@@ -4,10 +4,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multi-View Kernel Principal Component Analysis &mdash; kerch 0.2.2 documentation</title>
+    <title>Multi-View Kernel Principal Component Analysis &mdash; kerch 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css?v=7f9a90b1" />
+    <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
 
   
   <!--[if lt IE 9]>
@@ -16,7 +16,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../_static/documentation_options.js?v=b489f392"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -53,7 +53,8 @@
 <li class="toctree-l2"><a class="reference internal" href="index.html#single-view">Single-View</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#multi-view">Multi-View</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Multi-View Kernel Principal Component Analysis</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#kerch.module.MVKPCA"><code class="docutils literal notranslate"><span class="pre">MVKPCA</span></code></a></li>
+    <li class="toctree-l4"><a class="reference internal" href="#kerch.level.MVKPCA"><code
+            class="docutils literal notranslate"><span class="pre">MVKPCA</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -91,129 +92,275 @@
   <section id="multi-view-kernel-principal-component-analysis">
 <h1>Multi-View Kernel Principal Component Analysis<a class="headerlink" href="#multi-view-kernel-principal-component-analysis" title="Link to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kerch.module.</span></span><span class="sig-name descname"><span class="pre">MVKPCA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.MVKPCA" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA">
+        <em class="property"><span class="pre">class</span><span class="w"> </span></em><span
+            class="sig-prename descclassname"><span class="pre">kerch.level.</span></span><span
+            class="sig-name descname"><span class="pre">MVKPCA</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span
+            class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span
+            class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.MVKPCA"
+                                         title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_KPCA</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MVLevel</span></code></p>
 <p>Multi-View Kernel Principal Component Analysis.</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.C">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.MVKPCA.C" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.C">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">C</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.MVKPCA.C"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.H">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">H</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.module.MVKPCA.H" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.H">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">H</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">Parameter</span></em><a class="headerlink" href="#kerch.level.MVKPCA.H"
+                                                title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.MVKPCA.K" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.K">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.MVKPCA.K"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.Ks">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Ks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.MVKPCA.Ks" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.Ks">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">Ks</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.MVKPCA.Ks"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.Phi">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.MVKPCA.Phi" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.Phi">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.MVKPCA.Phi"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.PhiW">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PhiW</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.MVKPCA.PhiW" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.PhiW">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">PhiW</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.MVKPCA.PhiW"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.W">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.module.MVKPCA.W" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.W">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">W</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">Parameter</span></em><a class="headerlink" href="#kerch.level.MVKPCA.W"
+                                                title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.after_step">
-<span class="sig-name descname"><span class="pre">after_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.after_step" title="Link to this definition"></a></dt>
-<dd><p>Perform after-step operations, for example a projection of the parameters onto some manifold.</p>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.after_step">
+        <span class="sig-name descname"><span class="pre">after_step</span></span><span class="sig-paren">(</span><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.MVKPCA.after_step"
+                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Performs after-step operations, for example a transform of the parameters onto some manifold.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.attach_to">
-<span class="sig-name descname"><span class="pre">attach_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.attach_to" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.attach_to">
+        <span class="sig-name descname"><span class="pre">attach_to</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">weight_fn</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.MVKPCA.attach_to"
+                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.attach_view">
-<span class="sig-name descname"><span class="pre">attach_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.attach_view" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.attach_view">
+        <span class="sig-name descname"><span class="pre">attach_view</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span>
+        <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+                class="pre">None</span></span></span><a class="headerlink" href="#kerch.level.MVKPCA.attach_view"
+                                                        title="Link to this definition"></a></dt>
 <dd><p>Adds a view</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.attached">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attached</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.module.MVKPCA.attached" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.attached">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">attached</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink"
+                                                                                                    href="#kerch.level.MVKPCA.attached"
+                                                                                                    title="Link to this definition"></a>
+    </dt>
 <dd><p>Boolean indicating whether the view is attached to another multi_view.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.c">
-<span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.c" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.before_step">
+        <span class="sig-name descname"><span class="pre">before_step</span></span><span class="sig-paren">(</span><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.MVKPCA.before_step"
+                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Performs steps required before each training step.</p>
+    </dd>
+</dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.c">
+            <span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em
+                class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+                class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+                class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                            href="#kerch.level.MVKPCA.c"
+                                                                                            title="Link to this definition"></a>
+        </dt>
 <dd></dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.cache_level">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kerch.module.MVKPCA.cache_level" title="Link to this definition"></a></dt>
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.cache_keys">
+            <span class="sig-name descname"><span class="pre">cache_keys</span></span><span
+                class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+                class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span
+                class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span
+                class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span
+                class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
+                class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+                class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span
+                class="p"><span class="pre">]</span></span></span></span><a class="headerlink"
+                                                                            href="#kerch.level.MVKPCA.cache_keys"
+                                                                            title="Link to this definition"></a></dt>
+        <dd><p>Returns an iterable containing the different cache keys.</p>
+            <dl class="field-list simple">
+                <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+                <dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some
+                    cache elements are private and are not returned unless set to True. Defaults to False.</p>
+                </dd>
+            </dl>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.cache_level">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">cache_level</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a
+                class="headerlink" href="#kerch.level.MVKPCA.cache_level" title="Link to this definition"></a></dt>
 <dd><p>Cache level possible values (defaults to <cite>“normal”</cite>):</p>
 <ul class="simple">
-<li><p><cite>“oblivious”</cite>: the cache is inexistent and everything is computed on the go.</p></li>
-<li><p><cite>“lightweight”</cite>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</p></li>
-<li><p><cite>“normal”</cite>: same as lightweight, but the statistics of the out-of-sample points are also saved.</p></li>
+    <li><p><cite>“none”</cite>: the cache is non-existent and everything is computed on the go.</p></li>
+    <li><p><cite>“light”</cite>: the cache is very light. For example, only the kernel matrix and statistics of the
+        sample points are saved.</p></li>
+    <li><p><cite>“normal”</cite>: same as light, but the statistics of the out-of-sample points are also saved.</p></li>
 <li><p><cite>“heavy”</cite>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</p></li>
 <li><p><cite>“total”</cite>: every step of any computation is saved.</p></li>
 </ul>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.detach">
-<span class="sig-name descname"><span class="pre">detach</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.detach" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.detach">
+        <span class="sig-name descname"><span class="pre">detach</span></span><span class="sig-paren">(</span><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.MVKPCA.detach"
+                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.detach_all">
-<span class="sig-name descname"><span class="pre">detach_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.detach_all" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.detach_all">
+        <span class="sig-name descname"><span class="pre">detach_all</span></span><span class="sig-paren">(</span><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.MVKPCA.detach_all"
+                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd><p>Detaches all the known.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.dim_feature">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_feature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.module.MVKPCA.dim_feature" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.dim_feature">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">dim_feature</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a
+            class="headerlink" href="#kerch.level.MVKPCA.dim_feature" title="Link to this definition"></a></dt>
 <dd><p>Dimension of the explicit feature map if relevant.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.dim_output">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_output</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.module.MVKPCA.dim_output" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.dim_output">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">dim_output</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a
+            class="headerlink" href="#kerch.level.MVKPCA.dim_output" title="Link to this definition"></a></dt>
 <dd><p>Output dimension.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.dims_feature">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dims_feature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#kerch.module.MVKPCA.dims_feature" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.dims_feature">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">dims_feature</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span
+            class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span
+            class="pre">]</span></span></em><a class="headerlink" href="#kerch.level.MVKPCA.dims_feature"
+                                               title="Link to this definition"></a></dt>
 <dd><p>List containing the feature dimension of each view.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.dims_feature_cumulative">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dims_feature_cumulative</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#kerch.module.MVKPCA.dims_feature_cumulative" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.dims_feature_cumulative">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">dims_feature_cumulative</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span
+            class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span
+            class="pre">]</span></span></em><a class="headerlink" href="#kerch.level.MVKPCA.dims_feature_cumulative"
+                                               title="Link to this definition"></a></dt>
 <dd><p>List containing the cumulative feature dimensions of each view with the previus ones.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.MVKPCA.fit" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.eta">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">eta</span></span><em class="property"><span class="p"><span
+                class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a
+                class="headerlink" href="#kerch.level.MVKPCA.eta" title="Link to this definition"></a></dt>
+        <dd><p>Level weight <span class="math notranslate nohighlight">\(\eta\)</span>, e.g. for the weight of the loss.
+        </p>
+        </dd>
+    </dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.MVKPCA.forward" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.forward">
+        <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.MVKPCA.forward"
+                                         title="Link to this definition"></a></dt>
 <dd><p>Defines the computation performed at every call.</p>
 <p>Should be overridden by all subclasses.</p>
 <div class="admonition note">
@@ -226,37 +373,94 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.get_log_level">
-<span class="sig-name descname"><span class="pre">get_log_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.get_log_level" title="Link to this definition"></a></dt>
-<dd><p>Returns the log Level used by this object.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.h">
-<span class="sig-name descname"><span class="pre">h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.h" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.h">
+        <span class="sig-name descname"><span class="pre">h</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span
+            class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></span></span><a
+            class="headerlink" href="#kerch.level.MVKPCA.h" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.hidden">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hidden</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.MVKPCA.hidden" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.hidden">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">hidden</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.MVKPCA.hidden"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd><p>Hidden values.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.hidden_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hidden_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.module.MVKPCA.hidden_trainable" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.hidden_correlation">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">hidden_correlation</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a
+            class="headerlink" href="#kerch.level.MVKPCA.hidden_correlation" title="Link to this definition"></a></dt>
+    <dd><p>Correlation of the hidden variables <span
+            class="math notranslate nohighlight">\(\mathbf{h}^\top \mathbf{h}\)</span>. This should be the identity
+        provided
+        that the hidden variables lie on the Stiefel manifold.</p>
+    </dd>
+</dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.hidden_projector">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">hidden_projector</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Tensor</span></em><a class="headerlink" href="#kerch.level.MVKPCA.hidden_projector"
+                                                 title="Link to this definition"></a></dt>
+        <dd><p>Projector on the subspace spanned by the hidden variables <span class="math notranslate nohighlight">\(\mathbf{h}\mathbf{h}^\top\)</span>.
+            This is a rigorous projector provided its determinant is unity, e.g. when the hidden variables lie on the
+            Stiefel manifold.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.hidden_trainable">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">hidden_trainable</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a
+                class="headerlink" href="#kerch.level.MVKPCA.hidden_trainable" title="Link to this definition"></a>
+        </dt>
 <dd><p>Returns whether the hidden variables are trainable (a gradient can be computed on it).</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.MVKPCA.idx" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.hparams">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">hparams</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink"
+                                                                                                    href="#kerch.level.MVKPCA.hparams"
+                                                                                                    title="Link to this definition"></a>
+    </dt>
+    <dd></dd>
+</dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.idx">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span
+                class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a
+                class="headerlink" href="#kerch.level.MVKPCA.idx" title="Link to this definition"></a></dt>
 <dd><p>Indices used when performing various operations. This is only relevant in the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.init_parameters">
-<span class="sig-name descname"><span class="pre">init_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.init_parameters" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.init_parameters">
+        <span class="sig-name descname"><span class="pre">init_parameters</span></span><span
+            class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+            class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span
+            class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span
+            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">None</span></span></span><a class="headerlink" href="#kerch.level.MVKPCA.init_parameters"
+                                                    title="Link to this definition"></a></dt>
 <dd><p>Initializes the model parameters: the weight in primal and the hidden values in dual.
 This is suitable for gradient-based training.</p>
 <dl class="field-list simple">
@@ -270,29 +474,84 @@ This is suitable for gradient-based training.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.k" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.k">
+        <span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">Parameter</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span
+            class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span
+            class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                        href="#kerch.level.MVKPCA.k"
+                                                                                        title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.ks">
-<span class="sig-name descname"><span class="pre">ks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.ks" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.ks">
+        <span class="sig-name descname"><span class="pre">ks</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">Parameter</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span
+            class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span
+            class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span
+            class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a
+            class="headerlink" href="#kerch.level.MVKPCA.ks" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.loss">
-<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.loss" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.loss">
+        <span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                        href="#kerch.level.MVKPCA.loss"
+                                                                                        title="Link to this definition"></a>
+    </dt>
 <dd><p>Reconstruction error on the sample.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.manifold_parameters">
-<span class="sig-name descname"><span class="pre">manifold_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euclidean'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Parameter</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.manifold_parameters" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.losses">
+        <span class="sig-name descname"><span class="pre">losses</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.MVKPCA.losses"
+                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Different components of the losses.</p>
+    </dd>
+</dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.model_variance">
-<span class="sig-name descname"><span class="pre">model_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.model_variance" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.model_variance">
+        <span class="sig-name descname"><span class="pre">model_variance</span></span><span
+            class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+            class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span
+            class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span
+            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                              href="#kerch.level.MVKPCA.model_variance"
+                                                                              title="Link to this definition"></a></dt>
 <dd><p>Total variance learnt by the model given by the sum of the eigenvalues.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -308,61 +567,166 @@ has to be normalized. We refer to the remark of <code class="docutils literal no
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#kerch.module.MVKPCA.name" title="Link to this definition"></a></dt>
-<dd><p>Name of the level. This is relevant in some applications</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.named_views">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">named_views</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">View</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#kerch.module.MVKPCA.named_views" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.named_views">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">named_views</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterator</span><span
+            class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span
+            class="pre">[</span></span><span class="pre">str</span><span class="p"><span
+            class="pre">,</span></span><span class="w"> </span><span class="pre">View</span><span class="p"><span
+            class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink"
+                                                                                                href="#kerch.level.MVKPCA.named_views"
+                                                                                                title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.module.MVKPCA.num_idx" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.num_idx">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink"
+                                                                                                   href="#kerch.level.MVKPCA.num_idx"
+                                                                                                   title="Link to this definition"></a>
+    </dt>
 <dd><p>Number of selected indices when performing various operations. This is only relevant in the case of stochastic
 training.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.num_views">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_views</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.module.MVKPCA.num_views" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.num_views">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">num_views</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a
+            class="headerlink" href="#kerch.level.MVKPCA.num_views" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.param_trainable">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">param_trainable</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a
+                class="headerlink" href="#kerch.level.MVKPCA.param_trainable" title="Link to this definition"></a></dt>
+        <dd><p>Specifies whether the parameters weight and hidden are trainable or not.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.params">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">params</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a
+                class="headerlink" href="#kerch.level.MVKPCA.params" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.optimize">
-<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.optimize" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.phi">
+        <span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">Parameter</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span
+            class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span
+            class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                        href="#kerch.level.MVKPCA.phi"
+                                                                                        title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.phi">
-<span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.phi" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.phis">
+        <span class="sig-name descname"><span class="pre">phis</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">Parameter</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span
+            class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span
+            class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span
+            class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a
+            class="headerlink" href="#kerch.level.MVKPCA.phis" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.phis">
-<span class="sig-name descname"><span class="pre">phis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.phis" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.phiw">
+        <span class="sig-name descname"><span class="pre">phiw</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                        href="#kerch.level.MVKPCA.phiw"
+                                                                                        title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.phiw">
-<span class="sig-name descname"><span class="pre">phiw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.phiw" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.predict">
+        <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">known</span></span></em>, <em class="sig-param"><span
+            class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.MVKPCA.predict"
+                                         title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">known</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.MVKPCA.predict" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.print_cache_keys">
+        <span class="sig-name descname"><span class="pre">print_cache_keys</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span
+            class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span
+            class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span
+            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">None</span></span></span><a class="headerlink" href="#kerch.level.MVKPCA.print_cache_keys"
+                                                    title="Link to this definition"></a></dt>
+    <dd><p>Prints different cache keys.</p>
+        <dl class="field-list simple">
+            <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+            <dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some cache
+                elements are private and are not printed unless set to True. Defaults to False.</p>
+            </dd>
+        </dl>
+    </dd>
+</dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.project">
+            <span class="sig-name descname"><span class="pre">project</span></span><span class="sig-paren">(</span><em
+                class="sig-param"><span class="n"><span class="pre">known</span></span><span class="p"><span
+                class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>,
+            <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="p"><span
+                    class="pre">:</span></span><span class="w"> </span><span class="n"><span
+                    class="pre">str</span></span><span class="w"> </span><span class="o"><span
+                    class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span
+                class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+                class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                            href="#kerch.level.MVKPCA.project"
+                                                                                            title="Link to this definition"></a>
+        </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.project">
-<span class="sig-name descname"><span class="pre">project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">known</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.project" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.relative_variance">
-<span class="sig-name descname"><span class="pre">relative_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.relative_variance" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.relative_variance">
+        <span class="sig-name descname"><span class="pre">relative_variance</span></span><span
+            class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+            class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span
+            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                              href="#kerch.level.MVKPCA.relative_variance"
+                                                                              title="Link to this definition"></a></dt>
 <dd><p>Relative variance learnt by the model given by <code class="docutils literal notranslate"><span class="pre">`model_variance</span></code>/<code class="docutils literal notranslate"><span class="pre">total_variance</span></code>.
 This number is always comprised between 0 and 1 and avoids any considerations on normalization.</p>
 <dl class="field-list simple">
@@ -373,36 +737,54 @@ to <code class="docutils literal notranslate"><span class="pre">False</span></co
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.reset" title="Link to this definition"></a></dt>
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.representation">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">representation</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a
+                class="headerlink" href="#kerch.level.MVKPCA.representation" title="Link to this definition"></a></dt>
+        <dd></dd>
+    </dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.reset">
+            <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em
+                class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em
+                class="sig-param"><span class="n"><span class="pre">reset_persisting</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span
+                class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+                class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                          href="#kerch.level.MVKPCA.reset"
+                                                                                          title="Link to this definition"></a>
+        </dt>
 <dd><p>Resets the cache to empty.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>children</strong> – TODO</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.set_log_level">
-<span class="sig-name descname"><span class="pre">set_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.set_log_level" title="Link to this definition"></a></dt>
-<dd><p>Sets a specific log Level to this object. It serves as a way to use specific log Level for a specific class,
-different than the current general kerch log Level.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>level</strong> – If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current general kerch log Level will be used (WARNING if not
-specified otherwise)., defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>name</strong> – int, optional</p></li>
+    <li><p><strong>children</strong> – TODO</p></li>
+    <li><p><strong>reset_persisting</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the
+        elements for which persisting=True should also be resetted.
+        Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.solve">
-<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.solve" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.solve">
+        <span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span
+            class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
+            class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">None</span></span></span><a class="headerlink" href="#kerch.level.MVKPCA.solve"
+                                                    title="Link to this definition"></a></dt>
 <dd><p>Solves the model by decomposing the kernel matrix or the covariance matrix in principal components
 (eigendecomposition).</p>
 <p>Fits the model according to the input <code class="docutils literal notranslate"><span class="pre">sample</span></code> and output <code class="docutils literal notranslate"><span class="pre">target</span></code>. Many models have both a primal and
@@ -415,8 +797,14 @@ a dual formulation to be fitted.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.stochastic">
-<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.MVKPCA.stochastic" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.stochastic">
+        <span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.MVKPCA.stochastic"
+                                         title="Link to this definition"></a></dt>
 <dd><p>Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
 case of stochastic training.</p>
 <dl class="field-list simple">
@@ -439,13 +827,30 @@ specified during initialization.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.switcher">
-<span class="sig-name descname"><span class="pre">switcher</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'heavy':</span> <span class="pre">3,</span> <span class="pre">'lightweight':</span> <span class="pre">1,</span> <span class="pre">'normal':</span> <span class="pre">2,</span> <span class="pre">'oblivious':</span> <span class="pre">0,</span> <span class="pre">'total':</span> <span class="pre">4}</span></em><a class="headerlink" href="#kerch.module.MVKPCA.switcher" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.switcher">
+        <span class="sig-name descname"><span class="pre">switcher</span></span><em class="property"><span
+            class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span
+            class="pre">{'heavy':</span> <span class="pre">3,</span> <span class="pre">'light':</span> <span
+            class="pre">1,</span> <span class="pre">'none':</span> <span class="pre">0,</span> <span class="pre">'normal':</span>
+        <span class="pre">2,</span> <span class="pre">'total':</span> <span class="pre">4}</span></em><a
+            class="headerlink" href="#kerch.level.MVKPCA.switcher" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.total_variance">
-<span class="sig-name descname"><span class="pre">total_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.total_variance" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.total_variance">
+        <span class="sig-name descname"><span class="pre">total_variance</span></span><span
+            class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+            class="pre">as_tensor</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span
+            class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span
+            class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span
+            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+            class="w"> </span><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                              href="#kerch.level.MVKPCA.total_variance"
+                                                                              title="Link to this definition"></a></dt>
 <dd><p>Total variance contained in the feature map. In primal formulation,
 this is given by <span class="math notranslate nohighlight">\(\DeclareMathOperator{\tr}{tr}\tr(C)\)</span>, where <span class="math notranslate nohighlight">\(C = \sum\phi(x)\phi(x)^\top\)</span> is
 the covariance matrix on the sample. In dual, this is given by <span class="math notranslate nohighlight">\(\DeclareMathOperator{\tr}{tr}\tr(K)\)</span>,
@@ -465,8 +870,12 @@ map in primal and the number of datapoints in dual.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.MVKPCA.train" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.train">
+        <span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.MVKPCA.train"
+                                         title="Link to this definition"></a></dt>
 <dd><p>Activates the training mode, which disables the gradients computation and disables stochasticity. For the
 gradients and other things, we refer to the <cite>torch.nn.Module</cite> documentation. For the stochastic part, when put
 in evaluation mode (<cite>False</cite>), all the sample points are used for the computations, regardless of
@@ -474,45 +883,145 @@ the previously specified indices.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.update_hidden">
-<span class="sig-name descname"><span class="pre">update_hidden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.update_hidden" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.update_hidden">
+        <span class="sig-name descname"><span class="pre">update_hidden</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="n"><span
+            class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span
+            class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span
+            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">None</span></span></span><a class="headerlink" href="#kerch.level.MVKPCA.update_hidden"
+                                                    title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.vals">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vals</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.MVKPCA.vals" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.vals">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">vals</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.MVKPCA.vals"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd><p>Eigenvalues of the model. The model has to be fitted for these values to exist.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.view">
-<span class="sig-name descname"><span class="pre">view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">View</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.view" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.view">
+        <span class="sig-name descname"><span class="pre">view</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span>
+        <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+                class="pre">View</span></span></span><a class="headerlink" href="#kerch.level.MVKPCA.view"
+                                                        title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.views">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">views</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">View</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#kerch.module.MVKPCA.views" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.views">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">views</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Iterator</span><span class="p"><span
+            class="pre">[</span></span><span class="pre">View</span><span class="p"><span
+            class="pre">]</span></span></em><a class="headerlink" href="#kerch.level.MVKPCA.views"
+                                               title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.views_by_name">
-<span class="sig-name descname"><span class="pre">views_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">View</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.views_by_name" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.views_by_name">
+        <span class="sig-name descname"><span class="pre">views_by_name</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span
+            class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span
+            class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
+            class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span
+            class="pre">View</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink"
+                                                                                                     href="#kerch.level.MVKPCA.views_by_name"
+                                                                                                     title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.w">
-<span class="sig-name descname"><span class="pre">w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></span></span><a class="headerlink" href="#kerch.module.MVKPCA.w" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.w">
+        <span class="sig-name descname"><span class="pre">w</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span
+            class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></span></span><a
+            class="headerlink" href="#kerch.level.MVKPCA.w" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.weight">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.MVKPCA.weight" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.MVKPCA.watch_properties">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">watch_properties</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span
+            class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span
+            class="pre">]</span></span></em><a class="headerlink" href="#kerch.level.MVKPCA.watch_properties"
+                                               title="Link to this definition"></a></dt>
+    <dd><p>Properties to be watched (monitored). Their values can be accessed through the property <cite>watched_properties</cite>.
+        This is relevant e.g. in case of training.</p>
+    </dd>
+</dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.watched_properties">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">watched_properties</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a
+                class="headerlink" href="#kerch.level.MVKPCA.watched_properties" title="Link to this definition"></a>
+        </dt>
+        <dd><p>A dictionary containing the values of the properties that are specified in <cite>watch_properties</cite>.
+        </p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.weight">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Tensor</span></em><a class="headerlink" href="#kerch.level.MVKPCA.weight"
+                                                 title="Link to this definition"></a></dt>
 <dd><p>Weight.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.MVKPCA.weights_by_name">
-<span class="sig-name descname"><span class="pre">weights_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.MVKPCA.weights_by_name" title="Link to this definition"></a></dt>
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.weight_correlation">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">weight_correlation</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Tensor</span></em><a class="headerlink" href="#kerch.level.MVKPCA.weight_correlation"
+                                                 title="Link to this definition"></a></dt>
+        <dd><p>Correlation of the weights <span
+                class="math notranslate nohighlight">\(\mathbf{w}^\top \mathbf{w}\)</span>. This should be the identity
+            provided
+            that the weights lie on the Stiefel manifold.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.weight_projector">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">weight_projector</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Tensor</span></em><a class="headerlink" href="#kerch.level.MVKPCA.weight_projector"
+                                                 title="Link to this definition"></a></dt>
+        <dd><p>Projector on the subspace spanned by the weights <span class="math notranslate nohighlight">\(\mathbf{w}\mathbf{w}^\top\)</span>.
+            This is a rigorous projector provided its determinant is unity, e.g. when the weights lie on the Stiefel
+            manifold.</p>
+        </dd>
+    </dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.MVKPCA.weights_by_name">
+            <span class="sig-name descname"><span class="pre">weights_by_name</span></span><span
+                class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+                class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span
+                class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span
+                class="sig-paren">)</span><a class="headerlink" href="#kerch.level.MVKPCA.weights_by_name"
+                                             title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

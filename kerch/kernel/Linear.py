@@ -20,7 +20,7 @@ class Linear(Explicit):
     Linear kernel.
 
     .. math::
-        k(x,y) = x^\top x.
+        k(x,y) = x^\top y.
 
     To this kernel also corresponds the explicit finite dimensional feature map :math:`\phi(x)=x`.
     """
@@ -28,7 +28,7 @@ class Linear(Explicit):
     @utils.kwargs_decorator({})
     def __init__(self, *args, **kwargs):
         super(Linear, self).__init__(*args, **kwargs)
-        if self.normalized == True:
+        if self.normalized:
             self._log.info("A normalized linear kernel also corresponds to a cosine kernel.")
 
     def __str__(self):

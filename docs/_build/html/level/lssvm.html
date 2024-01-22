@@ -4,10 +4,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Least-Squares Support Vector Machine &mdash; kerch 0.2.2 documentation</title>
+    <title>Least-Squares Support Vector Machine &mdash; kerch 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css?v=7f9a90b1" />
+    <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
 
   
   <!--[if lt IE 9]>
@@ -16,7 +16,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=000c92bf"></script>
+    <script src="../_static/documentation_options.js?v=b489f392"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -54,7 +54,8 @@
 <li class="toctree-l3"><a class="reference internal" href="kpca.html">Kernel Principal Component Analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ppca.html">Probabilistic Principal Component Analysis</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Least-Squares Support Vector Machine</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#kerch.module.LSSVM"><code class="docutils literal notranslate"><span class="pre">LSSVM</span></code></a></li>
+    <li class="toctree-l4"><a class="reference internal" href="#kerch.level.LSSVM"><code
+            class="docutils literal notranslate"><span class="pre">LSSVM</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ridge.html">Ridge Regression</a></li>
@@ -94,183 +95,587 @@
   <section id="least-squares-support-vector-machine">
 <h1>Least-Squares Support Vector Machine<a class="headerlink" href="#least-squares-support-vector-machine" title="Link to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="kerch.module.LSSVM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kerch.module.</span></span><span class="sig-name descname"><span class="pre">LSSVM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.LSSVM" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM">
+        <em class="property"><span class="pre">class</span><span class="w"> </span></em><span
+            class="sig-prename descclassname"><span class="pre">kerch.level.</span></span><span
+            class="sig-name descname"><span class="pre">LSSVM</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span
+            class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span
+            class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.LSSVM"
+                                         title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Level</span></code></p>
 <p>Least squares support vector machine.</p>
+    <dl class="field-list simple">
+        <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+        <dd class="field-odd"><p><strong>gamma</strong> (<em>float</em><em>, </em><em>optional</em>) – Regularization
+            parameter of the LSSVM. Defaults to 1.</p>
+        </dd>
+    </dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.C">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.C" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.C">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">C</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.LSSVM.C"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Returns the explicit matrix on the sample datapoints.</p>
+        <div class="math notranslate nohighlight">
+            \[C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.\]
+        </div>
+    </dd>
+</dl>
+
+<dl class="py property">
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.Corr">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">Corr</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.LSSVM.Corr"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Returns the correlation matrix of the sample. Same as calling self.corr().</p>
+    </dd>
+</dl>
+
+<dl class="py property">
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.Cov">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">Cov</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.LSSVM.Cov"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Returns the covariance matrix of the sample. Same as calling self.cov().</p>
+    </dd>
+</dl>
+
+<dl class="py property">
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.H">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">H</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">Parameter</span></em><a class="headerlink" href="#kerch.level.LSSVM.H"
+                                                title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.H">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">H</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.module.LSSVM.H" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.K">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.LSSVM.K"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Returns the kernel matrix on the sample data. Same result as calling <a class="reference internal"
+                                                                                   href="#kerch.level.LSSVM.k"
+                                                                                   title="kerch.level.LSSVM.k"><code
+            class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
+        It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently
+        called.</p>
+        <div class="math notranslate nohighlight">
+            \[K_{ij} = k(x_i,x_j).\]
+        </div>
+    </dd>
+</dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.Phi">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span class="p"><span
+                class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.Phi" title="Link to this definition"></a></dt>
+        <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the
+            sample datapoints. Same as calling
+            <a class="reference internal" href="#kerch.level.LSSVM.phi" title="kerch.level.LSSVM.phi"><code
+                    class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code></a>, but
+            faster.
+            It is loaded from memory if already computed and unchanged since then, to avoid re-computation when
+            recurrently
+            called.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.PhiW">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">PhiW</span></span><em class="property"><span class="p"><span
+                class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.PhiW" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.K" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.Phi">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.Phi" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.PhiW">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PhiW</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.PhiW" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.W">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">W</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.module.LSSVM.W" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.W">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">W</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span><span
+            class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span
+            class="pre">Parameter</span></em><a class="headerlink" href="#kerch.level.LSSVM.W"
+                                                title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.after_step">
-<span class="sig-name descname"><span class="pre">after_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.after_step" title="Link to this definition"></a></dt>
-<dd><p>Perform after-step operations, for example a projection of the parameters onto some manifold.</p>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.after_step">
+        <span class="sig-name descname"><span class="pre">after_step</span></span><span class="sig-paren">(</span><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.LSSVM.after_step"
+                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Performs after-step operations, for example a transform of the parameters onto some manifold.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.attach_to">
-<span class="sig-name descname"><span class="pre">attach_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.attach_to" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.attach_to">
+        <span class="sig-name descname"><span class="pre">attach_to</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">weight_fn</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.LSSVM.attach_to"
+                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.attached">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attached</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.module.LSSVM.attached" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.attached">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">attached</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink"
+                                                                                                    href="#kerch.level.LSSVM.attached"
+                                                                                                    title="Link to this definition"></a>
+    </dt>
 <dd><p>Boolean indicating whether the view is attached to another multi_view.</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.bias">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bias</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.bias" title="Link to this definition"></a></dt>
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.before_step">
+            <span class="sig-name descname"><span class="pre">before_step</span></span><span
+                class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span
+                class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a
+                class="headerlink" href="#kerch.level.LSSVM.before_step" title="Link to this definition"></a></dt>
+        <dd><p>Performs steps required before each training step.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.bias">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">bias</span></span><em class="property"><span class="p"><span
+                class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.bias" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.bias_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bias_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.module.LSSVM.bias_trainable" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.bias_trainable">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">bias_trainable</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.bias_trainable" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.c">
-<span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.c" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.c">
+        <span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                        href="#kerch.level.LSSVM.c"
+                                                                                        title="Link to this definition"></a>
+    </dt>
+    <dd><p>Out-of-sample explicit matrix.</p>
+        <div class="math notranslate nohighlight">
+            \[C = \frac1M\sum_{i}^{M} \phi(x_i)\phi(x_i)^\top.\]
+        </div>
+        <dl class="field-list simple">
+            <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+            <dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>N</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>)
+                – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.,
+                defaults to <cite>None</cite></p>
+            </dd>
+            <dt class="field-even">Returns<span class="colon">:</span></dt>
+            <dd class="field-even"><p>Explicit matrix</p>
+            </dd>
+            <dt class="field-odd">Return type<span class="colon">:</span></dt>
+            <dd class="field-odd"><p>Tensor(dim_feature,dim_feature)</p>
+            </dd>
+        </dl>
+    </dd>
+</dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.cache_keys">
+            <span class="sig-name descname"><span class="pre">cache_keys</span></span><span
+                class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+                class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span
+                class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span
+                class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span
+                class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
+                class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+                class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span
+                class="p"><span class="pre">]</span></span></span></span><a class="headerlink"
+                                                                            href="#kerch.level.LSSVM.cache_keys"
+                                                                            title="Link to this definition"></a></dt>
+        <dd><p>Returns an iterable containing the different cache keys.</p>
+            <dl class="field-list simple">
+                <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+                <dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some
+                    cache elements are private and are not returned unless set to True. Defaults to False.</p>
+                </dd>
+            </dl>
+        </dd>
+    </dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.cache_level">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kerch.module.LSSVM.cache_level" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.cache_level">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">cache_level</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.cache_level" title="Link to this definition"></a></dt>
 <dd><p>Cache level possible values (defaults to <cite>“normal”</cite>):</p>
 <ul class="simple">
-<li><p><cite>“oblivious”</cite>: the cache is inexistent and everything is computed on the go.</p></li>
-<li><p><cite>“lightweight”</cite>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</p></li>
-<li><p><cite>“normal”</cite>: same as lightweight, but the statistics of the out-of-sample points are also saved.</p></li>
+    <li><p><cite>“none”</cite>: the cache is non-existent and everything is computed on the go.</p></li>
+    <li><p><cite>“light”</cite>: the cache is very light. For example, only the kernel matrix and statistics of the
+        sample points are saved.</p></li>
+    <li><p><cite>“normal”</cite>: same as light, but the statistics of the out-of-sample points are also saved.</p></li>
 <li><p><cite>“heavy”</cite>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</p></li>
 <li><p><cite>“total”</cite>: every step of any computation is saved.</p></li>
 </ul>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.current_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.current_sample" title="Link to this definition"></a></dt>
-<dd><p>Returns the sample that is currently used in the computations and for the normalizing and centering statistics
-if relevant.</p>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.centered">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">centered</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink"
+                                                                                                    href="#kerch.level.LSSVM.centered"
+                                                                                                    title="Link to this definition"></a>
+    </dt>
+    <dd><p>Returns if the kernel is centered in the feature maps.</p>
+    </dd>
+</dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.corr">
+            <span class="sig-name descname"><span class="pre">corr</span></span><span class="sig-paren">(</span><em
+                class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+                class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+                class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                            href="#kerch.level.LSSVM.corr"
+                                                                                            title="Link to this definition"></a>
+        </dt>
+        <dd><p>Returns the correlation matrix fo the provided input.</p>
+            <dl class="field-list simple">
+                <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+                <dd class="field-odd"><p><strong>x</strong>
+                    (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>)
+                    – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.,
+                    defaults to <cite>None</cite></p>
+                </dd>
+                <dt class="field-even">Returns<span class="colon">:</span></dt>
+                <dd class="field-even"><p>Correlation matrix</p>
+                </dd>
+                <dt class="field-odd">Return type<span class="colon">:</span></dt>
+                <dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+                </dd>
+            </dl>
+        </dd>
+    </dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.cov">
+            <span class="sig-name descname"><span class="pre">cov</span></span><span class="sig-paren">(</span><em
+                class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+                class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+                class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                            href="#kerch.level.LSSVM.cov"
+                                                                                            title="Link to this definition"></a>
+        </dt>
+        <dd><p>Returns the covariance matrix fo the provided input.</p>
+            <dl class="field-list simple">
+                <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+                <dd class="field-odd"><p><strong>x</strong>
+                    (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>)
+                    – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.
+                    Defaults to <cite>None</cite>.</p>
+                </dd>
+                <dt class="field-even">Returns<span class="colon">:</span></dt>
+                <dd class="field-even"><p>Covariance matrix</p>
+                </dd>
+                <dt class="field-odd">Return type<span class="colon">:</span></dt>
+                <dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+                </dd>
+            </dl>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.current_sample_unprojectioned">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample_unprojectioned</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.current_sample_unprojectioned" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.current_sample">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">current_sample</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.current_sample" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.current_targets">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_targets</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.current_targets" title="Link to this definition"></a></dt>
-<dd><p>Returns the targets that are currently used in the computations and for the normalizing and centering
-statistics if relevant.</p>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.current_sample_projected">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">current_sample_projected</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.current_sample_projected" title="Link to this definition"></a>
+    </dt>
+    <dd><p>Returns the sample that is currently used in the computations and for the normalizing and centering
+        statistics
+        if relevant.</p>
+    </dd>
+</dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.current_target">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">current_target</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Tensor</span></em><a class="headerlink" href="#kerch.level.LSSVM.current_target"
+                                                 title="Link to this definition"></a></dt>
+        <dd><p>Returns the target that are currently used in the computations, taking the stochastic aspect into account
+            if relevant.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.detach">
-<span class="sig-name descname"><span class="pre">detach</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.detach" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.detach">
+        <span class="sig-name descname"><span class="pre">detach</span></span><span class="sig-paren">(</span><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.LSSVM.detach"
+                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.dim_feature">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_feature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.module.LSSVM.dim_feature" title="Link to this definition"></a></dt>
-<dd><p>Dimension of the explicit feature map if relevant.</p>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.dim_feature">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">dim_feature</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.dim_feature" title="Link to this definition"></a></dt>
+    <dd><p>Returns the dimension of the explicit feature map if it exists.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.dim_input">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_input</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.module.LSSVM.dim_input" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.dim_input">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">dim_input</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.dim_input" title="Link to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.dim_output">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_output</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.module.LSSVM.dim_output" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.dim_output">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">dim_output</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.dim_output" title="Link to this definition"></a></dt>
 <dd><p>Output dimension.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.LSSVM.fit" title="Link to this definition"></a></dt>
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.empty_sample">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">empty_sample</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.empty_sample" title="Link to this definition"></a></dt>
+        <dd><p>Boolean specifying if the sample is empty or not.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.eta">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">eta</span></span><em class="property"><span class="p"><span
+                class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.eta" title="Link to this definition"></a></dt>
+        <dd><p>Level weight <span class="math notranslate nohighlight">\(\eta\)</span>, e.g. for the weight of the loss.
+        </p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.explicit">
+            <em class="property"><span class="pre">abstract</span><span class="w"> </span><span
+                    class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span
+                class="pre">explicit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span
+                class="w"> </span><span class="pre">bool</span></em><a class="headerlink"
+                                                                       href="#kerch.level.LSSVM.explicit"
+                                                                       title="Link to this definition"></a></dt>
+        <dd><p>True if the method has an explicit formulation, False otherwise.</p>
+        </dd>
+    </dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.explicit_preimage">
+            <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">explicit_preimage</span></span><span
+                class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span
+                class="sig-paren">)</span><a class="headerlink" href="#kerch.level.LSSVM.explicit_preimage"
+                                             title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.LSSVM.forward" title="Link to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.forward">
+        <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                        href="#kerch.level.LSSVM.forward"
+                                                                                        title="Link to this definition"></a>
+    </dt>
+    <dd><p>Passes datapoints through the kernel.</p>
+        <dl class="field-list simple">
+            <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+            <dd class="field-odd">
+                <ul class="simple">
+                    <li><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>,</em><em>dim_input</em><em>)</em>) –
+                        Datapoints to be passed through the kernel.</p></li>
+                    <li><p><strong>representation</strong> (<em>str</em><em>, </em><em>optional</em>) – Chosen
+                        representation. If <cite>dual</cite>, an out-of-sample kernel matrix is returned. If
+                        <cite>primal</cite> is specified, it returns the explicit feature map., defaults to
+                        <cite>dual</cite></p></li>
+                </ul>
+            </dd>
+            <dt class="field-even">Returns<span class="colon">:</span></dt>
+            <dd class="field-even"><p>Out-of-sample kernel matrix or explicit feature map depending on <cite>representation</cite>.
+            </p>
+            </dd>
+            <dt class="field-odd">Raises<span class="colon">:</span></dt>
+            <dd class="field-odd"><p>RepresentationError</p>
+            </dd>
+        </dl>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.gamma">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gamma</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#kerch.module.LSSVM.gamma" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.gamma">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">gamma</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink"
+                                                                                                     href="#kerch.level.LSSVM.gamma"
+                                                                                                     title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.get_log_level">
-<span class="sig-name descname"><span class="pre">get_log_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.get_log_level" title="Link to this definition"></a></dt>
-<dd><p>Returns the log Level used by this object.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.h">
-<span class="sig-name descname"><span class="pre">h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.h" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.h">
+        <span class="sig-name descname"><span class="pre">h</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span
+            class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></span></span><a
+            class="headerlink" href="#kerch.level.LSSVM.h" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.hidden">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hidden</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.hidden" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.hidden">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">hidden</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.LSSVM.hidden"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd><p>Hidden values.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.hidden_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hidden_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.module.LSSVM.hidden_trainable" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.hidden_correlation">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">hidden_correlation</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.hidden_correlation" title="Link to this definition"></a></dt>
+    <dd><p>Correlation of the hidden variables <span
+            class="math notranslate nohighlight">\(\mathbf{h}^\top \mathbf{h}\)</span>. This should be the identity
+        provided
+        that the hidden variables lie on the Stiefel manifold.</p>
+    </dd>
+</dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.hidden_projector">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">hidden_projector</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Tensor</span></em><a class="headerlink" href="#kerch.level.LSSVM.hidden_projector"
+                                                 title="Link to this definition"></a></dt>
+        <dd><p>Projector on the subspace spanned by the hidden variables <span class="math notranslate nohighlight">\(\mathbf{h}\mathbf{h}^\top\)</span>.
+            This is a rigorous projector provided its determinant is unity, e.g. when the hidden variables lie on the
+            Stiefel manifold.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.hidden_trainable">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">hidden_trainable</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.hidden_trainable" title="Link to this definition"></a></dt>
 <dd><p>Returns whether the hidden variables are trainable (a gradient can be computed on it).</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.idx" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.hparams">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">hparams</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink"
+                                                                                                    href="#kerch.level.LSSVM.hparams"
+                                                                                                    title="Link to this definition"></a>
+    </dt>
+    <dd><p>Dictionnary containing the hyper-parameters and their values. This can be relevant for monitoring.</p>
+    </dd>
+</dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.idx">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span
+                class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.idx" title="Link to this definition"></a></dt>
 <dd><p>Indices used when performing various operations. This is only relevant in the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.init_parameters">
-<span class="sig-name descname"><span class="pre">init_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.init_parameters" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.implicit_preimage">
+        <span class="sig-name descname"><span class="pre">implicit_preimage</span></span><span
+            class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+            class="pre">k_coefficient</span></span><span class="p"><span class="pre">:</span></span><span
+            class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span
+            class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span
+            class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span
+            class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span
+            class="pre">'knn'</span></span></em>, <em class="sig-param"><span class="o"><span
+            class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.LSSVM.implicit_preimage"
+                                         title="Link to this definition"></a></dt>
+    <dd></dd>
+</dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.init_parameters">
+            <span class="sig-name descname"><span class="pre">init_parameters</span></span><span
+                class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation</span></span><span
+                class="o"><span class="pre">=</span></span><span class="default_value"><span
+                class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span
+                class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span
+                class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span
+                class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+                class="pre">None</span></span></span><a class="headerlink" href="#kerch.level.LSSVM.init_parameters"
+                                                        title="Link to this definition"></a></dt>
 <dd><p>Initializes the model parameters: the weight in primal and the hidden values in dual.
 This is suitable for gradient-based training.</p>
 <dl class="field-list simple">
@@ -284,15 +689,24 @@ This is suitable for gradient-based training.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.init_sample">
-<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.LSSVM.init_sample" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.init_sample">
+        <span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.LSSVM.init_sample"
+                                         title="Link to this definition"></a></dt>
 <dd><p>Initializes the sample set (and the stochastic indices).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sample</strong> (<em>Tensor</em><em>, </em><em>optional</em>) – Sample points used for the various computations. When an out-of-sample computation is asked, it
 will be given relative to these samples. In case of overwriting a current sample, <cite>num_sample</cite> and
-<cite>dim_input</cite> are also overwritten. If <cite>None</cite> is specified, the sample dataset will be initialized according
+    <cite>dim_input</cite> are also overwritten. If <cite>None</cite> is specified, the sample data will be initialized
+    according
 to <cite>num_sample</cite> and <cite>dim_input</cite> specified during the construction. If a previous sample set has been used,
 it will keep the same dimension by consequence. A last case occurs when <cite>sample</cite> is of the class
 <cite>torch.nn.Parameter</cite>: the sample will then use those values, and they can thus be shared with the level
@@ -309,134 +723,330 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.k" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.k">
+        <span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">explicit</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span
+            class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span
+            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.level.LSSVM.k"
+                                                      title="Link to this definition"></a></dt>
+    <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
+        <div class="math notranslate nohighlight">
+            \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]
+        </div>
+        <p>with <span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^N\)</span> the out-of-sample points
+            (<cite>x</cite>) and <span class="math notranslate nohighlight">\(\{y_i\}_{j=1}^N\)</span> the sample points
+            (<cite>y</cite>).</p>
+        <div class="admonition note">
+            <p class="admonition-title">Note</p>
+            <p>In the case of centered kernels, this computation is more expensive as it requires to _center according
+                to
+                the sample data, which implies computing a statistic on the out-of-sample kernel matrix and thus
+                also computing it.</p>
+        </div>
+        <dl class="field-list simple">
+            <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+            <dd class="field-odd">
+                <ul class="simple">
+                    <li><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>N</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>)
+                        – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be
+                        used., defaults to <cite>None</cite></p></li>
+                    <li><p><strong>y</strong> (<em>Tensor</em><em>(</em><em>M</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>)
+                        – Out-of-sample points (second dimension). If <cite>None</cite>, the default sample will be
+                        used., defaults to <cite>None</cite></p></li>
+                </ul>
+            </dd>
+            <dt class="field-even">Returns<span class="colon">:</span></dt>
+            <dd class="field-even"><p>Kernel matrix</p>
+            </dd>
+            <dt class="field-odd">Return type<span class="colon">:</span></dt>
+            <dd class="field-odd"><p>Tensor(N,M)</p>
+            </dd>
+            <dt class="field-even">Raises<span class="colon">:</span></dt>
+            <dd class="field-even"><p>ExplicitError</p>
+            </dd>
+        </dl>
+    </dd>
+</dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.kappa">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">kappa</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.kappa" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.kappa">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kappa</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#kerch.module.LSSVM.kappa" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.kernel">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">kernel</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Kernel</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.LSSVM.kernel"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.kernel">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kernel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../kernel/base.html#kerch.kernel._Base" title="kerch.kernel._Base._Base"><span class="pre">_Base</span></a></em><a class="headerlink" href="#kerch.module.LSSVM.kernel" title="Link to this definition"></a></dt>
-<dd><p>The kernel used by the model or View.</p>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.kernel_transform">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">kernel_transform</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span
+            class="pre">TransformTree</span></em><a class="headerlink" href="#kerch.level.LSSVM.kernel_transform"
+                                                    title="Link to this definition"></a></dt>
+    <dd><p>Default transform performed on the kernel</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.loss">
-<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.loss" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.loss">
+        <span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                        href="#kerch.level.LSSVM.loss"
+                                                                                        title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.manifold_parameters">
-<span class="sig-name descname"><span class="pre">manifold_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euclidean'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Parameter</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.module.LSSVM.manifold_parameters" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.losses">
+        <span class="sig-name descname"><span class="pre">losses</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.LSSVM.losses"
+                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Different components of the losses.</p>
+    </dd>
+</dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#kerch.module.LSSVM.name" title="Link to this definition"></a></dt>
-<dd><p>Name of the level. This is relevant in some applications</p>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.normalized">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">normalized</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.normalized" title="Link to this definition"></a></dt>
+    <dd><p>Returns if the kernel is normalized in the feature maps.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.module.LSSVM.num_idx" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.num_idx">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink"
+                                                                                                   href="#kerch.level.LSSVM.num_idx"
+                                                                                                   title="Link to this definition"></a>
+    </dt>
 <dd><p>Number of selected indices when performing various operations. This is only relevant in the case of stochastic
 training.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.module.LSSVM.num_sample" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.num_sample">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.num_sample" title="Link to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
 
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.param_trainable">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">param_trainable</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.param_trainable" title="Link to this definition"></a></dt>
+        <dd><p>Specifies whether the parameters weight and hidden are trainable or not.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.params">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">params</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.params" title="Link to this definition"></a></dt>
+        <dd><p>Dictionnary containing the parameters and their values. This can be relevant for monitoring.</p>
+        </dd>
+    </dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.phi">
+            <span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em
+                class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+                class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+                class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+                class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                            href="#kerch.level.LSSVM.phi"
+                                                                                            title="Link to this definition"></a>
+        </dt>
+        <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the
+            specified points.</p>
+            <dl class="field-list simple">
+                <dt class="field-odd">Parameters<span class="colon">:</span></dt>
+                <dd class="field-odd"><p><strong>x</strong>
+                    (<em>Tensor</em><em>(</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – The
+                    datapoints serving as input of the explicit feature map. If <cite>None</cite>, the sample will be
+                    used.,
+                    defaults to <cite>None</cite></p>
+                </dd>
+                <dt class="field-even">Raises<span class="colon">:</span></dt>
+                <dd class="field-even"><p>ExplicitError</p>
+                </dd>
+            </dl>
+        </dd>
+    </dl>
+
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.optimize">
-<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.optimize" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.phiw">
+        <span class="sig-name descname"><span class="pre">phiw</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
+                                                                                        href="#kerch.level.LSSVM.phiw"
+                                                                                        title="Link to this definition"></a>
+    </dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.phi">
-<span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.phi" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.phiw">
-<span class="sig-name descname"><span class="pre">phiw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.phiw" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.project_sample">
-<span class="sig-name descname"><span class="pre">project_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.project_sample" title="Link to this definition"></a></dt>
-<dd><p>Apply to value the same projection as on the sample.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.projection_sample_revert">
-<span class="sig-name descname"><span class="pre">projection_sample_revert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.projection_sample_revert" title="Link to this definition"></a></dt>
-<dd><p>Get back the original value from a projected value, by using the same projection as the sample,
-but in reverse. This is not always feasible, depending on the projection used (normalizations are
-typically not invertible as they are projection which are not bijective).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.reset" title="Link to this definition"></a></dt>
-<dd><p>Resets the cache to empty.</p>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.print_cache_keys">
+        <span class="sig-name descname"><span class="pre">print_cache_keys</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span
+            class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span
+            class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span
+            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">None</span></span></span><a class="headerlink" href="#kerch.level.LSSVM.print_cache_keys"
+                                                    title="Link to this definition"></a></dt>
+    <dd><p>Prints different cache keys.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>children</strong> – TODO</p>
+    <dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some cache elements
+        are private and are not printed unless set to True. Defaults to False.</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.module.LSSVM.sample" title="Link to this definition"></a></dt>
-<dd><p>Raw sample before any projectionation.</p>
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.project_input">
+            <span class="sig-name descname"><span class="pre">project_input</span></span><span
+                class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+                class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
+                class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+                class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
+                class="w"> </span><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                href="#kerch.level.LSSVM.project_input"
+                                                                                title="Link to this definition"></a>
+        </dt>
+        <dd><p>Apply to value the same transform as on the sample.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.sample_projections">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_projections</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ProjectionTree</span></em><a class="headerlink" href="#kerch.module.LSSVM.sample_projections" title="Link to this definition"></a></dt>
-<dd><p>Default projection used by the sample.</p>
-</dd></dl>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.representation">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">representation</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.representation" title="Link to this definition"></a></dt>
+    <dd></dd>
+</dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.sample_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.module.LSSVM.sample_trainable" title="Link to this definition"></a></dt>
-<dd><p>Boolean if the sample dataset can be trained.</p>
-</dd></dl>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.requires_bias">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">requires_bias</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink"
+                                                                                                    href="#kerch.level.LSSVM.requires_bias"
+                                                                                                    title="Link to this definition"></a>
+    </dt>
+    <dd></dd>
+</dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.set_kernel">
-<span class="sig-name descname"><span class="pre">set_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../kernel/base.html#kerch.kernel._Base" title="kerch.kernel._Base._Base"><span class="pre">_Base</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.LSSVM.set_kernel" title="Link to this definition"></a></dt>
-<dd><p>For some obscure reason, this does not work as a setter (&#64;kernel.setter).
-TODO: find out why and solve</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.set_log_level">
-<span class="sig-name descname"><span class="pre">set_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.set_log_level" title="Link to this definition"></a></dt>
-<dd><p>Sets a specific log Level to this object. It serves as a way to use specific log Level for a specific class,
-different than the current general kerch log Level.</p>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.reset">
+        <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span
+            class="n"><span class="pre">reset_persisting</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                      href="#kerch.level.LSSVM.reset"
+                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>Resets the cache to empty.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>level</strong> – If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current general kerch log Level will be used (WARNING if not
-specified otherwise)., defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>name</strong> – int, optional</p></li>
+    <li><p><strong>children</strong> – TODO</p></li>
+    <li><p><strong>reset_persisting</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the
+        elements for which persisting=True should also be resetted.
+        Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.solve">
-<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.solve" title="Link to this definition"></a></dt>
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.sample">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Parameter</span></em><a class="headerlink" href="#kerch.level.LSSVM.sample"
+                                                    title="Link to this definition"></a></dt>
+        <dd><p>Full original raw sample without any transform or potential stochastic selection.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.sample_trainable">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">sample_trainable</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.sample_trainable" title="Link to this definition"></a></dt>
+        <dd><p>Boolean if the sample data can be trained.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.sample_transform">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">sample_transform</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">TransformTree</span></em><a class="headerlink" href="#kerch.level.LSSVM.sample_transform"
+                                                        title="Link to this definition"></a></dt>
+        <dd><p>Default transform used by the sample.</p>
+        </dd>
+    </dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.solve">
+            <span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em
+                class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+                class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+                class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span
+                class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+                class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span
+                class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+                class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
+                                                                                          href="#kerch.level.LSSVM.solve"
+                                                                                          title="Link to this definition"></a>
+        </dt>
 <dd><p>Fits the model according to the input <code class="docutils literal notranslate"><span class="pre">sample</span></code> and output <code class="docutils literal notranslate"><span class="pre">target</span></code>. Many models have both a primal and
 a dual formulation to be fitted.</p>
 <dl class="field-list simple">
@@ -451,8 +1061,14 @@ a dual formulation to be fitted.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.stochastic">
-<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.LSSVM.stochastic" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.stochastic">
+        <span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
+            class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.LSSVM.stochastic"
+                                         title="Link to this definition"></a></dt>
 <dd><p>Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
 case of stochastic training.</p>
 <dl class="field-list simple">
@@ -475,19 +1091,33 @@ specified during initialization.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.switcher">
-<span class="sig-name descname"><span class="pre">switcher</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'heavy':</span> <span class="pre">3,</span> <span class="pre">'lightweight':</span> <span class="pre">1,</span> <span class="pre">'normal':</span> <span class="pre">2,</span> <span class="pre">'oblivious':</span> <span class="pre">0,</span> <span class="pre">'total':</span> <span class="pre">4}</span></em><a class="headerlink" href="#kerch.module.LSSVM.switcher" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.switcher">
+        <span class="sig-name descname"><span class="pre">switcher</span></span><em class="property"><span
+            class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span
+            class="pre">{'heavy':</span> <span class="pre">3,</span> <span class="pre">'light':</span> <span
+            class="pre">1,</span> <span class="pre">'none':</span> <span class="pre">0,</span> <span class="pre">'normal':</span>
+        <span class="pre">2,</span> <span class="pre">'total':</span> <span class="pre">4}</span></em><a
+            class="headerlink" href="#kerch.level.LSSVM.switcher" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.targets">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">targets</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.targets" title="Link to this definition"></a></dt>
-<dd><p>Targets to be matched to.</p>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.target">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">target</span></span><em class="property"><span class="p"><span
+            class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink"
+                                                                                                      href="#kerch.level.LSSVM.target"
+                                                                                                      title="Link to this definition"></a>
+    </dt>
+    <dd><p>target to be matched to.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.LSSVM.train" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.train">
+        <span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span
+            class="sig-paren">)</span><a class="headerlink" href="#kerch.level.LSSVM.train"
+                                         title="Link to this definition"></a></dt>
 <dd><p>Activates the training mode, which disables the gradients computation and disables stochasticity. For the
 gradients and other things, we refer to the <cite>torch.nn.Module</cite> documentation. For the stochastic part, when put
 in evaluation mode (<cite>False</cite>), all the sample points are used for the computations, regardless of
@@ -495,13 +1125,39 @@ the previously specified indices.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.update_hidden">
-<span class="sig-name descname"><span class="pre">update_hidden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.update_hidden" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.transform_sample_revert">
+        <span class="sig-name descname"><span class="pre">transform_sample_revert</span></span><span
+            class="sig-paren">(</span><em class="sig-param"><span class="n"><span
+            class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
+            class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
+            class="pre">Tensor</span></span></span><a class="headerlink"
+                                                      href="#kerch.level.LSSVM.transform_sample_revert"
+                                                      title="Link to this definition"></a></dt>
+    <dd><p>Get back the original value from a projected value, by using the same transform as the sample,
+        but in reverse. This is not always feasible, depending on the transform used (normalizations are
+        typically not invertible as they are transform which are not bijective).</p>
+    </dd>
+</dl>
+
+    <dl class="py method">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.update_hidden">
+            <span class="sig-name descname"><span class="pre">update_hidden</span></span><span
+                class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>,
+            <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span
+                    class="pre">=</span></span><span class="default_value"><span
+                    class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
+                class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a
+                class="headerlink" href="#kerch.level.LSSVM.update_hidden" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.update_sample">
-<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.module.LSSVM.update_sample" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.update_sample">
+        <span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span
+            class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span
+            class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a
+            class="headerlink" href="#kerch.level.LSSVM.update_sample" title="Link to this definition"></a></dt>
 <dd><p>Updates the sample set. In contradiction to <cite>init_samples</cite>, this only updates the values of the sample and sets
 the gradients of the updated values to zero if relevant.</p>
 <dl class="field-list simple">
@@ -516,15 +1172,77 @@ the gradients of the updated values to zero if relevant.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.w">
-<span class="sig-name descname"><span class="pre">w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></span></span><a class="headerlink" href="#kerch.module.LSSVM.w" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.w">
+        <span class="sig-name descname"><span class="pre">w</span></span><span class="sig-paren">(</span><em
+            class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
+            class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
+            class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
+            class="sig-return-typehint"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span
+            class="pre">|</span></span><span class="w"> </span><span class="pre">Parameter</span></span></span><a
+            class="headerlink" href="#kerch.level.LSSVM.w" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="kerch.module.LSSVM.weight">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.module.LSSVM.weight" title="Link to this definition"></a></dt>
+    <dt class="sig sig-object py" id="kerch.level.LSSVM.watch_properties">
+        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+            class="sig-name descname"><span class="pre">watch_properties</span></span><em class="property"><span
+            class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span
+            class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span
+            class="pre">]</span></span></em><a class="headerlink" href="#kerch.level.LSSVM.watch_properties"
+                                               title="Link to this definition"></a></dt>
+    <dd><p>Properties to be watched (monitored). Their values can be accessed through the property <cite>watched_properties</cite>.
+        This is relevant e.g. in case of training.</p>
+    </dd>
+</dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.watched_properties">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">watched_properties</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a
+                class="headerlink" href="#kerch.level.LSSVM.watched_properties" title="Link to this definition"></a>
+        </dt>
+        <dd><p>A dictionary containing the values of the properties that are specified in <cite>watch_properties</cite>.
+        </p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.weight">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Tensor</span></em><a class="headerlink" href="#kerch.level.LSSVM.weight"
+                                                 title="Link to this definition"></a></dt>
 <dd><p>Weight.</p>
 </dd></dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.weight_correlation">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">weight_correlation</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Tensor</span></em><a class="headerlink" href="#kerch.level.LSSVM.weight_correlation"
+                                                 title="Link to this definition"></a></dt>
+        <dd><p>Correlation of the weights <span
+                class="math notranslate nohighlight">\(\mathbf{w}^\top \mathbf{w}\)</span>. This should be the identity
+            provided
+            that the weights lie on the Stiefel manifold.</p>
+        </dd>
+    </dl>
+
+    <dl class="py property">
+        <dt class="sig sig-object py" id="kerch.level.LSSVM.weight_projector">
+            <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
+                class="sig-name descname"><span class="pre">weight_projector</span></span><em class="property"><span
+                class="p"><span class="pre">:</span></span><span class="w"> </span><span
+                class="pre">Tensor</span></em><a class="headerlink" href="#kerch.level.LSSVM.weight_projector"
+                                                 title="Link to this definition"></a></dt>
+        <dd><p>Projector on the subspace spanned by the weights <span class="math notranslate nohighlight">\(\mathbf{w}\mathbf{w}^\top\)</span>.
+            This is a rigorous projector provided its determinant is unity, e.g. when the weights lie on the Stiefel
+            manifold.</p>
+        </dd>
+    </dl>
 
 </dd></dl>
 

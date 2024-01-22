@@ -172,7 +172,7 @@ class _BaseKernel(Sample, metaclass=ABCMeta):
         return self._explicit_with_none(x)
 
     def k(self, x=None, y=None, explicit=None) -> Tensor:
-        """
+        r"""
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
         .. math::

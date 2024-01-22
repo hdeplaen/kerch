@@ -6,7 +6,7 @@ x = np.sin(np.arange(50) / np.pi)
 plt.figure(0)
 plt.plot(x)
 
-k = kerch.kernel.polynomial(sample=x, degree=2)
+k = kerch.kernel.Polynomial(sample=x, degree=2)
 plt.figure(1)
 plt.imshow(k.K)
 plt.colorbar()

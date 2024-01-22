@@ -1,8 +1,8 @@
-===============
-Implicit Kernel
-===============
+============================
+Implicit Kernel Mother Class
+============================
 
-.. autoclass:: kerch.kernel._Implicit
+.. autoclass:: kerch.kernel.Implicit
    :members:
    :inherited-members: Module
    :undoc-members:
