@@ -3,7 +3,7 @@ import torch
 
 from kerch.plot.matplotlib import *
 from ..module.Sample import Sample
-from ..kernel._BaseKernel import _BaseKernel
+from ..kernel._base_kernel import _BaseKernel
 from ..level._View import _View
 from ..level._KPCA import _KPCA
 

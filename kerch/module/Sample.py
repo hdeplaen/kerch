@@ -52,31 +52,22 @@ class Sample(Stochastic,  # manager stochastic indices
     :type sample_transform: List[str]
     """
 
-    @abstractmethod
-    @utils.kwargs_decorator({
-        "sample": None,
-        "sample_trainable": False,
-        "num_sample": None,
-        "dim_input": None,
-        "idx_sample": None,
-        "prop_sample": None,
-        "sample_transform": []})
     def __init__(self, *args, **kwargs):
         super(Sample, self).__init__(*args, **kwargs)
 
-        sample = kwargs["sample"]
+        sample = kwargs.pop('sample', None)
         if sample is not None:
             sample = utils.castf(sample)
             self._num_total, self._dim_input = sample.shape
         else:
-            self._dim_input = kwargs["dim_input"]
-            self._num_total = kwargs["num_sample"]
+            self._dim_input = kwargs.pop('dim_input', None)
+            self._num_total = kwargs.pop('num_sample', None)
 
         self._sample = torch.nn.Parameter(torch.empty((0, 0)))
-        self._sample_trainable = kwargs["sample_trainable"]
+        self._sample_trainable = kwargs.pop('sample_trainable', False)
 
-        self.init_sample(sample, idx_sample=kwargs["idx_sample"], prop_sample=kwargs["prop_sample"])
-        self._default_sample_transform = kwargs["sample_transform"]
+        self.init_sample(sample, idx_sample=kwargs.pop('idx_sample', None), prop_sample=kwargs.pop('prop_sample', None))
+        self._default_sample_transform = kwargs.pop('sample_transform', [])
 
     @property
     def dim_input(self) -> int:
@@ -269,13 +260,14 @@ class Sample(Stochastic,  # manager stochastic indices
 
         return self._get("sample_transform", level_key="sample_transform", fun=fun)
 
-    def project_input(self, data) -> Union[Tensor, None]:
+    def transform_input(self, data) -> Union[Tensor, None]:
         r"""
         Apply to value the same transform as on the sample.
         """
+        data = utils.castf(data)
         if data is None:
             return None
-        return self.sample_transform.apply(data)
+        return self.sample_transform.apply(oos=data)
 
     def transform_sample_revert(self, data) -> Tensor:
         r"""

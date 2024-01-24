@@ -112,7 +112,6 @@ all time, or in other words that the kernels are translational invariant. We typ
     rbf
 
 
-
 Vision Kernels
 --------------
 
@@ -131,5 +130,14 @@ Abstract Kernels
     exponential
     explicit
     implicit
-    base
+    kernel
 
+
+Creating Kernels
+================
+
+It is also possible to create other kernels than the ones already implemented and still taking benefit of all features
+common to all kernel such as automatic transformation of the input of the kernel (centering, normalization...), all
+attributes (``K``, ``Phi``...), cache management etc. We refer to the examples in the documentation of the abstract
+classes :class:`kerch.kernel.Exponential`, :class:``kerch.kernel.Explicit`, :class:`kerch.kernel.Implicit` and
+:class:`kerch.kernel.Kernel`.

@@ -82,7 +82,27 @@ class Cache(Module,
                     cache_entry._apply(fn)
         return super(Cache, self)._apply(fn)
 
-    def _get(self, key, fun, level_key=None, default_level: str = 'total', force: bool = False,
+    def _save(self, key, fun=None, level_key=None, default_level: str = 'total', force: bool = False, persisting=False):
+        r"""
+        We refer to _get.
+        """
+
+        # determine which level to store in
+        try:
+            level = DEFAULT_CACHE_LEVEL[level_key]
+        except KeyError:
+            level = default_level
+        level = self._get_level(level)
+
+        # we now compute, store if the level corresponds and return the value
+        assert callable(fun) is not None, \
+            f"Cannot store {key} in the cache as no callable argument fun has been provided"
+        val = fun()
+        if level <= self._cache_level or force:
+            self._cache[key] = (level, persisting, val)
+        return val
+
+    def _get(self, key, fun=None, level_key=None, default_level: str = 'total', force: bool = False,
              overwrite: bool = False, persisting=False):
         r"""
         Retrieves an element from the cache. If the element is not present, it saved to the cache provided its level
@@ -118,18 +138,10 @@ class Cache(Module,
             #     if reverted_key in self._cache:
             #         return self._cache[reverted_key][1].T
 
-        # if it is not, we determine the level to assign it
-        try:
-            level = DEFAULT_CACHE_LEVEL[level_key]
-        except KeyError:
-            level = default_level
-        level = self._get_level(level)
+        # if it is not, we save it
+        return self._save(key=key, fun=fun, level_key=level_key, default_level=default_level,
+                          force=force, persisting=persisting)
 
-        # we now compute, store if the level corresponds and return the value
-        val = fun()
-        if level <= self._cache_level or force:
-            self._cache[key] = (level, persisting, val)
-        return val
 
     def _reset_cache(self, reset_persisting=True) -> None:
         r"""
@@ -146,7 +158,6 @@ class Cache(Module,
             for key, val in list(self._cache.items()):
                 if not val[1]:
                     del self._cache[key]
-                    del val
 
     def _clean_cache(self, max_level: Union[str, int, None] = None):
         r"""

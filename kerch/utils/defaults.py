@@ -29,4 +29,6 @@ DEFAULT_CACHE_LEVEL = {"forward_sample_default_representation": "light",
                        "transform_oos_data_level_nondefault": "total",
                        "transform_oos_statistics_default": "normal",
                        "transform_oos_statistics_nondefault": "normal",
+                       "_poly_explicit_fun": "light",
+                       "_nystrom_elements": "light"
                        }

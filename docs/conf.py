@@ -12,19 +12,18 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('..'))
 import kerch
-
 
 # -- Project information -----------------------------------------------------
 
 project = 'kerch'
-copyright = '2022, KU Leuven'
-author = 'HENRI DE PLAEN'
+copyright = kerch.__date__ + ", " + kerch.__credits__
+author = kerch.__author__
 
 # The full version, including alpha/beta/rc tags
 release = kerch.__version__
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -33,9 +32,15 @@ release = kerch.__version__
 # ones.
 extensions = ['sphinx.ext.mathjax',
               'sphinx.ext.autodoc',
+              "sphinx.ext.doctest",
               'sphinx_rtd_theme',
-              'matplotlib.sphinxext.plot_directive'
-]
+              'matplotlib.sphinxext.plot_directive',
+              'sphinx.ext.inheritance_diagram',
+              'sphinx.ext.graphviz',
+              "sphinx.ext.githubpages",
+              ]
+
+inheritance_graph_attrs = dict(rankdir="TB", size='""')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -44,7 +49,6 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
 
 # -- Options for HTML output -------------------------------------------------
 

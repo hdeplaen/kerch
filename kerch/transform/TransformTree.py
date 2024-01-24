@@ -170,9 +170,11 @@ class TransformTree(Transform):
         pass
 
     def _explicit_oos(self, x=None):
-        if callable(self._data_oos):
+        if x == 'oos1':
+            return self._data_oos
+        else:
+            assert callable(self._data_oos), 'data_oos should be callable when providing an x which is not None.'
             return self._data_oos(x)
-        return self._data_oos
 
     def _implicit_oos(self, x=None, y=None):
         if x == 'oos1' and y == 'oos2':

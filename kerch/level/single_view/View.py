@@ -11,7 +11,7 @@ from torch import Tensor
 from math import sqrt
 
 from .._View import _View
-from ...kernel.Kernel import Kernel
+from ...kernel.kernel import Kernel
 from ...kernel.factory import class_factory
 from ...utils import DEFAULT_KERNEL_TYPE, extend_docstring, kwargs_decorator, \
     castf, NotInitializedError, FTYPE

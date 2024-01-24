@@ -1,5 +1,5 @@
 import torch
-from kerch.kernel import _BaseKernel
+from kerch.kernel import _base_kernel
 from typing import Union
 
 @torch.no_grad()

@@ -1,5 +1,5 @@
 import torch
-from kerch.kernel import _BaseKernel as K
+from kerch.kernel import _base_kernel as K
 from kerch.module.Cache import Cache
 from .smoother import smoother
 

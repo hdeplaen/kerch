@@ -1,5 +1,5 @@
 # coding=utf-8
-from .Kernel import Kernel
+from .kernel import Kernel
 from ..utils import DEFAULT_KERNEL_TYPE
 
 

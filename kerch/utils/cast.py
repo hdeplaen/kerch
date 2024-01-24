@@ -1,9 +1,10 @@
 # coding=utf-8
+from __future__ import annotations
 import torch
 from .type import ITYPE, FTYPE
 from .errors import RepresentationError
 
-def castf(x, dev=None, tensor=True):
+def castf(x, dev=None, tensor=True) -> torch.Tensor | None:
     if x is None:
         return None
 
@@ -27,7 +28,7 @@ def castf(x, dev=None, tensor=True):
 
     return x
 
-def casti(x, dev=None):
+def casti(x, dev=None, tensor=False) -> torch.Tensor | None:
     if x is None:
         return None
 
@@ -38,6 +39,16 @@ def casti(x, dev=None):
 
     if dev is not None:
         x = x.to(dev)
+
+    if tensor:
+        dim = len(x.shape)
+        if dim == 0:
+            x = x.unsqueeze(0)
+            dim = 1
+        if dim == 1:
+            x = x.unsqueeze(1)
+        elif dim > 2:
+            raise NameError(f"Provided data has too much dimensions ({dim}).")
 
     return x.squeeze()
 

@@ -1,5 +1,5 @@
 import torch
-from kerch.kernel import _BaseKernel
+from kerch.kernel import _base_kernel
 
 @torch.no_grad()
 def knn(k_coefficients: torch.Tensor, kernel: _BaseKernel, num: int = 1) -> torch.Tensor:

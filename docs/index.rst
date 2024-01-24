@@ -21,6 +21,7 @@ If you experience any bug, please let me now: this is only a pre-alpha version.
    kernel/index
    level/index
    examples
+   structure
 
 
 Indices and tables

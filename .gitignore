@@ -6,3 +6,4 @@
 *.pyc
 /wandb/
 /research/yaml/kerch/
+/docs/_build/

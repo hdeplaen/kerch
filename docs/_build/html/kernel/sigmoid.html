@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sigmoid Kernel &mdash; kerch 0.3 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
-    <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+  <title>Sigmoid Kernel &mdash; kerch 0.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
 
   
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../_static/documentation_options.js?v=b489f392"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -60,7 +61,7 @@
 <li class="toctree-l4"><a class="reference internal" href="cosine.html">Cosine Kernel</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Sigmoid Kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rff.html">Random Fourier Features Kernel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="nystrom.html">Nystrom Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nystrom.html">Nyström Kernel</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#network-based-kernels">Network-based kernels</a></li>
@@ -69,10 +70,12 @@
 <li class="toctree-l3"><a class="reference internal" href="index.html#abstract-kernels">Abstract Kernels</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#creating-kernels">Creating Kernels</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../level/index.html">Level Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
 </ul>
 
         </div>
@@ -101,20 +104,13 @@
            <div itemprop="articleBody">
              
   <section id="sigmoid-kernel">
-<h1>Sigmoid Kernel<a class="headerlink" href="#sigmoid-kernel" title="Link to this heading"></a></h1>
+<h1>Sigmoid Kernel<a class="headerlink" href="#sigmoid-kernel" title="Permalink to this heading"></a></h1>
+<section id="class">
+<h2>Class<a class="headerlink" href="#class" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid">
-    <em class="property"><span class="pre">class</span><span class="w"> </span></em><span
-        class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span
-        class="sig-name descname"><span class="pre">Sigmoid</span></span><span class="sig-paren">(</span><em
-        class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>,
-    <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span
-            class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink"
-                                                                                    href="#kerch.kernel.Sigmoid"
-                                                                                    title="Link to this definition"></a>
-</dt>
-    <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Implicit</span></code>
-    </p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span class="sig-name descname"><span class="pre">Sigmoid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="implicit.html#kerch.kernel.Implicit" title="kerch.kernel.implicit.Implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Implicit</span></code></a></p>
 <p>Sigmoid kernel.</p>
 <div class="math notranslate nohighlight">
 \[k(x,y) = \sigma\left( a (x^\top y) + b \right),\]</div>
@@ -130,13 +126,10 @@
 <li><p><strong>b</strong> (<em>double</em><em>, </em><em>optional</em>) – Value for <span class="math notranslate nohighlight">\(b\)</span>., defaults to 0</p></li>
 <li><p><strong>params</strong> – <cite>True</cite> if the gradient of <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> are to be computed. If so, a graph is computed
 and the parameters can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
-    <li><p><strong>kernel_transform</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list composed of the
-        elements <cite>‘normalize’</cite> or <cite>‘center’</cite>. For example a centered
+<li><p><strong>kernel_transform</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list composed of the elements <cite>‘normalize’</cite> or <cite>‘center’</cite>. For example a centered
 cosine kernel which is centered and normalized in order to get a covariance matrix for example can be obtained
-        by invoking a linear kernel with <cite>default_transform = [‘normalize’, ‘center’, ‘normalize’]</cite> or just a
-        cosine
-        kernel with <cite>default_transform = [‘center’, ‘normalize’]</cite>. Redundancy is automatically handled.,
-        defaults
+by invoking a linear kernel with <cite>default_transform = [‘normalize’, ‘center’, ‘normalize’]</cite> or just a cosine
+kernel with <cite>default_transform = [‘center’, ‘normalize’]</cite>. Redundancy is automatically handled., defaults
 to <cite>[]</cite>.</p></li>
 <li><p><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
 be given relative to these samples., defaults to <cite>None</cite></p></li>
@@ -152,79 +145,47 @@ overwritten by the dimension of the sample points., defaults to 1</p></li>
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
 such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>. All indices are considered if both <cite>idx_stochastic</cite> and
 <cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</p></li>
-    <li><p><strong>sample_transform</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – TODO</p></li>
+<li><p><strong>sample_transform</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – TODO</p></li>
 <li><p><strong>cache_level</strong> (<em>str</em>) – level for a cache, defaults to ‘normal’.</p></li>
 <li><p><strong>log_level</strong> (<em>str</em><em> or </em><em>int</em>) – The logging level of this specific instance. If None, it will be the default logging level set
 for the toolbox., defaults to None.</p></li>
 </ul>
 </dd>
 </dl>
-        <dl class="py property">
-            <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.Corr">
-                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
-                    class="sig-name descname"><span class="pre">Corr</span></span><em class="property"><span
-                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
-                    class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.Corr"
-                                                     title="Link to this definition"></a></dt>
-            <dd><p>Returns the correlation matrix of the sample. Same as calling self.corr().</p>
-            </dd>
-        </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.Corr">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Corr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.Corr" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the correlation matrix of the sample. Same as calling self.corr().</p>
+</dd></dl>
 
-        <dl class="py property">
-            <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.Cov">
-                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
-                    class="sig-name descname"><span class="pre">Cov</span></span><em class="property"><span
-                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
-                    class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.Cov"
-                                                     title="Link to this definition"></a></dt>
-            <dd><p>Returns the covariance matrix of the sample. Same as calling self.cov().</p>
-            </dd>
-        </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.Cov">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cov</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.Cov" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the covariance matrix of the sample. Same as calling self.cov().</p>
+</dd></dl>
 
-        <dl class="py property">
+<dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.K" title="Link to this definition"></a></dt>
-            <dd><p>Returns the kernel matrix on the sample data. Same result as calling <a class="reference internal"
-                                                                                           href="#kerch.kernel.Sigmoid.k"
-                                                                                           title="kerch.kernel.Sigmoid.k"><code
-                    class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but
-                faster.
-                It is loaded from memory if already computed and unchanged since then, to avoid re-computation when
-                recurrently
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.K" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the kernel matrix on the sample data. Same result as calling <a class="reference internal" href="#kerch.kernel.Sigmoid.k" title="kerch.kernel.Sigmoid.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
+It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently
 called.</p>
 <div class="math notranslate nohighlight">
 \[K_{ij} = k(x_i,x_j).\]</div>
 </dd></dl>
 
-        <dl class="py property">
-            <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.Phi">
-                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
-                    class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span
-                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
-                    class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.Phi"
-                                                     title="Link to this definition"></a></dt>
-            <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of
-                the sample datapoints. Same as calling
-                <code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code>, but
-                faster.
-                It is loaded from memory if already computed and unchanged since then, to avoid re-computation when
-                recurrently
-                called.</p>
-            </dd>
-        </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.Phi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.Phi" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the sample datapoints. Same as calling
+<code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code>, but faster.
+It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently
+called.</p>
+</dd></dl>
 
-        <dl class="py method">
+<dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.c">
-    <span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em
-        class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
-        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
-        class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span
-        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
-        class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
-        class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
-                                                                                    href="#kerch.kernel.Sigmoid.c"
-                                                                                    title="Link to this definition"></a>
-</dt>
+<span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.c" title="Permalink to this definition"></a></dt>
 <dd><p>Out-of-sample explicit matrix.</p>
 <div class="math notranslate nohighlight">
 \[C = \frac1M\sum_{i}^{M} \phi(x_i)\phi(x_i)^\top.\]</div>
@@ -241,38 +202,25 @@ called.</p>
 </dl>
 </dd></dl>
 
-        <dl class="py method">
-            <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.cache_keys">
-                <span class="sig-name descname"><span class="pre">cache_keys</span></span><span
-                    class="sig-paren">(</span><em class="sig-param"><span class="n"><span
-                    class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span
-                    class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span
-                    class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span
-                    class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span
-                    class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
-                    class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span
-                    class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a
-                    class="headerlink" href="#kerch.kernel.Sigmoid.cache_keys" title="Link to this definition"></a>
-            </dt>
-            <dd><p>Returns an iterable containing the different cache keys.</p>
-                <dl class="field-list simple">
-                    <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-                    <dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some
-                        cache elements are private and are not returned unless set to True. Defaults to False.</p>
-                    </dd>
-                </dl>
-            </dd>
-        </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.cache_keys">
+<span class="sig-name descname"><span class="pre">cache_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.cache_keys" title="Permalink to this definition"></a></dt>
+<dd><p>Returns an iterable containing the different cache keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to True. Defaults to False.</p>
+</dd>
+</dl>
+</dd></dl>
 
-        <dl class="py property">
+<dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.cache_level">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.cache_level" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.cache_level" title="Permalink to this definition"></a></dt>
 <dd><p>Cache level possible values (defaults to <cite>“normal”</cite>):</p>
 <ul class="simple">
-    <li><p><cite>“none”</cite>: the cache is non-existent and everything is computed on the go.</p></li>
-    <li><p><cite>“light”</cite>: the cache is very light. For example, only the kernel matrix and statistics of the
-        sample points are saved.</p></li>
-    <li><p><cite>“normal”</cite>: same as light, but the statistics of the out-of-sample points are also saved.</p></li>
+<li><p><cite>“none”</cite>: the cache is non-existent and everything is computed on the go.</p></li>
+<li><p><cite>“light”</cite>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</p></li>
+<li><p><cite>“normal”</cite>: same as light, but the statistics of the out-of-sample points are also saved.</p></li>
 <li><p><cite>“heavy”</cite>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</p></li>
 <li><p><cite>“total”</cite>: every step of any computation is saved.</p></li>
 </ul>
@@ -280,105 +228,89 @@ called.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.centered">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">centered</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.centered" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">centered</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.centered" title="Permalink to this definition"></a></dt>
 <dd><p>Returns if the kernel is centered in the feature maps.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.corr">
-<span class="sig-name descname"><span class="pre">corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.corr" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.corr" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the correlation matrix fo the provided input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-    <dd class="field-odd"><p><strong>x</strong>
-        (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) –
-        Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to
-        <cite>None</cite></p>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Correlation matrix</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-    <dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+<dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.cov">
-<span class="sig-name descname"><span class="pre">cov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.cov" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.cov" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the covariance matrix fo the provided input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-    <dd class="field-odd"><p><strong>x</strong>
-        (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) –
-        Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.
-        Defaults to <cite>None</cite>.</p>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.
+Defaults to <cite>None</cite>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Covariance matrix</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-    <dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+<dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.current_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.current_sample" title="Link to this definition"></a></dt>
-    <dd></dd>
-</dl>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.current_sample" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
-        <dl class="py property">
-            <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.current_sample_projected">
-                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
-                    class="sig-name descname"><span class="pre">current_sample_projected</span></span><em
-                    class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span
-                    class="pre">Tensor</span></em><a class="headerlink"
-                                                     href="#kerch.kernel.Sigmoid.current_sample_projected"
-                                                     title="Link to this definition"></a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.current_sample_projected">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample_projected</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.current_sample_projected" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the sample that is currently used in the computations and for the normalizing and centering statistics
 if relevant.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.dim_feature">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_feature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.dim_feature" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_feature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.dim_feature" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the dimension of the explicit feature map if it exists.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.dim_input">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_input</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.dim_input" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_input</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.dim_input" title="Permalink to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
-        <dl class="py property">
-            <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.empty_sample">
-                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
-                    class="sig-name descname"><span class="pre">empty_sample</span></span><em class="property"><span
-                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
-                    class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.empty_sample"
-                                                   title="Link to this definition"></a></dt>
-            <dd><p>Boolean specifying if the sample is empty or not.</p>
-            </dd>
-        </dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.empty_sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">empty_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.empty_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Boolean specifying if the sample is empty or not.</p>
+</dd></dl>
 
-        <dl class="py property">
+<dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.explicit">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explicit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.explicit" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explicit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.explicit" title="Permalink to this definition"></a></dt>
 <dd><p>True if the method has an explicit formulation, False otherwise.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.explicit_preimage">
-<span class="sig-name descname"><span class="pre">explicit_preimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.explicit_preimage" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">explicit_preimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.explicit_preimage" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.forward" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.forward" title="Permalink to this definition"></a></dt>
 <dd><p>Passes datapoints through the kernel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -399,32 +331,31 @@ if relevant.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.hparams">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams</span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.hparams" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams</span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.hparams" title="Permalink to this definition"></a></dt>
 <dd><p>Dictionnary containing the hyper-parameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.idx" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.idx" title="Permalink to this definition"></a></dt>
 <dd><p>Indices used when performing various operations. This is only relevant in the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.implicit_preimage">
-<span class="sig-name descname"><span class="pre">implicit_preimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_coefficient</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'knn'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.implicit_preimage" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">implicit_preimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_coefficient</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'knn'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.implicit_preimage" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.init_sample">
-<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.init_sample" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.init_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Initializes the sample set (and the stochastic indices).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sample</strong> (<em>Tensor</em><em>, </em><em>optional</em>) – Sample points used for the various computations. When an out-of-sample computation is asked, it
 will be given relative to these samples. In case of overwriting a current sample, <cite>num_sample</cite> and
-    <cite>dim_input</cite> are also overwritten. If <cite>None</cite> is specified, the sample data will be initialized
-    according
+<cite>dim_input</cite> are also overwritten. If <cite>None</cite> is specified, the sample data will be initialized according
 to <cite>num_sample</cite> and <cite>dim_input</cite> specified during the construction. If a previous sample set has been used,
 it will keep the same dimension by consequence. A last case occurs when <cite>sample</cite> is of the class
 <cite>torch.nn.Parameter</cite>: the sample will then use those values, and they can thus be shared with the level
@@ -442,20 +373,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.k">
-    <span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em
-        class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span
-        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
-        class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span
-        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
-        class="sig-param"><span class="n"><span class="pre">explicit</span></span><span class="o"><span
-        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em
-        class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span
-        class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span
-        class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
-        class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink"
-                                                                                    href="#kerch.kernel.Sigmoid.k"
-                                                                                    title="Link to this definition"></a>
-</dt>
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
@@ -464,7 +382,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>In the case of centered kernels, this computation is more expensive as it requires to _center according to
-    the sample data, which implies computing a statistic on the out-of-sample kernel matrix and thus
+the sample data, which implies computing a statistic on the out-of-sample kernel matrix and thus
 also computing it.</p>
 </div>
 <dl class="field-list simple">
@@ -487,130 +405,89 @@ also computing it.</p>
 </dd></dl>
 
 <dl class="py property">
-    <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.kernel_transform">
-        <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
-            class="sig-name descname"><span class="pre">kernel_transform</span></span><em class="property"><span
-            class="p"><span class="pre">:</span></span><span class="w"> </span><span
-            class="pre">TransformTree</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.kernel_transform"
-                                                    title="Link to this definition"></a></dt>
-    <dd><p>Default transform performed on the kernel</p>
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.kernel_transform">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kernel_transform</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TransformTree</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.kernel_transform" title="Permalink to this definition"></a></dt>
+<dd><p>Default transform performed on the kernel</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.normalized">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.normalized" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.normalized" title="Permalink to this definition"></a></dt>
 <dd><p>Returns if the kernel is normalized in the feature maps.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.num_idx" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.num_idx" title="Permalink to this definition"></a></dt>
 <dd><p>Number of selected indices when performing various operations. This is only relevant in the case of stochastic
 training.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.num_sample" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.num_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.params">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.params" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.params" title="Permalink to this definition"></a></dt>
 <dd><p>Dictionnary containing the parameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.params_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params_trainable</span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.params_trainable" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params_trainable</span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.params_trainable" title="Permalink to this definition"></a></dt>
 <dd><p>Boolean returning if the parameters a trainable or not.</p>
 </dd></dl>
 
 <dl class="py method">
-    <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.print_cache_keys">
-        <span class="sig-name descname"><span class="pre">print_cache_keys</span></span><span class="sig-paren">(</span><em
-            class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span
-            class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span
-            class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span
-            class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span
-            class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
-            class="pre">None</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.print_cache_keys"
-                                                    title="Link to this definition"></a></dt>
-    <dd><p>Prints different cache keys.</p>
-        <dl class="field-list simple">
-            <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-            <dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some cache
-                elements are private and are not printed unless set to True. Defaults to False.</p>
-            </dd>
-        </dl>
-</dd></dl>
-
-<dl class="py method">
-    <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.project_input">
-        <span class="sig-name descname"><span class="pre">project_input</span></span><span class="sig-paren">(</span><em
-            class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span>
-        <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
-                class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span
-                class="w"> </span><span class="pre">None</span></span></span><a class="headerlink"
-                                                                                href="#kerch.kernel.Sigmoid.project_input"
-                                                                                title="Link to this definition"></a>
-    </dt>
-    <dd><p>Apply to value the same transform as on the sample.</p>
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.print_cache_keys">
+<span class="sig-name descname"><span class="pre">print_cache_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.print_cache_keys" title="Permalink to this definition"></a></dt>
+<dd><p>Prints different cache keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>private</strong> (<em>bool</em><em>, </em><em>optional</em>) – Some cache elements are private and are not printed unless set to True. Defaults to False.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.reset">
-    <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em
-        class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span
-        class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em
-        class="sig-param"><span class="n"><span class="pre">reset_persisting</span></span><span class="o"><span
-        class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span
-        class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span
-        class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink"
-                                                                                  href="#kerch.kernel.Sigmoid.reset"
-                                                                                  title="Link to this definition"></a>
-</dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_persisting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.reset" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the cache to empty.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-    <dd class="field-odd">
-        <ul class="simple">
-            <li><p><strong>children</strong> – TODO</p></li>
-            <li><p><strong>reset_persisting</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the
-                elements for which persisting=True should also be resetted.
-                Defaults to True.</p></li>
-        </ul>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>children</strong> – TODO</p></li>
+<li><p><strong>reset_persisting</strong> (<em>bool</em><em>, </em><em>optional</em>) – Indicates whether the elements for which persisting=True should also be resetted.
+Defaults to True.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.sample" title="Link to this definition"></a></dt>
-    <dd><p>Full original raw sample without any transform or potential stochastic selection.</p>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Parameter</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.sample" title="Permalink to this definition"></a></dt>
+<dd><p>Full original raw sample without any transform or potential stochastic selection.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.sample_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.sample_trainable" title="Link to this definition"></a></dt>
-    <dd><p>Boolean if the sample data can be trained.</p>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.sample_trainable" title="Permalink to this definition"></a></dt>
+<dd><p>Boolean if the sample data can be trained.</p>
 </dd></dl>
 
-        <dl class="py property">
-            <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.sample_transform">
-                <em class="property"><span class="pre">property</span><span class="w"> </span></em><span
-                    class="sig-name descname"><span class="pre">sample_transform</span></span><em class="property"><span
-                    class="p"><span class="pre">:</span></span><span class="w"> </span><span
-                    class="pre">TransformTree</span></em><a class="headerlink"
-                                                            href="#kerch.kernel.Sigmoid.sample_transform"
-                                                            title="Link to this definition"></a></dt>
-            <dd><p>Default transform used by the sample.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.sample_transform">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_transform</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TransformTree</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.sample_transform" title="Permalink to this definition"></a></dt>
+<dd><p>Default transform used by the sample.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.stochastic">
-<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.stochastic" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.stochastic" title="Permalink to this definition"></a></dt>
 <dd><p>Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
 case of stochastic training.</p>
 <dl class="field-list simple">
@@ -634,42 +511,35 @@ specified during initialization.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.switcher">
-    <span class="sig-name descname"><span class="pre">switcher</span></span><em class="property"><span
-        class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'heavy':</span>
-    <span class="pre">3,</span> <span class="pre">'light':</span> <span class="pre">1,</span> <span
-            class="pre">'none':</span> <span class="pre">0,</span> <span class="pre">'normal':</span> <span class="pre">2,</span>
-    <span class="pre">'total':</span> <span class="pre">4}</span></em><a class="headerlink"
-                                                                         href="#kerch.kernel.Sigmoid.switcher"
-                                                                         title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">switcher</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'heavy':</span> <span class="pre">3,</span> <span class="pre">'light':</span> <span class="pre">1,</span> <span class="pre">'none':</span> <span class="pre">0,</span> <span class="pre">'normal':</span> <span class="pre">2,</span> <span class="pre">'total':</span> <span class="pre">4}</span></em><a class="headerlink" href="#kerch.kernel.Sigmoid.switcher" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.train" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.train" title="Permalink to this definition"></a></dt>
 <dd><p>Activates the training mode, which disables the gradients computation and disables stochasticity. For the
 gradients and other things, we refer to the <cite>torch.nn.Module</cite> documentation. For the stochastic part, when put
 in evaluation mode (<cite>False</cite>), all the sample points are used for the computations, regardless of
 the previously specified indices.</p>
 </dd></dl>
 
-        <dl class="py method">
-            <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.transform_sample_revert">
-                <span class="sig-name descname"><span class="pre">transform_sample_revert</span></span><span
-                    class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span
-                    class="sig-paren">)</span> <span class="sig-return"><span
-                    class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span
-                    class="pre">Tensor</span></span></span><a class="headerlink"
-                                                              href="#kerch.kernel.Sigmoid.transform_sample_revert"
-                                                              title="Link to this definition"></a></dt>
-            <dd><p>Get back the original value from a projected value, by using the same transform as the sample,
-                but in reverse. This is not always feasible, depending on the transform used (normalizations are
-                typically not invertible as they are transform which are not bijective).</p>
-            </dd>
-        </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.transform_input">
+<span class="sig-name descname"><span class="pre">transform_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.transform_input" title="Permalink to this definition"></a></dt>
+<dd><p>Apply to value the same transform as on the sample.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.kernel.Sigmoid.transform_sample_revert">
+<span class="sig-name descname"><span class="pre">transform_sample_revert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#kerch.kernel.Sigmoid.transform_sample_revert" title="Permalink to this definition"></a></dt>
+<dd><p>Get back the original value from a projected value, by using the same transform as the sample,
+but in reverse. This is not always feasible, depending on the transform used (normalizations are
+typically not invertible as they are transform which are not bijective).</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Sigmoid.update_sample">
-<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.update_sample" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Sigmoid.update_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the sample set. In contradiction to <cite>init_samples</cite>, this only updates the values of the sample and sets
 the gradients of the updated values to zero if relevant.</p>
 <dl class="field-list simple">
@@ -686,6 +556,37 @@ the gradients of the updated values to zero if relevant.</p>
 </dd></dl>
 
 </section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.5</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../kernel/sigmoid-1.py">Source code</a>)</p>
+<figure class="align-default" id="id1">
+<img alt="../_images/sigmoid-1_00.png" class="plot-directive" src="../_images/sigmoid-1_00.png" />
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/sigmoid-1_00.png">png</a>, <a class="reference external" href="../kernel/sigmoid-1_00.hires.png">hires.png</a>, <a class="reference external" href="../kernel/sigmoid-1_00.pdf">pdf</a>)</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id2">
+<img alt="../_images/sigmoid-1_01.png" class="plot-directive" src="../_images/sigmoid-1_01.png" />
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/sigmoid-1_01.png">png</a>, <a class="reference external" href="../kernel/sigmoid-1_01.hires.png">hires.png</a>, <a class="reference external" href="../kernel/sigmoid-1_01.pdf">pdf</a>)</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
 
 
            </div>
@@ -698,7 +599,7 @@ the gradients of the updated values to zero if relevant.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, KU Leuven.</p>
+    <p>&#169; Copyright January 2024, KU Leuven.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
