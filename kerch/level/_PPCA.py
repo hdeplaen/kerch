@@ -1,3 +1,4 @@
+# coding=utf-8
 import torch
 from torch import Tensor as T
 from typing import Optional, Iterator
@@ -119,6 +120,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
         r"""
         Draws a `h` given the maximum a posteriori of the distribution. By choosing the input, you either
         choose a primal or dual representation.
+
         :param phi: Primal representation.
         :param k: Dual representation.
         :type phi: Tensor[N, dim_input], optional
@@ -138,6 +140,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     def phi_map(self, h: T) -> T:
         r"""
         Maximum a posteriori of phi given h.
+
         :param h: Latent representation.
         :type h: Tensor[N, dim_output]
         :return: MAP of phi given h.
@@ -151,6 +154,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     def k_map(self, h: T) -> T:
         r"""
         Maximum a posteriori of k given h.
+
         :param h: Latent representation.
         :type h: Tensor[N, dim_output]
         :return: MAP of k given h.
@@ -164,6 +168,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     def draw_h(self, num: int = 1) -> T:
         r"""
         Draws a h given its prior distribution.
+
         :param num: Number of h to be sampled, defaults to 1.
         :type num: int, optional
         :return: Latent representation.
@@ -175,6 +180,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     def draw_phi(self, num: int = 1, posterior: bool = True) -> T:
         r"""
         Draws a primal representation phi given its posterior distribution.
+
         :param posterior: Indicates whether phi has to be drawn from its posterior distribution or its conditional
             given the prior of h. Defaults to True.
         :param num: Number of phi to be sampled, defaults to 1.
@@ -195,6 +201,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     def draw_k(self, num: int = 1, posterior: bool = False) -> T:
         r"""
         Draws a dual representation k given its posterior distribution.
+
         :param posterior: Indicates whether phi has to be drawn from its posterior distribution or its conditional
             given the prior of h. Defaults to True.
         :param num: Number of k to be sampled, defaults to 1.

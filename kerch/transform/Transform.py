@@ -4,7 +4,7 @@ from typing import Union, Tuple
 from abc import ABCMeta, abstractmethod
 
 import torch
-from kerch.module.Cache import Cache
+from kerch.feature.cache import Cache
 from kerch.utils.errors import BijectionError, ImplicitError
 
 
@@ -70,12 +70,12 @@ class Transform(Cache, metaclass=ABCMeta):
     def add_offspring(self, val: Transform) -> None:
         # add offspring to parent
         if type(val) in self.offspring:
-            self._log.debug(f"Overwriting offspring of type {type(val)} in parent {type(self._parent)}.")
+            self._logger.debug(f"Overwriting offspring of type {type(val)} in parent {type(self._parent)}.")
         self._offspring[type(self)] = self
 
         # add parent to offspring
         if val.parent is not None:
-            self._log.debug(f"Overwriting parent of offspring {type(self)}.")
+            self._logger.debug(f"Overwriting parent of offspring {type(self)}.")
         val._parent = self
 
     def add_parent(self, val: Transform) -> None:

@@ -43,11 +43,11 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
 
         # LEGACY SUPPORT
         if kwargs["center"]:
-            self._log.warning("Argument center kept for legacy and will be removed in a later version. Please use the "
+            self._logger.warning("Argument center kept for legacy and will be removed in a later version. Please use the "
                               "more versatile kernel_transform parameter instead.")
             kernel_transform.append("mean_centering")
         if kwargs["normalize"]:
-            self._log.warning("Argument normalize kept for legacy and will be removed in a later version. Please use "
+            self._logger.warning("Argument normalize kept for legacy and will be removed in a later version. Please use "
                               "the more versatile kernel_transform parameter instead.")
             kernel_transform.append("unit_sphere_normalization")
 
@@ -64,8 +64,8 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
             return self._kernel_implicit_transform
 
     @property
-    def hparams(self) -> dict:
-        return {'Default kernel transforms': self._default_kernel_transform, **super(Kernel, self).hparams}
+    def hparams_fixed(self) -> dict:
+        return {'Default kernel transforms': self._default_kernel_transform, **super(Kernel, self).hparams_fixed}
 
     @property
     def _naturally_centered(self) -> bool:
@@ -191,11 +191,13 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
     # ACCESSIBLE METHODS
     def phi(self, x=None, transform=None) -> Tensor:
         r"""
-        Returns the explicit feature map :math:`\phi(\cdot)` of the specified points.
+        Returns the explicit feature map :math:`\phi(x)` of the specified points.
 
-        :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,
-            defaults to `None`
-        :type x: Tensor(,dim_input), optional
+        :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.
+            Defaults to ``None``.
+        :type x: Tensor[num_x, dim_input], optional
+        :return: Explicit feature map :math:`\phi(x)` of the specified points.
+        :rtype: Tensor[num_x, dim_feature]
         :raises: ExplicitError
         """
         x = utils.castf(x)
@@ -207,24 +209,24 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.
 
         .. math::
-            K = [k(x_i,y_j)]_{i,j=1}^{N,M},
+            K = [k(x_i,y_j)]_{i,j=1}^{\texttt{num_x}, \texttt{num_y}},
 
-        with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`x`) and :math:`\{y_i\}_{j=1}^N` the sample points
+        with :math:`\{x_i\}_{i=1}^\texttt{num_x}` the out-of-sample points (`x`) and :math:`\{y_i\}_{j=1}^\texttt{num_y}` the sample points
         (`y`).
 
         .. note::
-            In the case of centered kernels, this computation is more expensive as it requires to _center according to
+            In the case of centered kernels on an out-of-sample, this computation is more expensive as it requires to center according to
             the sample data, which implies computing a statistic on the out-of-sample kernel matrix and thus
             also computing it.
 
-        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
-        :param y: Out-of-sample points (second dimension). If `None`, the default sample will be used., defaults to `None`
+        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used. Defaults to ``None``
+        :param y: Out-of-sample points (second dimension). If `None`, the default sample will be used. Defaults to ``None``
 
-        :type x: Tensor(N,dim_input), optional
-        :type y: Tensor(M,dim_input), optional
+        :type x: Tensor[num_x, dim_input], optional
+        :type y: Tensor[num_y, dim_input], optional
 
         :return: Kernel matrix
-        :rtype: Tensor(N,M)
+        :rtype: Tensor[num_x, num_y]
 
         :raises: ExplicitError
         """
@@ -262,13 +264,13 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         Out-of-sample explicit matrix.
 
         .. math::
-            C = \frac1M\sum_{i}^{M} \phi(x_i)\phi(x_i)^\top.
+            C = \frac{1}{\texttt{num_x}}\sum_{i}^{\texttt{num_x}} \phi(x_i)\phi(x_i)^\top.
 
         :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`
-        :type x: Tensor(N,dim_input), optional
+        :type x: Tensor(num_x,dim_input), optional
 
         :return: Explicit matrix
-        :rtype: Tensor(dim_feature,dim_feature)
+        :rtype: Tensor[dim_feature, dim_feature]
         """
 
         phi = self.phi(x=x, transform=transform)

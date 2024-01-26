@@ -8,11 +8,11 @@ a base in the RKHS spanned by the provided sample. By looking at the RKHS coeffi
 recover an approximate explicit feature map.
 
 .. autoclass:: kerch.kernel.Nystrom
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches
+    :show-inheritance:
 
 
 Example
@@ -177,9 +177,9 @@ quality of the approximation.
     fig3.colorbar(im3, ax=axs3.ravel().tolist())
 
 
-Using the factory
------------------
-The following codes are equivalent. First, an example with the default arguments:
+Factory
+-------
+The following lines are equivalent. First, an example with the default arguments:
 
 .. code-block:: python
 
@@ -229,3 +229,11 @@ And now with some arguments:
     k = kerch.kernel.factory(kernel_type='nystrom', base_type='rbf', sample=sample, sigma=2, dim=3)
 
 
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.Nystrom
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

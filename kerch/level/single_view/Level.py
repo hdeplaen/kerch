@@ -6,7 +6,7 @@ from .View import View
 from ... import utils
 
 
-class Level(View, _Level, metaclass=ABCMeta):
+class Level(_Level, View, metaclass=ABCMeta):
 
     @utils.extend_docstring(_Level)
     @utils.extend_docstring(View)
@@ -29,7 +29,7 @@ class Level(View, _Level, metaclass=ABCMeta):
 
         # set the sample to input (always works for the underlying kernel)
         if sample is not None:
-            self._log.debug("Setting the sample to the provided input. Possibly overwriting a previous one.")
+            self._logger.debug("Setting the sample to the provided input. Possibly overwriting a previous one.")
             self.init_sample(sample)  # keeping the stochastic state if set.
 
         # verify that the output has the same dimensions

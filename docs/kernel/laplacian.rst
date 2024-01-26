@@ -3,11 +3,11 @@ Laplacian Kernel
 ================
 
 .. autoclass:: kerch.kernel.Laplacian
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
+    :show-inheritance:
 
 Examples
 ========
@@ -80,3 +80,27 @@ As the 2-norm between the inputs is not squared, the result is essentially smoot
     axs2[1].set_title(f"RBF ($\sigma$={f_rbf_sigma1.sigma})")
 
     fig2.colorbar(im2, ax=axs2.ravel().tolist(), orientation='horizontal')
+
+
+Factory
+-------
+
+The following lines are equivalent:
+
+.. code-block::
+
+    k = kerch.kernel.Laplacian(**kwargs)
+
+
+.. code-block::
+
+    k = kerch.kernel.factory(kernel_type='laplacian', **kwargs)
+
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.Laplacian
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

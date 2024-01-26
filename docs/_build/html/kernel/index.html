@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kernel Module &mdash; kerch 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-codeautolink.css" />
 
   
   <!--[if lt IE 9]>
@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Linear Kernel" href="linear.html" />
-    <link rel="prev" title="Welcome to the Kerch package" href="../index.html" /> 
+    <link rel="prev" title="Models" href="../examples/models.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,7 +46,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/install.html">Install</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Kernel Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a><ul>
@@ -95,8 +105,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../level/index.html">Level Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Model Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
 </ul>
 
         </div>
@@ -123,9 +138,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="kernel-module">
+  <div class="section" id="kernel-module">
 <h1>Kernel Module<a class="headerlink" href="#kernel-module" title="Permalink to this heading"></a></h1>
-<section id="introduction">
+<div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
 <p>This module contains many different types of kernels. Each kernel is created based on some hyperparameters and a sample
 dataset.</p>
@@ -145,33 +160,37 @@ kernel matrices of implicitly defined kernels.</p>
 <cite>kerch.kernle.implicit</cite> and <cite>explicit</cite> inherit. All other kernels inherit of one of these two at the exception
 of <cite>polynomial</cite> which directly inherits <cite>base</cite> as it has a primal formulation and a dual
 formulation which can be computed otherwise than with an inner product of the explicit feature map.</p>
-<section id="kernel-factory">
+<div class="section" id="kernel-factory">
 <h3>Kernel Factory<a class="headerlink" href="#kernel-factory" title="Permalink to this heading"></a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.kernel.factory">
-<span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span class="sig-name descname"><span class="pre">factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="kernel.html#kerch.kernel.Kernel" title="kerch.kernel.kernel.Kernel"><span class="pre">Kernel</span></a></span></span><a class="headerlink" href="#kerch.kernel.factory" title="Permalink to this definition"></a></dt>
+<code class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></code><code class="sig-name descname"><span class="pre">factory</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">kernel_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="kernel.html#kerch.kernel.Kernel" title="kerch.kernel.kernel.Kernel"><span class="pre">Kernel</span></a></span></span><a class="reference internal" href="../_modules/kerch/kernel/_factory.html#factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.factory" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a kernel based on the specified name with the specified arguments. This is the same as
 calling <cite>kerch.kernel.name(*args, **kwargs)</cite> (if <cite>name</cite> is not a string here). This allows for the creation of kernel where
 the name of kernel is passed as a string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>kernel_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of kernel chosen. For the possible choices, please refer to the (non-abstract) classes
-herebelow. Defaults to kerch.DEFAULT_KERNEL_TYPE.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Arguments to be passed to the kernel constructor, such as <cite>sample</cite> or <cite>sigma</cite>. If an argument is
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>kernel_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Type of kernel chosen. For the possible choices, please refer to the (non-abstract) classes
+herebelow. Defaults to kerch.DEFAULT_KERNEL_TYPE.</li>
+<li><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – Arguments to be passed to the kernel constructor, such as <cite>sample</cite> or <cite>sigma</cite>. If an argument is
 passed that does not exist (e.g. <cite>sigma</cite> to a <cite>linear</cite> kernel), it will just be neglected. For the default
-values, please refer to the default values of the requested kernel.</p></li>
+values, please refer to the default values of the requested kernel.</li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instantiation of the specified kernel.</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An instantiation of the specified kernel.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-</section>
-</section>
-<section id="examples">
+</div>
+</div>
+<div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -203,29 +222,105 @@ values, please refer to the default values of the requested kernel.</p></li>
 <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 </pre></div>
 </div>
-<p>(<a class="reference external" href="../kernel/index-1.py">Source code</a>, <a class="reference external" href="../kernel/index-1.png">png</a>, <a class="reference external" href="../kernel/index-1.hires.png">hires.png</a>, <a class="reference external" href="../kernel/index-1.pdf">pdf</a>)</p>
-<figure class="align-default">
+<p>(<a class="reference external" href="../kernel/index-1.py" rel="noopener noreferrer" target="_blank">Source code</a>, <a class="reference external" href="../kernel/index-1.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/index-1.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/index-1.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</p>
+<div class="figure align-default">
 <img alt="../_images/index-1.png" class="plot-directive" src="../_images/index-1.png" />
-</figure>
-</section>
-<section id="different-kernels">
+</div>
+</div>
+<div class="section" id="different-kernels">
 <h2>Different Kernels<a class="headerlink" href="#different-kernels" title="Permalink to this heading"></a></h2>
-<section id="generic-kernels">
+<div class="section" id="generic-kernels">
 <h3>Generic Kernels<a class="headerlink" href="#generic-kernels" title="Permalink to this heading"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="linear.html">Linear Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rbf.html">RBF Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="laplacian.html">Laplacian Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="polynomial.html">Polynomial Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cosine.html">Cosine Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sigmoid.html">Sigmoid Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rff.html">Random Fourier Features Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nystrom.html">Nyström Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear.html">Linear Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="linear.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="linear.html#sine">Sine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="linear.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rbf.html">RBF Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html#sine">Sine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html#time">Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="laplacian.html">Laplacian Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="laplacian.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="laplacian.html#sine">Sine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="laplacian.html#comparison-with-rbf">Comparison with RBF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="laplacian.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="laplacian.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polynomial.html">Polynomial Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polynomial.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polynomial.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="polynomial.html#sine">Sine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polynomial.html#factory">Factory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polynomial.html#influence-of-the-parameters">Influence of the parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polynomial.html#explicit-and-implicit">Explicit and Implicit</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="polynomial.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cosine.html">Cosine Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cosine.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosine.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cosine.html#connection-with-linear">Connection with Linear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cosine.html#multiple-dimensions">Multiple Dimensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cosine.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cosine.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sigmoid.html">Sigmoid Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sigmoid.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigmoid.html#example">Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sigmoid.html#sine">Sine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sigmoid.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sigmoid.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rff.html">Random Fourier Features Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rff.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rff.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rff.html#sine">Sine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rff.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rff.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nystrom.html">Nyström Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nystrom.html#example">Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nystrom.html#explicit-rbf">Explicit RBF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nystrom.html#effect-of-the-dimension">Effect of the dimension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nystrom.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nystrom.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</section>
-<section id="network-based-kernels">
+</div>
+<div class="section" id="network-based-kernels">
 <h3>Network-based kernels<a class="headerlink" href="#network-based-kernels" title="Permalink to this heading"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
@@ -233,62 +328,130 @@ values, please refer to the default values of the requested kernel.</p></li>
 <li class="toctree-l1"><a class="reference internal" href="implicit_nn.html">Implicit Network-based Kernel</a></li>
 </ul>
 </div>
-</section>
-<section id="time-kernels">
+</div>
+<div class="section" id="time-kernels">
 <h3>Time Kernels<a class="headerlink" href="#time-kernels" title="Permalink to this heading"></a></h3>
 <p>The idea behind time kernels is that time has the same local effect at
 all time, or in other words that the kernels are translational invariant. We typically consider the following kernels:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="indicator.html">Indicator Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hat.html">Hat Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rbf.html">RBF Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indicator.html">Indicator Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="indicator.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indicator.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="indicator.html#linear-time">Linear (Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indicator.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="indicator.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hat.html">Hat Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hat.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hat.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hat.html#linear-time">Linear (Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hat.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hat.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rbf.html">RBF Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html#class">Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html#sine">Sine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html#time">Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rbf.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</section>
-<section id="vision-kernels">
+</div>
+<div class="section" id="vision-kernels">
 <h3>Vision Kernels<a class="headerlink" href="#vision-kernels" title="Permalink to this heading"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="additive_chi2.html">Additive Chi Squared Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="skewed_chi2.html">Skewed Chi Squared Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="additive_chi2.html">Additive Chi Squared Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="additive_chi2.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="skewed_chi2.html">Skewed Chi Squared Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="skewed_chi2.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</section>
-<section id="abstract-kernels">
+</div>
+<div class="section" id="abstract-kernels">
 <h3>Abstract Kernels<a class="headerlink" href="#abstract-kernels" title="Permalink to this heading"></a></h3>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="exponential.html">Exponential Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="explicit.html">Explicit Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="implicit.html">Implicit Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="kernel.html">Kernel Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exponential.html">Exponential Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="exponential.html#abstract-class">Abstract Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exponential.html#defining-a-new-kernel">Defining a New Kernel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="exponential.html#minimal-example">Minimal Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="exponential.html#extensive-example">Extensive Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="exponential.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="explicit.html">Explicit Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="explicit.html#abstract-class">Abstract Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explicit.html#defining-a-new-kernel">Defining a New Kernel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="explicit.html#minimal-example">Minimal Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="explicit.html#extensive-example">Extensive Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="explicit.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="implicit.html">Implicit Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="implicit.html#abstract-class">Abstract Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implicit.html#defining-a-new-kernel">Defining a New Kernel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="implicit.html#minimal-example">Minimal Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="implicit.html#extensive-example">Extensive Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="implicit.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kernel.html">Kernel Class</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kernel.html#abstract-class">Abstract Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel.html#mother-class">Mother Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kernel.html#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
-</section>
-</section>
-<section id="creating-kernels">
+</div>
+</div>
+<div class="section" id="creating-kernels">
 <h2>Creating Kernels<a class="headerlink" href="#creating-kernels" title="Permalink to this heading"></a></h2>
 <p>It is also possible to create other kernels than the ones already implemented and still taking benefit of all features
 common to all kernel such as automatic transformation of the input of the kernel (centering, normalization…), all
-attributes (<code class="docutils literal notranslate"><span class="pre">K</span></code>, <code class="docutils literal notranslate"><span class="pre">Phi</span></code>…), cache management etc. We refer to the examples in the documentation of the abstract
-classes <a class="reference internal" href="exponential.html#kerch.kernel.Exponential" title="kerch.kernel.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Exponential</span></code></a>, :class:<a href="#id1"><span class="problematic" id="id2">``</span></a>kerch.kernel.Explicit`, <a class="reference internal" href="implicit.html#kerch.kernel.Implicit" title="kerch.kernel.Implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Implicit</span></code></a> and
+attributes (<code class="docutils literal notranslate"><span class="pre">K</span></code>, <code class="docutils literal notranslate"><span class="pre">Phi</span></code>…), cache management, stochasicity etc. We refer to the examples in the documentation of the abstract
+classes <a class="reference internal" href="exponential.html#kerch.kernel.Exponential" title="kerch.kernel.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Exponential</span></code></a>, <a class="reference internal" href="explicit.html#kerch.kernel.Explicit" title="kerch.kernel.Explicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Explicit</span></code></a>, <a class="reference internal" href="implicit.html#kerch.kernel.Implicit" title="kerch.kernel.Implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Implicit</span></code></a> and
 <a class="reference internal" href="kernel.html#kerch.kernel.Kernel" title="kerch.kernel.Kernel"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Kernel</span></code></a>.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to the Kerch package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../examples/models.html" class="btn btn-neutral float-left" title="Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="linear.html" class="btn btn-neutral float-right" title="Linear Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright January 2024, KU Leuven.</p>
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

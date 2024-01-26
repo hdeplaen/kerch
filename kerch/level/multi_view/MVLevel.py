@@ -16,7 +16,7 @@ class MVLevel(_Level, MultiView, metaclass=ABCMeta):
     @torch.no_grad()
     def solve(self, sample=None, target=None, representation=None, **kwargs) -> None:
         if sample is not None:
-            self._log.warning("It is not possible to directly change sample in multi-view models as for now. "
+            self._logger.warning("It is not possible to directly change sample in multi-view models as for now. "
                               "The default values will be used.")
 
         return super(_Level, self).solve(sample=None,

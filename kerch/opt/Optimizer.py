@@ -12,7 +12,7 @@ import torch
 from .stiefel import stiefel_optimizer
 
 from .. import utils
-from kerch.module.Module import Module
+from kerch.feature.feature import Module
 
 
 class Optimizer():

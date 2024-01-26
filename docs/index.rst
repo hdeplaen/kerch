@@ -1,32 +1,54 @@
-.. kerch documentation master file, created by
-   sphinx-quickstart on Fri May 20 18:29:55 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-============================
-Welcome to the Kerch package
-============================
+=======
+Welcome
+=======
 
 This package is meant for various kernel-based operations. For the moment,
 only the kernel module is available, but a lot of models will follow soon.
 If you experience any bug, please let me now: this is only a pre-alpha version.
 
-.. include:: install.rst
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Modules
-   :glob:
+    :maxdepth: 2
+    :hidden:
+    :caption: General
 
-   kernel/index
-   level/index
-   examples
-   structure
+    general/install
 
 
-Indices and tables
-==================
+.. toctree::
+    :maxdepth: 2
+    :hidden:
+    :caption: Examples
 
-   * :ref:`genindex`
+    examples/kernels
+    examples/levels
+    examples/models
+
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Modules
+    :hidden:
+    :glob:
+
+    kernel/index
+    level/index
+    model/index
+
+
+.. toctree::
+    :maxdepth: 2
+    :hidden:
+    :caption: In Depth
+
+    features/index
+    general/utils
+    structure/index
+
+
+References
+==========
+
+
    * :ref:`modindex`
    * :ref:`search`

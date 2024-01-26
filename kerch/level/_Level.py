@@ -25,15 +25,21 @@ class _Level(_View, metaclass=ABCMeta):
         self.watch_properties = kwargs.pop('watch_properties', [])
         self._parameter_related_cache = []
 
-    @property
-    def hparams(self) -> dict:
-        return {'Level type': self.__class__.__name__,
-                'Level eta': self.eta,
-                **super(_Level, self).hparams}
+        # INITIALIZE THE PARAMETERS WHEN POSSIBLE
+        try:
+            self.init_parameters()
+        except AssertionError:
+            pass
 
     @property
-    def params(self) -> dict:
-        return {**super(_Level, self).params}
+    def hparams_fixed(self) -> dict:
+        return {'Level type': self.__class__.__name__,
+                'Level eta': self.eta,
+                **super(_Level, self).hparams_fixed}
+
+    @property
+    def hparams_variable(self) -> dict:
+        return {**super(_Level, self).hparams_variable}
 
     @property
     def watch_properties(self) -> list[str]:
@@ -119,7 +125,7 @@ class _Level(_View, metaclass=ABCMeta):
 
         # verify that the sample has been initialized
         if self._num_total is None:
-            self._log.error("Cannot solve as no input has been provided nor a sample already exists")
+            self._logger.error("Cannot solve as no input has been provided nor a sample already exists")
             return
 
         # check the representation is correct and set it to the default Level value if None

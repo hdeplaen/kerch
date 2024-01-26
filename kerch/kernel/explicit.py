@@ -66,3 +66,5 @@ class Explicit(Kernel, metaclass=ABCMeta):
 
     def _explicit_preimage(self, phi):
         raise NotImplementedError
+
+

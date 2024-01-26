@@ -1,6 +1,6 @@
 # coding=utf-8
 import torch
-from ..module.Logger import _GLOBAL_LOGGER
+from ..feature.logger import _GLOBAL_LOGGER
 
 
 def eigs(A, k=None, B=None, psd=True, sym=True):
@@ -12,14 +12,14 @@ def eigs(A, k=None, B=None, psd=True, sym=True):
 
     try:
         s, v = torch.lobpcg(A, k=k, B=B, largest=True)
-        _GLOBAL_LOGGER._log.info('Using LOBPCG for eigendecomposition.')
+        _GLOBAL_LOGGER._logger.info('Using LOBPCG for eigendecomposition.')
     except:
         if sym:
             if B is None:
                 s, v = torch.linalg.eigh(A)
             else:
                 s, v = torch.linalg.eigh(torch.linalg.inv(B) @ A)
-            _GLOBAL_LOGGER._log.info('Using hermitian eigendecomposition (eigh).')
+            _GLOBAL_LOGGER._logger.info('Using hermitian eigendecomposition (eigh).')
             v = v[:, -k:]  # eigenvectors are vertical components of v
             s = s[-k:]
         elif psd:
@@ -27,7 +27,7 @@ def eigs(A, k=None, B=None, psd=True, sym=True):
                 _, s, v = torch.svd(A)
             else:
                 _, s, v = torch.svd(torch.linalg.inv(B) @ A)
-            _GLOBAL_LOGGER._log.info('Using SVD for eigendecomposition (svd).')
+            _GLOBAL_LOGGER._logger.info('Using SVD for eigendecomposition (svd).')
             v = v[:, :k]  # eigenvectors are vertical components of v
             s = s[:k]
         else:
@@ -35,7 +35,7 @@ def eigs(A, k=None, B=None, psd=True, sym=True):
                 s, v = torch.linalg.eig(A)
             else:
                 s, v = torch.linalg.eig(torch.linalg.inv(B) @ A)
-            _GLOBAL_LOGGER._log.info('Using classical eigendecomposition (eig).')
+            _GLOBAL_LOGGER._logger.info('Using classical eigendecomposition (eig).')
             v = v[:, :k]  # eigenvectors are vertical components of v
             s = s[:k]
 

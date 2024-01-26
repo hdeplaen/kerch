@@ -31,7 +31,7 @@ class TransformTree(Transform):
     :type diag_fun: Function handle
     """
 
-    all_transform = {"normalize": UnitSphereNormalization,  # for legacy
+    _all_transform = {"normalize": UnitSphereNormalization,  # for legacy
                      "center": MeanCentering,  # for legacy
                      "sphere": UnitSphereNormalization,
                      "min": MinimumCentering,
@@ -42,9 +42,9 @@ class TransformTree(Transform):
                      "mean_centering": MeanCentering,
                      "minimum_centering": MinimumCentering,
                      "unit_variance_normalization": UnitVarianceNormalization,
-                     "minmax_normalization": MinMaxNormalization,
-                     "standardize": [MeanCentering, UnitVarianceNormalization],
-                     "minmax_rescaling": [MinimumCentering, MinMaxNormalization]}
+                      "minmax_normalization": MinMaxNormalization,
+                      "standardize": [MeanCentering, UnitVarianceNormalization],
+                      "minmax_rescaling": [MinimumCentering, MinMaxNormalization]}
 
     @staticmethod
     def beautify_transform(transform) -> Union[None, List[Transform]]:
@@ -63,7 +63,7 @@ class TransformTree(Transform):
                     if issubclass(transform, Transform):
                         transform_classes.append(transform)
                 except TypeError:
-                    new_transform = TransformTree.all_transform.get(
+                    new_transform = TransformTree._all_transform.get(
                         transform, NameError(f"Unrecognized transform key {transform}."))
                     if isinstance(new_transform, Exception):
                         raise new_transform
@@ -73,7 +73,7 @@ class TransformTree(Transform):
                     elif issubclass(new_transform, Transform):
                         transform_classes.append(new_transform)
                     else:
-                        kerch._GLOBAL_LOGGER._log.error("Error while creating TransformTree list of transform")
+                        kerch._GLOBAL_LOGGER._logger.error("Error while creating TransformTree list of transform")
 
             # remove same following elements
             previous_item = None
@@ -232,7 +232,7 @@ class TransformTree(Transform):
             if callable(self._base):
                 oos = self._base
             else:
-                self._log.error("No out-of-sample provided and the default one is not a function handle.")
+                self._logger.error("No out-of-sample provided and the default one is not a function handle.")
 
         tree_path = self._get_tree(transform)
         if (not isinstance(oos, Tensor)) and x is None and y is None:

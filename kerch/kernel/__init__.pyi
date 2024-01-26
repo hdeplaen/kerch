@@ -1,4 +1,5 @@
 # coding=utf-8
+from ._base_kernel import _BaseKernel
 from .kernel import Kernel as Kernel
 from .implicit import Implicit as Implicit
 from .explicit import Explicit as Explicit
@@ -18,4 +19,4 @@ from .implicit_nn import ImplicitNN as ImplicitNN
 from .additive_chi_2 import AdditiveChi2 as AdditiveChi2
 from .skewed_chi_2 import SkewedChi2 as SkewedChi2
 from .random_features import RandomFeatures as RandomFeatures
-from .factory import factory as factory
+from ._factory import factory as factory

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to the Kerch package &mdash; kerch 0.3 documentation</title>
+  <title>Welcome &mdash; kerch 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="_static/sphinx-codeautolink.css" />
 
   
   <!--[if lt IE 9]>
@@ -23,7 +23,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Kernel Module" href="kernel/index.html" /> 
+    <link rel="next" title="Install" href="general/install.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,12 +45,27 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="general/install.html">Install</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="kernel/index.html">Kernel Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="level/index.html">Level Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model/index.html">Model Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structure/index.html">Structure</a></li>
 </ul>
 
         </div>
@@ -67,7 +82,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to the Kerch package</li>
+      <li class="breadcrumb-item active">Welcome</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -77,74 +92,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-the-kerch-package">
-<h1>Welcome to the Kerch package<a class="headerlink" href="#welcome-to-the-kerch-package" title="Permalink to this heading"></a></h1>
+  <div class="section" id="welcome">
+<h1>Welcome<a class="headerlink" href="#welcome" title="Permalink to this heading"></a></h1>
 <p>This package is meant for various kernel-based operations. For the moment,
 only the kernel module is available, but a lot of models will follow soon.
 If you experience any bug, please let me now: this is only a pre-alpha version.</p>
-<section id="install">
-<h2>Install<a class="headerlink" href="#install" title="Permalink to this heading"></a></h2>
-<p>As for now, there are two ways to install the package.</p>
-<section id="using-pip">
-<h3>Using PIP<a class="headerlink" href="#using-pip" title="Permalink to this heading"></a></h3>
-<p>Using pip, it suffices to run <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">kerch</span></code>. Just rerun this command to update the package to its newest version.</p>
-</section>
-<section id="from-source">
-<h3>From source<a class="headerlink" href="#from-source" title="Permalink to this heading"></a></h3>
-<p>You can also install the package directly from the GitHub repository.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/hdeplaen/kerch
-<span class="nb">cd</span><span class="w"> </span>kerch
-python<span class="w"> </span>setup.py<span class="w"> </span>install
-</pre></div>
+<div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="kernel/index.html">Kernel Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="kernel/index.html#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernel/index.html#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernel/index.html#different-kernels">Different Kernels</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kernel/index.html#creating-kernels">Creating Kernels</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="level/index.html">Level Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="level/index.html#single-view">Single-View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="level/index.html#multi-view">Multi-View</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#training-and-tuning-an-ls-svm">Training and tuning an LS-SVM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#out-of-sample-normalized-and-centered-kernels">Out-of-sample normalized and centered kernels</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="structure.html">Structure</a></li>
-</ul>
 </div>
-</section>
-</section>
-<section id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
 </div></blockquote>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="kernel/index.html" class="btn btn-neutral float-right" title="Kernel Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="general/install.html" class="btn btn-neutral float-right" title="Install" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright January 2024, KU Leuven.</p>
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

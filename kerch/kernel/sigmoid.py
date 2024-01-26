@@ -52,13 +52,13 @@ class Sigmoid(Implicit):
         return "Sigmoid kernel."
 
     @property
-    def params(self):
+    def hparams_variable(self):
         return {'Kernel parameter a': self._a,
                 'Kernel parameter b': self._b}
 
     @property
-    def hparams(self):
-        return {"Kernel": "Sigmoid", **super(Sigmoid, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Sigmoid", **super(Sigmoid, self).hparams_fixed}
 
     @property
     def params_trainable(self):

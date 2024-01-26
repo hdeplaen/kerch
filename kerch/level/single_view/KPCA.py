@@ -1,3 +1,4 @@
+# coding=utf-8
 import torch
 from torch import Tensor as T
 
@@ -16,6 +17,7 @@ class KPCA(_KPCA, Level):
     @kwargs_decorator({})
     def __init__(self, *args, **kwargs):
         super(KPCA, self).__init__(*args, **kwargs)
+
 
     def __str__(self):
         return "KPCA with " + Level.__str__(self)

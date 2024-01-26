@@ -11,7 +11,7 @@ class Ridge(LSSVM):
     def __init__(self, *args, **kwargs):
         if kwargs["requires_bias"]:
             kwargs["requires_bias"] = False
-            self._log.warning('A ridge regression has no bias term. '
+            self._logger.warning('A ridge regression has no bias term. '
                               'The bias parameter is overwritten to False.')
         super(Ridge, self).__init__(*args, **kwargs)
 

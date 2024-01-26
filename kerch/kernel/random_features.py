@@ -46,19 +46,17 @@ class RandomFeatures(Explicit):
     :type weights_trainable: bool, optional
     """
 
-    @utils.kwargs_decorator(
-        {"num_weights": 1,
-         "weights": None,
-         "weights_trainable": False})
+
     def __init__(self, *args, **kwargs):
         super(RandomFeatures, self).__init__(*args, **kwargs)
         self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
-                                           kwargs["weights_trainable"])
+                                           kwargs.pop('weights_trainable', False))
 
-        if kwargs["weights"] is None:
-            self.num_weights = int(kwargs["num_weights"])
+        weights = kwargs.pop('weights', None)
+        if weights is None:
+            self.num_weights = int(kwargs.pop('num_weights', 1))
         else:
-            self.weights = kwargs["weights"]
+            self.weights = weights
 
     @property
     def _weights_exists(self) -> bool:
@@ -105,11 +103,11 @@ class RandomFeatures(Explicit):
                 # zeroing the gradients if relevant
                 if self.weights_trainable and self._weights.grad is not None:
                     self._weights.grad.sample.zero_()
-            self._log.debug("The weights has been (re)initialized")
+            self._logger.debug("The weights has been (re)initialized")
         else:
             self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                                self.weights_trainable)
-            self._log.info("The weights is unset.")
+            self._logger.info("The weights is unset.")
 
     @property
     def weights_trainable(self) -> bool:
@@ -133,12 +131,12 @@ class RandomFeatures(Explicit):
         return "Random Features kernel"
 
     @property
-    def params(self):
+    def hparams_variable(self):
         return {"Dimension": self.num_weights}
 
     @property
-    def hparams(self):
-        return {"Kernel": "Random Features", **super(RandomFeatures, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Random Features", **super(RandomFeatures, self).hparams_fixed}
 
     def _explicit_preimage(self, phi) -> torch.Tensor:
         phi = phi * sqrt(self.num_weights)

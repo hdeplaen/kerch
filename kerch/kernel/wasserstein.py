@@ -41,8 +41,8 @@ class Wasserstein(Exponential):
         return f"Wasserstein Exponential Kernel (sigma: {str(self.sigma)})"
 
     @property
-    def hparams(self):
-        return {"Kernel": "Wasserstein Exponential Kernel", **super(Wasserstein, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Wasserstein Exponential Kernel", **super(Wasserstein, self).hparams_fixed}
 
     @property
     def cost(self) -> str:

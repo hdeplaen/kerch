@@ -31,12 +31,12 @@ class AdditiveChi2(Implicit):
         return f"Additive Chi Squared kernel."
 
     @property
-    def params(self):
+    def hparams_variable(self):
         return {}
 
     @property
-    def hparams(self):
-        return {"Kernel": "Additive Chi Squared", **super(AdditiveChi2, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Additive Chi Squared", **super(AdditiveChi2, self).hparams_fixed}
 
     def _implicit(self, x, y):
         x = x.T[:, :, None]

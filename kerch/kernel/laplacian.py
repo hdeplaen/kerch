@@ -37,8 +37,8 @@ class Laplacian(Exponential):
         return f"Laplacian kernel (sigma undefined)"
 
     @property
-    def hparams(self):
-        return {"Kernel": "Laplacian", **super(Laplacian, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Laplacian", **super(Laplacian, self).hparams_fixed}
 
     def _dist(self, x, y):
         x = x.T[:, :, None]

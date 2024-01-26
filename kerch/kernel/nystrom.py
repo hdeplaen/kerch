@@ -14,7 +14,7 @@ import torch
 from .. import utils
 from .explicit import Explicit, Kernel
 from ._base_kernel import _BaseKernel
-from .factory import factory
+from ._factory import factory
 
 @utils.extend_docstring(Kernel)
 class Nystrom(Explicit):
@@ -64,7 +64,7 @@ class Nystrom(Explicit):
                                              "sample_trainable": k.sample_trainable,
                                              "idx_sample": k.idx})
             self._base_kernel = k
-            self._log.info("Keeping original kernel transform (no overwriting, so base_kernel_transform is "
+            self._logger.info("Keeping original kernel transform (no overwriting, so base_kernel_transform is "
                            "neglected).")
 
         self._dim = kwargs.pop('dim', None)
@@ -103,10 +103,10 @@ class Nystrom(Explicit):
             raise utils.NotInitializedError(cls=self, message='The base kernel has not been defined yet.')
         return self._base_kernel
 
-    def hparams(self):
+    def hparams_fixed(self):
         return {"Kernel": "Nystrom",
-                "Base Kernel": self._base_kernel.hparams['Kernel'],
-                **super(Nystrom, self).hparams}
+                "Base Kernel": self._base_kernel.hparams_fixed['Kernel'],
+                **super(Nystrom, self).hparams_fixed}
 
     def init_sample(self, sample=None, idx_sample=None, prop_sample=None):
         super(Nystrom, self).init_sample(sample=sample, idx_sample=idx_sample, prop_sample=prop_sample)
@@ -116,7 +116,7 @@ class Nystrom(Explicit):
     @torch.no_grad()
     def _compute_decomposition(self):
         if "H" not in self.cache_keys(private=True):
-            self._log.info("Computing the eigendecomposition for the Nystrom kernel.")
+            self._logger.info("Computing the eigendecomposition for the Nystrom kernel.")
 
             if self._dim is None:
                 self.dim = self._num_total
@@ -127,7 +127,7 @@ class Nystrom(Explicit):
             # verify that the decomposed kernel is PSD
             sum_neg = torch.sum(lambdas < 0)
             if sum_neg > 0:
-                self._log.warning(f"The decomposed kernel is not positive semi-definite as it possesses {sum_neg} "
+                self._logger.warning(f"The decomposed kernel is not positive semi-definite as it possesses {sum_neg} "
                                   f"negative eigenvalues. These will be discarded, but may prove relevant if their "
                                   f"magnitude is non-negligible.")
 
@@ -135,7 +135,7 @@ class Nystrom(Explicit):
             idx_small = lambdas < 1.e-10
             sum_small = torch.sum(idx_small)
             if sum_small > 0:
-                self._log.warning(
+                self._logger.warning(
                     f"{sum_small} very small or negative eigenvalues are detected on {self._dim}. "
                     f"To avoid numerical instability, these values are pruned. "
                     f"The new explicit dimension is now {self._dim - sum_small}.")

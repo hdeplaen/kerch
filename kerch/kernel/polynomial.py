@@ -7,28 +7,62 @@ File containing the polynomial kernel class.
 @license: MIT
 @date: March 2021
 """
+from __future__ import annotations
 from typing import Iterator
-from math import factorial, comb, prod, sqrt
+from math import factorial, comb, prod, sqrt, inf
+
+from torch import Tensor
 
 from .. import utils
 from .kernel import Kernel
+from .explicit import Explicit
+from .implicit import Implicit
 
 import torch
 
 
 @utils.extend_docstring(Kernel)
-class Polynomial(Kernel):
+class Polynomial(Implicit, Explicit):
     r"""
-    Polynomial kernel.
+    Polynomial kernel of degree :math:`\alpha \geq 0` and parameter :math:`\beta`.
 
     .. math::
         k(x,y) = \left(x^\top y + \beta\right)^\alpha.
 
-    .. note ::
-        An explicit feature map also corresponds to this kernel, but is not implemented.
+    Provided the degree :math:`\alpha` is a natural number, this kernel accepts both an explicit feature map and an equivalent kernel formulation not depending on the
+    inner product of the explicit feature maps (implicit). Its components are given by
 
-    :param alpha: Degree of the polynomial kernel. Defaults to 2
-    :param beta: Value beta of the polynomial kernel. Defaults to 1
+    .. math::
+        \left[\phi(x)\right]_k = \sqrt{\frac{\alpha!}{j_0!j_1! \ldots j_\texttt{dim_input}!}}x_0^{j_0}x_1^{j_1}\ldots x_{\texttt{dim_input}-1}^{j_{\texttt{dim_input}-1}}\sqrt{\beta}^{j_\texttt{dim_input}},
+
+
+    where :math:`k = 0, \ldots, \texttt{dim_feature}-1` correspond to all permutations satisfying
+
+    .. math::
+        j_0 + j_1 + \ldots + j_{\texttt{dim_input}} = \alpha,
+
+    and
+
+    .. math::
+            \texttt{dim_feature} = \left(\begin{array}{c}\texttt{dim_input} + \alpha \\ \alpha\end{array}\right).
+
+    One can verify that :math:`k(x,y) = \phi(x)^\top\phi(y)`. An example is also given in the Example section of its
+    documentation.
+
+    .. note::
+        For a natural number degree :math:`\alpha` . The computation of a kernel matrix of :math:`n` points is typically
+        more efficient to compute as an inner product of the explicit feature map if :math:`\texttt{dim_feature} < n`
+        and using the kernel formula otherwise. If the degree is not a natural number, only the latter is possible as
+        the explicit feature map does not exist.
+
+        This can be specified when calling :py:meth:`kerch.kernel.Polynomial.k` by specifying the boolean ``explicit`` to
+        ``True`` (using the explicit feature map) or ``False`` (directly using the kernel formula).
+
+        Other considerations may come into play. If a centered or normalized kernel on an out-of-sample is required, this may require extra
+        computations when directly using the kernel matrix as doing it on the explicit feature is more straightforward.
+
+    :param alpha: Degree :math:`\alpha` of the polynomial kernel. Defaults to 2.
+    :param beta: Value :math:`\beta` of the polynomial kernel. Defaults to 1.
     :param alpha_trainable: `True` if the gradient of the degree is to be computed. If so, a graph is computed
         and the degree can be updated. `False` just leads to a static computation., defaults to `False`
     :param beta_trainable: `True` if the gradient of the degree is to be computed. If so, a graph is computed
@@ -59,22 +93,40 @@ class Polynomial(Kernel):
 
     @property
     def explicit(self) -> bool:
-        self._log.debug("The explicit formulation of the polynomial kernel is not implemented.")
+        r"""
+        True if the method has an explicit formulation, False otherwise. This is the case only if the degree
+        :math:`\alpha` is a natural number.
+        """
+        if (self.alpha % 1) == 0:
+            return True
         return False
 
     @property
-    def dim_feature(self) -> int:
-        assert (self.alpha % 1) == 0, 'Explicit formulation is only possible for degrees that are natural numbers.'
-        alpha = int(self.alpha)
-        return comb(self.dim_input + alpha, alpha)
+    def dim_feature(self) -> int | inf:
+        r"""
+        Feature dimension. Provided the degree :math:`\alpha` is a natural number, it is given by
+
+        .. math::
+            \texttt{dim_feature} = \left(\begin{array}{c}\texttt{dim_input} + \alpha \\ \alpha\end{array}\right).
+
+
+        If the degree :math:`\alpha` is not a natural number, the explicit feature does not exist and by consequence
+        the feature dimension is infinite.
+        """
+        if (self.alpha % 1) == 0:
+            alpha = int(self.alpha)
+            return comb(self.dim_input + alpha, alpha)
+        else:
+            return inf
 
     @property
     def alpha(self):
         r"""
-        Degree of the polynomial.
+        Degree of the polynomial. This is argument plays a similar role to the bandwidth of
+        an exponential kernel, such as the RBF kernel.
 
         .. note::
-            The explicit feature map only exists if the degree is a finite natural number.
+            The explicit feature map only exists if the degree is a natural number.
 
         """
         if isinstance(self._alpha, torch.nn.Parameter):
@@ -90,8 +142,8 @@ class Polynomial(Kernel):
     @property
     def alpha_trainable(self) -> bool:
         r"""
-        Boolean indicating if the alpha/degree is trainable. This is argument plays a similar role to the bandwidth of
-        an exponential kernel, such as the RBF kernel.
+        Boolean indicating if the alpha/degree is trainable. In other words, this argument provides or not a gradient
+        to the degree for potential gradient-based training.
         """
         return self._alpha_trainable
 
@@ -118,18 +170,20 @@ class Polynomial(Kernel):
         return self._beta_trainable
 
     @property
-    def params(self):
+    def hparams_variable(self):
         return {'Kernel alpha': self.alpha,
                 'Kernel beta': self.beta,
-                **super(Polynomial, self).params}
+                **super(Polynomial, self).hparams_variable}
 
     @property
-    def hparams(self):
+    def hparams_fixed(self):
         return {"Kernel": "Polynomial"}
 
     @property
     def _phi_fun(self):
-        assert (self.alpha % 1) == 0, 'Explicit formulation is only possible for degrees that are natural numbers.'
+        if (self.alpha % 1) != 0:
+            raise utils.ExplicitError(cls=self,
+                                      message='Explicit formulation is only possible for degrees that are natural numbers.')
 
         def multichoose(n, k):
             if not k: return [[0] * n]
@@ -166,12 +220,38 @@ class Polynomial(Kernel):
         assert (self.alpha % 1) == 0, 'Explicit formulation is only possible for degrees that are natural numbers.'
         return self._phi_fun(x)
 
-    def explicit_preimage(self, phi):
-        raise NotImplementedError
-
     def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         yield self._alpha
         yield self._beta
         yield from super(Polynomial, self)._slow_parameters(recurse)
 
+    @utils.extend_docstring(Kernel.k)
+    def k(self, x=None, y=None, explicit=None, transform=None) -> torch.Tensor:
+        r"""
+        .. note::
+            For the specific case of the polynomial kernel, the optimal value for ``explicit`` is automatically determined
+            based on the size of the inputs if ``explicit=None``. This does not take into account possible transforms.
+        """
 
+        # automatically determining best representation
+        x = utils.castf(x)
+        y = utils.castf(x)
+        if explicit is None:
+            if x is None:
+                num_x = self.num_idx
+            else:
+                num_x = x.shape[0]
+            if y is None:
+                num_y = self.num_idx
+            else:
+                num_y = y.shape[0]
+            if self.dim_feature * (num_x + num_y) < num_x * num_y:
+                explicit = True
+            else:
+                explicit = False
+
+        return super(Polynomial, self).k(x=x, y=y, explicit=explicit, transform=transform)
+
+    @utils.extend_docstring(Kernel.explicit_preimage)
+    def explicit_preimage(self, phi: Tensor):
+        return NotImplementedError

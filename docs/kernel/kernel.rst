@@ -14,8 +14,33 @@ Abstract Class
 --------------
 
 .. autoclass:: kerch.kernel.Kernel
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches
+    :show-inheritance:
+
+
+Mother Class
+------------
+This abstract class is itself built onto an even more abstract class that does not support kernel transforms. One can
+inherit from that one if no transforms are required. The cache management is also minimal.
+
+.. autoclass:: kerch.kernel._BaseKernel
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches
+    :show-inheritance:
+
+
+
+
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.Kernel
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

@@ -10,11 +10,11 @@ Abstract Class
 ==============
 
 .. autoclass:: kerch.kernel.Explicit
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches
+    :show-inheritance:
 
 Defining a New Kernel
 =====================
@@ -268,3 +268,13 @@ a name and the ``hparams`` property. We also define ``dim_feature``.
             # return torch.Tensor of size [num, self.dim_feature]
             # self.dim_feature is provided so it will be deduced from the provided definition and not computed on the go
             return phi
+
+
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.Explicit
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

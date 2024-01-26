@@ -43,7 +43,7 @@ class LSSVM(Level):
         if self._hidden_exists:
             self._hidden.data -= torch.mean(self._hidden.data, dim=1)
         else:
-            self._log.debug("The hidden variables cannot be centered as they are not set.")
+            self._logger.debug("The hidden variables cannot be centered as they are not set.")
 
     def _solve_primal(self) -> None:
         C = self.kernel.C

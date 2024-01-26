@@ -7,7 +7,7 @@ import torch
 
 from ..level import Level, factory
 from ..utils import NotInitializedError, kwargs_decorator
-from ..module.Stochastic import Stochastic
+from ..feature.stochastic import Stochastic
 
 
 class Model(Stochastic, metaclass=ABCMeta):
@@ -54,19 +54,19 @@ class Model(Stochastic, metaclass=ABCMeta):
         return self._first_level.num_sample
 
     @property
-    def hparams(self) -> dict:
+    def hparams_fixed(self) -> dict:
         val = dict()
         for num, level in enumerate(self.levels):
             name = f"[LEVEL{num} {level.__class__.__name__}] "
-            val = {**val, **{name + key: val for key, val in level.hparams.items()}}
+            val = {**val, **{name + key: val for key, val in level.hparams_fixed.items()}}
         return val
 
     @property
-    def params(self) -> dict:
+    def hparams_variable(self) -> dict:
         val = dict()
         for num, level in enumerate(self.levels):
             name = f"[LEVEL{num} {level.__class__.__name__}] "
-            val = {**val, **{name + key: val for key, val in level.params.items()}}
+            val = {**val, **{name + key: val for key, val in level.hparams_variable.items()}}
         return val
 
     @property
@@ -132,7 +132,7 @@ class Model(Stochastic, metaclass=ABCMeta):
                     level.stochastic(idx=self._idx_stochastic)
                 else:
                     level.update_sample(x, idx_sample=self._idx_stochastic)
-                if level.param_trainable is False:
+                if level.level_trainable is False:
                     level.solve()
                 x = level()
         else:
@@ -199,9 +199,9 @@ class Model(Stochastic, metaclass=ABCMeta):
         # overwrite param_trainable
         match kwargs['constraint']:
             case "soft":
-                level.param_trainable = True
+                level.level_trainable = True
             case "hard":
-                level.param_trainable = False
+                level.level_trainable = False
             case _:
                 raise NameError('The constraint argument must be either soft or hard.')
 

@@ -7,20 +7,21 @@ File containing the abstract kernel classes.
 @license: MIT
 @date: March 2021
 """
-
+from __future__ import annotations
 import torch
 from torch import Tensor
 from abc import ABCMeta, abstractmethod
+from math import inf
 
 from .. import utils
-from ..module.Sample import Sample
+from ..feature.sample import Sample
 
 
 @utils.extend_docstring(Sample)
 class _BaseKernel(Sample, metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
         super(_BaseKernel, self).__init__(*args, **kwargs)
-        self._log.debug("Initializing " + str(self))
+        self._logger.debug("Initializing " + str(self))
 
     @abstractmethod
     def __str__(self):
@@ -36,22 +37,22 @@ class _BaseKernel(Sample, metaclass=ABCMeta):
         pass
 
     @property
-    def hparams(self):
+    def hparams_fixed(self):
         r"""
         Dictionnary containing the hyper-parameters and their values. This can be relevant for monitoring.
         """
-        return {**super(_BaseKernel, self).hparams}
+        return {**super(_BaseKernel, self).hparams_fixed}
 
     @property
-    def params(self) -> dict:
+    def hparams_variable(self) -> dict:
         r"""
         Dictionnary containing the parameters and their values. This can be relevant for monitoring.
         """
-        return {**super(_BaseKernel, self).params}
+        return {**super(_BaseKernel, self).hparams_variable}
 
     @property
     @abstractmethod
-    def dim_feature(self) -> int:
+    def dim_feature(self) -> int | inf:
         r"""
         Returns the dimension of the explicit feature map if it exists.
         """
@@ -266,7 +267,7 @@ class _BaseKernel(Sample, metaclass=ABCMeta):
         .. math::
             K_{ij} = k(x_i,x_j).
         """
-        return self._K(explicit=self.explicit)
+        return self._K()
 
     @property
     def C(self) -> Tensor:
@@ -274,7 +275,7 @@ class _BaseKernel(Sample, metaclass=ABCMeta):
         Returns the explicit matrix on the sample datapoints.
 
         .. math::
-            C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.
+            C = \frac{1}{\texttt{num_idx}}\sum_i^\texttt{num_idx} \phi(x_i)\phi(x_i)^\top.
         """
         return self._C()
 
@@ -282,7 +283,7 @@ class _BaseKernel(Sample, metaclass=ABCMeta):
     def Phi(self) -> Tensor:
         r"""
         Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling
-        :py:func:`phi()`, but faster.
+        :py:func:`phi()`, but slightly faster.
         It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently
         called.
         """
@@ -309,7 +310,7 @@ class _BaseKernel(Sample, metaclass=ABCMeta):
         k_coefficient = utils.castf(k_coefficient)
 
         if torch.all(k_coefficient < 0):
-            self._log.warning(f"The argument k_coefficient contains negative values, which should never be the case by "
+            self._logger.warning(f"The argument k_coefficient contains negative values, which should never be the case by "
                               f"definition of a RKHS.")
 
         # PRE-IMAGE

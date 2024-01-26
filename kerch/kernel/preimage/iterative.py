@@ -1,6 +1,6 @@
 import torch
 from kerch.kernel import _base_kernel as K
-from kerch.module.Cache import Cache
+from kerch.feature.cache import Cache
 from .smoother import smoother
 
 
@@ -35,7 +35,7 @@ def iterative(k_coefficient: torch.Tensor, kernel: K, num_iter: int = 100, lr=1.
         if light_cache:
             kernel.cache_level = 'light'
         else:
-            kernel._log.warn("The cache level is recommended to be at light at maximum in order to ease the "
+            kernel._logger.warn("The cache level is recommended to be at light at maximum in order to ease the "
                              "memory load during the pre-image computation. It is temporarily being set to "
                              "light. You can also set the argument light_cache to True to set it "
                              "temporarily lower during the pre-image computation.")

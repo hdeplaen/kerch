@@ -82,10 +82,14 @@ class Exponential(Implicit, metaclass=ABCMeta):
         self._sigma.requires_grad = self._sigma_trainable
 
     @property
-    def params(self):
+    def hparams_variable(self):
         return {'Kernel parameter sigma': self.sigma,
-                "Trainable sigma": self.sigma_trainable,
-                **super(Exponential, self).params}
+                **super(Exponential, self).hparams_variable}
+
+    @property
+    def hparams_fixed(self):
+        return {"Trainable sigma": self.sigma_trainable,
+                **super(Exponential, self).hparams_fixed}
 
     @abstractmethod
     def _dist(self, x, y):
@@ -99,8 +103,8 @@ class Exponential(Implicit, metaclass=ABCMeta):
             with torch.no_grad():
                 sigma = .5 * torch.sqrt(torch.median(D))
                 self.sigma = sigma
-                self._log.warning(f"The kernel bandwidth sigma has not been provided and is assigned by a "
-                                  f"heuristic (sigma={self.sigma}).")
+                self._logger.warning(f"The kernel bandwidth sigma has not been provided and is assigned by a "
+                                  f"heuristic (sigma={self.sigma:.2e}).")
 
         fact = 1 / (2 * torch.abs(self._sigma) ** 2)
         output = torch.exp(torch.mul(D, -fact))

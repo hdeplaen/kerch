@@ -35,5 +35,5 @@ class Cosine(Linear):
         return "Cosine kernel."
 
     @property
-    def hparams(self):
-        return {"Kernel": "Cosine", **super(Cosine, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Cosine", **super(Cosine, self).hparams_fixed}

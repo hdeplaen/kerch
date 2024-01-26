@@ -1,3 +1,4 @@
+# coding=utf-8
 from typing import Optional
 import torch
 from torch import Tensor as T
@@ -29,7 +30,6 @@ class PPCA(_PPCA, Level):
         else:
             raise AttributeError("One and only one attribute phi or k has to be specified.")
 
-##############################################################################################################
     @torch.no_grad()
     def _solve_primal(self) -> None:
         C = self.C
@@ -37,7 +37,7 @@ class PPCA(_PPCA, Level):
         if self.dim_output is None:
             self._dim_output = self.dim_feature
         elif self.dim_output > self.dim_feature:
-            self._log.warning(f"In primal, the output dimension {self.dim_output} (the number of "
+            self._logger.warning(f"In primal, the output dimension {self.dim_output} (the number of "
                               f"eigenvectors) must not exceed the feature dimension {self.dim_feature} (the dimension "
                               f"of the correlation matrix to be diagonalized). As this is the case here, the output "
                               f"dimension is reduced to {self.dim_feature}.")
@@ -59,7 +59,7 @@ class PPCA(_PPCA, Level):
         if self.dim_output is None:
             self._dim_output = self.num_idx
         elif self.dim_output > self.num_idx:
-            self._log.warning(f"In dual, the output dimension {self.dim_output} (the number of "
+            self._logger.warning(f"In dual, the output dimension {self.dim_output} (the number of "
                               f"eigenvectors) must not exceed the number of samples {self.num_idx} (the dimension "
                               f"of the kernel matrix to be diagonalized). As this is the case here, the output "
                               f"dimension is reduced to {self.num_idx}.")

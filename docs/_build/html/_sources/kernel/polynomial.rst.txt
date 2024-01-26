@@ -6,11 +6,11 @@ Class
 =====
 
 .. autoclass:: kerch.kernel.Polynomial
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches
+    :show-inheritance:
 
 
 Examples
@@ -35,6 +35,20 @@ Sine
     plt.imshow(k.K)
     plt.title(f"Alpha = {k.alpha}, Beta = {k.beta}")
     plt.colorbar()
+
+Factory
+-------
+
+The following lines are equivalent:
+
+.. code-block::
+
+    k = kerch.kernel.Polynomial(**kwargs)
+
+
+.. code-block::
+
+    k = kerch.kernel.factory(kernel_type='polynomial', **kwargs)
 
 
 Influence of the parameters
@@ -153,3 +167,12 @@ and implicitly using :math:`k(x,y) = \left(x^\top y + \beta\right)^\alpha`. The 
         ax.set_yticks([])
 
     fig.colorbar(im, ax=axs.ravel().tolist(), orientation='horizontal')
+
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.Polynomial
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

@@ -19,11 +19,16 @@ import kerch
 # -- Project information -----------------------------------------------------
 
 project = 'kerch'
-copyright = kerch.__date__ + ", " + kerch.__credits__
+copyright = kerch.__credits__ + ", " + kerch.__date__
 author = kerch.__author__
 
 # The full version, including alpha/beta/rc tags
 release = kerch.__version__
+
+# other
+source_encoding = "utf-8-sig"
+language = 'en'
+root_doc = "index"
 
 # -- General configuration ---------------------------------------------------
 
@@ -33,14 +38,17 @@ release = kerch.__version__
 extensions = ['sphinx.ext.mathjax',
               'sphinx.ext.autodoc',
               "sphinx.ext.doctest",
+              'sphinx.ext.intersphinx',
+              'sphinx.ext.viewcode',
               'sphinx_rtd_theme',
               'matplotlib.sphinxext.plot_directive',
               'sphinx.ext.inheritance_diagram',
               'sphinx.ext.graphviz',
               "sphinx.ext.githubpages",
+              'sphinx_exec_code',
+              'sphinx_new_tab_link',
+              'sphinx_codeautolink',
               ]
-
-inheritance_graph_attrs = dict(rankdir="TB", size='""')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -65,3 +73,27 @@ html_static_path = ['_static']
 html_theme_options = {
     'navigation_depth': 4,
 }
+
+# INHERITANCE DIAGRAMS
+graphviz_output_format = 'png'
+inheritance_graph_attrs = dict(rankdir="TB", fontsize=12, size='"16.0, 20.0"')
+
+
+def shorten_submodules(submods: list):
+    shorts = dict()
+    for mod_name in submods:
+        mod = getattr(kerch, mod_name)
+        for cl_name in mod.__all__:
+            cl = getattr(mod, cl_name)
+            if hasattr(cl, '__module__'):
+                cl_mod_name = cl.__module__
+                short_cl_mod_name = '.'.join(cl_mod_name.split('.')[:-1])
+                shorts[cl_mod_name + '.' + cl_name] = short_cl_mod_name + '.' + cl_name
+    return shorts
+
+
+inheritance_alias = shorten_submodules(['kernel', 'level', 'feature', 'model'])
+
+# MAPPING
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
+                       'torch': ('https://pytorch.org/docs/stable', None)}

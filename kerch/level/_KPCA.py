@@ -106,11 +106,11 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
         if self._dim_output is None:
             self._dim_output = self.dim_feature
-            self._log.warning(f"The output dimension has not been set and is now set to its maximum possible "
+            self._logger.warning(f"The output dimension has not been set and is now set to its maximum possible "
                               f"value. In primal formulation, this corresponds to the feature dimension "
                               f"(dim_output=dim_feature={self.dim_output}).")
         elif self._dim_output > self.dim_feature:
-            self._log.warning(f"In primal, the output dimension {self.dim_output} (the number of "
+            self._logger.warning(f"In primal, the output dimension {self.dim_output} (the number of "
                               f"eigenvectors) must not exceed the feature dimension {self.dim_feature} (the dimension "
                               f"of the correlation matrix to be diagonalized). As this is the case here, the output "
                               f"dimension is reduced to {self.dim_feature}.")
@@ -126,11 +126,11 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
         if self._dim_output is None:
             self._dim_output = self.num_idx
-            self._log.warning(f"The output dimension has not been set and is now set to its maximum possible "
+            self._logger.warning(f"The output dimension has not been set and is now set to its maximum possible "
                               f"value. In dual formulation, this corresponds to the number of datapoints in the "
                               f"current sample (dim_output=num_idx={self.dim_output}).")
         elif self._dim_output > self.num_idx:
-            self._log.warning(f"In dual, the output dimension {self.dim_output} (the number of "
+            self._logger.warning(f"In dual, the output dimension {self.dim_output} (the number of "
                               f"eigenvectors) must not exceed the number of samples {self.num_idx} (the dimension "
                               f"of the kernel matrix to be diagonalized). As this is the case here, the output "
                               f"dimension is reduced to {self.num_idx}.")
@@ -150,7 +150,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
         """
         # KPCA models don't require the target to be defined. This is verified.
         if target is not None:
-            self._log.warning("The target value is not used when fitting a KPCA model.")
+            self._logger.warning("The target value is not used when fitting a KPCA model.")
         return _Level.solve(self,
                             sample=sample,
                             target=None,

@@ -80,12 +80,12 @@ class Hat(Implicit):
         self._lag.requires_grad = self._lag_trainable
 
     @property
-    def params(self):
+    def hparams_variable(self):
         return {'Kernel lag': self.lag}
 
     @property
-    def hparams(self):
-        return {"Kernel": "Hat", **super(Hat, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Hat", **super(Hat, self).hparams_fixed}
 
     def _implicit(self, x, y):
         x = x.T[:, :, None]

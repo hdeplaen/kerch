@@ -29,7 +29,7 @@ class Linear(Explicit):
     def __init__(self, *args, **kwargs):
         super(Linear, self).__init__(*args, **kwargs)
         if self.normalized:
-            self._log.info("A normalized linear kernel also corresponds to a cosine kernel.")
+            self._logger.info("A normalized linear kernel also corresponds to a cosine kernel.")
 
     def __str__(self):
         return "linear kernel"
@@ -38,8 +38,8 @@ class Linear(Explicit):
     def dim_feature(self) -> int:
         return self.dim_input
 
-    def hparams(self):
-        return {"Kernel": "Linear", **super(Linear, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Linear", **super(Linear, self).hparams_fixed}
 
     def _explicit(self, x):
         return super(Linear, self)._explicit(x)

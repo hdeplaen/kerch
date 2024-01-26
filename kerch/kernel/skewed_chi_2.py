@@ -21,7 +21,7 @@ class SkewedChi2(Implicit):
     Skewed Chi Squared kernel. Often used in computer vision.
 
     .. math::
-        k(x,y) = \prod_i \frac{2\sqrt(x_i+p) \sqrt(y_i+p)}{x_i + y_i + 2}.
+        k(x,y) = \prod_i \frac{2\sqrt{x_i+p} \sqrt{y_i+p}}{x_i + y_i + 2}.
 
 
     :param p: Free parameter :math:`p`., defaults to 0.
@@ -44,7 +44,7 @@ class SkewedChi2(Implicit):
     @property
     def p(self) -> float:
         r"""
-        Parameter :math:``p` of the kernel.
+        Parameter :math:`p` of the kernel.
         """
         if isinstance(self._p, torch.nn.Parameter):
             return self._p.data.cpu().numpy().astype(float)
@@ -59,12 +59,12 @@ class SkewedChi2(Implicit):
         return f"Skewed Chi Squared kernel (p: {self.p})."
 
     @property
-    def params(self):
+    def hparams_variable(self):
         return {'Kernel parameter p': self.p}
 
     @property
-    def hparams(self):
-        return {"Kernel": "Skewed Chi Squred", "Trainable p": self._p_trainable, **super(SkewedChi2, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Skewed Chi Squred", "Trainable p": self._p_trainable, **super(SkewedChi2, self).hparams_fixed}
 
     def _implicit(self, x, y):
         x = x.T[:, :, None]

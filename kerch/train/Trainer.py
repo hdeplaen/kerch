@@ -6,11 +6,11 @@ from torch.utils.data import SequentialSampler
 import tqdm
 
 from ..model.Model import Model
-from ..module.Logger import Logger
+from ..feature.logger import Logger
 from ..utils import kwargs_decorator
 from ..opt import Optimizer
 from ..data import _LearningSet
-from .. import watch
+from .. import monitor
 
 
 class Trainer(Logger):
@@ -190,8 +190,8 @@ class Trainer(Logger):
                                    disable=self._mask_batch_progress or not self._verbose,
                                    desc="Batch")
 
-        watcher = watch.factory(model=self.model, opt=self._optimizer, expe_name=self._expe_name,
-                                verbose=self._verbose, **self._watcher_kwargs)
+        watcher = monitor.factory(model=self.model, opt=self._optimizer, expe_name=self._expe_name,
+                                  verbose=self._verbose, **self._watcher_kwargs)
 
         def closure():
             self.model()

@@ -1,14 +1,6 @@
 # coding=utf-8
-"""
-Source code for the RKM toolbox.
-
-@author: HENRI DE PLAEN
-@copyright: KU LEUVEN
-@license: MIT
-@date: March 2021
-"""
 from abc import ABCMeta, abstractmethod
-from ..module.Logger import Logger
+from ..feature.logger import Logger
 
 
 class KerchError(Exception, metaclass=ABCMeta):

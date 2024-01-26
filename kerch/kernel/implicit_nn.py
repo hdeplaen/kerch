@@ -45,8 +45,8 @@ class ImplicitNN(Implicit):
         return "implicit kernel"
 
     @property
-    def hparams(self):
-        return {"Kernel": "Implicit NN", **super(ImplicitNN, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Implicit NN", **super(ImplicitNN, self).hparams_fixed}
 
     def _implicit(self, x, y):
         raise NotImplementedError

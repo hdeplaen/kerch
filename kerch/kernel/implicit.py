@@ -7,10 +7,11 @@ File containing the RBF kernel class.
 @license: MIT
 @date: March 2021
 """
-
+from __future__ import annotations
 from .. import utils
 from .kernel import Kernel
 from torch import Tensor as T
+from math import inf
 
 from abc import ABCMeta
 from ..utils import ExplicitError, extend_docstring
@@ -30,11 +31,14 @@ class Implicit(Kernel, metaclass=ABCMeta):
         return False
 
     @property
-    def dim_feature(self) -> int:
-        raise utils.ExplicitError
+    def dim_feature(self) -> int | inf:
+        r"""
+        For implicit kernels, the feature dimension is infinite.
+        """
+        return inf
 
     def _explicit(self, x):
-        raise ExplicitError(self)
+        raise ExplicitError(cls=self)
 
     def explicit_preimage(self, phi: T):
-        raise ExplicitError(self)
+        raise ExplicitError(cms=self)

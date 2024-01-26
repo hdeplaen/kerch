@@ -9,11 +9,11 @@ Abstract Class
 ==============
 
 .. autoclass:: kerch.kernel.Implicit
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
+    :show-inheritance:
 
 Defining a New Kernel
 =====================
@@ -245,3 +245,13 @@ Because of the logarithm, we must also verify that :math:`a` is strictly positiv
 
             # return torch.Tensor of size [num_x, num_y]
             return k
+
+
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.Implicit
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

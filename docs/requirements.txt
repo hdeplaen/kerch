@@ -1,3 +1,7 @@
 sphinx
 sphinx-rtd-theme
+graphviz
+sphinx-exec-code
+sphinx-new-tab-link
+sphinx-codeautolink
 chardet

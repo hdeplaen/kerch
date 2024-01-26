@@ -10,7 +10,7 @@ from torch import Tensor as T
 from kerch import utils
 from .._View import _View
 from ..single_view.View import View
-from ...module.Stochastic import Stochastic
+from ...feature.stochastic import Stochastic
 
 
 @utils.extend_docstring(Stochastic)
@@ -27,7 +27,7 @@ class MultiView(_View):
         self._views = OrderedDict()
         self._num_views = 0
 
-        self._log.debug("The output dimension, the sample and the hidden variables of each View will be overwritten "
+        self._logger.debug("The output dimension, the sample and the hidden variables of each View will be overwritten "
                         "by the general value passed as an argument, possibly with None.")
 
         # append the known
@@ -57,7 +57,7 @@ class MultiView(_View):
                            "hidden": self.hidden,
                            })
         else:
-            self._log.error(f"View {view} could not be added as it is nor a view object nor a dictionnary of "
+            self._logger.error(f"View {view} could not be added as it is nor a view object nor a dictionnary of "
                             f"parameters")
             return
 

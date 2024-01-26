@@ -12,11 +12,11 @@ Abstract Class
 ==============
 
 .. autoclass:: kerch.kernel.Exponential
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
+    :show-inheritance:
 
 
 
@@ -251,3 +251,13 @@ a name and the ``hparams`` property.
 
             # return torch.Tensor of size [num_x, num_y]
             return torch.sum(torch.abs(diff)**self.degree, dim=0, keepdim=False)
+
+
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.Exponential
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

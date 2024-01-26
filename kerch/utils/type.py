@@ -13,8 +13,8 @@ def gpu_available() -> bool:
     """
     import torch.cuda
     if torch.cuda.is_available():
-        from ..module.Logger import _GLOBAL_LOGGER
-        _GLOBAL_LOGGER._log.info("Using CUDA version " + torch.version.cuda)
+        from ..feature.logger import _GLOBAL_LOGGER
+        _GLOBAL_LOGGER._logger.info("Using CUDA version " + torch.version.cuda)
         return True
     return False
 

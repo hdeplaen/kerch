@@ -85,7 +85,7 @@ class Indicator(Implicit):
         return f"Indicator kernel (lag: {self.lag})"
 
     @property
-    def params(self):
+    def hparams_variable(self):
         return {'Kernel lag': self.lag,
                 'Kernel gamma': self.gamma}
 
@@ -116,8 +116,8 @@ class Indicator(Implicit):
         self._lag.requires_grad = self._lag_trainable
 
     @property
-    def hparams(self):
-        return {"Kernel": "Indicator", **super(Indicator, self).hparams}
+    def hparams_fixed(self):
+        return {"Kernel": "Indicator", **super(Indicator, self).hparams_fixed}
 
     @property
     def gamma(self):

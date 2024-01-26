@@ -7,11 +7,11 @@ Class
 
 
 .. autoclass:: kerch.kernel.Cosine
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
+    :show-inheritance:
 
 
 Examples
@@ -76,3 +76,27 @@ This does not happen in higher dimensions.
     axs[1].set_title("Two Dimensions")
 
     fig.colorbar(im, ax=axs.ravel().tolist(), orientation='horizontal')
+
+
+Factory
+-------
+
+The following lines are equivalent:
+
+.. code-block::
+
+    k = kerch.kernel.Cosine(**kwargs)
+
+
+.. code-block::
+
+    k = kerch.kernel.factory(kernel_type='cosine', **kwargs)
+
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.Cosine
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

@@ -13,7 +13,7 @@ from abc import ABCMeta, abstractmethod
 from typing import Union
 
 from kerch import utils
-from ..module.Stochastic import Stochastic
+from ..feature.stochastic import Stochastic
 
 
 @utils.extend_docstring(Stochastic)
@@ -53,11 +53,11 @@ class _View(Stochastic, metaclass=ABCMeta):
         hidden = kwargs.pop('hidden', None)
 
         # INITIATE
-        self._param_trainable = kwargs.pop('param_trainable', False)
-        self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE), self._param_trainable)
-        self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE), self._param_trainable)
+        self._level_trainable = kwargs.pop('level_trainable', False)
+        self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE), self._level_trainable)
+        self._weight = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE), self._level_trainable)
         if weight is not None and hidden is not None:
-            self._log.info("Both the hidden and the weight are set. Priority is given to the weight values.")
+            self._logger.info("Both the hidden and the weight are set. Priority is given to the weight values.")
             self.weight = weight
         elif weight is None:
             self.hidden = hidden
@@ -67,13 +67,13 @@ class _View(Stochastic, metaclass=ABCMeta):
         self._attached_weight = None
 
     @property
-    def hparams(self) -> dict:
-        constraint = 'soft' if self._param_trainable else 'hard'
+    def hparams_fixed(self) -> dict:
+        constraint = 'soft' if self._level_trainable else 'hard'
         return {'Output dimension': self.dim_output,
                 'Representation': self.representation,
-                'Parameters trainable': self._param_trainable,
+                'Parameters trainable': self._level_trainable,
                 'Constraint': constraint,
-                **super(_View, self).hparams}
+                **super(_View, self).hparams_fixed}
 
     def _reset_hidden(self) -> None:
         self._hidden = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE,
@@ -89,11 +89,13 @@ class _View(Stochastic, metaclass=ABCMeta):
         assert self._dim_output is not None, "No output dimension has been provided."
         self.hidden = torch.nn.init.orthogonal_(torch.empty((self._num_total, self.dim_output),
                                                             dtype=utils.FTYPE, device=self._param_device))
+        self._logger.info('The hidden variables are initialized.')
 
     def _init_weight(self) -> None:
         assert self._dim_output is not None, "No output dimension has been provided."
         self.weight = torch.nn.init.orthogonal_(torch.empty((self.dim_feature, self.dim_output),
                                                             dtype=utils.FTYPE, device=self._param_device))
+        self._logger.info('The weights are initialized.')
 
     def init_parameters(self, representation=None, overwrite=True) -> None:
         """
@@ -120,17 +122,17 @@ class _View(Stochastic, metaclass=ABCMeta):
         switcher.get(representation)()
 
     @property
-    def param_trainable(self) -> bool:
+    def level_trainable(self) -> bool:
         r"""
         Specifies whether the parameters weight and hidden are trainable or not.
         """
-        return self._param_trainable
+        return self._level_trainable
 
-    @param_trainable.setter
-    def param_trainable(self, val: bool) -> None:
+    @level_trainable.setter
+    def level_trainable(self, val: bool) -> None:
         self._hidden.requires_grad = val
         self._weight.requires_grad = val
-        self._param_trainable = val
+        self._level_trainable = val
 
     @property
     def representation(self) -> str:
@@ -180,7 +182,7 @@ class _View(Stochastic, metaclass=ABCMeta):
             if idx_sample is None:
                 idx_sample = self.idx
             self._hidden.copy_(val.data[idx_sample, :].T)
-            if self._param_trainable and self._hidden.grad is not None:
+            if self._level_trainable and self._hidden.grad is not None:
                 self._hidden.grad.sample.zero_()
             self._reset_weight()
 
@@ -201,32 +203,32 @@ class _View(Stochastic, metaclass=ABCMeta):
                     if self._hidden_exists and val.shape == self._hidden.shape:
                         self._hidden.copy_(val)
                         # zeroing the gradients if relevant
-                        if self._param_trainable and self._hidden.grad is not None:
+                        if self._level_trainable and self._hidden.grad is not None:
                             self._hidden.grad.sample.zero_()
                     else:
                         del self._hidden
                         # torch.no_grad() does not affect the constructor
-                        self._hidden = torch.nn.Parameter(val, requires_grad=self._param_trainable)
+                        self._hidden = torch.nn.Parameter(val, requires_grad=self._level_trainable)
 
                     self._dim_output, self._num_h = self._hidden.shape
                 self._reset_weight()
         else:
             self._reset_hidden()
             self._reset_weight()
-            self._log.info("The hidden value is unset.")
+            self._logger.info("The hidden value is unset.")
 
     @property
     def hidden_trainable(self) -> bool:
         """
         Returns whether the hidden variables are trainable (a gradient can be computed on it).
         """
-        return self._param_trainable
+        return self._level_trainable
 
     @hidden_trainable.setter
     def hidden_trainable(self, val: bool):
         # changes the possibility of training the hidden values through backpropagation
-        self._param_trainable = val
-        self._hidden.requires_grad = self._param_trainable
+        self._level_trainable = val
+        self._hidden.requires_grad = self._level_trainable
 
     @property
     def _hidden_exists(self) -> bool:
@@ -246,12 +248,12 @@ class _View(Stochastic, metaclass=ABCMeta):
             return False
 
     def attach_to(self, weight_fn) -> None:
-        self._log.debug(self.__repr__() + " is attached to a multi-view.")
+        self._logger.debug(self.__repr__() + " is attached to a multi-view.")
         assert not self.attached, 'Cannot attach a view which is already attached'
         self._attached_weight = weight_fn
 
     def detach(self) -> None:
-        self._log.debug(self.__repr__() + ' is now detached.')
+        self._logger.debug(self.__repr__() + ' is now detached.')
         w = self.weight
         self._attached = False
         self.weight = w
@@ -287,19 +289,19 @@ class _View(Stochastic, metaclass=ABCMeta):
                         if self._weight_exists and self._weight.shape == val.shape:
                             self._weight.copy_(val.T)
                             # zeroing the gradients if relevant
-                            if self._param_trainable and self._weight.grad is not None:
+                            if self._level_trainable and self._weight.grad is not None:
                                 self._weight.grad.sample.zero_()
                         else:
                             del self._weight
                             # torch.no_grad() does not affect the constructor
-                            self._weight = torch.nn.Parameter(val.T, requires_grad=self._param_trainable)
+                            self._weight = torch.nn.Parameter(val.T, requires_grad=self._level_trainable)
 
                         self._dim_output = self._weight.shape[0]
                 self._reset_hidden()
             else:
                 self._reset_weight()
                 self._reset_hidden()
-                self._log.info("The weight is unset.")
+                self._logger.info("The weight is unset.")
 
     @property
     def _weight_exists(self) -> bool:
@@ -337,7 +339,7 @@ class _View(Stochastic, metaclass=ABCMeta):
             try:
                 self._update_hidden_from_weight()
             except NotImplementedError:
-                self._log.info('The relation between the weights and the hidden variables have '
+                self._logger.info('The relation between the weights and the hidden variables have '
                                'not been implemented in this case.')
 
         if x is None:

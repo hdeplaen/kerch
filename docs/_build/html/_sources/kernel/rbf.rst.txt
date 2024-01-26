@@ -6,11 +6,11 @@ Class
 =====
 
 .. autoclass:: kerch.kernel.RBF
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches, sample_as_param, phi_sample, phi, C
+    :show-inheritance:
 
 Examples
 ========
@@ -57,3 +57,26 @@ Time
     plt.imshow(k.K)
     plt.colorbar()
     plt.title("RBF with sigma " + str(k.sigma))
+
+
+Factory
+-------
+
+The following lines are equivalent:
+
+.. code-block::
+
+    k = kerch.kernel.RBF(**kwargs)
+
+
+.. code-block::
+
+    k = kerch.kernel.factory(kernel_type='rbf', **kwargs)
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.RBF
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

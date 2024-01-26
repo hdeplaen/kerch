@@ -47,4 +47,4 @@ class exp_l1(exponential):
         # this is to be used to get back a lot of parameters and info typically for monitoring
         # with tensorboard, weights&biases or other.
         return {"Kernel": "_Exponential-L1",
-                **super(exp_l1, self).hparams}
+                **super(exp_l1, self).hparams_fixed}

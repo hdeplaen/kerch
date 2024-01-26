@@ -10,16 +10,17 @@ import torch
 from torch import Tensor
 from math import sqrt
 
+from ...feature import Sample
 from .._View import _View
 from ...kernel.kernel import Kernel
-from ...kernel.factory import class_factory
+from ...kernel._factory import class_factory
 from ...utils import DEFAULT_KERNEL_TYPE, extend_docstring, kwargs_decorator, \
     castf, NotInitializedError, FTYPE
 
 
 @extend_docstring(_View)
 @extend_docstring(Kernel)
-class View(Kernel, _View):
+class View(Kernel, _View, Sample):
     r"""
     :param kernel_type: Represents which kernel to use if kernel_class is not specified.
         Defaults to kerch.DEFAULT_KERNEL_TYPE.
@@ -77,7 +78,7 @@ class View(Kernel, _View):
             self._dim_output = target.shape[1]
         self.target = target
 
-        self._log.debug("View initialized with " + self.kernel.__str__())
+        self._logger.debug("View initialized with " + self.kernel.__str__())
 
     def __str__(self):
         if self.attached:
@@ -93,6 +94,7 @@ class View(Kernel, _View):
         assert self._num_total is not None, "No data has been initialized yet."
         assert self._dim_output is not None, "No output dimension has been provided."
         self.bias = torch.zeros((self.dim_output), dtype=FTYPE, device=self._bias.device)
+        self._log.info('The bias is initialized.')
 
     @property
     def _bias_exists(self) -> bool:
@@ -124,7 +126,7 @@ class View(Kernel, _View):
     def bias(self) -> Tensor:
         if self._bias.nelement() != 0:
             return self._bias
-        self._log.debug("No bias has been initialized yet.")
+        self._logger.debug("No bias has been initialized yet.")
 
     @bias.setter
     @torch.no_grad()
@@ -137,7 +139,7 @@ class View(Kernel, _View):
             if dim_val == 0:
                 val = val.repeat(self._dim_output)
             elif dim_val > 1:
-                self._log.error("The bias can only be set to a scalar or a vector. "
+                self._logger.error("The bias can only be set to a scalar or a vector. "
                                 "This operation is thus discarded.")
             # setting the value
             if self._bias.nelement() == 0:
@@ -160,7 +162,7 @@ class View(Kernel, _View):
         return self._param_trainable
 
     @param_trainable.setter
-    def param_trainable(self, val: bool) -> None:
+    def level_trainable(self, val: bool) -> None:
         self._param_trainable = val
         self._hidden.requires_grad = val
         self._weight.requires_grad = val
@@ -184,7 +186,7 @@ class View(Kernel, _View):
     def target(self, val):
         val = castf(val, dev=self._sample.device, tensor=True)
         if val is None:
-            self._log.debug("target set to empty values.")
+            self._logger.debug("target set to empty values.")
         else:
             if self.empty_sample:
                 raise NotInitializedError(cls=self, message="The sample has not been initialized yet.")
@@ -208,9 +210,9 @@ class View(Kernel, _View):
         if self._hidden_exists:
             # will return a ExplicitError if not available
             self.weight = self.Phi.T @ self.H
-            self._log.debug("Setting the weight _Based on the hidden values.")
+            self._logger.debug("Setting the weight _Based on the hidden values.")
         else:
-            self._log.info("The weight cannot _Based on the hidden values as these are unset.")
+            self._logger.info("The weight cannot _Based on the hidden values as these are unset.")
 
     def _update_hidden_from_weight(self):
         raise NotImplementedError

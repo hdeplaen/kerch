@@ -6,11 +6,11 @@ Class
 =====
 
 .. autoclass:: kerch.kernel.Linear
-   :members:
-   :inherited-members: Module
-   :undoc-members:
-   :exclude-members: training, dump_patches
-   :show-inheritance:
+    :members:
+    :inherited-members: Module
+    :undoc-members:
+    :exclude-members: training, dump_patches
+    :show-inheritance:
 
 
 
@@ -36,3 +36,25 @@ Sine
     plt.figure(1)
     plt.imshow(k.K)
     plt.colorbar()
+
+Factory
+-------
+
+The following lines are equivalent:
+
+.. code-block::
+
+    k = kerch.kernel.Linear(**kwargs)
+
+
+.. code-block::
+
+    k = kerch.kernel.factory(kernel_type='linear', **kwargs)
+
+Inheritance Diagram
+===================
+
+.. inheritance-diagram::
+    kerch.kernel.Linear
+    :private-bases:
+    :top-classes: kerch.feature.Logger torch.nn.Module

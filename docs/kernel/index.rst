@@ -2,6 +2,8 @@
 Kernel Module
 =============
 
+.. py::module:: kernel
+
 Introduction
 ============
 
@@ -28,6 +30,7 @@ The general structure of the module is based around an abstract kernel class `ba
 `kerch.kernle.implicit` and `explicit` inherit. All other kernels inherit of one of these two at the exception
 of `polynomial` which directly inherits `base` as it has a primal formulation and a dual
 formulation which can be computed otherwise than with an inner product of the explicit feature map.
+
 
 Kernel Factory
 --------------
@@ -78,7 +81,7 @@ Generic Kernels
 ---------------
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
 
     linear
     rbf
@@ -93,7 +96,7 @@ Network-based kernels
 ---------------------
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
 
     explicit_nn
     implicit_nn
@@ -105,7 +108,7 @@ The idea behind time kernels is that time has the same local effect at
 all time, or in other words that the kernels are translational invariant. We typically consider the following kernels:
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
 
     indicator
     hat
@@ -116,7 +119,7 @@ Vision Kernels
 --------------
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
 
     additive_chi2
     skewed_chi2
@@ -125,7 +128,7 @@ Abstract Kernels
 ----------------
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
 
     exponential
     explicit
@@ -138,6 +141,29 @@ Creating Kernels
 
 It is also possible to create other kernels than the ones already implemented and still taking benefit of all features
 common to all kernel such as automatic transformation of the input of the kernel (centering, normalization...), all
-attributes (``K``, ``Phi``...), cache management etc. We refer to the examples in the documentation of the abstract
-classes :class:`kerch.kernel.Exponential`, :class:``kerch.kernel.Explicit`, :class:`kerch.kernel.Implicit` and
+attributes (``K``, ``Phi``...), cache management, stochasicity etc. We refer to the examples in the documentation of the abstract
+classes :class:`kerch.kernel.Exponential`, :class:`kerch.kernel.Explicit`, :class:`kerch.kernel.Implicit` and
 :class:`kerch.kernel.Kernel`.
+
+..
+    Inheritance Diagram
+    ====================
+    .. inheritance-diagram::
+        kerch.kernel.RBF
+        kerch.kernel.Polynomial
+        kerch.kernel.Indicator
+        kerch.kernel.Cosine
+        kerch.kernel.Linear
+        kerch.kernel.Nystrom
+        kerch.kernel.AdditiveChi2
+        kerch.kernel.Explicit
+        kerch.kernel.ExplicitNN
+        kerch.kernel.Exponential
+        kerch.kernel.Hat
+        kerch.kernel.ImplicitNN
+        kerch.kernel.RFF
+        kerch.kernel.Sigmoid
+        kerch.kernel.SkewedChi2
+        kerch.kernel.Laplacian
+        :private-bases:
+        :top-classes: kerch.feature.Logger torch.nn.Module
