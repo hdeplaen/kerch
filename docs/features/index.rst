@@ -10,6 +10,6 @@ Features
     logger
     module
     cache
-    sample
     stochastic
+    sample
     transform

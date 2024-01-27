@@ -1,0 +1,3 @@
+Class,Explicit Feature Map,Kernel,Parameters,Factory Type
+:py:class:`kerch.kernel.ExplicitNN`,:math:`\phi(x) = NN\left(x\right)`,":math:`k(x,y)=\phi(x)^\top\phi(y)`",None,``’explicit_nn’``
+:py:class:`kerch.kernel.ImplicitNN`,:octicon:`x;1em;sd-text-danger` ,":math:`k(x,y) = NN\left( [x, y] \right).`",None,``’implicit_nn’``

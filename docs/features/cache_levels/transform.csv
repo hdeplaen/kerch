@@ -1,0 +1,9 @@
+Key,Description,``'none'``,``'light'``,``'normal'``,``'heavy'``,``'total'``
+``"transform_sample_data_default"``,Transformed sample value of the default transformation,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"transform_sample_data_nondefault"``,Transformed sample value of  another transformation,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"transform_sample_statistics_default"``,Transformed sample statistics of the default transformation,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"transform_sample_statistics_nondefault"``,Transformed sample statistics of another transformation,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"transform_oos_data_default"``,Transformed out-of-sample value of the default transformation,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"transform_oos_data_nondefault"``,Transformed out-of-sample value of  another transformation,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info`
+``"transform_oos_statistics_default"``,Transformed out-of-sample statistics of the default transformation,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"transform_oos_statistics_nondefault"``,Transformed out-of-sample statistics of another transformation,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`

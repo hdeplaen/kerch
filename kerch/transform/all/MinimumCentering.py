@@ -3,9 +3,9 @@ from ..Transform import Transform
 import torch
 
 class MinimumCentering(Transform):
-    def __init__(self, explicit: bool, default_path: bool = False):
+    def __init__(self, explicit: bool, default_path: bool = False, **kwargs):
         super(MinimumCentering, self).__init__(explicit=explicit,
-                                               name="Minimum Centering", default_path=default_path)
+                                               name="Minimum Centering", default_path=default_path, **kwargs)
 
     def _explicit_statistics(self, sample):
         return torch.min(sample, dim=0).values

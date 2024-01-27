@@ -4,4 +4,6 @@ graphviz
 sphinx-exec-code
 sphinx-new-tab-link
 sphinx-codeautolink
+sphinx-design
+sphinx-toolbox
 chardet

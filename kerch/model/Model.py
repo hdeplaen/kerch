@@ -215,6 +215,6 @@ class Model(Stochastic, metaclass=ABCMeta):
 
         self._levels.append(level)
 
-    def reset(self, children=False, reset_persisting=True) -> None:
+    def reset(self, recurse=False, reset_persisting=True) -> None:
         for level in self.levels:
-            level.reset(children=children, reset_persisting=reset_persisting)
+            level.reset(recurse=recurse, reset_persisting=reset_persisting)

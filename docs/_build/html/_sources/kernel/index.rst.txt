@@ -10,6 +10,9 @@ Introduction
 This module contains many different types of kernels. Each kernel is created based on some hyperparameters and a sample
 dataset.
 
+General
+-------
+
 If no sample dataset is provided, a random one will be initialized. This dataset can always be reinitialized
 (`init_sample`) or the alue of the datapoints can be updated updated (`update_sample`). In the latter case, the
 dimensions have to be matching. Furthermore, the sample dataset can also work in a stochastic manner, of which the
@@ -36,6 +39,7 @@ Kernel Factory
 --------------
 
 .. autofunction:: kerch.kernel.factory
+
 
 Examples
 ========
@@ -77,63 +81,7 @@ Examples
 Different Kernels
 =================
 
-Generic Kernels
----------------
-
-.. toctree::
-    :maxdepth: 3
-
-    linear
-    rbf
-    laplacian
-    polynomial
-    cosine
-    sigmoid
-    rff
-    nystrom
-
-Network-based kernels
----------------------
-
-.. toctree::
-    :maxdepth: 3
-
-    explicit_nn
-    implicit_nn
-
-Time Kernels
-------------
-
-The idea behind time kernels is that time has the same local effect at
-all time, or in other words that the kernels are translational invariant. We typically consider the following kernels:
-
-.. toctree::
-    :maxdepth: 3
-
-    indicator
-    hat
-    rbf
-
-
-Vision Kernels
---------------
-
-.. toctree::
-    :maxdepth: 3
-
-    additive_chi2
-    skewed_chi2
-
-Abstract Kernels
-----------------
-
-.. toctree::
-    :maxdepth: 3
-
-    exponential
-    explicit
-    implicit
-    kernel
+.. include:: all_kernels.rst
 
 
 Creating Kernels

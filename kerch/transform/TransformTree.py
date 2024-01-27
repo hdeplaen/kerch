@@ -47,7 +47,7 @@ class TransformTree(Transform):
                       "minmax_rescaling": [MinimumCentering, MinMaxNormalization]}
 
     @staticmethod
-    def beautify_transform(transform) -> Union[None, List[Transform]]:
+    def beautify_transform(transform: list[str]) -> Union[None, List[Transform]]:
         r"""
         Creates a list of _Transform classes and removes duplicates.
 
@@ -58,18 +58,18 @@ class TransformTree(Transform):
             return None
         else:
             transform_classes = []
-            for transform in transform:
+            for tr in transform:
                 try:
-                    if issubclass(transform, Transform):
-                        transform_classes.append(transform)
+                    if issubclass(tr, Transform):
+                        transform_classes.append(tr)
                 except TypeError:
                     new_transform = TransformTree._all_transform.get(
-                        transform, NameError(f"Unrecognized transform key {transform}."))
+                        tr, NameError(f"Unrecognized transform key {tr}."))
                     if isinstance(new_transform, Exception):
                         raise new_transform
                     elif isinstance(new_transform, List):
-                        for tr in new_transform:
-                            transform_classes.append(tr)
+                        for ntr in new_transform:
+                            transform_classes.append(ntr)
                     elif issubclass(new_transform, Transform):
                         transform_classes.append(new_transform)
                     else:
@@ -80,10 +80,10 @@ class TransformTree(Transform):
             idx = 0
             for current_item in transform_classes:
                 if current_item == previous_item:
-                    transform.pop(idx)
+                    transform_classes.pop(idx)
                 else:
                     previous_item = current_item
-                    idx = idx + 1
+                    idx += 1
 
             return transform_classes
 
@@ -98,7 +98,7 @@ class TransformTree(Transform):
         # create default tree
         node = self
         for transform in self._default_transform:
-            offspring = transform(explicit=self.explicit, default_path=True)
+            offspring = transform(explicit=self.explicit, default_path=True, cache_level=self.cache_level)
             node.add_offspring(offspring)
             node = offspring
         self._default_node = node
@@ -197,12 +197,13 @@ class TransformTree(Transform):
             transform = self._default_transform
 
         tree_path = [self]
-        for transform in transform:
-            if transform not in tree_path[-1].offspring:
-                offspring = transform(explicit=self.explicit)
-                tree_path[-1].add_offspring(offspring)
+        for tr_class in transform:
+            current_tr = tree_path[-1]
+            if tr_class in current_tr.offspring:
+                offspring = current_tr.offspring[tr_class]
             else:
-                offspring = tree_path[-1].offspring[transform]
+                offspring = tr_class(explicit=self.explicit, cache_level=self.cache_level)
+                current_tr.add_offspring(offspring)
             tree_path.append(offspring)
         return tree_path
 
@@ -243,8 +244,7 @@ class TransformTree(Transform):
 
         self._data_oos = oos
         sol = tree_path[-1].oos(x=x, y=y)
-        for node in tree_path:
-            node._clean_cache()
+        self._clean_cache()
         self._data_oos = None  # to avoid blocking the destruction if necessary by the garbage collector
         return sol
 

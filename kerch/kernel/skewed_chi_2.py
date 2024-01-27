@@ -27,16 +27,14 @@ class SkewedChi2(Implicit):
     :param p: Free parameter :math:`p`., defaults to 0.
     :param p_trainable: `True` if the gradient of :math:`p` is to be computed. If so, a graph is computed
         and :math:`p` can be updated. `False` just leads to a static computation., defaults to `False`
-
+    :type p: float, optional
+    :type p_trainable: bool, optional
     """
-
-    @utils.kwargs_decorator(
-        {"p": 0., "p_trainable": False})
     def __init__(self, *args, **kwargs):
-        self._p = kwargs["p"]
+        self._p = kwargs.pop('p', 0.)
         super(SkewedChi2, self).__init__(*args, **kwargs)
 
-        self._p_trainable = kwargs["p_trainable"]
+        self._p_trainable = kwargs.pop('p_trainable', False)
         self._p = torch.nn.Parameter(
             torch.tensor(self._p, dtype=utils.FTYPE),
             requires_grad=self._p_trainable)

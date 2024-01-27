@@ -3,8 +3,8 @@ from ..Transform import Transform
 import torch
 
 class MeanCentering(Transform):
-    def __init__(self, explicit: bool, default_path: bool = False):
-        super(MeanCentering, self).__init__(explicit=explicit, name="Mean centering", default_path=default_path)
+    def __init__(self, explicit: bool, default_path: bool = False, **kwargs):
+        super(MeanCentering, self).__init__(explicit=explicit, name="Mean centering", default_path=default_path, **kwargs)
 
     def _explicit_statistics(self, sample):
         return torch.mean(sample, dim=0)

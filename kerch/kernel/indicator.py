@@ -54,32 +54,28 @@ class Indicator(Implicit):
     :type gamma_trainable: bool, optional
     """
 
-    @utils.kwargs_decorator(
-        {"lag": 1,
-         "gamma": None,
-         "lag_trainable": False,
-         "gamma_trainable": False})
     def __init__(self, *args, **kwargs):
         """
         :param lag: bandwidth of the kernel (default 1)
         :param gamma: value on the diagonal (default 2 * lag + 1, which ensures PSD in most cases)
         """
-        self._lag = kwargs["lag"]
+        self._lag = kwargs.pop('lag', 1)
         super(Indicator, self).__init__(*args, **kwargs)
         assert self._dim_input == 1, "The indicator kernel is only defined for 1-dimensional entries."
 
-        self._lag_trainable = kwargs["lag_trainable"]
+        self._lag_trainable = kwargs.pop('lag_trainable', False)
         self._lag = torch.nn.Parameter(
             torch.tensor(self._lag, dtype=utils.FTYPE), requires_grad=self._lag_trainable)
 
-        self._gamma_trainable = kwargs["gamma_trainable"]
-        if kwargs["gamma"] is None:
+        self._gamma_trainable = kwargs.pop('gamma_trainable', False)
+        gamma = kwargs.pop('gamma', None)
+        if gamma is None:
             self._link_training = True
             self._gamma = torch.nn.Parameter(2 * self._lag.data + 1, requires_grad=False)
         else:
             self._link_training = False
             self._gamma = torch.nn.Parameter(
-                torch.tensor(kwargs["gamma"], dtype=utils.FTYPE), requires_grad=self._gamma_trainable)
+                torch.tensor(gamma, dtype=utils.FTYPE), requires_grad=self._gamma_trainable)
 
     def __str__(self):
         return f"Indicator kernel (lag: {self.lag})"

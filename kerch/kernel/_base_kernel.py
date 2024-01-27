@@ -21,7 +21,6 @@ from ..feature.sample import Sample
 class _BaseKernel(Sample, metaclass=ABCMeta):
     def __init__(self, *args, **kwargs):
         super(_BaseKernel, self).__init__(*args, **kwargs)
-        self._logger.debug("Initializing " + str(self))
 
     @abstractmethod
     def __str__(self):

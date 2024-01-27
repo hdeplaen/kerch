@@ -43,12 +43,14 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
 
         # LEGACY SUPPORT
         if kwargs["center"]:
-            self._logger.warning("Argument center kept for legacy and will be removed in a later version. Please use the "
-                              "more versatile kernel_transform parameter instead.")
+            self._logger.warning(
+                "Argument center kept for legacy and will be removed in a later version. Please use the "
+                "more versatile kernel_transform parameter instead.")
             kernel_transform.append("mean_centering")
         if kwargs["normalize"]:
-            self._logger.warning("Argument normalize kept for legacy and will be removed in a later version. Please use "
-                              "the more versatile kernel_transform parameter instead.")
+            self._logger.warning(
+                "Argument normalize kept for legacy and will be removed in a later version. Please use "
+                "the more versatile kernel_transform parameter instead.")
             kernel_transform.append("unit_sphere_normalization")
 
         self._default_kernel_transform = self._simplify_transform(kernel_transform)
@@ -132,19 +134,21 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
     def _kernel_explicit_transform(self) -> TransformTree:
         def fun():
             return TransformTree(explicit=True,
-                                  sample=self._explicit_with_none,
-                                  default_transform=self._default_kernel_transform,
-                                  cache_level=self._cache_level)
+                                 sample=self._explicit_with_none,
+                                 default_transform=self._default_kernel_transform,
+                                 cache_level=self._cache_level)
+
         return self._get("kernel_explicit_transform", level_key="kernel_explicit_transform", fun=fun)
 
     @property
     def _kernel_implicit_transform(self) -> TransformTree:
         def fun():
             return TransformTree(explicit=False,
-                                  sample=self._implicit_with_none,
-                                  default_transform=self._default_kernel_transform,
-                                  cache_level=self._cache_level,
-                                  implicit_self=self._implicit_self)
+                                 sample=self._implicit_with_none,
+                                 default_transform=self._default_kernel_transform,
+                                 cache_level=self._cache_level,
+                                 implicit_self=self._implicit_self)
+
         return self._get("kernel_implicit_transform", level_key="kernel_implicit_transform", fun=fun)
 
     def _phi(self):
@@ -152,9 +156,11 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         Returns the explicit feature map with default centering and normalization. If already computed, it is
         recovered from the cache.
         """
+
         def fun():
             self._check_sample()
             return self._kernel_explicit_transform.projected_sample
+
         return self._get("phi", level_key="sample_phi", fun=fun)
 
     def _C(self) -> Tensor:
@@ -162,10 +168,12 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         Returns the covariance matrix with default centering and normalization. If already computed, it is recovered
         from the cache.
                 """
+
         def fun():
             scale = 1 / self.num_idx
             phi = self._phi()
             return scale * phi.T @ phi
+
         return self._get("C", level_key="sample_C", fun=fun)
 
     def _K(self, explicit=None, overwrite: bool = False) -> Tensor:
@@ -178,6 +186,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         :param overwrite: By default, the kernel matrix is recovered from cache if already computed. Force overwrites
             this if True., defaults to False
         """
+
         def fun(explicit):
             self._check_sample()
             if explicit is None: explicit = self.explicit
@@ -186,6 +195,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
                 return phi @ phi.T
             else:
                 return self._kernel_implicit_transform.projected_sample
+
         return self._get("K", level_key="sample_K", fun=lambda: fun(explicit), overwrite=overwrite)
 
     # ACCESSIBLE METHODS
@@ -202,7 +212,8 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         """
         x = utils.castf(x)
         transform = self._get_transform(transform)
-        return self._kernel_explicit_transform.apply(oos=self._explicit_with_none, x=self.transform_input(x), transform=transform)
+        return self._kernel_explicit_transform.apply(oos=self._explicit_with_none, x=self.transform_input(x),
+                                                     transform=transform)
 
     def k(self, x=None, y=None, explicit=None, transform=None) -> Tensor:
         r"""
@@ -248,7 +259,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
                 phi_y = self._kernel_explicit_transform.apply(x=self.transform_input(y),
                                                               transform=transform)
             return phi_x @ phi_y.T
-        else: # implicit
+        else:  # implicit
             if utils.equal(x, y):
                 x = self.transform_input(x)
                 return self._kernel_implicit_transform.apply(x=x,

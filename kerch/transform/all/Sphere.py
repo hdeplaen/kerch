@@ -4,9 +4,9 @@ from ..Transform import Transform
 from kerch.utils.type import EPS
 
 class UnitSphereNormalization(Transform):
-    def __init__(self, explicit: bool, default_path: bool = False):
+    def __init__(self, explicit: bool, default_path: bool = False, **kwargs):
         super(UnitSphereNormalization, self).__init__(explicit=explicit, name="Unit Sphere Normalization",
-                                                      default_path=default_path)
+                                                      default_path=default_path, **kwargs)
 
     def _explicit_statistics(self, sample):
         return torch.norm(sample, dim=1, keepdim=True)

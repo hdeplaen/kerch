@@ -18,7 +18,7 @@ import lazy_loader
 @utils.extend_docstring(Kernel)
 class ExplicitNN(Explicit):
     r"""
-    Explicit kernel class, parametrized by a neural network.
+    Explicit feature map kernel, given by a neural network.
 
     .. math::
         k(x,y) = NN\left(x\right)^\top NN\left(y\right).
@@ -29,22 +29,21 @@ class ExplicitNN(Explicit):
     .. math::
         \phi(x) = NN\left(x\right)
 
-    :param network: Network to be used.
-    :type network: torch.nn.Module
+    :param encoder: Explicit feature map encoder network.
+    :param decoder: Explicit decoder network
+    :param networks_trainable: ``True`` if the encoder and decoders are trainable. Defaults to ``True``.
+    :param recon_loss_fun: Instance of the reconstruction loss function for the encoder/decoder pair.
+        Defaults to torch.nn.MSELoss(reduction='mean').
+    :type encoder: torch.nn.Module
+    :type decoder: torch.nn.Module, optional
+    :type networks_trainable: bool, optional
+    :type recon_loss_fun: torch.nn.modules.loss._Loss, optional
     """
 
-    @utils.kwargs_decorator(
-        {"kernels_trainable": False})
     def __init__(self, *args, **kwargs):
-        """
-        :param encoder: torch.nn.Module explicit kernel
-        :param decoder: torch.nn.Module explicit kernel pseudo-inverse
-        :param kernels_trainable: True if support vectors / kernel are trainable (default False)
-        :param recon_loss_fun: Instance of the reconstruction loss function for the encoder/decoder pair.
-            Defaults to torch.nn.MSELoss(reduction='mean').
-        """
         self._encoder = None
         self._decoder = None
+        self._network_trainable = kwargs.pop('network_trainable', True)
 
         super(ExplicitNN, self).__init__(*args, **kwargs)
 
@@ -70,7 +69,9 @@ class ExplicitNN(Explicit):
         return f"explicit kernel ({encoder}, {decoder})"
 
     def hparams_fixed(self):
-        return {"Kernel": "Explicit Neural Network Based", **super(ExplicitNN, self).hparams_fixed}
+        return {"Kernel": "Explicit Neural Network",
+                "Trainable Feature Map": self._network_trainable,
+                **super(ExplicitNN, self).hparams_fixed}
 
     @property
     def encoder(self) -> torch.nn.Module:
@@ -92,14 +93,17 @@ class ExplicitNN(Explicit):
         return self._encoder(x)
 
     def loss(self) -> float:
-        recon = self.decode()
-        return self._recon_loss_func(self.current_sample, recon)
+        if self._decoder is not None:
+            recon = self.decode()
+            return self._recon_loss_func(self.current_sample, recon)
+        return 0.
 
     def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
-        yield from self._encoder.parameters()
-        if self._decoder is not None:
-            yield from self._decoder.parameters()
-        super(ExplicitNN, self)._euclidean_parameters(recurse)
+        if self._network_trainable:
+            yield from self._encoder.parameters()
+            if self._decoder is not None:
+                yield from self._decoder.parameters()
+            super(ExplicitNN, self)._euclidean_parameters(recurse)
 
     def _explicit_preimage(self, phi) -> torch.Tensor:
         View = lazy_loader.load('..level.single_view.View', error_on_import=True)

@@ -34,7 +34,7 @@ class Logger(object, metaclass=ABCMeta):
     _kerch_handler.setFormatter(_kerch_format)
 
     def __init__(self, *args, **kwargs):
-        self._name = kwargs.pop('name', None)
+        self._name = kwargs.pop('logger_name', None)
         class_name = self.__class__.__name__
         if self._name is not None and class_name != "Logger":
             log_name = self._name + ' ' + class_name
@@ -46,6 +46,8 @@ class Logger(object, metaclass=ABCMeta):
         self._logger_internal: logging.Logger = logging.getLogger(name=log_name)
         self._logger_internal.addHandler(Logger._kerch_handler)
         self.logging_level = kwargs.pop('logging_level', None)
+
+        self._logger.debug('Instantiating')
 
     @property
     def _logger(self) -> logging.Logger:
@@ -97,7 +99,7 @@ class Logger(object, metaclass=ABCMeta):
         self._logger_internal.setLevel(level)
 
 
-_GLOBAL_LOGGER = Logger(name="global")
+_GLOBAL_LOGGER = Logger(logger_name="global")
 
 
 def set_logging_level(level: int):

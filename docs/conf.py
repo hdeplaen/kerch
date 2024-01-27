@@ -36,6 +36,7 @@ root_doc = "index"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.mathjax',
+              'sphinx_toolbox.more_autodoc.variables',
               'sphinx.ext.autodoc',
               "sphinx.ext.doctest",
               'sphinx.ext.intersphinx',
@@ -44,10 +45,11 @@ extensions = ['sphinx.ext.mathjax',
               'matplotlib.sphinxext.plot_directive',
               'sphinx.ext.inheritance_diagram',
               'sphinx.ext.graphviz',
-              "sphinx.ext.githubpages",
+              'sphinx.ext.githubpages',
               'sphinx_exec_code',
               'sphinx_new_tab_link',
               'sphinx_codeautolink',
+              'sphinx_design',
               ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -97,3 +99,11 @@ inheritance_alias = shorten_submodules(['kernel', 'level', 'feature', 'model'])
 # MAPPING
 intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
                        'torch': ('https://pytorch.org/docs/stable', None)}
+
+
+
+
+
+# GITHUB
+github_username = 'hdeplaen'
+github_repository = 'kerch'

@@ -15,7 +15,10 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
     @utils.extend_docstring(_Level)
     def __init__(self, *args, **kwargs):
-        kwargs['kernel_transform'] = kwargs.pop('kernel_transform', []).append('mean_centering')
+        kernel_transform = kwargs.pop('kernel_transform', [])
+        kernel_transform.append('mean_centering')
+        kwargs['kernel_transform'] = kernel_transform
+
         super(_KPCA, self).__init__(*args, **kwargs)
         self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                         requires_grad=False)

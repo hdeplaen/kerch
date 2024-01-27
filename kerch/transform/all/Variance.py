@@ -4,9 +4,9 @@ from ..Transform import Transform
 import torch
 
 class UnitVarianceNormalization(Transform):
-    def __init__(self, explicit: bool, default_path: bool = False):
+    def __init__(self, explicit: bool, default_path: bool = False, **kwargs):
         super(UnitVarianceNormalization, self).__init__(explicit=explicit,
-                                                        name="Unit Variance Normalization", default_path=default_path)
+                                                        name="Unit Variance Normalization", default_path=default_path, **kwargs)
 
     def _explicit_statistics(self, sample):
         return torch.std(sample, dim=0)

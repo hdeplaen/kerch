@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Index &mdash; kerch 0.3 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
-      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
-      <link rel="stylesheet" type="text/css" href="_static/sphinx-codeautolink.css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css?v=7f9a90b1" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="_static/sphinx-codeautolink.css?v=125d5c1c" />
+      <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
 
   
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=b489f392"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/design-tabs.js?v=36754332"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -47,6 +49,8 @@
               <p class="caption" role="heading"><span class="caption-text">General</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general/contribute.html">Contribute to Kerch</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -63,6 +67,7 @@
 <p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="views/index.html">Views and Levels</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general/utils.html">Utilitaries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="structure/index.html">Structure</a></li>
 </ul>
@@ -187,11 +192,23 @@
       </ul></li>
       <li><a href="general/utils.html#kerch.utils.errors.KerchError.__weakref__">__weakref__ (kerch.utils.errors.KerchError attribute)</a>
 </li>
+      <li><a href="features/cache.html#kerch.feature.Cache._apply">_apply() (kerch.feature.Cache method)</a>
+</li>
       <li><a href="kernel/kernel.html#kerch.kernel._BaseKernel">_BaseKernel (class in kerch.kernel)</a>
+</li>
+      <li><a href="features/cache.html#kerch.feature.Cache._clean_cache">_clean_cache() (kerch.feature.Cache method)</a>
 </li>
       <li><a href="features/module.html#kerch.feature.Module._euclidean_parameters">_euclidean_parameters() (kerch.feature.Module method)</a>
 </li>
+      <li><a href="features/cache.html#kerch.feature.Cache._get">_get() (kerch.feature.Cache method)</a>
+</li>
       <li><a href="features/logger.html#kerch.feature.Logger._logger">_logger (kerch.feature.Logger property)</a>
+</li>
+      <li><a href="features/cache.html#kerch.feature.Cache._remove_from_cache">_remove_from_cache() (kerch.feature.Cache method)</a>
+</li>
+      <li><a href="features/cache.html#kerch.feature.Cache._reset_cache">_reset_cache() (kerch.feature.Cache method)</a>
+</li>
+      <li><a href="features/cache.html#kerch.feature.Cache._save">_save() (kerch.feature.Cache method)</a>
 </li>
       <li><a href="features/module.html#kerch.feature.Module._slow_parameters">_slow_parameters() (kerch.feature.Module method)</a>
 </li>
@@ -2333,62 +2350,62 @@
 </li>
       <li><a href="level/mvkpca.html#kerch.level.MVKPCA.predict">predict() (kerch.level.MVKPCA method)</a>
 </li>
-      <li><a href="features/cache.html#kerch.feature.Cache.print_cache_keys">print_cache_keys() (kerch.feature.Cache method)</a>
+      <li><a href="features/cache.html#kerch.feature.Cache.print_cache">print_cache() (kerch.feature.Cache method)</a>
 
       <ul>
-        <li><a href="features/sample.html#kerch.feature.Sample.print_cache_keys">(kerch.feature.Sample method)</a>
+        <li><a href="features/sample.html#kerch.feature.Sample.print_cache">(kerch.feature.Sample method)</a>
 </li>
-        <li><a href="features/stochastic.html#kerch.feature.Stochastic.print_cache_keys">(kerch.feature.Stochastic method)</a>
+        <li><a href="features/stochastic.html#kerch.feature.Stochastic.print_cache">(kerch.feature.Stochastic method)</a>
 </li>
-        <li><a href="kernel/kernel.html#kerch.kernel._BaseKernel.print_cache_keys">(kerch.kernel._BaseKernel method)</a>
+        <li><a href="kernel/kernel.html#kerch.kernel._BaseKernel.print_cache">(kerch.kernel._BaseKernel method)</a>
 </li>
-        <li><a href="kernel/additive_chi2.html#kerch.kernel.AdditiveChi2.print_cache_keys">(kerch.kernel.AdditiveChi2 method)</a>
+        <li><a href="kernel/additive_chi2.html#kerch.kernel.AdditiveChi2.print_cache">(kerch.kernel.AdditiveChi2 method)</a>
 </li>
-        <li><a href="kernel/cosine.html#kerch.kernel.Cosine.print_cache_keys">(kerch.kernel.Cosine method)</a>
+        <li><a href="kernel/cosine.html#kerch.kernel.Cosine.print_cache">(kerch.kernel.Cosine method)</a>
 </li>
-        <li><a href="kernel/explicit.html#kerch.kernel.Explicit.print_cache_keys">(kerch.kernel.Explicit method)</a>
+        <li><a href="kernel/explicit.html#kerch.kernel.Explicit.print_cache">(kerch.kernel.Explicit method)</a>
 </li>
-        <li><a href="kernel/explicit_nn.html#kerch.kernel.ExplicitNN.print_cache_keys">(kerch.kernel.ExplicitNN method)</a>
+        <li><a href="kernel/explicit_nn.html#kerch.kernel.ExplicitNN.print_cache">(kerch.kernel.ExplicitNN method)</a>
 </li>
-        <li><a href="kernel/exponential.html#kerch.kernel.Exponential.print_cache_keys">(kerch.kernel.Exponential method)</a>
+        <li><a href="kernel/exponential.html#kerch.kernel.Exponential.print_cache">(kerch.kernel.Exponential method)</a>
 </li>
-        <li><a href="kernel/hat.html#kerch.kernel.Hat.print_cache_keys">(kerch.kernel.Hat method)</a>
+        <li><a href="kernel/hat.html#kerch.kernel.Hat.print_cache">(kerch.kernel.Hat method)</a>
 </li>
-        <li><a href="kernel/implicit.html#kerch.kernel.Implicit.print_cache_keys">(kerch.kernel.Implicit method)</a>
+        <li><a href="kernel/implicit.html#kerch.kernel.Implicit.print_cache">(kerch.kernel.Implicit method)</a>
 </li>
-        <li><a href="kernel/implicit_nn.html#kerch.kernel.ImplicitNN.print_cache_keys">(kerch.kernel.ImplicitNN method)</a>
+        <li><a href="kernel/implicit_nn.html#kerch.kernel.ImplicitNN.print_cache">(kerch.kernel.ImplicitNN method)</a>
 </li>
-        <li><a href="kernel/indicator.html#kerch.kernel.Indicator.print_cache_keys">(kerch.kernel.Indicator method)</a>
+        <li><a href="kernel/indicator.html#kerch.kernel.Indicator.print_cache">(kerch.kernel.Indicator method)</a>
 </li>
-        <li><a href="kernel/kernel.html#kerch.kernel.Kernel.print_cache_keys">(kerch.kernel.Kernel method)</a>
+        <li><a href="kernel/kernel.html#kerch.kernel.Kernel.print_cache">(kerch.kernel.Kernel method)</a>
 </li>
-        <li><a href="kernel/laplacian.html#kerch.kernel.Laplacian.print_cache_keys">(kerch.kernel.Laplacian method)</a>
+        <li><a href="kernel/laplacian.html#kerch.kernel.Laplacian.print_cache">(kerch.kernel.Laplacian method)</a>
 </li>
-        <li><a href="kernel/linear.html#kerch.kernel.Linear.print_cache_keys">(kerch.kernel.Linear method)</a>
+        <li><a href="kernel/linear.html#kerch.kernel.Linear.print_cache">(kerch.kernel.Linear method)</a>
 </li>
-        <li><a href="kernel/nystrom.html#kerch.kernel.Nystrom.print_cache_keys">(kerch.kernel.Nystrom method)</a>
+        <li><a href="kernel/nystrom.html#kerch.kernel.Nystrom.print_cache">(kerch.kernel.Nystrom method)</a>
 </li>
-        <li><a href="kernel/polynomial.html#kerch.kernel.Polynomial.print_cache_keys">(kerch.kernel.Polynomial method)</a>
+        <li><a href="kernel/polynomial.html#kerch.kernel.Polynomial.print_cache">(kerch.kernel.Polynomial method)</a>
 </li>
-        <li><a href="kernel/rbf.html#kerch.kernel.RBF.print_cache_keys">(kerch.kernel.RBF method)</a>
+        <li><a href="kernel/rbf.html#kerch.kernel.RBF.print_cache">(kerch.kernel.RBF method)</a>
 </li>
-        <li><a href="kernel/rff.html#kerch.kernel.RFF.print_cache_keys">(kerch.kernel.RFF method)</a>
+        <li><a href="kernel/rff.html#kerch.kernel.RFF.print_cache">(kerch.kernel.RFF method)</a>
 </li>
-        <li><a href="kernel/sigmoid.html#kerch.kernel.Sigmoid.print_cache_keys">(kerch.kernel.Sigmoid method)</a>
+        <li><a href="kernel/sigmoid.html#kerch.kernel.Sigmoid.print_cache">(kerch.kernel.Sigmoid method)</a>
 </li>
-        <li><a href="kernel/skewed_chi2.html#kerch.kernel.SkewedChi2.print_cache_keys">(kerch.kernel.SkewedChi2 method)</a>
+        <li><a href="kernel/skewed_chi2.html#kerch.kernel.SkewedChi2.print_cache">(kerch.kernel.SkewedChi2 method)</a>
 </li>
-        <li><a href="level/kpca.html#kerch.level.KPCA.print_cache_keys">(kerch.level.KPCA method)</a>
+        <li><a href="level/kpca.html#kerch.level.KPCA.print_cache">(kerch.level.KPCA method)</a>
 </li>
-        <li><a href="level/lssvm.html#kerch.level.LSSVM.print_cache_keys">(kerch.level.LSSVM method)</a>
+        <li><a href="level/lssvm.html#kerch.level.LSSVM.print_cache">(kerch.level.LSSVM method)</a>
 </li>
-        <li><a href="level/mvkpca.html#kerch.level.MVKPCA.print_cache_keys">(kerch.level.MVKPCA method)</a>
+        <li><a href="level/mvkpca.html#kerch.level.MVKPCA.print_cache">(kerch.level.MVKPCA method)</a>
 </li>
-        <li><a href="level/ppca.html#kerch.level.PPCA.print_cache_keys">(kerch.level.PPCA method)</a>
+        <li><a href="level/ppca.html#kerch.level.PPCA.print_cache">(kerch.level.PPCA method)</a>
 </li>
-        <li><a href="level/ridge.html#kerch.level.Ridge.print_cache_keys">(kerch.level.Ridge method)</a>
+        <li><a href="level/ridge.html#kerch.level.Ridge.print_cache">(kerch.level.Ridge method)</a>
 </li>
-        <li><a href="features/transform.html#kerch.transform.TransformTree.print_cache_keys">(kerch.transform.TransformTree method)</a>
+        <li><a href="features/transform.html#kerch.transform.TransformTree.print_cache">(kerch.transform.TransformTree method)</a>
 </li>
       </ul></li>
       <li><a href="level/mvkpca.html#kerch.level.MVKPCA.project">project() (kerch.level.MVKPCA method)</a>

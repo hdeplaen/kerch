@@ -7,9 +7,9 @@ import torch
 
 
 class MinMaxNormalization(Transform):
-    def __init__(self, explicit: bool, default_path: bool = False):
+    def __init__(self, explicit: bool, default_path: bool = False, **kwargs):
         super(MinMaxNormalization, self).__init__(explicit=explicit,
-                                                  name="Min Max Normalization", default_path=default_path)
+                                                  name="Min Max Normalization", default_path=default_path, **kwargs)
 
     def _explicit_statistics(self, sample):
         max_sample = torch.max(sample, dim=0).values

@@ -13,6 +13,8 @@ If you experience any bug, please let me now: this is only a pre-alpha version.
     :caption: General
 
     general/install
+    general/first_steps
+    general/contribute
 
 
 .. toctree::
@@ -42,6 +44,7 @@ If you experience any bug, please let me now: this is only a pre-alpha version.
     :caption: In Depth
 
     features/index
+    views/index
     general/utils
     structure/index
 
