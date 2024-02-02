@@ -304,28 +304,46 @@ class _BaseKernel(Sample, metaclass=ABCMeta):
         """
         return self.corr()
 
-    def implicit_preimage(self, k_coefficient: Tensor, method: str = 'knn', **kwargs):
-        # DEFENSIVE
-        k_coefficient = utils.castf(k_coefficient)
+    def implicit_preimage(self, k_image: Tensor | None = None, method: str = 'knn', **kwargs):
+        r"""
+        Computes a pre-image of coefficients in the RKHS of the kernel, given by ``k_image``.
+        Different methods are available:
 
-        if torch.all(k_coefficient < 0):
+        * ``'knn'``: Nearest neighbors. We refer to :py:func:`kerch.method.knn` for more details.
+        * ``'smoother'``: Kernel smoothing. We refer to :py:func:`kerch.method.smoother` for more details
+        * ``'iterative'``: Iterative optimization. We refer to :py:func:`kerch.method.iterative_preimage_k` for more details
+
+        :param k_image: RKHS coefficients to be inverted. If not specified (``None``), the kernel matrix on the sample is used.
+        :type k_image: torch.Tensor [num_points, num_idx], optional
+        :param method: Pre-image method to be used. Defaults to ``'knn'``.
+        :type method: str, optional
+        :param \**kwargs: Additional parameters of the pre-image method used. Please refer to its documentation for
+            further details.
+        :type \**kwargs: dict, optional
+        :return: Pre-image
+        :rtype: torch.Tensor [num_points, dim_input]
+        """
+
+        # DEFENSIVE
+        k_image = utils.castf(k_image)
+        if k_image is None:
+            k_image = self.K
+
+        if torch.all(k_image < 0):
             self._logger.warning(f"The argument k_coefficient contains negative values, which should never be the case by "
                               f"definition of a RKHS.")
 
         # PRE-IMAGE
         method = method.lower()
         if method == 'knn':
-            from kerch.kernel.preimage import knn
-            return knn(k_coefficient, self, **kwargs)
+            from ..method import knn
+            return knn(dists=-k_image, observations=self.current_sample, **kwargs)
         elif method == 'smoother':
-            from kerch.kernel.preimage import smoother
-            return smoother(k_coefficient, self, **kwargs)
+            from ..method import smoother
+            return smoother(coefficients=k_image, observations=self.current_sample, **kwargs)
         elif method == 'iterative':
-            from kerch.kernel.preimage import iterative
-            return iterative(k_coefficient, self, **kwargs)
+            from ..method import iterative_preimage_k
+            return iterative_preimage_k(k_image=k_image, kernel=self, **kwargs)
         else:
             raise AttributeError('Unknown or non-implemented preimage method.')
 
-    @abstractmethod
-    def explicit_preimage(self, phi: Tensor):
-        pass

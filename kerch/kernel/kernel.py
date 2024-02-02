@@ -350,3 +350,48 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         cov = self.cov(x=x)
         var = torch.sqrt(torch.diag(cov))[:, None]
         return cov / (var * var.T)
+
+    def explicit_preimage(self, phi_image: torch.Tensor | None =None, method: str='explicit', **kwargs) -> torch.Tensor:
+        r"""
+        Computes a pre-image of an explicit feature map of the kernel, given by ``phi_image``.
+        Different methods are available:
+
+        *``'explicit'``: Uses an explicit implementation specific to the kernel (if available). This is always
+            preferable if available.
+        * ``'knn'``: Nearest neighbors. We refer to :py:func:`kerch.method.knn` for more details.
+        * ``'smoother'``: Kernel smoothing. We refer to :py:func:`kerch.method.smoother` for more details
+        * ``'iterative'``: Iterative optimization. We refer to :py:func:`kerch.method.iterative_preimage_phi` for more details
+
+        :param phi_image: Explicit feature map image to be inverted. If not specified (``None``), the
+            explicit feature map on the sample is used.
+        :type phi_image: torch.Tensor [num_points, dim_feature], optional
+        :param method: Pre-image method to be used. Defaults to ``'explicit'``.
+        :type method: str, optional
+        :param \**kwargs: Additional parameters of the pre-image method used. Please refer to its documentation for
+            further details.
+        :type \**kwargs: dict, optional
+        :return: Pre-image
+        :rtype: torch.Tensor [num_points, dim_input]
+        """
+        phi_image = utils.castf(phi_image)
+        if phi_image is None:
+            phi_image = self.phi()
+
+        method = method.lower()
+        if method == 'explicit':
+            phi = self._explicit_projected.revert(phi_image)
+            x_tilde = self._explicit_preimage(phi)
+            return self.sample_transform.revert(x_tilde)
+        elif method == 'knn':
+            from ..method import knn
+            k_image = phi_image @ self.Phi.T
+            return knn(dists=-k_image, observations=self.current_sample, **kwargs)
+        elif method == 'smoother':
+            from ..method import smoother
+            k_image = phi_image @ self.Phi.T
+            return smoother(coefficients=k_image, observations=self.current_sample, **kwargs)
+        elif method == 'iterative':
+            from ..method import iterative_preimage_phi
+            return iterative_preimage_phi(phi_image=phi_image, kernel=self, **kwargs)
+        else:
+            raise AttributeError('Unknown or non-implemented preimage method.')

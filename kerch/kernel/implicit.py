@@ -40,5 +40,12 @@ class Implicit(Kernel, metaclass=ABCMeta):
     def _explicit(self, x):
         raise ExplicitError(cls=self)
 
-    def explicit_preimage(self, phi: T):
+    def explicit_preimage(self, phi_image: T | None = None, method: str = 'explicit', **kwargs):
+        r"""
+
+        .. note::
+            Not available for kernels that have no explicit feature map representation.
+
+
+        """
         raise ExplicitError(cms=self)

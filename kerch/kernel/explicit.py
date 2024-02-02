@@ -45,25 +45,6 @@ class Explicit(Kernel, metaclass=ABCMeta):
     def _explicit(self, x):
         return x
 
-    def explicit_preimage(self, phi=None) -> torch.Tensor:
-        r"""
-            Returns a pseudo-inverse of the explicit feature map if available.
-
-            .. note::
-                The normalized version is not implemented
-
-            :param phi: Image to be pseudo-inverted. Defaults to the explicit feature map of the sample.
-            :type phi: Tensor(N, dim_feature)
-            :return: Pseudo-inverted values of the value of phi.
-            :rtype: Tensor(N, dim_input)
-        """
-
-        if phi is None:
-            phi = self.phi()
-        phi = self._explicit_projected.revert(phi)
-        x_tilde = self._explicit_preimage(phi)
-        return self.sample_transform.revert(x_tilde)
-
     def _explicit_preimage(self, phi):
         raise NotImplementedError
 

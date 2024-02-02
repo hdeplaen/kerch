@@ -9,7 +9,7 @@ x1 = torch.randn((N, dim)) + 2
 x2 = torch.randn((N, dim)) - 2
 x = torch.cat((x1,x2), dim=0)
 
-k = kerch.kernel.random_features(sample=x, num_weights=feat)
+k = kerch.kernel.generic.random_features(sample=x, num_weights=feat)
 phi = k.phi()
 x_tile = k.phi_pinv()
 

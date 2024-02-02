@@ -9,8 +9,8 @@ def factory(kernel_type=DEFAULT_KERNEL_TYPE, **kwargs) -> Kernel:
     calling `kerch.kernel.name(*args, **kwargs)` (if `name` is not a string here). This allows for the creation of kernel where
     the name of kernel is passed as a string.
 
-    :param kernel_type: Type of kernel chosen. For the possible choices, please refer to the (non-abstract) classes
-        herebelow. Defaults to kerch.DEFAULT_KERNEL_TYPE.
+    :param kernel_type: Type of kernel chosen. For the possible choices, please refer to the `Factory Type` column of the
+        :doc:`../kernel/index` documentation. Defaults to :py:data:`kerch.DEFAULT_KERNEL_TYPE`.
     :param \**kwargs: Arguments to be passed to the kernel constructor, such as `sample` or `sigma`. If an argument is
         passed that does not exist (e.g. `sigma` to a `linear` kernel), it will just be neglected. For the default
         values, please refer to the default values of the requested kernel.
