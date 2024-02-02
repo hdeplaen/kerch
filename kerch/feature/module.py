@@ -155,6 +155,14 @@ class Module(Logger,
         Variable hyperparameters of the module. By contrast with :py:attr:`hparams_fixed`, these are the values that are may change during
         the training and may be monitored at various stages during the training.
         If applicable, these can be kernel bandwidth parameters for example.
+
+        .. note::
+
+            All parameters that are potentially trainable, like a kernel bandwidth :math:`\sigma` for example, are
+            included in this dictionary, even if the corresponding trainable argument is set to ``False``. In the
+            latter case, they will be not evolve during training iterations, but will still be included in this
+            dictionary.
+
         We refer to the documentation of :doc:`../features/module` for further information.
         """
         return {}

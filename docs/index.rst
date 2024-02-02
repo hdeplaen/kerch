@@ -12,6 +12,7 @@ If you experience any bug, please let me now: this is only a pre-alpha version.
     :hidden:
     :caption: General
 
+    general/index
     general/install
     general/first_steps
     general/contribute

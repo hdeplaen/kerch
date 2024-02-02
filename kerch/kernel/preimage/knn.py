@@ -2,7 +2,7 @@ import torch
 from kerch.kernel import _base_kernel
 
 @torch.no_grad()
-def knn(k_coefficients: torch.Tensor, kernel: _BaseKernel, num: int = 1) -> torch.Tensor:
+def knn(k_coefficients: torch.Tensor, kernel: _base_kernel, num: int = 1) -> torch.Tensor:
     r"""
     Returns the sum of the num closest x, the distance being given by the coefficients.
 

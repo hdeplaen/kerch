@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 import torch
 from kerch.kernel import _base_kernel
 from typing import Union
 
+from ...utils import castf
+
+
 @torch.no_grad()
-def smoother(k_coefficients: torch.Tensor, kernel: _BaseKernel, num: Union[int, str] = 'all') -> torch.Tensor:
+def smoother(k_coefficients: torch.Tensor, kernel: _base_kernel | None = None, sample: torch.Tensor | None = None,
+             num: Union[int, str] = 'all') -> torch.Tensor:
     r"""
     Returns a weighted sum of x by the coefficients.
 
@@ -20,8 +26,11 @@ def smoother(k_coefficients: torch.Tensor, kernel: _BaseKernel, num: Union[int, 
 
     # PRELIMINARIES
     num_points, num_coefficients = k_coefficients.shape
-    sample = kernel.current_sample_projected
-    num_sample = kernel.num_idx
+    sample = castf(sample)
+    if sample is None:
+        assert isinstance(kernel, _base_kernel), 'If no sample is provided, please provide a valid kernel.'
+        sample = kernel.current_sample_projected
+    num_sample = sample.shape[0]
 
     # DEFENSIVE
     assert num_coefficients == num_sample, \

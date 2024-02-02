@@ -139,11 +139,15 @@ class RandomFeatures(Explicit):
         return {"Kernel": "Random Features", **super(RandomFeatures, self).hparams_fixed}
 
     def _explicit_preimage(self, phi) -> torch.Tensor:
-        phi = phi * sqrt(self.num_weights)
-        weights_pinv = torch.linalg.pinv(self.weights).T
+        phi *= sqrt(self.num_weights)
+        weights_pinv = self._get(key="RSF_weights_piv", level_key="_rsf_piv",
+                                 fun=lambda: torch.linalg.pinv(self.weights).T)
         return torch.special.logit(phi, eps=1.e-8) @ weights_pinv
 
     def _explicit(self, x):
         wx = x @ self.weights.T
         dim_inv_sqrt = 1 / sqrt(self.num_weights)
         return dim_inv_sqrt * torch.sigmoid(wx)
+
+    def after_step(self) -> None:
+        self._remove_from_cache('RSF_weights_piv')

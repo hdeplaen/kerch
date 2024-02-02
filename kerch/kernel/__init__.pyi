@@ -20,3 +20,4 @@ from .additive_chi_2 import AdditiveChi2 as AdditiveChi2
 from .skewed_chi_2 import SkewedChi2 as SkewedChi2
 from .random_features import RandomFeatures as RandomFeatures
 from ._factory import factory as factory
+from . import preimage as preimage
