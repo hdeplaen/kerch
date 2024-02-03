@@ -1,0 +1,9 @@
+Class,Explicit Feature Map,Kernel,Parameters,Factory Type
+:py:class:`kerch.kernel.Linear`,:math:`\phi(x) = x`,":math:`k(x,y)=\phi(x)^\top\phi(y)`",None,``’linear’``
+:py:class:`kerch.kernel.RBF`,:octicon:`x;1em;sd-text-danger` ,":math:`k(x,y)=\exp\left(-\frac{\left\lVert x-y\right\rVert^2_2}{2\sigma^2}\right)`",``sigma``,``’rbf’``
+:py:class:`kerch.kernel.Laplacian`,:octicon:`x;1em;sd-text-danger` ,":math:`k(x,y)=\exp\left(-\frac{\left\lVert x-y\right\rVert_2}{2\sigma^2}\right)`",``sigma``,``’laplacian’``
+:py:class:`kerch.kernel.Polynomial`,See documentation,":math:`k(x,y) = \left(x^\top y + \beta\right)^\alpha`","``alpha``, ``beta``",``’polynomial’``
+:py:class:`kerch.kernel.Cosine`,:math:`\phi(x) = \frac{x}{\left\lVert x\right\rVert_2}`,":math:`k(x,y)=\phi(x)^\top\phi(y)`",None,``’cosine’``
+:py:class:`kerch.kernel.Sigmoid`,:octicon:`x;1em;sd-text-danger` ,":math:`k(x,y) = \sigma\left( a (x^\top y) + b \right)`","``a``, ``b``",``’sigmoid’``
+:py:class:`kerch.kernel.RFF`,See documentation,":math:`k(x,y)=\phi(x)^\top\phi(y)`","``num_weights``, ``sigma``",``’rff’``
+:py:class:`kerch.kernel.Nystrom`,See documentation,See documentation,``dim``,``’nystrom’``

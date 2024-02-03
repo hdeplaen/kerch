@@ -98,7 +98,7 @@ def kernel_smoother(domain: torch.Tensor, observations: torch.Tensor, num: Union
     :rtype: torch.Tensor [num_observations, dim_observations]
     """
     domain = castf(domain)
-    observations = castf(domain)
+    observations = castf(observations)
 
     assert domain.shape[0] == observations.shape[0], f"Not the same number of domain {domain.shape[0]} and coefficients points {domain.shape[0]}."
 

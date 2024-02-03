@@ -11,7 +11,7 @@ File containing the Wasserstein Exponential Kernel class.
 import torch
 
 from ... import utils
-from ..exponential import Exponential
+from kerch.kernel.generic.exponential import Exponential
 
 
 @utils.extend_docstring(Exponential)
@@ -60,7 +60,7 @@ class Wasserstein(Exponential):
     def reg(self, val: float) -> None:
         self._reg = float(val)
 
-    def _dist(self, x, y) -> torch.Tensor:
+    def _square_dist(self, x, y) -> torch.Tensor:
         return self._get("W_dist", level_key="Wasserstein_kernel_dist", fun=lambda: self._wass_dist(x,y))
 
     def _wass_dist(self, x, y) -> torch.Tensor:

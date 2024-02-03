@@ -1,52 +1,49 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+
+<html class="writer-html5" data-content_root="../" lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Polynomial Kernel &mdash; kerch 0.3 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sphinx-codeautolink.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
-  <!--[if lt IE 9]>
+<meta charset="utf-8"/><meta content="Docutils 0.18.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Polynomial Kernel — kerch 0.3 documentation</title>
+<link href="../_static/pygments.css?v=92fd9be5" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/theme.css?v=19f00094" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=eafc0fe6" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-codeautolink.css?v=125d5c1c" rel="stylesheet" type="text/css"/>
+<link href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/design-tabs.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Cosine Kernel" href="cosine.html" />
-    <link rel="prev" title="Laplacian Kernel" href="laplacian.html" /> 
+<script src="../_static/jquery.js?v=5d32c60e"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+<script src="../_static/documentation_options.js?v=b489f392"></script>
+<script src="../_static/doctools.js?v=888ff710"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/design-tabs.js?v=36754332"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="cosine.html" rel="next" title="Cosine Kernel"/>
+<link href="laplacian.html" rel="prev" title="Laplacian Kernel"/>
 </head>
-
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
             kerch
           </a>
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">General</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../general/index.html">Why Kerch?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general/install.html">Install</a></li>
@@ -96,40 +93,36 @@
 <li class="toctree-l1"><a class="reference internal" href="../general/utils.html">Utilitaries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
 </ul>
-
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">kerch</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Kernel Module</a></li>
-      <li class="breadcrumb-item active">Polynomial Kernel</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/kernel/polynomial.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <div class="section" id="polynomial-kernel">
-<h1>Polynomial Kernel<a class="headerlink" href="#polynomial-kernel" title="Permalink to this headline"></a></h1>
-<div class="section" id="class">
-<h2>Class<a class="headerlink" href="#class" title="Permalink to this headline"></a></h2>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">kerch</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Kernel Module</a></li>
+<li class="breadcrumb-item active">Polynomial Kernel</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/kernel/polynomial.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="polynomial-kernel">
+<h1>Polynomial Kernel<a class="headerlink" href="#polynomial-kernel" title="Link to this heading"></a></h1>
+<section id="class">
+<h2>Class<a class="headerlink" href="#class" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></code><code class="sig-name descname"><span class="pre">Polynomial</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/kernel/generic/polynomial.html#Polynomial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.Polynomial" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="implicit.html#kerch.kernel.Implicit" title="kerch.kernel.implicit.Implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.implicit.Implicit</span></code></a>, <a class="reference internal" href="explicit.html#kerch.kernel.Explicit" title="kerch.kernel.explicit.Explicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.explicit.Explicit</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span class="sig-name descname"><span class="pre">Polynomial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/kernel/generic/polynomial.html#Polynomial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.Polynomial" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="implicit.html#kerch.kernel.Implicit" title="kerch.kernel.implicit.Implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Implicit</span></code></a>, <a class="reference internal" href="explicit.html#kerch.kernel.Explicit" title="kerch.kernel.explicit.Explicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Explicit</span></code></a></p>
 <p>Polynomial kernel of degree <span class="math notranslate nohighlight">\(\alpha \geq 0\)</span> and parameter <span class="math notranslate nohighlight">\(\beta\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[k(x,y) = \left(x^\top y + \beta\right)^\alpha.\]</div>
@@ -146,409 +139,352 @@ inner product of the explicit feature maps (implicit). Its components are given 
 <p>One can verify that <span class="math notranslate nohighlight">\(k(x,y) = \phi(x)^\top\phi(y)\)</span>. An example is also given in the Example section of its
 documentation.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <p>For a natural number degree <span class="math notranslate nohighlight">\(\alpha\)</span> . The computation of a kernel matrix of <span class="math notranslate nohighlight">\(n\)</span> points is typically
 more efficient to compute as an inner product of the explicit feature map if <span class="math notranslate nohighlight">\(\texttt{dim_feature} &lt; n\)</span>
 and using the kernel formula otherwise. If the degree is not a natural number, only the latter is possible as
 the explicit feature map does not exist.</p>
 <p>This can be specified when calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">Polynomial.k()</span></code> by specifying the boolean <code class="docutils literal notranslate"><span class="pre">explicit</span></code> to
 <code class="docutils literal notranslate"><span class="pre">True</span></code> (using the explicit feature map) or <code class="docutils literal notranslate"><span class="pre">False</span></code> (directly using the kernel formula).</p>
-<p class="last">Other considerations may come into play. If a centered or normalized kernel on an out-of-sample is required, this may require extra
+<p>Other considerations may come into play. If a centered or normalized kernel on an out-of-sample is required, this may require extra
 computations when directly using the kernel matrix as doing it on the explicit feature is more straightforward.</p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>alpha</strong> (<em>double</em><em>, </em><em>optional</em>) – Degree <span class="math notranslate nohighlight">\(\alpha\)</span> of the polynomial kernel. Defaults to 2.</li>
-<li><strong>beta</strong> (<em>double</em><em>, </em><em>optional</em>) – Value <span class="math notranslate nohighlight">\(\beta\)</span> of the polynomial kernel. Defaults to 1.</li>
-<li><strong>alpha_trainable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – <cite>True</cite> if the gradient of the degree is to be computed. If so, a graph is computed
-and the degree can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></li>
-<li><strong>beta_trainable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – <cite>True</cite> if the gradient of the degree is to be computed. If so, a graph is computed
-and the degree can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></li>
-<li><strong>kernel_transform</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – A list composed of the elements <cite>‘normalize’</cite> or <cite>‘center’</cite>. For example a centered
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>double</em><em>, </em><em>optional</em>) – Degree <span class="math notranslate nohighlight">\(\alpha\)</span> of the polynomial kernel. Defaults to 2.</p></li>
+<li><p><strong>beta</strong> (<em>double</em><em>, </em><em>optional</em>) – Value <span class="math notranslate nohighlight">\(\beta\)</span> of the polynomial kernel. Defaults to 1.</p></li>
+<li><p><strong>alpha_trainable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – <cite>True</cite> if the gradient of the degree is to be computed. If so, a graph is computed
+and the degree can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
+<li><p><strong>beta_trainable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – <cite>True</cite> if the gradient of the degree is to be computed. If so, a graph is computed
+and the degree can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
+<li><p><strong>kernel_transform</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – A list composed of the elements <cite>‘normalize’</cite> or <cite>‘center’</cite>. For example a centered
 cosine kernel which is centered and normalized in order to get a covariance matrix for example can be obtained
 by invoking a linear kernel with <cite>default_transform = [‘normalize’, ‘center’, ‘normalize’]</cite> or just a cosine
 kernel with <cite>default_transform = [‘center’, ‘normalize’]</cite>. Redundancy is automatically handled., defaults
-to <cite>[]</cite>.</li>
-<li><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
-be given relative to these samples., defaults to <cite>None</cite></li>
-<li><strong>sample_trainable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
-computed and the sample can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></li>
-<li><strong>num_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Number of sample points. This parameter is neglected if <cite>sample</cite> is not <cite>None</cite> and overwritten by
-the number of points contained in sample., defaults to 1</li>
-<li><strong>dim_input</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Dimension of each sample point. This parameter is neglected if <cite>sample</cite> is not <cite>None</cite> and
-overwritten by the dimension of the sample points., defaults to 1</li>
-<li><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Initializes the indices of the samples to be updated. All indices are considered if both
-<cite>idx_stochastic</cite> and <cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite></li>
-<li><strong>prop_sample</strong> – Instead of giving indices, specifying a proportion of the original sample set is also
+to <cite>[]</cite>.</p></li>
+<li><p><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
+be given relative to these samples., defaults to <cite>None</cite></p></li>
+<li><p><strong>sample_trainable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
+computed and the sample can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
+<li><p><strong>num_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Number of sample points. This parameter is neglected if <cite>sample</cite> is not <cite>None</cite> and overwritten by
+the number of points contained in sample., defaults to 1</p></li>
+<li><p><strong>dim_input</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Dimension of each sample point. This parameter is neglected if <cite>sample</cite> is not <cite>None</cite> and
+overwritten by the dimension of the sample points., defaults to 1</p></li>
+<li><p><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Initializes the indices of the samples to be updated. All indices are considered if both
+<cite>idx_stochastic</cite> and <cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite></p></li>
+<li><p><strong>prop_sample</strong> – Instead of giving indices, specifying a proportion of the original sample set is also
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
 such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>. All indices are considered if both <cite>idx_stochastic</cite> and
-<cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</li>
-<li><strong>sample_transform</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – TODO</li>
-<li><strong>cache_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Cache level for saving temporary execution results during the execution. The higher the cache,
+<cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</p></li>
+<li><p><strong>sample_transform</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – TODO</p></li>
+<li><p><strong>cache_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Cache level for saving temporary execution results during the execution. The higher the cache,
 the more is saved. Defaults to <code class="docutils literal notranslate"><span class="pre">'normal'</span></code>. We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for further
-information.</li>
-<li><strong>logging_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Logging level for this specific instance.
+information.</p></li>
+<li><p><strong>logging_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Logging level for this specific instance.
 If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current default kerch global log level will be used.
 Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code> (default kerch logging level).
-We refer to the <a class="reference internal" href="../features/logger.html"><span class="doc">Logging in Kerch</span></a> documentation for further information.</li>
+We refer to the <a class="reference internal" href="../features/logger.html"><span class="doc">Logging in Kerch</span></a> documentation for further information.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.C">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">C</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.C" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.C" title="Link to this definition"></a></dt>
 <dd><p>Returns the explicit matrix on the sample datapoints.</p>
 <div class="math notranslate nohighlight">
 \[C = \frac{1}{\texttt{num_idx}}\sum_i^\texttt{num_idx} \phi(x_i)\phi(x_i)^\top.\]</div>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.Corr">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">Corr</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.Corr" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Corr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.Corr" title="Link to this definition"></a></dt>
 <dd><p>Returns the correlation matrix of the sample. Same as calling self.corr().</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.Cov">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">Cov</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.Cov" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cov</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.Cov" title="Link to this definition"></a></dt>
 <dd><p>Returns the covariance matrix of the sample. Same as calling self.cov().</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">K</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.K" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.K" title="Link to this definition"></a></dt>
 <dd><p>Returns the kernel matrix on the sample data. Same result as calling <a class="reference internal" href="#kerch.kernel.Polynomial.k" title="kerch.kernel.Polynomial.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently
 called.</p>
 <div class="math notranslate nohighlight">
 \[K_{ij} = k(x_i,x_j).\]</div>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.Phi">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">Phi</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.Phi" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.Phi" title="Link to this definition"></a></dt>
 <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the sample datapoints. Same as calling
 <a class="reference internal" href="#kerch.kernel.Polynomial.phi" title="kerch.kernel.Polynomial.phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code></a>, but slightly faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently
 called.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.alpha">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">alpha</span></code><a class="headerlink" href="#kerch.kernel.Polynomial.alpha" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#kerch.kernel.Polynomial.alpha" title="Link to this definition"></a></dt>
 <dd><p>Degree of the polynomial. This is argument plays a similar role to the bandwidth of
 an exponential kernel, such as the RBF kernel.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The explicit feature map only exists if the degree is a natural number.</p>
+<p class="admonition-title">Note</p>
+<p>The explicit feature map only exists if the degree is a natural number.</p>
 </div>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.alpha_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">alpha_trainable</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.alpha_trainable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alpha_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.alpha_trainable" title="Link to this definition"></a></dt>
 <dd><p>Boolean indicating if the alpha/degree is trainable. In other words, this argument provides or not a gradient
 to the degree for potential gradient-based training.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.beta">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">beta</span></code><a class="headerlink" href="#kerch.kernel.Polynomial.beta" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">beta</span></span><a class="headerlink" href="#kerch.kernel.Polynomial.beta" title="Link to this definition"></a></dt>
 <dd><p>Beta of the polynomial.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.beta_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">beta_trainable</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.beta_trainable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">beta_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.beta_trainable" title="Link to this definition"></a></dt>
 <dd><p>Boolean indicating if the beta is trainable.</p>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.c">
-<code class="sig-name descname"><span class="pre">c</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.c" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.c" title="Link to this definition"></a></dt>
 <dd><p>Out-of-sample explicit matrix.</p>
 <div class="math notranslate nohighlight">
 \[C = \frac{1}{\texttt{num_x}}\sum_{i}^{\texttt{num_x}} \phi(x_i)\phi(x_i)^\top.\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> (<em>Tensor</em><em>(</em><em>num_x</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Explicit matrix</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor[dim_feature, dim_feature]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>num_x</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Explicit matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.cache_keys">
-<code class="sig-name descname"><span class="pre">cache_keys</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.cache_keys" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cache_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.cache_keys" title="Link to this definition"></a></dt>
 <dd><p>Returns an iterable containing the different cache keys.
 We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for more information.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.cache_level">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">cache_level</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.cache_level" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.cache_level" title="Link to this definition"></a></dt>
 <dd><p>Cache level for saving temporary execution results during the execution. The higher the cache,
 the more is saved. Defaults to <code class="docutils literal notranslate"><span class="pre">'normal'</span></code> unless set otherwise during instantiation. The different possible
 values are:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code>: the cache is non-existent and everything is computed on the go.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;light&quot;</span></code>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;normal&quot;</span></code>: same as light, but the statistics of the out-of-sample points are also saved.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;heavy&quot;</span></code>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;total&quot;</span></code>: every step of any computation is saved.</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"none"</span></code>: the cache is non-existent and everything is computed on the go.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"light"</span></code>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"normal"</span></code>: same as light, but the statistics of the out-of-sample points are also saved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"heavy"</span></code>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">"total"</span></code>: every step of any computation is saved.</p></li>
 </ul>
 <p>We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for further information.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.centered">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">centered</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.centered" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">centered</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.centered" title="Link to this definition"></a></dt>
 <dd><p>Returns if the kernel is centered in the feature maps.</p>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.corr">
-<code class="sig-name descname"><span class="pre">corr</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.corr" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.corr" title="Link to this definition"></a></dt>
 <dd><p>Returns the correlation matrix fo the provided input.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Correlation matrix</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor[dim_feature, dim_feature]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correlation matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.cov">
-<code class="sig-name descname"><span class="pre">cov</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.cov" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.cov" title="Link to this definition"></a></dt>
 <dd><p>Returns the covariance matrix fo the provided input.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.
-Defaults to <cite>None</cite>.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Covariance matrix</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor[dim_feature, dim_feature]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.
+Defaults to <cite>None</cite>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Covariance matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.current_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">current_sample</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.current_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.current_sample" title="Link to this definition"></a></dt>
 <dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.current_sample_projected">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">current_sample_projected</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.current_sample_projected" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample_projected</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.current_sample_projected" title="Link to this definition"></a></dt>
 <dd><p>Returns the sample that is currently used in the computations and for the normalizing and centering statistics
 if relevant.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.dim_feature">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">dim_feature</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">inf</span></em><a class="headerlink" href="#kerch.kernel.Polynomial.dim_feature" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_feature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">inf</span></em><a class="headerlink" href="#kerch.kernel.Polynomial.dim_feature" title="Link to this definition"></a></dt>
 <dd><p>Feature dimension. Provided the degree <span class="math notranslate nohighlight">\(\alpha\)</span> is a natural number, it is given by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\texttt{dim_feature} = \left(\begin{array}{c}\texttt{dim_input} + \alpha \\ \alpha\end{array}\right).\end{split}\]</div>
 <p>If the degree <span class="math notranslate nohighlight">\(\alpha\)</span> is not a natural number, the explicit feature does not exist and by consequence
 the feature dimension is infinite.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.dim_input">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">dim_input</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.dim_input" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_input</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.dim_input" title="Link to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.empty_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">empty_sample</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.empty_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">empty_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.empty_sample" title="Link to this definition"></a></dt>
 <dd><p>Boolean specifying if the sample is empty or not.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.explicit">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">explicit</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.explicit" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explicit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.explicit" title="Link to this definition"></a></dt>
 <dd><p>True if the method has an explicit formulation, False otherwise. This is the case only if the degree
 <span class="math notranslate nohighlight">\(\alpha\)</span> is a natural number.</p>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.explicit_preimage">
-<code class="sig-name descname"><span class="pre">explicit_preimage</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/kernel/generic/polynomial.html#Polynomial.explicit_preimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.Polynomial.explicit_preimage" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">explicit_preimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/kernel/generic/polynomial.html#Polynomial.explicit_preimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.Polynomial.explicit_preimage" title="Link to this definition"></a></dt>
 <dd><p>Computes a pre-image of an explicit feature map of the kernel, given by <code class="docutils literal notranslate"><span class="pre">phi_image</span></code>.
 Different methods are available:</p>
-<dl class="docutils">
-<dt><a href="#id1"><span class="problematic" id="id2">*</span></a><code class="docutils literal notranslate"><span class="pre">'explicit'</span></code>: Uses an explicit implementation specific to the kernel (if available). This is always</dt><dd>preferable if available.</dd>
-</dl>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">'knn'</span></code>: Nearest neighbors. We refer to <a class="reference internal" href="../methods/knn.html#kerch.method.knn" title="kerch.method.knn"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.knn()</span></code></a> for more details.</li>
-<li><code class="docutils literal notranslate"><span class="pre">'smoother'</span></code>: Kernel smoothing. We refer to <a class="reference internal" href="../methods/smoother.html#kerch.method.smoother" title="kerch.method.smoother"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.smoother()</span></code></a> for more details</li>
-<li><code class="docutils literal notranslate"><span class="pre">'iterative'</span></code>: Iterative optimization. We refer to <a class="reference internal" href="../methods/iterative.html#kerch.method.iterative_preimage_phi" title="kerch.method.iterative_preimage_phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.iterative_preimage_phi()</span></code></a> for more details</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'explicit'</span></code>: Uses an explicit implementation specific to the kernel (if available). This is always preferable if available.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'knn'</span></code>: Nearest neighbors. We refer to <a class="reference internal" href="../methods/knn.html#kerch.method.knn" title="kerch.method.knn"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.knn()</span></code></a> for more details.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'smoother'</span></code>: Kernel smoothing. We refer to <a class="reference internal" href="../methods/smoother.html#kerch.method.smoother" title="kerch.method.smoother"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.smoother()</span></code></a> for more details</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'iterative'</span></code>: Iterative optimization. We refer to <a class="reference internal" href="../methods/iterative.html#kerch.method.iterative_preimage_phi" title="kerch.method.iterative_preimage_phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.iterative_preimage_phi()</span></code></a> for more details</p></li>
 </ul>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>phi_image</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><em>torch.Tensor</em></a><em> [</em><em>num_points</em><em>, </em><em>dim_feature</em><em>]</em><em>, </em><em>optional</em>) – Explicit feature map image to be inverted. If not specified (<code class="docutils literal notranslate"><span class="pre">None</span></code>), the
-explicit feature map on the sample is used.</li>
-<li><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Pre-image method to be used. Defaults to <code class="docutils literal notranslate"><span class="pre">'explicit'</span></code>.</li>
-<li><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional parameters of the pre-image method used. Please refer to its documentation for
-further details.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phi_image</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><em>torch.Tensor</em></a><em> [</em><em>num_points</em><em>, </em><em>dim_feature</em><em>]</em><em>, </em><em>optional</em>) – Explicit feature map image to be inverted. If not specified (<code class="docutils literal notranslate"><span class="pre">None</span></code>), the explicit feature map on the sample is used.</p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Pre-image method to be used. Defaults to <code class="docutils literal notranslate"><span class="pre">'explicit'</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional parameters of the pre-image method used. Please refer to its documentation for
+further details.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Pre-image</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)">torch.Tensor</a> [num_points, dim_input]</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pre-image</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)">torch.Tensor</a> [num_points, dim_input]</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.forward">
-<code class="sig-name descname"><span class="pre">forward</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span></em>, <em><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.forward" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.forward" title="Link to this definition"></a></dt>
 <dd><p>Passes datapoints through the kernel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<em>Tensor</em><em>(</em><em>,</em><em>dim_input</em><em>)</em>) – Datapoints to be passed through the kernel.</li>
-<li><strong>representation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Chosen representation. If <cite>dual</cite>, an out-of-sample kernel matrix is returned. If
-<cite>primal</cite> is specified, it returns the explicit feature map., defaults to <cite>dual</cite></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>,</em><em>dim_input</em><em>)</em>) – Datapoints to be passed through the kernel.</p></li>
+<li><p><strong>representation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Chosen representation. If <cite>dual</cite>, an out-of-sample kernel matrix is returned. If
+<cite>primal</cite> is specified, it returns the explicit feature map., defaults to <cite>dual</cite></p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Out-of-sample kernel matrix or explicit feature map depending on <cite>representation</cite>.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">RepresentationError</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Out-of-sample kernel matrix or explicit feature map depending on <cite>representation</cite>.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>RepresentationError</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.hparams_fixed">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">hparams_fixed</span></code><a class="headerlink" href="#kerch.kernel.Polynomial.hparams_fixed" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams_fixed</span></span><a class="headerlink" href="#kerch.kernel.Polynomial.hparams_fixed" title="Link to this definition"></a></dt>
 <dd><p>Dictionnary containing the hyper-parameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.hparams_variable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">hparams_variable</span></code><a class="headerlink" href="#kerch.kernel.Polynomial.hparams_variable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams_variable</span></span><a class="headerlink" href="#kerch.kernel.Polynomial.hparams_variable" title="Link to this definition"></a></dt>
 <dd><p>Dictionnary containing the parameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">idx</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.idx" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.idx" title="Link to this definition"></a></dt>
 <dd><p>Indices used when performing various operations. This is only relevant in the case of stochastic training.</p>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.implicit_preimage">
-<code class="sig-name descname"><span class="pre">implicit_preimage</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">k_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'knn'</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.implicit_preimage" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">implicit_preimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'knn'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.implicit_preimage" title="Link to this definition"></a></dt>
 <dd><p>Computes a pre-image of coefficients in the RKHS of the kernel, given by <code class="docutils literal notranslate"><span class="pre">k_image</span></code>.
 Different methods are available:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">'knn'</span></code>: Nearest neighbors. We refer to <a class="reference internal" href="../methods/knn.html#kerch.method.knn" title="kerch.method.knn"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.knn()</span></code></a> for more details.</li>
-<li><code class="docutils literal notranslate"><span class="pre">'smoother'</span></code>: Kernel smoothing. We refer to <a class="reference internal" href="../methods/smoother.html#kerch.method.smoother" title="kerch.method.smoother"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.smoother()</span></code></a> for more details</li>
-<li><code class="docutils literal notranslate"><span class="pre">'iterative'</span></code>: Iterative optimization. We refer to <a class="reference internal" href="../methods/iterative.html#kerch.method.iterative_preimage_k" title="kerch.method.iterative_preimage_k"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.iterative_preimage_k()</span></code></a> for more details</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'knn'</span></code>: Nearest neighbors. We refer to <a class="reference internal" href="../methods/knn.html#kerch.method.knn" title="kerch.method.knn"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.knn()</span></code></a> for more details.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'smoother'</span></code>: Kernel smoothing. We refer to <a class="reference internal" href="../methods/smoother.html#kerch.method.smoother" title="kerch.method.smoother"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.smoother()</span></code></a> for more details</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'iterative'</span></code>: Iterative optimization. We refer to <a class="reference internal" href="../methods/iterative.html#kerch.method.iterative_preimage_k" title="kerch.method.iterative_preimage_k"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.iterative_preimage_k()</span></code></a> for more details</p></li>
 </ul>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>k_image</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><em>torch.Tensor</em></a><em> [</em><em>num_points</em><em>, </em><em>num_idx</em><em>]</em><em>, </em><em>optional</em>) – RKHS coefficients to be inverted. If not specified (<code class="docutils literal notranslate"><span class="pre">None</span></code>), the kernel matrix on the sample is used.</li>
-<li><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Pre-image method to be used. Defaults to <code class="docutils literal notranslate"><span class="pre">'knn'</span></code>.</li>
-<li><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional parameters of the pre-image method used. Please refer to its documentation for
-further details.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k_image</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><em>torch.Tensor</em></a><em> [</em><em>num_points</em><em>, </em><em>num_idx</em><em>]</em><em>, </em><em>optional</em>) – RKHS coefficients to be inverted. If not specified (<code class="docutils literal notranslate"><span class="pre">None</span></code>), the kernel matrix on the sample is used.</p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Pre-image method to be used. Defaults to <code class="docutils literal notranslate"><span class="pre">'knn'</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional parameters of the pre-image method used. Please refer to its documentation for
+further details.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Pre-image</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)">torch.Tensor</a> [num_points, dim_input]</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pre-image</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)">torch.Tensor</a> [num_points, dim_input]</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.init_sample">
-<code class="sig-name descname"><span class="pre">init_sample</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.init_sample" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.init_sample" title="Link to this definition"></a></dt>
 <dd><p>Initializes the sample set (and the stochastic indices).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sample</strong> (<em>Tensor</em><em>, </em><em>optional</em>) – Sample points used for the various computations. When an out-of-sample computation is asked, it
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample</strong> (<em>Tensor</em><em>, </em><em>optional</em>) – Sample points used for the various computations. When an out-of-sample computation is asked, it
 will be given relative to these samples. In case of overwriting a current sample, <cite>num_sample</cite> and
 <cite>dim_input</cite> are also overwritten. If <cite>None</cite> is specified, the sample data will be initialized according
 to <cite>num_sample</cite> and <cite>dim_input</cite> specified during the construction. If a previous sample set has been used,
 it will keep the same dimension by consequence. A last case occurs when <cite>sample</cite> is of the class
 <cite>torch.nn.Parameter</cite>: the sample will then use those values, and they can thus be shared with the level
-calling this method., defaults to <cite>None</cite></li>
-<li><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Initializes the indices of the samples to be updated. All indices are considered if both
-<cite>idx_sample</cite> and <cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite></li>
-<li><strong>prop_sample</strong> – Instead of giving indices, specifying a proportion of the original sample set is also
+calling this method., defaults to <cite>None</cite></p></li>
+<li><p><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Initializes the indices of the samples to be updated. All indices are considered if both
+<cite>idx_sample</cite> and <cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite></p></li>
+<li><p><strong>prop_sample</strong> – Instead of giving indices, specifying a proportion of the original sample set is also
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
 such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_sample</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>. All indices are considered if both <cite>idx_sample</cite> and
-<cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</li>
+<cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.k">
-<code class="sig-name descname"><span class="pre">k</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">explicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="reference internal" href="../_modules/kerch/kernel/generic/polynomial.html#Polynomial.k"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.Polynomial.k" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="reference internal" href="../_modules/kerch/kernel/generic/polynomial.html#Polynomial.k"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.Polynomial.k" title="Link to this definition"></a></dt>
 <dd><div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">For the specific case of the polynomial kernel, the optimal value for <code class="docutils literal notranslate"><span class="pre">explicit</span></code> is automatically determined
+<p class="admonition-title">Note</p>
+<p>For the specific case of the polynomial kernel, the optimal value for <code class="docutils literal notranslate"><span class="pre">explicit</span></code> is automatically determined
 based on the size of the inputs if <code class="docutils literal notranslate"><span class="pre">explicit=None</span></code>. This does not take into account possible transforms.</p>
 </div>
 <p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
@@ -557,211 +493,175 @@ based on the size of the inputs if <code class="docutils literal notranslate"><s
 <p>with <span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^\texttt{num_x}\)</span> the out-of-sample points (<cite>x</cite>) and <span class="math notranslate nohighlight">\(\{y_i\}_{j=1}^\texttt{num_y}\)</span> the sample points
 (<cite>y</cite>).</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">In the case of centered kernels on an out-of-sample, this computation is more expensive as it requires to center according to
+<p class="admonition-title">Note</p>
+<p>In the case of centered kernels on an out-of-sample, this computation is more expensive as it requires to center according to
 the sample data, which implies computing a statistic on the out-of-sample kernel matrix and thus
 also computing it.</p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<em>Tensor</em><em>[</em><em>num_x</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></li>
-<li><strong>y</strong> (<em>Tensor</em><em>[</em><em>num_y</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (second dimension). If <cite>None</cite>, the default sample will be used. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>Tensor</em><em>[</em><em>num_x</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p><strong>y</strong> (<em>Tensor</em><em>[</em><em>num_y</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (second dimension). If <cite>None</cite>, the default sample will be used. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Kernel matrix</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">Tensor[num_x, num_y]</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">ExplicitError</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Kernel matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor[num_x, num_y]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p>ExplicitError</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.kernel_transform">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">kernel_transform</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../features/transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree.TransformTree"><span class="pre">kerch.transform.TransformTree.TransformTree</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.kernel_transform" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kernel_transform</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../features/transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree.TransformTree"><span class="pre">TransformTree</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.kernel_transform" title="Link to this definition"></a></dt>
 <dd><p>Default transform performed on the kernel</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.normalized">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">normalized</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.normalized" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.normalized" title="Link to this definition"></a></dt>
 <dd><p>Returns if the kernel is normalized in the feature maps.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">num_idx</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.num_idx" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.num_idx" title="Link to this definition"></a></dt>
 <dd><p>Number of selected indices when performing various operations. This is only relevant in the case of stochastic
 training.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">num_sample</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.num_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.num_sample" title="Link to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.phi">
-<code class="sig-name descname"><span class="pre">phi</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.phi" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.phi" title="Link to this definition"></a></dt>
 <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(x)\)</span> of the specified points.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> (<em>Tensor</em><em>[</em><em>num_x</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – The datapoints serving as input of the explicit feature map. If <cite>None</cite>, the sample will be used.
-Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Explicit feature map <span class="math notranslate nohighlight">\(\phi(x)\)</span> of the specified points.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor[num_x, dim_feature]</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">ExplicitError</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>[</em><em>num_x</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – The datapoints serving as input of the explicit feature map. If <cite>None</cite>, the sample will be used.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Explicit feature map <span class="math notranslate nohighlight">\(\phi(x)\)</span> of the specified points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor[num_x, dim_feature]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p>ExplicitError</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.print_cache">
-<code class="sig-name descname"><span class="pre">print_cache</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.print_cache" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">print_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.print_cache" title="Link to this definition"></a></dt>
 <dd><p>Prints the cache content. We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for further information.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.reset">
-<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em><span class="n"><span class="pre">reset_persisting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_persisting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.reset" title="Link to this definition"></a></dt>
 <dd><p>Resets the cache to be empty. We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for more information.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, resets the cache of this module and also of its potential children. otherwise,
-it only resets the cache for this module. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
-<li><strong>reset_persisting</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Persisting elements are meant to resist to a cache reset (see
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, resets the cache of this module and also of its potential children. otherwise,
+it only resets the cache for this module. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>reset_persisting</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Persisting elements are meant to resist to a cache reset (see
 <a class="reference internal" href="../features/cache.html#kerch.feature.Cache._save" title="kerch.feature.Cache._save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_save()</span></code></a>). The option allows to also reset them if <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to
-<code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">sample</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.parameter.Parameter.html#torch.nn.parameter.Parameter" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.nn.parameter.Parameter</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.parameter.Parameter.html#torch.nn.parameter.Parameter" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Parameter</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.sample" title="Link to this definition"></a></dt>
 <dd><p>Full original raw sample without any transform or potential stochastic selection.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.sample_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">sample_trainable</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.sample_trainable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.sample_trainable" title="Link to this definition"></a></dt>
 <dd><p>Boolean if the sample data can be trained.</p>
 </dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.sample_transform">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">sample_transform</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../features/transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree.TransformTree"><span class="pre">kerch.transform.TransformTree.TransformTree</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.sample_transform" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_transform</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../features/transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree.TransformTree"><span class="pre">TransformTree</span></a></em><a class="headerlink" href="#kerch.kernel.Polynomial.sample_transform" title="Link to this definition"></a></dt>
 <dd><p>Default transform used by the sample.</p>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.stochastic">
-<code class="sig-name descname"><span class="pre">stochastic</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.stochastic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.stochastic" title="Link to this definition"></a></dt>
 <dd><p>Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
 case of stochastic training.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the sample subset relative to the original sample set., defaults to <cite>None</cite></li>
-<li><strong>prop</strong> (<em>double</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the sample subset relative to the original sample set., defaults to <cite>None</cite></p></li>
+<li><p><strong>prop</strong> (<em>double</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
-such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>., defaults to <cite>None</cite>.</li>
+such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>., defaults to <cite>None</cite>.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>If <cite>None</cite> is specified for both <cite>idx_stochastic</cite> and <cite>prop_stochastic</cite>, all samples are used and the subset equals the
 original sample set. This is also the default behavior if this function is never called, nor the parameters
 specified during initialization.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Both <cite>idx_stochastic</cite> and <cite>prop_stochastic</cite> cannot be filled together as conflict would arise.</p>
+<p class="admonition-title">Note</p>
+<p>Both <cite>idx_stochastic</cite> and <cite>prop_stochastic</cite> cannot be filled together as conflict would arise.</p>
 </div>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.train">
-<code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.train" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.train" title="Link to this definition"></a></dt>
 <dd><p>Activates the training mode, which disables the gradients computation and disables stochasticity. For the
 gradients and other things, we refer to the <cite>torch.nn.Module</cite> documentation. For the stochastic part, when put
 in evaluation mode (<cite>False</cite>), all the sample points are used for the computations, regardless of
 the previously specified indices.</p>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.transform_input">
-<code class="sig-name descname"><span class="pre">transform_input</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.transform_input" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.transform_input" title="Link to this definition"></a></dt>
 <dd><p>Apply to value the same transform as on the sample.</p>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.transform_sample_revert">
-<code class="sig-name descname"><span class="pre">transform_sample_revert</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.transform_sample_revert" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_sample_revert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Polynomial.transform_sample_revert" title="Link to this definition"></a></dt>
 <dd><p>Get back the original value from a projected value, by using the same transform as the sample,
 but in reverse. This is not always feasible, depending on the transform used (normalizations are
 typically not invertible as they are transform which are not bijective).</p>
 </dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Polynomial.update_sample">
-<code class="sig-name descname"><span class="pre">update_sample</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">sample_values</span></span></em>, <em><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.update_sample" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Polynomial.update_sample" title="Link to this definition"></a></dt>
 <dd><p>Updates the sample set. In contradiction to <cite>init_samples</cite>, this only updates the values of the sample and sets
 the gradients of the updated values to zero if relevant.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sample_values</strong> (<em>Tensor</em>) – Values given to the updated samples.</li>
-<li><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the samples to be updated. All indices are considered if <cite>None</cite>., defaults to
-<cite>None</cite></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_values</strong> (<em>Tensor</em>) – Values given to the updated samples.</p></li>
+<li><p><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the samples to be updated. All indices are considered if <cite>None</cite>., defaults to
+<cite>None</cite></p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
-
 </dd></dl>
-
-</div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
-<div class="section" id="sine">
-<h3>Sine<a class="headerlink" href="#sine" title="Permalink to this headline"></a></h3>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<section id="sine">
+<h3>Sine<a class="headerlink" href="#sine" title="Link to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -770,71 +670,75 @@ the gradients of the updated values to zero if relevant.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-<span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha = </span><span class="si">{</span><span class="n">k</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Alpha = </span><span class="si">{</span><span class="n">k</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/2da26c042b7a6e64dd9623bcb495f3e7/polynomial-1.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>)</p>
-<div class="figure align-default" id="id3">
-<img alt="../_images/polynomial-1_00.png" class="plot-directive" src="../_images/polynomial-1_00.png" />
-<p class="caption"><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/11b52b83bba5817fb305299559dc2dac/polynomial-1_00.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/cfc389e0656c37c884a7d1a6d35ed661/polynomial-1_00.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/ca3e8cd2134f5957f14c07d1be50401c/polynomial-1_00.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
-</div>
-<div class="figure align-default" id="id4">
-<img alt="../_images/polynomial-1_01.png" class="plot-directive" src="../_images/polynomial-1_01.png" />
-<p class="caption"><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/e1a22805cb3a3010428e54507e8462d4/polynomial-1_01.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/d60fe87f7d116aab4ec242d1339939f5/polynomial-1_01.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/b2866100b6c24b6960b54dd39194d671/polynomial-1_01.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
-</div>
-</div>
-<div class="section" id="factory">
-<h3>Factory<a class="headerlink" href="#factory" title="Permalink to this headline"></a></h3>
+<p>(<a class="reference external" href="../kernel/polynomial-1.py" rel="noopener noreferrer" target="_blank">Source code</a>)</p>
+<figure class="align-default" id="id1">
+<img alt="../_images/polynomial-1_00.png" class="plot-directive" src="../_images/polynomial-1_00.png"/>
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/polynomial-1_00.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/polynomial-1_00.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/polynomial-1_00.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id2">
+<img alt="../_images/polynomial-1_01.png" class="plot-directive" src="../_images/polynomial-1_01.png"/>
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/polynomial-1_01.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/polynomial-1_01.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/polynomial-1_01.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="factory">
+<h3>Factory<a class="headerlink" href="#factory" title="Link to this heading"></a></h3>
 <p>The following lines are equivalent:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">kernel_type</span><span class="o">=</span><span class="s1">&#39;polynomial&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">kernel_type</span><span class="o">=</span><span class="s1">'polynomial'</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="influence-of-the-parameters">
-<h3>Influence of the parameters<a class="headerlink" href="#influence-of-the-parameters" title="Permalink to this headline"></a></h3>
+</section>
+<section id="influence-of-the-parameters">
+<h3>Influence of the parameters<a class="headerlink" href="#influence-of-the-parameters" title="Link to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
 
-<span class="n">k1</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">k2</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">k3</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">k4</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k1</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k2</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k3</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k4</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k1</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha = </span><span class="si">{</span><span class="n">k1</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k1</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Alpha = </span><span class="si">{</span><span class="n">k1</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k1</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k2</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha = </span><span class="si">{</span><span class="n">k2</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k2</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Alpha = </span><span class="si">{</span><span class="n">k2</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k2</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k3</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha = </span><span class="si">{</span><span class="n">k3</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k3</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Alpha = </span><span class="si">{</span><span class="n">k3</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k3</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="n">im</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k4</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha = </span><span class="si">{</span><span class="n">k4</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k4</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Alpha = </span><span class="si">{</span><span class="n">k4</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k4</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">:</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
 
-<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">'horizontal'</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/c3123c8c18c2226a4751d0610723cb40/polynomial-2.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="../_downloads/0433158cb8f3c019a052de839696d6de/polynomial-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/ef0baa2793d5df4a90a84b7b4308ae99/polynomial-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/7bbd158b2dd620193591226fb651dddb/polynomial-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
-<div class="figure align-default">
-<img alt="../_images/polynomial-2.png" class="plot-directive" src="../_images/polynomial-2.png" />
-</div>
+<p>(<a class="reference external" href="../kernel/polynomial-2.py" rel="noopener noreferrer" target="_blank">Source code</a>, <a class="reference external" href="../kernel/polynomial-2.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/polynomial-2.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/polynomial-2.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../_images/polynomial-2.png" class="plot-directive" src="../_images/polynomial-2.png"/>
+</figure>
 <p>In the following example, the kernels are also to ease the readability of the effects.
 The diagonal always becomes the unity when normalizing, hence the more pronounced difference with the non-normalized example above.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
@@ -843,108 +747,104 @@ The diagonal always becomes the unity when normalizing, hence the more pronounce
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
 
-<span class="n">k1</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;normalize&#39;</span><span class="p">])</span>
-<span class="n">k2</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;normalize&#39;</span><span class="p">])</span>
-<span class="n">k3</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;normalize&#39;</span><span class="p">])</span>
-<span class="n">k4</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;normalize&#39;</span><span class="p">])</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k1</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">'normalize'</span><span class="p">])</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k2</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">'normalize'</span><span class="p">])</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k3</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">'normalize'</span><span class="p">])</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k4</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">'normalize'</span><span class="p">])</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k1</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha = </span><span class="si">{</span><span class="n">k1</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k1</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Alpha = </span><span class="si">{</span><span class="n">k1</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k1</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k2</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha = </span><span class="si">{</span><span class="n">k2</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k2</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Alpha = </span><span class="si">{</span><span class="n">k2</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k2</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k3</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha = </span><span class="si">{</span><span class="n">k3</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k3</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Alpha = </span><span class="si">{</span><span class="n">k3</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k3</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="n">im</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k4</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha = </span><span class="si">{</span><span class="n">k4</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k4</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Alpha = </span><span class="si">{</span><span class="n">k4</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, Beta = </span><span class="si">{</span><span class="n">k4</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">:</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
 
-<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">'horizontal'</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/f99b79d6ddd0687783e9c42272b09234/polynomial-3.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="../_downloads/a12798ce7471c5c37af0d55d46f2f153/polynomial-3.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/667ad59d2de0f12f5b3165be1b657426/polynomial-3.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/2d2beee9de27a17546a06f52518b1ec7/polynomial-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
-<div class="figure align-default">
-<img alt="../_images/polynomial-3.png" class="plot-directive" src="../_images/polynomial-3.png" />
-</div>
-</div>
-<div class="section" id="explicit-and-implicit">
-<h3>Explicit and Implicit<a class="headerlink" href="#explicit-and-implicit" title="Permalink to this headline"></a></h3>
+<p>(<a class="reference external" href="../kernel/polynomial-3.py" rel="noopener noreferrer" target="_blank">Source code</a>, <a class="reference external" href="../kernel/polynomial-3.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/polynomial-3.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/polynomial-3.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../_images/polynomial-3.png" class="plot-directive" src="../_images/polynomial-3.png"/>
+</figure>
+</section>
+<section id="explicit-and-implicit">
+<h3>Explicit and Implicit<a class="headerlink" href="#explicit-and-implicit" title="Link to this heading"></a></h3>
 <p>The polynomial kernel can have its kernel matrix computed through the explicit feature map as <span class="math notranslate nohighlight">\(k(x,y) = \phi(x)^\top\phi(y)\)</span>
 and implicitly using <span class="math notranslate nohighlight">\(k(x,y) = \left(x^\top y + \beta\right)^\alpha\)</span>. The following confirms that both are equivalent.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
-<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/torch.html#module-torch" title="torch"><span class="nn">torch</span></a>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="n">num</span><span class="p">,</span> <span class="n">dim_input</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span><span class="mi">3</span>
 
-<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">dim_input</span><span class="p">)</span>
-<span class="n">oos</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">dim_input</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">dim_input</span><span class="p">)</span>
+<span class="n">oos</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">dim_input</span><span class="p">)</span>
 
-<span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;normalize&#39;</span><span class="p">])</span>
+<a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">k</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/polynomial.html#kerch.kernel.Polynomial" title="kerch.kernel.generic.polynomial.Polynomial"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Polynomial</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">'center'</span><span class="p">,</span> <span class="s1">'normalize'</span><span class="p">])</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">explicit</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Explicit (sample)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Explicit (sample)"</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">explicit</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Implicit (sample)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Implicit (sample)"</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">oos</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">oos</span><span class="p">,</span> <span class="n">explicit</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Implicit (out-of-sample)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Implicit (out-of-sample)"</span><span class="p">)</span>
 
 <span class="n">im</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">oos</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">oos</span><span class="p">,</span> <span class="n">explicit</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Explicit (out-of-sample)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Explicit (out-of-sample)"</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">:</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
 
-<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">'horizontal'</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/16ed7ae49e6f15510059bf4e8adc88cd/polynomial-4.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="../_downloads/96f0b96a56a9bb4511530f83f32631fb/polynomial-4.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/230e57ac338d4f71ee96128e53d95608/polynomial-4.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/cd674c4e6ccf26fd3903f2ade4ad17d1/polynomial-4.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
-<div class="figure align-default">
-<img alt="../_images/polynomial-4.png" class="plot-directive" src="../_images/polynomial-4.png" />
-</div>
-</div>
-</div>
-<div class="section" id="inheritance-diagram">
-<h2>Inheritance Diagram<a class="headerlink" href="#inheritance-diagram" title="Permalink to this headline"></a></h2>
-<div class="graphviz"><img src="../_images/inheritance-9cc1a03380b2bcb8d2cc6bd866db28fb0a4f2612.png" alt="Inheritance diagram of kerch.kernel.Polynomial" usemap="#inheritanced11920e204" class="inheritance graphviz" /></div>
+<p>(<a class="reference external" href="../kernel/polynomial-4.py" rel="noopener noreferrer" target="_blank">Source code</a>, <a class="reference external" href="../kernel/polynomial-4.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/polynomial-4.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/polynomial-4.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../_images/polynomial-4.png" class="plot-directive" src="../_images/polynomial-4.png"/>
+</figure>
+</section>
+</section>
+<section id="inheritance-diagram">
+<h2>Inheritance Diagram<a class="headerlink" href="#inheritance-diagram" title="Link to this heading"></a></h2>
+<div class="graphviz"><img alt="Inheritance diagram of kerch.kernel.Polynomial" class="inheritance graphviz" src="../_images/inheritance-9cc1a03380b2bcb8d2cc6bd866db28fb0a4f2612.png" usemap="#inheritanced11920e204"/></div>
 <map id="inheritanced11920e204" name="inheritanced11920e204">
-<area shape="rect" id="node1" href="../features/cache.html#kerch.feature.Cache" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="118,157,269,184"/>
-<area shape="rect" id="node6" href="../features/stochastic.html#kerch.feature.Stochastic" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="105,232,283,260"/>
-<area shape="rect" id="node2" href="../features/module.html#kerch.feature.Module" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="114,81,273,109"/>
-<area shape="rect" id="node3" href="../features/logger.html#kerch.feature.Logger" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="5,5,161,33"/>
-<area shape="rect" id="node5" href="../features/sample.html#kerch.feature.Sample" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="114,308,274,336"/>
-<area shape="rect" id="node10" href="kernel.html#kerch.kernel._BaseKernel" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="102,384,286,411"/>
-<area shape="rect" id="node7" href="explicit.html#kerch.kernel.Explicit" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="30,535,182,563"/>
-<area shape="rect" id="node8" href="kernel.html#kerch.kernel.Kernel" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="121,459,266,487"/>
-<area shape="rect" id="node9" href="implicit.html#kerch.kernel.Implicit" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="206,535,360,563"/>
-</map></div>
+<area alt="" coords="118,152,270,177" href="../features/cache.html#kerch.feature.Cache" id="node1" shape="rect" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache,"/>
+<area alt="" coords="105,225,283,251" href="../features/stochastic.html#kerch.feature.Stochastic" id="node6" shape="rect" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache,"/>
+<area alt="" coords="114,79,274,104" href="../features/module.html#kerch.feature.Module" id="node2" shape="rect" target="_top" title=":param logging_level: Logging level for this specific instance."/>
+<area alt="" coords="5,5,161,31" href="../features/logger.html#kerch.feature.Logger" id="node3" shape="rect" target="_top" title=":param logging_level: Logging level for this specific instance."/>
+<area alt="" coords="113,299,275,324" href="../features/sample.html#kerch.feature.Sample" id="node5" shape="rect" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will"/>
+<area alt="" coords="101,372,287,397" href="kernel.html#kerch.kernel._BaseKernel" id="node10" shape="rect" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will"/>
+<area alt="" coords="28,519,181,544" href="explicit.html#kerch.kernel.Explicit" id="node7" shape="rect" target="_top" title=":param kernel_transform: A list composed of the elements `'normalize'` or `'center'`. For example a centered"/>
+<area alt="" coords="121,445,267,471" href="kernel.html#kerch.kernel.Kernel" id="node8" shape="rect" target="_top" title=":param kernel_transform: A list composed of the elements `'normalize'` or `'center'`. For example a centered"/>
+<area alt="" coords="206,519,361,544" href="implicit.html#kerch.kernel.Implicit" id="node9" shape="rect" target="_top" title=":param kernel_transform: A list composed of the elements `'normalize'` or `'center'`. For example a centered"/>
+</map></section>
+</section>
 </div>
-
-
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="laplacian.html" class="btn btn-neutral float-left" title="Laplacian Kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cosine.html" class="btn btn-neutral float-right" title="Cosine Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright KU Leuven, January 2024.</p>
-  </div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="laplacian.html" rel="prev" title="Laplacian Kernel"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="cosine.html" rel="next" title="Cosine Kernel">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright KU Leuven, January 2024.</p>
+</div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
@@ -952,15 +852,14 @@ and implicitly using <span class="math notranslate nohighlight">\(k(x,y) = \left
    
 
 </footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
+</div>
+</div>
+</section>
+</div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
-
+  </script>
 </body>
 </html>

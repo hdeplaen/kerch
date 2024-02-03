@@ -1,7 +1,7 @@
 import torch
 from ..kernel._base_kernel import _BaseKernel as K
 from ..feature.cache import Cache
-from .smoother import smoother
+from ._smoother import smoother
 from ..utils import castf
 
 
@@ -69,6 +69,7 @@ def iterative_preimage_k(k_image: torch.Tensor, kernel: K, num_iter: int = 100, 
     :return: Pre-image
     :rtype: torch.Tensor [num_points, dim_input]
     """
+    k_image = castf(k_image)
 
     # CHECK IF THE CACHE LEVEL HAS TO BE CHANGED
     cache_level = Cache._cache_level_switcher[kernel.cache_level]
@@ -129,6 +130,7 @@ def iterative_preimage_phi(phi_image: torch.Tensor, kernel: K, num_iter: int = 1
     :return: Pre-image
     :rtype: torch.Tensor [num_points, dim_feature]
     """
+    phi_image = castf(phi_image)
 
     # CHECK IF THE CACHE LEVEL HAS TO BE CHANGED
     cache_level = Cache._cache_level_switcher[kernel.cache_level]

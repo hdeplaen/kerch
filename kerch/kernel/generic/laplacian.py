@@ -8,13 +8,13 @@ File containing the RBF kernel class.
 @date: March 2021
 """
 
-import torch
+from ...feature.logger import _GLOBAL_LOGGER
+from .exponential import Exponential
+from ...utils import extend_docstring
+from ..distance.euclidean import Euclidean
 
-from ... import utils
-from ..exponential import Exponential
 
-
-@utils.extend_docstring(Exponential)
+@extend_docstring(Euclidean)
 class Laplacian(Exponential):
     r"""
     Laplacian kernel.
@@ -24,9 +24,26 @@ class Laplacian(Exponential):
 
 
     .. note::
-        The difference with the RBF kernel is in the squaring or not of the distance inside the exponential.
+        The difference with the RBF kernel is in the squaring or not of the euclidean norm inside the exponential.
 
     """
+    def __new__(cls, *args, **kwargs):
+        distance = kwargs.pop('distance', None)
+        squared = kwargs.pop('squared', None)
+        if distance is not None and distance != 'euclidean':
+            _GLOBAL_LOGGER._logger.warning('A specific distance has been provided for the RBF kernel. The RBF kernel '
+                                           'is defined as a particular exponential kernel with euclidean distance '
+                                           'only. This value will be neglected. Please use the more generic '
+                                           'Exponential kernel if you wish to use another distance')
+        if squared is not None and squared != False:
+            _GLOBAL_LOGGER._logger.warning('A non-squared exponential kernel has been requested. The RBF kernel '
+                                           'is defined as a particular exponential kernel with squared norm and '
+                                           'euclidean distance only. This value will be neglected. Please use the '
+                                           'Laplacian kernel if you wish to use an euclidean distance with a '
+                                           'non-squared norm or the more generic Exponential kernel if you'
+                                           'wish to use another distance')
+        kwargs['squared'] = False
+        return Exponential.__new__(cls, *args, **kwargs)
 
     def __init__(self, *args, **kwargs):
         super(Laplacian, self).__init__(*args, **kwargs)
@@ -39,11 +56,3 @@ class Laplacian(Exponential):
     @property
     def hparams_fixed(self):
         return {"Kernel": "Laplacian", **super(Laplacian, self).hparams_fixed}
-
-    def _dist(self, x, y):
-        x = x.T[:, :, None]
-        y = y.T[:, None, :]
-
-        diff = x - y
-        D = torch.sum(diff * diff, dim=0, keepdim=False)
-        return torch.sqrt(D)

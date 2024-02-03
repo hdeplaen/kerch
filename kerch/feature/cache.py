@@ -3,10 +3,11 @@
 Abstract class allowing for torch.nn.Modules to also host a cache of torch objects
 which can also be ported like torch.nn.Parameters are, on GPU for example.
 """
+from __future__ import annotations
 
 import torch
-from typing import Union, List, Iterable, Any
-from abc import ABCMeta, abstractmethod
+from typing import Union, List, Iterable, Any, Type
+from abc import ABCMeta
 
 from .module import Module
 from ..utils import reverse_dict, extend_docstring, DEFAULT_CACHE_LEVEL
@@ -21,6 +22,8 @@ class Cache(Module,
         information.
     :type cache_level: str, optional
     """
+
+    _cache_elements = []
 
     _cache_level_switcher = {"none": 0,
                              "light": 1,
@@ -131,7 +134,7 @@ class Cache(Module,
         return val
 
     def _get(self, key, fun=None, level_key=None, default_level: str = 'normal', force: bool = False,
-             overwrite: bool = False, persisting=False) -> Any:
+             overwrite: bool = False, persisting=False, destroy=False) -> Any:
         r"""
         Retrieves an element from the cache. If the element is not present, it saved to the cache provided its level
         is lower or equal to the default level. This can be overwritten by the overwrite argument.
@@ -143,6 +146,8 @@ class Cache(Module,
         :param force: if the value is ``True``, the element will nevertheless be saved whatever level is specified. Defaults to ``False``.
         :param persisting: These values are meant to persist after a cache reset when calling
             :py:meth:`~kerch.feature.Cache.reset` with ``reset_persisting=False``. Defaults to ``False``.
+        :param destroy: This destroys the value from the cache after being read/computed. This is meant for short-term
+            memory. Defaults to ``False``.
 
         :type key: str
         :type level_key: str, optional
@@ -151,6 +156,7 @@ class Cache(Module,
         :type force: bool, optional
         :type overwrite: bool, optional
         :type persisting: bool, optional
+        :type destroy: bool, optional
 
         :return: The result of ``fun()``
         """
@@ -167,32 +173,40 @@ class Cache(Module,
             #         return self._cache[reverted_key][1].T
 
         # if it is not, we save it
-        return self._save(key=key, fun=fun, level_key=level_key, default_level=default_level,
-                          force=force, persisting=persisting)
+        val = self._save(key=key, fun=fun, level_key=level_key, default_level=default_level,
+                         force=force, persisting=persisting)
+        if destroy:
+            self._remove_from_cache(key)
+        return val
 
-    def _reset_cache(self, reset_persisting=True) -> None:
+    def _reset_cache(self, reset_persisting: bool = True, avoid_classes: list | None = None) -> None:
         r"""
         This just resets the cache and makes it empty.
 
         :param reset_persisting: Persisting elements are meant to resist to a cache reset
             (see :py:meth:`~kerch.feature.Cache._save`). The option allows to also reset them if ``True``. Defaults to ``True``.
         :type reset_persisting: bool, optional
+        :param avoid_classes: Class of which the elements must be avoided to be resetted. Default to ``[]``.
+        :type avoid_classes: list(type(:class:`~kerch.feature.Cache`)), optional
 
         .. note::
             This method is documented for completeness, but it should never be required to call it directly.
 
         """
+        elements_avoided = list()
+        if avoid_classes is not None:
+            for cl in avoid_classes:
+                elements_avoided.extend(cl._cache_elements)
 
-        if reset_persisting:
+        if reset_persisting and len(elements_avoided) == 0:
             self._logger.debug("The cache is fully resetted.")
-            # for val in self._cache.values(): del val
             self._cache = {}
         else:
-            self._logger.debug("The cache is resetted at the exception of the persisting elements.")
+            self._logger.debug("The cache is resetted at the exception of the persisting elements and avoided classes.")
             for key in list(self._cache.keys()):
-                if key in self._cache:
+                if key in self._cache and key not in elements_avoided:
                     val = self._cache[key]
-                    if not val[1]:
+                    if not val[1] or reset_persisting:
                         self._cache.pop(key)
 
     def _clean_cache(self, max_level: Union[str, int, None] = None):
@@ -219,8 +233,6 @@ class Cache(Module,
                     value = self._cache[key]
                     if value[0] > max_level:
                         self._cache.pop(key)
-
-
 
     def _remove_from_cache(self, key: Union[str, List[str]]) -> None:
         r"""

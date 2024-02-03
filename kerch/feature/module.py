@@ -18,6 +18,9 @@ class Module(Logger,
              torch.nn.Module,
              object,
              metaclass=ABCMeta):
+    def __new__(cls, *args, **kwargs):
+        return object.__new__(cls)
+
     @abstractmethod
     def __init__(self, *args, **kwargs):
         # for some obscure reason, calling the super init does not lead to the call of both classes.

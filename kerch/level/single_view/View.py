@@ -44,7 +44,7 @@ class View(Kernel, _View, Sample):
             kernel_class = class_factory(kernel_type)
         assert issubclass(kernel_class, Kernel), 'The provided kernel_class argument is not a valid kernel class.'
         new_cls = type(cls.__name__, (cls, kernel_class, ), dict(cls.__dict__))
-        return object.__new__(new_cls)
+        return kernel_class.__new__(new_cls, *args, **kwargs)
 
     @kwargs_decorator({
         # "kernel": None,

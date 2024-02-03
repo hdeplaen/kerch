@@ -73,7 +73,7 @@ def kernel_knn(domain: torch.Tensor, observations: torch.Tensor, num: int = 1, k
     :rtype: torch.Tensor [num_points, dim_observations]
     """
     domain = castf(domain)
-    observations = castf(domain)
+    observations = castf(observations)
 
     assert domain.shape[0] == observations.shape[
         0], f"Not the same number of domain {domain.shape[0]} and coefficients points {domain.shape[0]}."

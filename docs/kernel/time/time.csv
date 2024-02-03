@@ -1,0 +1,4 @@
+Class,Explicit Feature Map,Kernel,Parameters,Factory Type
+:py:class:`kerch.kernel.Indicator`,:octicon:`x;1em;sd-text-danger`  ,See documentation,"``lag``, ``gamma``",``’indicator’``
+:py:class:`kerch.kernel.RBF`,:octicon:`x;1em;sd-text-danger`  ,":math:`k(x,y)=\exp\left(-\frac{\left\lVert x-y\right\rVert^2_2}{2\sigma^2}\right)`",``sigma``,``’rbf’``
+:py:class:`kerch.kernel.Hat`,:octicon:`x;1em;sd-text-danger`  ,See documentation,``lag``,``’hat’``

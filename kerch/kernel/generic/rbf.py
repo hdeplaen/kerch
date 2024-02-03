@@ -7,14 +7,13 @@ File containing the RBF kernel class.
 @license: MIT
 @date: March 2021
 """
+from ...utils import extend_docstring
+from ...feature.logger import _GLOBAL_LOGGER
+from .exponential import Exponential
+from ..distance.euclidean import Euclidean
 
-import torch
 
-from ... import utils
-from ..exponential import Exponential
-
-
-@utils.extend_docstring(Exponential)
+@extend_docstring(Euclidean)
 class RBF(Exponential):
     r"""
     RBF kernel (radial basis function) of bandwidth :math:`\sigma>0`.
@@ -33,6 +32,22 @@ class RBF(Exponential):
         Other considerations may come into play. If a centered or normalized kernel on an out-of-sample is required, this may require extra
         computations when directly using the kernel matrix as doing it on the explicit feature is more straightforward.
     """
+    def __new__(cls, *args, **kwargs):
+        distance = kwargs.pop('distance', None)
+        squared = kwargs.pop('squared', None)
+        if distance is not None and distance != 'euclidean':
+            _GLOBAL_LOGGER._logger.warning('A specific distance has been provided for the RBF kernel. The RBF kernel '
+                                           'is defined as a particular exponential kernel with euclidean distance '
+                                           'only. This value will be neglected. Please use the more generic '
+                                           'Exponential kernel if you wish to use another distance')
+        if squared is not None and squared != True:
+            _GLOBAL_LOGGER._logger.warning('A non-squared exponential kernel has been requested. The RBF kernel '
+                                           'is defined as a particular exponential kernel with squared norm and '
+                                           'euclidean distance only. This value will be neglected. Please use the '
+                                           'Laplacian kernel if you wish to use an euclidean distance with a '
+                                           'non-squared norm or the more generic Exponential kernel if you'
+                                           'wish to use another distance')
+        return Exponential.__new__(cls, *args, **kwargs)
 
     def __init__(self, *args, **kwargs):
         super(RBF, self).__init__(*args, **kwargs)
@@ -42,16 +57,6 @@ class RBF(Exponential):
             return f"RBF kernel (sigma: {str(self.sigma)})"
         return f"RBF kernel (sigma undefined)"
 
-
     @property
     def hparams_fixed(self):
         return {"Kernel": "RBF", **super(RBF, self).hparams_fixed}
-
-    def _dist(self, x, y):
-        x = x.T[:, :, None]
-        y = y.T[:, None, :]
-
-        diff = x - y
-        return torch.sum(diff * diff, dim=0, keepdim=False)
-
-

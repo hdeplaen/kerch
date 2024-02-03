@@ -1,5 +1,0 @@
-Class,Explicit Feature Map,Kernel,Parameters,Factory Type
-:py:class:`~kerch.kernel.Exponential`,:octicon:`x;1em;sd-text-danger`  ,:py:meth:`~kerch.kernel.Kernel._dist`,``sigma``,N/A
-:py:class:`~kerch.kernel.Explicit`,:py:meth:`~kerch.kernel.Kernel._explicit`,":math:`k(x,y)=\phi(x)^\top\phi(y)`",None,N/A
-:py:class:`~kerch.kernel.Implicit`,:octicon:`x;1em;sd-text-danger`  ,:py:meth:`~kerch.kernel.Kernel._implicit`,None,N/A
-:py:class:`~kerch.kernel.Kernel`,:py:meth:`~kerch.kernel.Kernel._explicit`,:py:meth:`~kerch.kernel.Kernel._implicit`,None,N/A

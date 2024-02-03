@@ -7,7 +7,7 @@ File containing the abstract kernel classes with transform.
 @license: MIT
 @date: March 2021
 """
-
+from __future__ import annotations
 from abc import ABCMeta, abstractmethod
 from typing import List, Union
 
@@ -356,14 +356,12 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         Computes a pre-image of an explicit feature map of the kernel, given by ``phi_image``.
         Different methods are available:
 
-        *``'explicit'``: Uses an explicit implementation specific to the kernel (if available). This is always
-            preferable if available.
+        * ``'explicit'``: Uses an explicit implementation specific to the kernel (if available). This is always preferable if available.
         * ``'knn'``: Nearest neighbors. We refer to :py:func:`kerch.method.knn` for more details.
         * ``'smoother'``: Kernel smoothing. We refer to :py:func:`kerch.method.smoother` for more details
         * ``'iterative'``: Iterative optimization. We refer to :py:func:`kerch.method.iterative_preimage_phi` for more details
 
-        :param phi_image: Explicit feature map image to be inverted. If not specified (``None``), the
-            explicit feature map on the sample is used.
+        :param phi_image: Explicit feature map image to be inverted. If not specified (``None``), the explicit feature map on the sample is used.
         :type phi_image: torch.Tensor [num_points, dim_feature], optional
         :param method: Pre-image method to be used. Defaults to ``'explicit'``.
         :type method: str, optional
@@ -372,6 +370,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         :type \**kwargs: dict, optional
         :return: Pre-image
         :rtype: torch.Tensor [num_points, dim_input]
+
         """
         phi_image = utils.castf(phi_image)
         if phi_image is None:

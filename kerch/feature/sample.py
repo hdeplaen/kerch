@@ -50,6 +50,8 @@ class Sample(Stochastic,  # manager stochastic indices
     :type sample_transform: List[str]
     """
 
+    _cache_elements = ["sample_transform"]
+
     def __init__(self, *args, **kwargs):
         super(Sample, self).__init__(*args, **kwargs)
 
@@ -197,8 +199,7 @@ class Sample(Stochastic,  # manager stochastic indices
             self._sample = torch.nn.Parameter(sample.data,
                                               requires_grad=self._sample_trainable)
 
-        self.stochastic(idx=idx_sample, prop=prop_sample)
-        self._reset_cache(reset_persisting=False)
+        self.stochastic(idx=idx_sample, prop=prop_sample) # also resets
 
     @torch.no_grad()
     def update_sample(self, sample_values, idx_sample=None):

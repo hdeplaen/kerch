@@ -1,24 +1,28 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Laplacian Kernel &mdash; kerch 0.3 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sphinx-codeautolink.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css?v=7f9a90b1" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-codeautolink.css?v=125d5c1c" />
+      <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/design-tabs.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=b489f392"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/design-tabs.js?v=36754332"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -122,77 +126,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="laplacian-kernel">
-<h1>Laplacian Kernel<a class="headerlink" href="#laplacian-kernel" title="Permalink to this headline"></a></h1>
+  <section id="laplacian-kernel">
+<h1>Laplacian Kernel<a class="headerlink" href="#laplacian-kernel" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></code><code class="sig-name descname"><span class="pre">Laplacian</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/kernel/generic/laplacian.html#Laplacian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.Laplacian" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="exponential.html#kerch.kernel.Exponential" title="kerch.kernel.exponential.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.exponential.Exponential</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></span><span class="sig-name descname"><span class="pre">Laplacian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/kernel/generic/laplacian.html#Laplacian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.Laplacian" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="exponential.html#kerch.kernel.Exponential" title="kerch.kernel.generic.exponential.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exponential</span></code></a></p>
 <p>Laplacian kernel.</p>
 <div class="math notranslate nohighlight">
 \[k(x,y) = \exp\left( -\frac{\lVert x-y \rVert_2}{2\sigma^2} \right).\]</div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The difference with the RBF kernel is in the squaring or not of the distance inside the exponential.</p>
+<p class="admonition-title">Note</p>
+<p>The difference with the RBF kernel is in the squaring or not of the euclidean norm inside the exponential.</p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sigma</strong> (<em>double</em><em>, </em><em>optional</em>) – Bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span> of the kernel. If <cite>None</cite>, the value is filled by a heuristic on
-the sample data: half of the square root of the median of the pairwise distances. Computing the heuristic on
-the full sample data can be expensive and <cite>idx_sample</cite> or <cite>prop_sample</cite> could be specified to only compute
-it on a subset only., defaults to <cite>None</cite>.</li>
-<li><strong>sigma_trainable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – <cite>True</cite> if the gradient of the bandwidth is to be computed. If so, a graph is computed
-and the bandwidth can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></li>
-<li><strong>kernel_transform</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – A list composed of the elements <cite>‘normalize’</cite> or <cite>‘center’</cite>. For example a centered
-cosine kernel which is centered and normalized in order to get a covariance matrix for example can be obtained
-by invoking a linear kernel with <cite>default_transform = [‘normalize’, ‘center’, ‘normalize’]</cite> or just a cosine
-kernel with <cite>default_transform = [‘center’, ‘normalize’]</cite>. Redundancy is automatically handled., defaults
-to <cite>[]</cite>.</li>
-<li><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
-be given relative to these samples., defaults to <cite>None</cite></li>
-<li><strong>sample_trainable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
-computed and the sample can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></li>
-<li><strong>num_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Number of sample points. This parameter is neglected if <cite>sample</cite> is not <cite>None</cite> and overwritten by
-the number of points contained in sample., defaults to 1</li>
-<li><strong>dim_input</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Dimension of each sample point. This parameter is neglected if <cite>sample</cite> is not <cite>None</cite> and
-overwritten by the dimension of the sample points., defaults to 1</li>
-<li><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Initializes the indices of the samples to be updated. All indices are considered if both
-<cite>idx_stochastic</cite> and <cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite></li>
-<li><strong>prop_sample</strong> – Instead of giving indices, specifying a proportion of the original sample set is also
-possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
-such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>. All indices are considered if both <cite>idx_stochastic</cite> and
-<cite>prop_stochastic</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</li>
-<li><strong>sample_transform</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – TODO</li>
-<li><strong>cache_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Cache level for saving temporary execution results during the execution. The higher the cache,
-the more is saved. Defaults to <code class="docutils literal notranslate"><span class="pre">'normal'</span></code>. We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for further
-information.</li>
-<li><strong>logging_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Logging level for this specific instance.
-If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current default kerch global log level will be used.
-Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code> (default kerch logging level).
-We refer to the <a class="reference internal" href="../features/logger.html"><span class="doc">Logging in Kerch</span></a> documentation for further information.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.Corr">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">Corr</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.Corr" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Corr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.Corr" title="Link to this definition"></a></dt>
 <dd><p>Returns the correlation matrix of the sample. Same as calling self.corr().</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.Cov">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">Cov</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.Cov" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cov</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.Cov" title="Link to this definition"></a></dt>
 <dd><p>Returns the covariance matrix of the sample. Same as calling self.cov().</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">K</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.K" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.K" title="Link to this definition"></a></dt>
 <dd><p>Returns the kernel matrix on the sample data. Same result as calling <a class="reference internal" href="#kerch.kernel.Laplacian.k" title="kerch.kernel.Laplacian.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently
 called.</p>
@@ -202,7 +163,7 @@ called.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.Phi">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">Phi</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.Phi" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Phi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.Phi" title="Link to this definition"></a></dt>
 <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the sample datapoints. Same as calling
 <code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code>, but slightly faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently
@@ -211,405 +172,372 @@ called.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.c">
-<code class="sig-name descname"><span class="pre">c</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.c" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.c" title="Link to this definition"></a></dt>
 <dd><p>Out-of-sample explicit matrix.</p>
 <div class="math notranslate nohighlight">
 \[C = \frac{1}{\texttt{num_x}}\sum_{i}^{\texttt{num_x}} \phi(x_i)\phi(x_i)^\top.\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> (<em>Tensor</em><em>(</em><em>num_x</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Explicit matrix</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor[dim_feature, dim_feature]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>num_x</em><em>,</em><em>dim_input</em><em>)</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Explicit matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.cache_keys">
-<code class="sig-name descname"><span class="pre">cache_keys</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.cache_keys" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cache_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.cache_keys" title="Link to this definition"></a></dt>
 <dd><p>Returns an iterable containing the different cache keys.
 We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for more information.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.cache_level">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">cache_level</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.cache_level" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cache_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.cache_level" title="Link to this definition"></a></dt>
 <dd><p>Cache level for saving temporary execution results during the execution. The higher the cache,
 the more is saved. Defaults to <code class="docutils literal notranslate"><span class="pre">'normal'</span></code> unless set otherwise during instantiation. The different possible
 values are:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code>: the cache is non-existent and everything is computed on the go.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;light&quot;</span></code>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;normal&quot;</span></code>: same as light, but the statistics of the out-of-sample points are also saved.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;heavy&quot;</span></code>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</li>
-<li><code class="docutils literal notranslate"><span class="pre">&quot;total&quot;</span></code>: every step of any computation is saved.</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code>: the cache is non-existent and everything is computed on the go.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;light&quot;</span></code>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;normal&quot;</span></code>: same as light, but the statistics of the out-of-sample points are also saved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;heavy&quot;</span></code>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;total&quot;</span></code>: every step of any computation is saved.</p></li>
 </ul>
 <p>We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for further information.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.centered">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">centered</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.centered" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">centered</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.centered" title="Link to this definition"></a></dt>
 <dd><p>Returns if the kernel is centered in the feature maps.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.corr">
-<code class="sig-name descname"><span class="pre">corr</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.corr" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.corr" title="Link to this definition"></a></dt>
 <dd><p>Returns the correlation matrix fo the provided input.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Correlation matrix</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor[dim_feature, dim_feature]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used., defaults to <cite>None</cite></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Correlation matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.cov">
-<code class="sig-name descname"><span class="pre">cov</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.cov" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.cov" title="Link to this definition"></a></dt>
 <dd><p>Returns the covariance matrix fo the provided input.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.
-Defaults to <cite>None</cite>.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Covariance matrix</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Tensor[dim_feature, dim_feature]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Tensor</em><em>[</em><em>N</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used.
+Defaults to <cite>None</cite>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Covariance matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor[dim_feature, dim_feature]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.current_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">current_sample</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.current_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.current_sample" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.current_sample_projected">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">current_sample_projected</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.current_sample_projected" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_sample_projected</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.current_sample_projected" title="Link to this definition"></a></dt>
 <dd><p>Returns the sample that is currently used in the computations and for the normalizing and centering statistics
 if relevant.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.dim_feature">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">dim_feature</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">inf</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.dim_feature" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_feature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">inf</span></em><a class="headerlink" href="#kerch.kernel.Laplacian.dim_feature" title="Link to this definition"></a></dt>
 <dd><p>For implicit kernels, the feature dimension is infinite.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.dim_input">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">dim_input</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.dim_input" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_input</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.dim_input" title="Link to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.empty_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">empty_sample</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.empty_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">empty_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.empty_sample" title="Link to this definition"></a></dt>
 <dd><p>Boolean specifying if the sample is empty or not.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.explicit">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">explicit</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.explicit" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">explicit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.explicit" title="Link to this definition"></a></dt>
 <dd><p>True if the method has an explicit formulation, False otherwise.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.explicit_preimage">
-<code class="sig-name descname"><span class="pre">explicit_preimage</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">phi_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'explicit'</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.explicit_preimage" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">explicit_preimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'explicit'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.explicit_preimage" title="Link to this definition"></a></dt>
 <dd><div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Not available for kernels that have no explicit feature map representation.</p>
+<p class="admonition-title">Note</p>
+<p>Not available for kernels that have no explicit feature map representation.</p>
 </div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.forward">
-<code class="sig-name descname"><span class="pre">forward</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span></em>, <em><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.forward" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.forward" title="Link to this definition"></a></dt>
 <dd><p>Passes datapoints through the kernel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<em>Tensor</em><em>(</em><em>,</em><em>dim_input</em><em>)</em>) – Datapoints to be passed through the kernel.</li>
-<li><strong>representation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Chosen representation. If <cite>dual</cite>, an out-of-sample kernel matrix is returned. If
-<cite>primal</cite> is specified, it returns the explicit feature map., defaults to <cite>dual</cite></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>Tensor</em><em>(</em><em>,</em><em>dim_input</em><em>)</em>) – Datapoints to be passed through the kernel.</p></li>
+<li><p><strong>representation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Chosen representation. If <cite>dual</cite>, an out-of-sample kernel matrix is returned. If
+<cite>primal</cite> is specified, it returns the explicit feature map., defaults to <cite>dual</cite></p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Out-of-sample kernel matrix or explicit feature map depending on <cite>representation</cite>.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">RepresentationError</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Out-of-sample kernel matrix or explicit feature map depending on <cite>representation</cite>.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>RepresentationError</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.hparams_fixed">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">hparams_fixed</span></code><a class="headerlink" href="#kerch.kernel.Laplacian.hparams_fixed" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams_fixed</span></span><a class="headerlink" href="#kerch.kernel.Laplacian.hparams_fixed" title="Link to this definition"></a></dt>
 <dd><p>Dictionnary containing the hyper-parameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.hparams_variable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">hparams_variable</span></code><a class="headerlink" href="#kerch.kernel.Laplacian.hparams_variable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams_variable</span></span><a class="headerlink" href="#kerch.kernel.Laplacian.hparams_variable" title="Link to this definition"></a></dt>
 <dd><p>Dictionnary containing the parameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">idx</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.idx" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.idx" title="Link to this definition"></a></dt>
 <dd><p>Indices used when performing various operations. This is only relevant in the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.implicit_preimage">
-<code class="sig-name descname"><span class="pre">implicit_preimage</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">k_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'knn'</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.implicit_preimage" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">implicit_preimage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'knn'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.implicit_preimage" title="Link to this definition"></a></dt>
 <dd><p>Computes a pre-image of coefficients in the RKHS of the kernel, given by <code class="docutils literal notranslate"><span class="pre">k_image</span></code>.
 Different methods are available:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">'knn'</span></code>: Nearest neighbors. We refer to <a class="reference internal" href="../methods/knn.html#kerch.method.knn" title="kerch.method.knn"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.knn()</span></code></a> for more details.</li>
-<li><code class="docutils literal notranslate"><span class="pre">'smoother'</span></code>: Kernel smoothing. We refer to <a class="reference internal" href="../methods/smoother.html#kerch.method.smoother" title="kerch.method.smoother"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.smoother()</span></code></a> for more details</li>
-<li><code class="docutils literal notranslate"><span class="pre">'iterative'</span></code>: Iterative optimization. We refer to <a class="reference internal" href="../methods/iterative.html#kerch.method.iterative_preimage_k" title="kerch.method.iterative_preimage_k"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.iterative_preimage_k()</span></code></a> for more details</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'knn'</span></code>: Nearest neighbors. We refer to <a class="reference internal" href="../methods/knn.html#kerch.method.knn" title="kerch.method.knn"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.knn()</span></code></a> for more details.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'smoother'</span></code>: Kernel smoothing. We refer to <a class="reference internal" href="../methods/smoother.html#kerch.method.smoother" title="kerch.method.smoother"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.smoother()</span></code></a> for more details</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'iterative'</span></code>: Iterative optimization. We refer to <a class="reference internal" href="../methods/iterative.html#kerch.method.iterative_preimage_k" title="kerch.method.iterative_preimage_k"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.method.iterative_preimage_k()</span></code></a> for more details</p></li>
 </ul>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>k_image</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><em>torch.Tensor</em></a><em> [</em><em>num_points</em><em>, </em><em>num_idx</em><em>]</em><em>, </em><em>optional</em>) – RKHS coefficients to be inverted. If not specified (<code class="docutils literal notranslate"><span class="pre">None</span></code>), the kernel matrix on the sample is used.</li>
-<li><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Pre-image method to be used. Defaults to <code class="docutils literal notranslate"><span class="pre">'knn'</span></code>.</li>
-<li><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional parameters of the pre-image method used. Please refer to its documentation for
-further details.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k_image</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><em>torch.Tensor</em></a><em> [</em><em>num_points</em><em>, </em><em>num_idx</em><em>]</em><em>, </em><em>optional</em>) – RKHS coefficients to be inverted. If not specified (<code class="docutils literal notranslate"><span class="pre">None</span></code>), the kernel matrix on the sample is used.</p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Pre-image method to be used. Defaults to <code class="docutils literal notranslate"><span class="pre">'knn'</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – Additional parameters of the pre-image method used. Please refer to its documentation for
+further details.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Pre-image</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)">torch.Tensor</a> [num_points, dim_input]</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pre-image</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)">torch.Tensor</a> [num_points, dim_input]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.init_sample">
-<code class="sig-name descname"><span class="pre">init_sample</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.init_sample" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.init_sample" title="Link to this definition"></a></dt>
 <dd><p>Initializes the sample set (and the stochastic indices).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sample</strong> (<em>Tensor</em><em>, </em><em>optional</em>) – Sample points used for the various computations. When an out-of-sample computation is asked, it
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample</strong> (<em>Tensor</em><em>, </em><em>optional</em>) – Sample points used for the various computations. When an out-of-sample computation is asked, it
 will be given relative to these samples. In case of overwriting a current sample, <cite>num_sample</cite> and
 <cite>dim_input</cite> are also overwritten. If <cite>None</cite> is specified, the sample data will be initialized according
 to <cite>num_sample</cite> and <cite>dim_input</cite> specified during the construction. If a previous sample set has been used,
 it will keep the same dimension by consequence. A last case occurs when <cite>sample</cite> is of the class
 <cite>torch.nn.Parameter</cite>: the sample will then use those values, and they can thus be shared with the level
-calling this method., defaults to <cite>None</cite></li>
-<li><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Initializes the indices of the samples to be updated. All indices are considered if both
-<cite>idx_sample</cite> and <cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite></li>
-<li><strong>prop_sample</strong> – Instead of giving indices, specifying a proportion of the original sample set is also
+calling this method., defaults to <cite>None</cite></p></li>
+<li><p><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Initializes the indices of the samples to be updated. All indices are considered if both
+<cite>idx_sample</cite> and <cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite></p></li>
+<li><p><strong>prop_sample</strong> – Instead of giving indices, specifying a proportion of the original sample set is also
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
 such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_sample</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>. All indices are considered if both <cite>idx_sample</cite> and
-<cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</li>
+<cite>prop_sample</cite> are <cite>None</cite>., defaults to <cite>None</cite>.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.k">
-<code class="sig-name descname"><span class="pre">k</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">explicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.k" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.k" title="Link to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{\texttt{num_x}, \texttt{num_y}},\]</div>
 <p>with <span class="math notranslate nohighlight">\(\{x_i\}_{i=1}^\texttt{num_x}\)</span> the out-of-sample points (<cite>x</cite>) and <span class="math notranslate nohighlight">\(\{y_i\}_{j=1}^\texttt{num_y}\)</span> the sample points
 (<cite>y</cite>).</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">In the case of centered kernels on an out-of-sample, this computation is more expensive as it requires to center according to
+<p class="admonition-title">Note</p>
+<p>In the case of centered kernels on an out-of-sample, this computation is more expensive as it requires to center according to
 the sample data, which implies computing a statistic on the out-of-sample kernel matrix and thus
 also computing it.</p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<em>Tensor</em><em>[</em><em>num_x</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></li>
-<li><strong>y</strong> (<em>Tensor</em><em>[</em><em>num_y</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (second dimension). If <cite>None</cite>, the default sample will be used. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>Tensor</em><em>[</em><em>num_x</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (first dimension). If <cite>None</cite>, the default sample will be used. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p><strong>y</strong> (<em>Tensor</em><em>[</em><em>num_y</em><em>, </em><em>dim_input</em><em>]</em><em>, </em><em>optional</em>) – Out-of-sample points (second dimension). If <cite>None</cite>, the default sample will be used. Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Kernel matrix</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">Tensor[num_x, num_y]</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last">ExplicitError</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Kernel matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tensor[num_x, num_y]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p>ExplicitError</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.kernel_transform">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">kernel_transform</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../features/transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree.TransformTree"><span class="pre">kerch.transform.TransformTree.TransformTree</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.kernel_transform" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kernel_transform</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../features/transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree.TransformTree"><span class="pre">TransformTree</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.kernel_transform" title="Link to this definition"></a></dt>
 <dd><p>Default transform performed on the kernel</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.normalized">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">normalized</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.normalized" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.normalized" title="Link to this definition"></a></dt>
 <dd><p>Returns if the kernel is normalized in the feature maps.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">num_idx</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.num_idx" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.num_idx" title="Link to this definition"></a></dt>
 <dd><p>Number of selected indices when performing various operations. This is only relevant in the case of stochastic
 training.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">num_sample</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.num_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.num_sample" title="Link to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.print_cache">
-<code class="sig-name descname"><span class="pre">print_cache</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.print_cache" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">print_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.print_cache" title="Link to this definition"></a></dt>
 <dd><p>Prints the cache content. We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for further information.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.reset">
-<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em><span class="n"><span class="pre">reset_persisting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_persisting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.reset" title="Link to this definition"></a></dt>
 <dd><p>Resets the cache to be empty. We refer to the <a class="reference internal" href="../features/cache.html"><span class="doc">Cache Management</span></a> documentation for more information.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, resets the cache of this module and also of its potential children. otherwise,
-it only resets the cache for this module. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
-<li><strong>reset_persisting</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Persisting elements are meant to resist to a cache reset (see
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, resets the cache of this module and also of its potential children. otherwise,
+it only resets the cache for this module. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>reset_persisting</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Persisting elements are meant to resist to a cache reset (see
 <a class="reference internal" href="../features/cache.html#kerch.feature.Cache._save" title="kerch.feature.Cache._save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_save()</span></code></a>). The option allows to also reset them if <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to
-<code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">sample</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.parameter.Parameter.html#torch.nn.parameter.Parameter" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.nn.parameter.Parameter</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.parameter.Parameter.html#torch.nn.parameter.Parameter" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Parameter</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.sample" title="Link to this definition"></a></dt>
 <dd><p>Full original raw sample without any transform or potential stochastic selection.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.sample_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">sample_trainable</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.sample_trainable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.sample_trainable" title="Link to this definition"></a></dt>
 <dd><p>Boolean if the sample data can be trained.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.sample_transform">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">sample_transform</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../features/transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree.TransformTree"><span class="pre">kerch.transform.TransformTree.TransformTree</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.sample_transform" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample_transform</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../features/transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree.TransformTree"><span class="pre">TransformTree</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.sample_transform" title="Link to this definition"></a></dt>
 <dd><p>Default transform used by the sample.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.sigma">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">sigma</span></code><a class="headerlink" href="#kerch.kernel.Laplacian.sigma" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sigma</span></span><a class="headerlink" href="#kerch.kernel.Laplacian.sigma" title="Link to this definition"></a></dt>
 <dd><p>Bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span> of the kernel.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.sigma_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">sigma_trainable</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.sigma_trainable" title="Permalink to this definition"></a></dt>
-<dd><p>Boolean indicating of the bandwidth is trainable.</p>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sigma_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kerch.kernel.Laplacian.sigma_trainable" title="Link to this definition"></a></dt>
+<dd><p>Boolean indicating of the bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span> is trainable.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.stochastic">
-<code class="sig-name descname"><span class="pre">stochastic</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.stochastic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.stochastic" title="Link to this definition"></a></dt>
 <dd><p>Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
 case of stochastic training.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the sample subset relative to the original sample set., defaults to <cite>None</cite></li>
-<li><strong>prop</strong> (<em>double</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the sample subset relative to the original sample set., defaults to <cite>None</cite></p></li>
+<li><p><strong>prop</strong> (<em>double</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
-such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>., defaults to <cite>None</cite>.</li>
+such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_stochastic</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>., defaults to <cite>None</cite>.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>If <cite>None</cite> is specified for both <cite>idx_stochastic</cite> and <cite>prop_stochastic</cite>, all samples are used and the subset equals the
 original sample set. This is also the default behavior if this function is never called, nor the parameters
 specified during initialization.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Both <cite>idx_stochastic</cite> and <cite>prop_stochastic</cite> cannot be filled together as conflict would arise.</p>
+<p class="admonition-title">Note</p>
+<p>Both <cite>idx_stochastic</cite> and <cite>prop_stochastic</cite> cannot be filled together as conflict would arise.</p>
 </div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.train">
-<code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.train" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.train" title="Link to this definition"></a></dt>
 <dd><p>Activates the training mode, which disables the gradients computation and disables stochasticity. For the
 gradients and other things, we refer to the <cite>torch.nn.Module</cite> documentation. For the stochastic part, when put
 in evaluation mode (<cite>False</cite>), all the sample points are used for the computations, regardless of
@@ -618,13 +546,13 @@ the previously specified indices.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.transform_input">
-<code class="sig-name descname"><span class="pre">transform_input</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.transform_input" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.transform_input" title="Link to this definition"></a></dt>
 <dd><p>Apply to value the same transform as on the sample.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.transform_sample_revert">
-<code class="sig-name descname"><span class="pre">transform_sample_revert</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">torch.Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.transform_sample_revert" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_sample_revert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.2)"><span class="pre">Tensor</span></a></span></span><a class="headerlink" href="#kerch.kernel.Laplacian.transform_sample_revert" title="Link to this definition"></a></dt>
 <dd><p>Get back the original value from a projected value, by using the same transform as the sample,
 but in reverse. This is not always feasible, depending on the transform used (normalizations are
 typically not invertible as they are transform which are not bijective).</p>
@@ -632,30 +560,26 @@ typically not invertible as they are transform which are not bijective).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kerch.kernel.Laplacian.update_sample">
-<code class="sig-name descname"><span class="pre">update_sample</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">sample_values</span></span></em>, <em><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.update_sample" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kerch.kernel.Laplacian.update_sample" title="Link to this definition"></a></dt>
 <dd><p>Updates the sample set. In contradiction to <cite>init_samples</cite>, this only updates the values of the sample and sets
 the gradients of the updated values to zero if relevant.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sample_values</strong> (<em>Tensor</em>) – Values given to the updated samples.</li>
-<li><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the samples to be updated. All indices are considered if <cite>None</cite>., defaults to
-<cite>None</cite></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_values</strong> (<em>Tensor</em>) – Values given to the updated samples.</p></li>
+<li><p><strong>idx_sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the samples to be updated. All indices are considered if <cite>None</cite>., defaults to
+<cite>None</cite></p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
-<div class="section" id="sine">
-<h3>Sine<a class="headerlink" href="#sine" title="Permalink to this headline"></a></h3>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<section id="sine">
+<h3>Sine<a class="headerlink" href="#sine" title="Link to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -679,22 +603,28 @@ the gradients of the updated values to zero if relevant.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sigma = &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">sigma</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/d8d4977cd718cf200efa4451dc8c31b2/laplacian-1.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>)</p>
-<div class="figure align-default" id="id1">
+<p>(<a class="reference external" href="../kernel/laplacian-1.py" rel="noopener noreferrer" target="_blank">Source code</a>)</p>
+<figure class="align-default" id="id1">
 <img alt="../_images/laplacian-1_00.png" class="plot-directive" src="../_images/laplacian-1_00.png" />
-<p class="caption"><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/39cac6b2c9c2555f06e080cb78a924d2/laplacian-1_00.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/b484593d0b598fd48e5c88b273e7e46f/laplacian-1_00.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/49b907a0d39c75ca1d871ad665df2435/laplacian-1_00.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
-</div>
-<div class="figure align-default" id="id2">
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/laplacian-1_00.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/laplacian-1_00.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/laplacian-1_00.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id2">
 <img alt="../_images/laplacian-1_01.png" class="plot-directive" src="../_images/laplacian-1_01.png" />
-<p class="caption"><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/f723deb7b96054eacc2004a7de4b644d/laplacian-1_01.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/9c585876e0bb6ade9e2c3abedae34c22/laplacian-1_01.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/00aabb262f4c52df85e2316b5b07ea61/laplacian-1_01.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
-</div>
-<div class="figure align-default" id="id3">
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/laplacian-1_01.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/laplacian-1_01.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/laplacian-1_01.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id3">
 <img alt="../_images/laplacian-1_02.png" class="plot-directive" src="../_images/laplacian-1_02.png" />
-<p class="caption"><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/c658bd2449fdb7ce2e76034fccf845ab/laplacian-1_02.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/a4db8380c3d7df206e764cf153d13903/laplacian-1_02.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/67bb772f49cb89d9e87f3ce35a9565f5/laplacian-1_02.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
-</div>
-</div>
-<div class="section" id="comparison-with-rbf">
-<h3>Comparison with RBF<a class="headerlink" href="#comparison-with-rbf" title="Permalink to this headline"></a></h3>
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/laplacian-1_02.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/laplacian-1_02.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/laplacian-1_02.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="comparison-with-rbf">
+<h3>Comparison with RBF<a class="headerlink" href="#comparison-with-rbf" title="Link to this heading"></a></h3>
 <p>As the 2-norm between the inputs is not squared, the result is essentially smoother (less drastic changes) with the Laplacian kernel compared to the RBF kernel. This will also lead to a proportionally higher sigma for a “similar” result.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -731,18 +661,22 @@ the gradients of the updated values to zero if relevant.</p>
 <span class="n">fig2</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs2</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>(<a class="reference download internal" download="" href="../_downloads/3dad71862cbbbc49222190f1398282ff/laplacian-2.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>)</p>
-<div class="figure align-default" id="id4">
+<p>(<a class="reference external" href="../kernel/laplacian-2.py" rel="noopener noreferrer" target="_blank">Source code</a>)</p>
+<figure class="align-default" id="id4">
 <img alt="../_images/laplacian-2_00.png" class="plot-directive" src="../_images/laplacian-2_00.png" />
-<p class="caption"><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/bda6fddeded726e993bce57d6c52cb74/laplacian-2_00.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/534d569eaf0e01e828c7b886f235b566/laplacian-2_00.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/b36714442a815c6c53cc3ffbd2542995/laplacian-2_00.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
-</div>
-<div class="figure align-default" id="id5">
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/laplacian-2_00.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/laplacian-2_00.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/laplacian-2_00.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id5">
 <img alt="../_images/laplacian-2_01.png" class="plot-directive" src="../_images/laplacian-2_01.png" />
-<p class="caption"><span class="caption-text">(<a class="reference download internal" download="" href="../_downloads/9af7a71c3729d24d8ce7f8b0f5883631/laplacian-2_01.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/8002fbe6621d705edc4f1ef4b26d0c34/laplacian-2_01.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/dcc71256ca6508edb13217b42681b3ea/laplacian-2_01.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
-</div>
-</div>
-<div class="section" id="factory">
-<h3>Factory<a class="headerlink" href="#factory" title="Permalink to this headline"></a></h3>
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/laplacian-2_01.png" rel="noopener noreferrer" target="_blank">png</a>, <a class="reference external" href="../kernel/laplacian-2_01.hires.png" rel="noopener noreferrer" target="_blank">hires.png</a>, <a class="reference external" href="../kernel/laplacian-2_01.pdf" rel="noopener noreferrer" target="_blank">pdf</a>)</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="factory">
+<h3>Factory<a class="headerlink" href="#factory" title="Link to this heading"></a></h3>
 <p>The following lines are equivalent:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Laplacian</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
@@ -750,23 +684,22 @@ the gradients of the updated values to zero if relevant.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">kernel_type</span><span class="o">=</span><span class="s1">&#39;laplacian&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="inheritance-diagram">
-<h2>Inheritance Diagram<a class="headerlink" href="#inheritance-diagram" title="Permalink to this headline"></a></h2>
-<div class="graphviz"><img src="../_images/inheritance-5bbd2c75d155d030d660a142d39ff562833441c2.png" alt="Inheritance diagram of kerch.kernel.Laplacian" usemap="#inheritancedd38ed51ba" class="inheritance graphviz" /></div>
+</section>
+</section>
+<section id="inheritance-diagram">
+<h2>Inheritance Diagram<a class="headerlink" href="#inheritance-diagram" title="Link to this heading"></a></h2>
+<div class="graphviz"><img src="../_images/inheritance-908848623fa3d2af8bddb4512f9938a7f253c916.png" alt="Inheritance diagram of kerch.kernel.Laplacian" usemap="#inheritancedd38ed51ba" class="inheritance graphviz" /></div>
 <map id="inheritancedd38ed51ba" name="inheritancedd38ed51ba">
-<area shape="rect" id="node1" href="../features/cache.html#kerch.feature.Cache" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="118,157,269,184"/>
-<area shape="rect" id="node6" href="../features/stochastic.html#kerch.feature.Stochastic" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="105,232,283,260"/>
-<area shape="rect" id="node2" href="../features/module.html#kerch.feature.Module" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="114,81,273,109"/>
-<area shape="rect" id="node3" href="../features/logger.html#kerch.feature.Logger" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="5,5,161,33"/>
-<area shape="rect" id="node5" href="../features/sample.html#kerch.feature.Sample" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="114,308,274,336"/>
-<area shape="rect" id="node10" href="kernel.html#kerch.kernel._BaseKernel" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="102,384,286,411"/>
-<area shape="rect" id="node7" href="exponential.html#kerch.kernel.Exponential" target="_top" title=":param sigma: Bandwidth :math:`sigma` of the kernel. If `None`, the value is filled by a heuristic on" alt="" coords="103,611,284,638"/>
-<area shape="rect" id="node8" href="implicit.html#kerch.kernel.Implicit" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="117,535,270,563"/>
-<area shape="rect" id="node9" href="kernel.html#kerch.kernel.Kernel" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="121,459,266,487"/>
-</map></div>
-</div>
+<area shape="rect" id="node1" href="../features/cache.html#kerch.feature.Cache" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="118,152,270,177"/>
+<area shape="rect" id="node6" href="../features/stochastic.html#kerch.feature.Stochastic" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="105,225,283,251"/>
+<area shape="rect" id="node2" href="../features/module.html#kerch.feature.Module" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="114,79,274,104"/>
+<area shape="rect" id="node3" href="../features/logger.html#kerch.feature.Logger" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="5,5,161,31"/>
+<area shape="rect" id="node5" href="../features/sample.html#kerch.feature.Sample" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="113,299,275,324"/>
+<area shape="rect" id="node9" href="kernel.html#kerch.kernel._BaseKernel" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="101,372,287,397"/>
+<area shape="rect" id="node7" href="implicit.html#kerch.kernel.Implicit" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="117,519,271,544"/>
+<area shape="rect" id="node8" href="kernel.html#kerch.kernel.Kernel" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="121,445,267,471"/>
+</map></section>
+</section>
 
 
            </div>

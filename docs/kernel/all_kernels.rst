@@ -2,35 +2,35 @@ Generic Kernels
 ---------------
 
 .. csv-table::
-    :file: generic.csv
+    :file: generic/generic.csv
     :header-rows: 1
 
 .. toctree::
     :hidden:
     :maxdepth: 3
 
-    linear
-    rbf
-    laplacian
-    polynomial
-    cosine
-    sigmoid
-    rff
-    nystrom
+    generic/linear
+    generic/rbf
+    generic/laplacian
+    generic/polynomial
+    generic/cosine
+    generic/sigmoid
+    generic/rff
+    generic/nystrom
 
 Network-Based Kernels
 ---------------------
 
 .. csv-table::
-    :file: network.csv
+    :file: network/network.csv
     :header-rows: 1
 
 .. toctree::
     :hidden:
     :maxdepth: 3
 
-    explicit_nn
-    implicit_nn
+    network/explicit_nn
+    network/implicit_nn
 
 Time Kernels
 ------------
@@ -39,44 +39,62 @@ The idea behind time kernels is that time has the same local effect at
 all time, or in other words that the kernels are translational invariant. We typically consider the following kernels:
 
 .. csv-table::
-    :file: time.csv
+    :file: time/time.csv
     :header-rows: 1
 
 .. toctree::
     :hidden:
     :maxdepth: 3
 
-    indicator
-    hat
-    rbf
+    time/indicator
+    time/hat
+    generic/rbf
+
+
+Statistical Kernels
+-------------------
+.. toctree::
+    :hidden:
+    :maxdepth: 3
+
+    statistics/uniform
+    statistics/triangular
+    statistics/epanechnikov
+    statistics/quartic
+    statistics/triweight
+    statistics/tricube
+    generic/rbf
+    statistics/logistic
+    statistics/silverman
+
 
 
 Vision Kernels
 --------------
 
 .. csv-table::
-    :file: vision.csv
+    :file: vision/vision.csv
     :header-rows: 1
 
 .. toctree::
     :hidden:
     :maxdepth: 3
 
-    additive_chi2
-    skewed_chi2
+    vision/additive_chi2
+    vision/skewed_chi2
 
 Abstract Kernels
 ----------------
 
 .. csv-table::
-    :file: abstract.csv
+    :file: abstract/abstract.csv
     :header-rows: 1
 
 .. toctree::
     :hidden:
     :maxdepth: 3
 
-    exponential
-    explicit
-    implicit
-    kernel
+    abstract/distance
+    abstract/explicit
+    abstract/implicit
+    abstract/kernel

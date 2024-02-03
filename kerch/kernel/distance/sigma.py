@@ -1,23 +1,15 @@
-# coding=utf-8
-"""
-File containing the RBF kernel class.
-
-@author: HENRI DE PLAEN
-@copyright: KU LEUVEN
-@license: MIT
-@date: March 2021
-"""
-
+from __future__ import annotations
+from abc import ABCMeta, abstractmethod
 from typing import Iterator
 import torch
 
-from abc import ABCMeta, abstractmethod
-from .. import utils
-from .implicit import Implicit
+from ... import utils
+from ..implicit import Implicit
+from ...feature import Sample
 
 
 @utils.extend_docstring(Implicit)
-class Exponential(Implicit, metaclass=ABCMeta):
+class Sigma(Implicit, metaclass=ABCMeta):
     r"""
     :param sigma: Bandwidth :math:`\sigma` of the kernel. If `None`, the value is filled by a heuristic on
         the sample data: half of the square root of the median of the pairwise distances. Computing the heuristic on
@@ -28,9 +20,12 @@ class Exponential(Implicit, metaclass=ABCMeta):
     :type sigma: double, optional
     :type sigma_trainable: bool, optional
     """
+
+    _cache_elements = ["_kernel_dist_sample", "_kernel_square_dist_sample"]
+
     def __init__(self, *args, **kwargs):
         self._sigma_defined = False
-        super(Exponential, self).__init__(*args, **kwargs)
+        super(Sigma, self).__init__(*args, **kwargs)
 
         sigma = kwargs.pop('sigma', None)
         self._sigma_trainable = kwargs.pop('sigma_trainable', False)
@@ -39,16 +34,10 @@ class Exponential(Implicit, metaclass=ABCMeta):
         if self._sigma_defined:
             self.sigma = sigma
 
+        self._default_square = False
+
     def __str__(self):
-        if self._sigma_defined:
-            return f"exponential kernel (sigma: {str(self.sigma)})"
-        return f"exponential kernel (sigma undefined)"
-
-    @property
-    def _naturally_normalized(self) -> bool:
-        # _Exponential kernels are always naturally normalized
-        return True
-
+        return "generic distance"
 
     @property
     def sigma(self):
@@ -58,21 +47,22 @@ class Exponential(Implicit, metaclass=ABCMeta):
         if self._sigma_defined:
             return self._sigma.data.detach().cpu().item()
         elif not self._sigma_defined and not self.empty_sample:
-            self.k()
+            self._determine_sigma()
             return self.sigma
         raise utils.NotInitializedError(cls=self, message='The kernel bandwidth sigma value is unset. It cannot be '
                                                           'deduced based on a heuristic as the sample is also unset.')
 
     @sigma.setter
     def sigma(self, val):
-        self._reset_cache(reset_persisting=False)
+        self._logger.debug(f"Setting sigma to {val}.")
+        self._reset_cache(reset_persisting=False, avoid_classes=[Sample, Sigma])
         self._sigma_defined = True
         self._sigma.data = utils.castf(val, tensor=False, dev=self._sigma.device)
 
     @property
     def sigma_trainable(self) -> bool:
         r"""
-        Boolean indicating of the bandwidth is trainable.
+        Boolean indicating of the bandwidth :math:`\sigma` is trainable.
         """
         return self._sigma_trainable
 
@@ -84,39 +74,37 @@ class Exponential(Implicit, metaclass=ABCMeta):
     @property
     def hparams_variable(self):
         return {'Kernel parameter sigma': self.sigma,
-                **super(Exponential, self).hparams_variable}
+                **super(Sigma, self).hparams_variable}
 
     @property
     def hparams_fixed(self):
         return {"Trainable sigma": self.sigma_trainable,
-                **super(Exponential, self).hparams_fixed}
+                **super(Sigma, self).hparams_fixed}
 
     @abstractmethod
-    def _dist(self, x, y):
+    def _determine_sigma(self) -> None:
         pass
 
-    def _implicit(self, x, y):
-        D = self._dist(x, y)
+    @abstractmethod
+    def _dist_sigma(self, x, y):
+        pass
 
-        # define sigma if not set by the user
-        if not self._sigma_defined:
-            with torch.no_grad():
-                sigma = .5 * torch.sqrt(torch.median(D))
-                self.sigma = sigma
-                self._logger.warning(f"The kernel bandwidth sigma has not been provided and is assigned by a "
-                                  f"heuristic (sigma={self.sigma:.2e}).")
-
-        fact = 1 / (2 * torch.abs(self._sigma) ** 2)
-        output = torch.exp(torch.mul(D, -fact))
-
-        return output
-
-    def _implicit_self(self, x=None):
-        if x is None:
-            x = self.current_sample_projected
-
-        return torch.ones(x.shape[0], dtype=utils.FTYPE, device=x.device)
+    @abstractmethod
+    def _square_dist_sigma(self, x, y):
+        pass
 
     def _slow_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
-        yield from super(Exponential, self)._slow_parameters(recurse)
+        yield from super(Sigma, self)._slow_parameters(recurse)
         yield self._sigma
+
+    @abstractmethod
+    def _square_dist(self, x, y) -> torch.Tensor:
+        pass
+
+    @abstractmethod
+    def _dist(self, x, y) -> torch.Tensor:
+        pass
+
+    @property
+    def _sigma_fact(self) -> float | None:
+        return 1 / self._sigma
