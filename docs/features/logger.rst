@@ -96,8 +96,8 @@ Info
     print(k.K)                                          # first warning (the sigma is defined)
 
 
-Inheritance Diagram
-===================
+Inheritance
+===========
 
 This is a base class that directly inherits from :external+python:py:class:`object`.
 

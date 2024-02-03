@@ -16,5 +16,14 @@ class Wasserstein(Distance, metaclass=ABCMeta):
     def __str__(self):
         return "wasserstein"
 
+    def _compute_cost(self, type_cost: str | None = None, size_input: tuple | None = None):
+        if type_cost is None:
+            raise ValueError(
+                "No cost has been defined an it cannot be computed as the argument type_cost has not been provided.")
+        if size_input is None:
+            raise ValueError(
+                "No cost has been defined an it cannot be computed as the argument size_input has not been provided.")
+
+
     def _dist(self, x, y) -> torch.Tensor:
         pass

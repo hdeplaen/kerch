@@ -34,10 +34,10 @@ class RFF(Explicit):
 
     with :math:`w_1, \ldots, w_{\texttt{num_weights}} \sim \mathcal{N}(0,I_{\texttt{dim_input}})` and :math:`\texttt{dim_feature} = 2 \times \texttt{num_weights}`.
 
-    In the limit of :math:`\texttt{num_weights} \rightarrow +\infty`, we recover the RBF kernel with unity bandwidth :math:`\sigma = 1`:
+    In the limit of :math:`\texttt{num_weights} \rightarrow +\infty`, we recover the RBF kernel:
 
     .. math::
-        k(x,y) = \phi(x)^{\top}\phi(y) = \exp\left( -\frac{1}{2}\lVert x-y \rVert_2^2 \right)
+        k(x,y) = \phi(x)^{\top}\phi(y) = \exp\left( -\frac{\lVert x-y \rVert_2^2}{2\sigma^2} \right)
 
     :param num_weights: Number of weights :math:`\texttt{num_weights}` sampled for the RFF., defaults to 1.
     :type num_weights: int, optional

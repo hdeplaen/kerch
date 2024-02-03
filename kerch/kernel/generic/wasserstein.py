@@ -11,7 +11,7 @@ File containing the Wasserstein Exponential Kernel class.
 import torch
 
 from ... import utils
-from kerch.kernel.generic.exponential import Exponential
+from kerch.kernel.statistics.exponential import Exponential
 
 
 @utils.extend_docstring(Exponential)

@@ -18,7 +18,7 @@ class Cosine(Linear):
     Cosine kernel.
 
     .. math::
-        k(x,y) = \cos\left(\angle xy\right) = \frac{x^{\top} y}{\max\left(\lVert x \rVert_2 \cdot \lVert y \rVert_2, \epsilon\right)}.
+        k(x,y) = \cos\left(\angle(x,y)\right) = \frac{x^{\top} y}{\max\left(\lVert x \rVert_2 \cdot \lVert y \rVert_2, \epsilon\right)}.
 
     This corresponds to a normalized linear kernel, or equivalently a linear kernel on which the datapoints are first
     projected onto a hypersphere.

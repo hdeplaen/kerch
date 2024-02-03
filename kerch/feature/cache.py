@@ -18,7 +18,7 @@ class Cache(Module,
             metaclass=ABCMeta):
     r"""
     :param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache,
-        the more is saved. Defaults to ``'normal'``. We refer to the :doc:`../features/cache` documentation for further
+        the more is saved. Defaults to ``'normal'``. We refer to the :doc:`/features/cache` documentation for further
         information.
     :type cache_level: str, optional
     """
@@ -51,7 +51,7 @@ class Cache(Module,
         * ``"heavy"``: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.
         * ``"total"``: every step of any computation is saved.
 
-        We refer to the :doc:`../features/cache` documentation for further information.
+        We refer to the :doc:`/features/cache` documentation for further information.
         """
         switcher = Cache._cache_level_switcher
         inv_switcher = {switcher[k]: k for k in switcher}
@@ -258,7 +258,7 @@ class Cache(Module,
 
     def reset(self, recurse=False, reset_persisting=True) -> None:
         r"""
-        Resets the cache to be empty. We refer to the :doc:`../features/cache` documentation for more information.
+        Resets the cache to be empty. We refer to the :doc:`/features/cache` documentation for more information.
 
         :param recurse: If ``True``, resets the cache of this module and also of its potential children. otherwise,
             it only resets the cache for this module. Defaults to ``True``.
@@ -277,7 +277,7 @@ class Cache(Module,
     def cache_keys(self, private: bool = False) -> Iterable[str]:
         r"""
         Returns an iterable containing the different cache keys.
-        We refer to the :doc:`../features/cache` documentation for more information.
+        We refer to the :doc:`/features/cache` documentation for more information.
 
         :param private: Some cache elements are private and are not returned unless set to ``True``. Defaults to ``False``.
         :type private: bool, optional
@@ -288,7 +288,7 @@ class Cache(Module,
 
     def print_cache(self, private: bool = False) -> None:
         r"""
-        Prints the cache content. We refer to the :doc:`../features/cache` documentation for further information.
+        Prints the cache content. We refer to the :doc:`/features/cache` documentation for further information.
 
         :param private: Some cache elements are private and are not returned unless set to ``True``. Defaults to ``False``.
         :type private: bool, optional

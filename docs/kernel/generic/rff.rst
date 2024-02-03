@@ -28,7 +28,7 @@ Sine
     x = np.sin(np.arange(50) / np.pi)
 
     k_rbf = kerch.kernel.RBF(sample=x, sigma=1)
-    k_rff = kerch.kernel.RFF(sample=x, num_weights=50)
+    k_rff = kerch.kernel.RFF(sample=x, num_weights=50, sigma=1)
 
     fig, axs = plt.subplots(1, 2)
 

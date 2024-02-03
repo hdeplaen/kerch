@@ -1,11 +1,11 @@
 import torch
 from torch import Tensor
 
-from ..distance.select import Select
+from ..distance.select_distance import SelectDistance
 from ...utils import extend_docstring
 
-@extend_docstring(Select)
-class Triangular(Select):
+@extend_docstring(SelectDistance)
+class Triangular(SelectDistance):
     r"""
     Uniform kernel.
 

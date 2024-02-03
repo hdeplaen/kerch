@@ -9,7 +9,7 @@ File containing the RBF kernel class.
 """
 from ...utils import extend_docstring
 from ...feature.logger import _GLOBAL_LOGGER
-from .exponential import Exponential
+from kerch.kernel.statistics.exponential import Exponential
 from ..distance.euclidean import Euclidean
 
 
@@ -24,32 +24,41 @@ class RBF(Exponential):
 
     .. note::
         If working with big datasets, one may consider an explicit approximation of the RBF kernel using
-        Random Fourier Features (:class:`..RFF`). This will be faster provided :math:`2\times\texttt{num_weights} < n`,
+        Random Fourier Features (:py:class:`~kerch.kernel.RFF`). This will be faster provided :math:`2\times\texttt{num_weights} < n`,
         where :math:`\texttt{num_weights}` is the number of weights used to control the RFF approximation and :math:`n` is
         the number of datapoints. The latter class however does not offer so much flexibility, as the automatic determination
         of the bandwidth :math:`\sigma` using a heuristic for example.
 
         Other considerations may come into play. If a centered or normalized kernel on an out-of-sample is required, this may require extra
         computations when directly using the kernel matrix as doing it on the explicit feature is more straightforward.
+
+
+    .. note::
+        The norm inside the exponential is always squared. If you wish a non-squared norm, this corresponds to the
+        :py:class:`~kerch.kernel.Laplacian` kernel. If another distance than the Euclidean one is required, we refer to
+        the more generic :py:class:`~kerch.kernel.Exponential` kernel.
+
     """
+
     def __new__(cls, *args, **kwargs):
         distance = kwargs.pop('distance', None)
-        squared = kwargs.pop('squared', None)
         if distance is not None and distance != 'euclidean':
             _GLOBAL_LOGGER._logger.warning('A specific distance has been provided for the RBF kernel. The RBF kernel '
                                            'is defined as a particular exponential kernel with euclidean distance '
                                            'only. This value will be neglected. Please use the more generic '
                                            'Exponential kernel if you wish to use another distance')
-        if squared is not None and squared != True:
-            _GLOBAL_LOGGER._logger.warning('A non-squared exponential kernel has been requested. The RBF kernel '
-                                           'is defined as a particular exponential kernel with squared norm and '
-                                           'euclidean distance only. This value will be neglected. Please use the '
-                                           'Laplacian kernel if you wish to use an euclidean distance with a '
-                                           'non-squared norm or the more generic Exponential kernel if you'
-                                           'wish to use another distance')
+
         return Exponential.__new__(cls, *args, **kwargs)
 
     def __init__(self, *args, **kwargs):
+        squared = kwargs.pop('squared', None)
+        if squared is not None and squared != True:
+            self._logger.warning('A non-squared RBF kernel has been requested. The RBF kernel '
+                                 'is defined as a particular exponential kernel with squared and '
+                                 'euclidean distance only. This value will be neglected. Please use the '
+                                 'Laplacian kernel if you wish to use an euclidean distance with a '
+                                 'non-squared norm or the more generic Exponential kernel if you'
+                                 'wish to use another distance')
         super(RBF, self).__init__(*args, **kwargs)
 
     def __str__(self):

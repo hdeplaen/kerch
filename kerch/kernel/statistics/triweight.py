@@ -1,11 +1,11 @@
 import torch
 from torch import Tensor
 
-from ..distance.select import Select
+from ..distance.select_distance import SelectDistance
 from ...utils import extend_docstring
 
-@extend_docstring(Select)
-class Triweight(Select):
+@extend_docstring(SelectDistance)
+class Triweight(SelectDistance):
     r"""
     Triweight kernel.
 

@@ -48,11 +48,11 @@ Random
     import torch
     from matplotlib import pyplot as plt
 
-    num_input, dim_input = 20, 3
+    num_input, dim_input = 20, 5
     sample = torch.randn(num_input, dim_input)
 
-    k1 = kerch.kernel.Epanechnikov(sample=sample, sigma=1.5)
-    k2 = kerch.kernel.Epanechnikov(sample=sample, distance='chebyshev', sigma=1.5)
+    k1 = kerch.kernel.Epanechnikov(sample=sample, sigma=3)
+    k2 = kerch.kernel.Epanechnikov(sample=sample, distance='chebyshev', sigma=3)
 
     fig, axs = plt.subplots(1,2)
     axs[0].imshow(k1.K)

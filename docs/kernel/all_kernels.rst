@@ -63,7 +63,7 @@ Statistical Kernels
     statistics/quartic
     statistics/triweight
     statistics/tricube
-    generic/rbf
+    statistics/exponential
     statistics/logistic
     statistics/silverman
 

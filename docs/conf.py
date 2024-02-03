@@ -98,7 +98,9 @@ inheritance_alias = shorten_submodules(['kernel', 'level', 'feature', 'model'])
 
 # MAPPING
 intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
-                       'torch': ('https://pytorch.org/docs/stable', None)}
+                       'torch': ('https://pytorch.org/docs/stable', None,),
+                       'matplotlib': ('https://matplotlib.org/stable', None),
+                       'numpy': ('https://numpy.org/doc/stable/', None)}
 
 
 

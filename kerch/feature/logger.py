@@ -20,7 +20,7 @@ class Logger(object, metaclass=ABCMeta):
     :param logging_level: Logging level for this specific instance.
         If the value is ``None``, the current default kerch global log level will be used.
         Defaults to ``None`` (default kerch logging level).
-        We refer to the :doc:`../features/logger` documentation for further information.
+        We refer to the :doc:`/features/logger` documentation for further information.
     :type logging_level: int, optional
     """
 
@@ -88,7 +88,7 @@ class Logger(object, metaclass=ABCMeta):
         Logging level of this specific instance.
         If the value is ``None``, the current default kerch global log Level will be used.
         Defaults to ``None`` (default global kerch level).
-        We refer to the :doc:`../features/logger` documentation for further information.
+        We refer to the :doc:`/features/logger` documentation for further information.
         """
         return self._logger_internal.level
 

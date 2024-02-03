@@ -3,11 +3,11 @@ from abc import ABCMeta, abstractmethod
 import torch
 
 from ... import utils
-from .sigma import Sigma
+from ._distance import _Distance
 
 
-@utils.extend_docstring(Sigma)
-class Distance(Sigma, metaclass=ABCMeta):
+@utils.extend_docstring(_Distance)
+class Distance(_Distance, metaclass=ABCMeta):
 
     def __init__(self, *args, **kwargs):
         super(Distance, self).__init__(*args, **kwargs)
@@ -27,15 +27,11 @@ class Distance(Sigma, metaclass=ABCMeta):
 
     def _dist_sigma(self, x, y):
         _ = self.sigma
-        if self._sigma_fact is None:
-            fact = 1 / self.sigma
-            return self._dist(fact * x, fact * y)
+        if id(x) == id(y) and id(x) == id(self.current_sample_projected):
+            d = self._sample_dist(destroy=True)
         else:
-            if id(x) == id(y) and id(x) == id(self.current_sample_projected):
-                d = self._sample_dist(destroy=True)
-            else:
-                d = self._dist(x, y)
-            return self._sigma_fact * d
+            d = self._dist(x, y)
+        return self._sigma_fact * d
 
     def _square_dist_sigma(self, x, y):
         return self._dist_sigma(x, y) ** 2

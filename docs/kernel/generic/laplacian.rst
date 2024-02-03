@@ -33,16 +33,18 @@ Sine
     plt.colorbar()
     plt.title(f"Sigma = {k.sigma:.2f}")
 
-    k.sigma = 1
+    k.sigma = 2
 
     plt.figure(2)
     plt.imshow(k.K)
     plt.colorbar()
-    plt.title("Sigma = "+str(k.sigma))
+    plt.title(f"Sigma = {k.sigma:.2f}")
 
 Comparison with RBF
 -------------------
-As the 2-norm between the inputs is not squared, the result is essentially smoother (less drastic changes) with the Laplacian kernel compared to the RBF kernel. This will also lead to a proportionally higher sigma for a "similar" result.
+As the 2-norm between the inputs is not squared, the result is essentially more drastically descreasing in the bulk,
+but heavier in the tail compared to the :class:`~kerch.kernel.RBF` kernel. This will also lead to a proportionally
+higher sigma for a "similar" result.
 
 .. plot::
     :include-source:
@@ -80,6 +82,27 @@ As the 2-norm between the inputs is not squared, the result is essentially smoot
     axs2[1].set_title(f"RBF ($\sigma$={f_rbf_sigma1.sigma})")
 
     fig2.colorbar(im2, ax=axs2.ravel().tolist(), orientation='horizontal')
+
+
+.. plot::
+    :include-source:
+
+    import kerch
+    import torch
+    from matplotlib import pyplot as plt
+
+    x = torch.linspace(-5, 5, 200)
+    k_rbf = kerch.kernel.RBF(sample=x, sigma=1)
+    k_laplacian = kerch.kernel.Laplacian(sample=x, sigma=1)
+    shape = torch.cat((k_rbf.k(y=0), k_laplacian.k(y=0)), dim=1)
+
+    plt.figure()
+    plt.plot(x, shape)
+    plt.title('Kernel Shape')
+    plt.legend(['RBF',
+                'Laplacian'])
+    plt.xlabel('x')
+    plt.ylabel('k(x,y=0)')
 
 
 Factory

@@ -105,7 +105,9 @@
 <li class="toctree-l4"><a class="reference internal" href="statistics/quartic.html">Quartic (biweight) Kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="statistics/triweight.html">Triweight Kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="statistics/tricube.html">Tricube Kernel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="generic/rbf.html">RBF Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="statistics/exponential.html">Exponential Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="statistics/logistic.html">Logistic Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="statistics/silverman.html">Silverman Kernel</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#vision-kernels">Vision Kernels</a><ul>
@@ -114,6 +116,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#abstract-kernels">Abstract Kernels</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="abstract/distance.html">Distance-Based Kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="abstract/explicit.html">Explicit Kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="abstract/implicit.html">Implicit Kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="abstract/kernel.html">Kernel Class</a></li>
@@ -427,7 +430,7 @@ all time, or in other words that the kernels are translational invariant. We typ
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="generic/exponential.html#kerch.kernel.Exponential" title="kerch.kernel.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exponential</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="statistics/exponential.html#kerch.kernel.Exponential" title="kerch.kernel.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exponential</span></code></a></p></td>
 <td><p><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">_dist()</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sigma</span></code></p></td>
@@ -462,7 +465,7 @@ all time, or in other words that the kernels are translational invariant. We typ
 <p>It is also possible to create other kernels than the ones already implemented and still taking benefit of all features
 common to all kernel such as automatic transformation of the input of the kernel (centering, normalization…), all
 attributes (<code class="docutils literal notranslate"><span class="pre">K</span></code>, <code class="docutils literal notranslate"><span class="pre">Phi</span></code>…), cache management, stochasicity etc. We refer to the examples in the documentation of the abstract
-classes <a class="reference internal" href="generic/exponential.html#kerch.kernel.Exponential" title="kerch.kernel.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Exponential</span></code></a>, <a class="reference internal" href="abstract/explicit.html#kerch.kernel.Explicit" title="kerch.kernel.Explicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Explicit</span></code></a>, <a class="reference internal" href="abstract/implicit.html#kerch.kernel.Implicit" title="kerch.kernel.Implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Implicit</span></code></a> and
+classes <a class="reference internal" href="statistics/exponential.html#kerch.kernel.Exponential" title="kerch.kernel.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Exponential</span></code></a>, <a class="reference internal" href="abstract/explicit.html#kerch.kernel.Explicit" title="kerch.kernel.Explicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Explicit</span></code></a>, <a class="reference internal" href="abstract/implicit.html#kerch.kernel.Implicit" title="kerch.kernel.Implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Implicit</span></code></a> and
 <a class="reference internal" href="abstract/kernel.html#kerch.kernel.Kernel" title="kerch.kernel.Kernel"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Kernel</span></code></a>.</p>
 </section>
 </section>

@@ -9,7 +9,7 @@ Date: June 2022
 """
 
 import torch
-from kerch.kernel.generic.exponential import exponential
+from kerch.kernel.statistics.exponential import exponential
 
 
 class exp_l1(exponential):
