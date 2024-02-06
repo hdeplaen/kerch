@@ -87,7 +87,7 @@ def iterative_preimage_k(k_image: torch.Tensor, kernel: K, num_iter: int = 50, l
     :return: Pre-image
     :rtype: torch.Tensor [num_points, dim_input]
     """
-    k_image = castf(k_image)
+    k_image = castf(k_image).data
 
     # CHECK IF THE CACHE LEVEL HAS TO BE CHANGED
     cache_level = Cache._cache_level_switcher[kernel.cache_level]
@@ -109,7 +109,7 @@ def iterative_preimage_k(k_image: torch.Tensor, kernel: K, num_iter: int = 50, l
 
     loss_fn = torch.nn.MSELoss()
     # x0 = torch.zeros(k_image.shape[0], kernel.dim_input, dtype=k_image.dtype)
-    x0 = knn(dists=k_image, observations=kernel.current_sample)
+    x0 = knn(dists=-k_image + k_image.max(), observations=kernel.current_sample)
 
     def obj(vals):
         k_current = kernel.k(x=vals)
@@ -150,7 +150,7 @@ def iterative_preimage_phi(phi_image: torch.Tensor, kernel: K, num_iter: int = 5
     :return: Pre-image
     :rtype: torch.Tensor [num_points, dim_feature]
     """
-    phi_image = castf(phi_image)
+    phi_image = castf(phi_image).data
 
     # CHECK IF THE CACHE LEVEL HAS TO BE CHANGED
     cache_level = Cache._cache_level_switcher[kernel.cache_level]
@@ -172,7 +172,7 @@ def iterative_preimage_phi(phi_image: torch.Tensor, kernel: K, num_iter: int = 5
 
     loss_fn = torch.nn.MSELoss()
     weights = phi_image @ kernel.Phi.T
-    x0 = knn(dists=weights, observations=kernel.current_sample)
+    x0 = knn(dists=-weights, observations=kernel.current_sample)
 
     def obj(vals):
         phi_current = kernel.phi(x=vals)

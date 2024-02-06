@@ -44,6 +44,7 @@ def knn(dists: torch.Tensor, observations: torch.Tensor, num: int = 1) -> torch.
         f"The number of required neighbors num must be strictly positive ({num})."
 
     # PRE-IMAGE
+    assert dists.min() >=0, 'There are negative distances for kNN.'
     _, indices = torch.topk(-dists, k=num, dim=1)
     kept_sample = observations[indices]
     return torch.mean(kept_sample, dim=1)
