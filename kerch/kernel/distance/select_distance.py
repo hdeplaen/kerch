@@ -45,5 +45,5 @@ class SelectDistance(_Distance, metaclass=ABCMeta):
 
     def __str__(self):
         if self._sigma_defined:
-            return f"({super(SelectDistance, self).__str__()}, sigma: {str(self.sigma)})"
+            return f"({super(SelectDistance, self).__str__()}, sigma: {self.sigma:1.2e})"
         return f"({super(SelectDistance, self).__str__()}, sigma undefined)"

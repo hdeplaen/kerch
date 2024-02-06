@@ -54,7 +54,7 @@ class Laplacian(Exponential):
 
     def __str__(self):
         if self._sigma_defined:
-            return f"Laplacian kernel (sigma: {str(self.sigma)})"
+            return f"Laplacian kernel (sigma: {self.sigma:1.2e})"
         return f"Laplacian kernel (sigma undefined)"
 
     @property

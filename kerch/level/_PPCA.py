@@ -10,11 +10,11 @@ from .. import utils
 
 class _PPCA(_Level, metaclass=ABCMeta):
     @utils.kwargs_decorator({'use_mean': False,
-                             'sigma': None})
+                             'feature_noise': None})
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.use_mean = kwargs["use_mean"]
-        self.sigma = kwargs["sigma"]
+        self.feature_noise = kwargs["feature_noise"]
         self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                         requires_grad=False)
         self._parameter_related_cache = [*self._parameter_related_cache,
@@ -41,18 +41,18 @@ class _PPCA(_Level, metaclass=ABCMeta):
         self._vals.data = val
 
     @property
-    def sigma(self) -> float:
+    def feature_noise(self) -> float:
         r"""
         Sigma value, acts as a regularization parameter.
         """
-        return self._sigma
+        return self._feature_noise
 
-    @sigma.setter
-    def sigma(self, val: Optional[float]) -> None:
+    @feature_noise.setter
+    def feature_noise(self, val: Optional[float]) -> None:
         if val is None:
-            self._sigma = None
+            self._feature_noise = None
         else:
-            self._sigma = float(val)
+            self._feature_noise = float(val)
 
     @property
     def mu(self) -> torch.nn.Parameter:
@@ -67,7 +67,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     @torch.no_grad()
     def _B_primal(self) -> T:
         def compute() -> T:
-            return torch.cholesky(self.weight @ self.weight.T + self.sigma ** 2 * self._I_primal)
+            return torch.cholesky(self.weight @ self.weight.T + self.feature_noise ** 2 * self._I_primal)
 
         return self._get(key="_B_primal", level_key="PPCA_B_primal", fun=compute)
 
@@ -79,7 +79,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     @torch.no_grad()
     def _B_dual(self) -> T:
         def compute() -> T:
-            return torch.cholesky(self.hidden.T @ self.hidden + self.sigma ** 2 * torch.inv(self.K))
+            return torch.cholesky(self.hidden.T @ self.hidden + self.feature_noise ** 2 * torch.inv(self.K))
 
         return self._get(key="_B_dual", level_key="PPCA_B_dual", fun=compute)
 
@@ -91,7 +91,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     @torch.no_grad()
     def _Inv_primal(self) -> T:
         def compute() -> T:
-            return torch.inv(self.weight.T @ self.weight + self.sigma ** 2 * self._I_primal)
+            return torch.inv(self.weight.T @ self.weight + self.feature_noise ** 2 * self._I_primal)
 
         return self._get(key="_Inv_primal", level_key="PPCA_Inv_primal", fun=compute)
 
@@ -104,7 +104,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     @torch.no_grad()
     def _Inv_dual(self) -> T:
         def compute() -> T:
-            return torch.inv(self.hidden.T @ self.K @ self.hidden + self.sigma ** 2 * self._I_dual)
+            return torch.inv(self.hidden.T @ self.K @ self.hidden + self.feature_noise ** 2 * self._I_dual)
 
         return self._get(key="_Inv_dual", level_key="PPCA_Inv_dual", fun=compute)
 
@@ -223,7 +223,7 @@ class _PPCA(_Level, metaclass=ABCMeta):
     def loss(self, representation=None) -> T:
         return torch.tensor(0., dtype=utils.FTYPE)
 
-    def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
+    def _stiefel_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         super(_PPCA, self)._euclidean_parameters(recurse)
         if self._representation == 'primal':
             if self._weight_exists:

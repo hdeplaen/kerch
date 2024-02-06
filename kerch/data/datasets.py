@@ -13,12 +13,13 @@ def _get_file_path(name: str):
 class TwoMoons(_LearningSetTrain):
     @kwargs_decorator({'noise': .1})
     def __init__(self, *args, **kwargs):
+        self._noise = kwargs['noise']
         super(TwoMoons, self).__init__(name="Two Moons",
                                        dim_data=2,
                                        dim_labels=1,
                                        range=(-4, 7, -4, 4),
                                        **kwargs)
-        self._noise = kwargs['noise']
+
 
     def _training(self, num):
         try:

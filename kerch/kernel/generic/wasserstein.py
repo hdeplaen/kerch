@@ -38,7 +38,7 @@ class Wasserstein(Exponential):
     def __str__(self):
         if self._sigma is None:
             return f"Wasserstein Exponential Kernel (sigma undefined)"
-        return f"Wasserstein Exponential Kernel (sigma: {str(self.sigma)})"
+        return f"Wasserstein Exponential Kernel (sigma: {self.sigma:1.2e})"
 
     @property
     def hparams_fixed(self):

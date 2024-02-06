@@ -266,7 +266,7 @@ class Sample(Stochastic,  # manager stochastic indices
         data = utils.castf(data)
         if data is None:
             return None
-        return self.sample_transform.apply(oos=data)
+        return self.sample_transform.apply(x=data)
 
     def transform_sample_revert(self, data) -> Tensor:
         r"""

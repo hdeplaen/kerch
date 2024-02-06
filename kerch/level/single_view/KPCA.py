@@ -17,6 +17,9 @@ class KPCA(_KPCA, Level):
     @kwargs_decorator({})
     def __init__(self, *args, **kwargs):
         super(KPCA, self).__init__(*args, **kwargs)
+        if not self.centered:
+            self._logger.warning("The used feature map/kernel is not centered. "
+                                 "This may work, but contradicts with the classical definition of KPCA.")
 
 
     def __str__(self):

@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import annotations
 import torch
 from torch import Tensor as T
 from abc import ABCMeta
@@ -15,10 +16,6 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
     @utils.extend_docstring(_Level)
     def __init__(self, *args, **kwargs):
-        kernel_transform = kwargs.pop('kernel_transform', [])
-        kernel_transform.append('mean_centering')
-        kwargs['kernel_transform'] = kernel_transform
-
         super(_KPCA, self).__init__(*args, **kwargs)
         self._vals = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),
                                         requires_grad=False)
@@ -101,8 +98,6 @@ class _KPCA(_Level, metaclass=ABCMeta):
         var = self.model_variance(as_tensor=as_tensor, normalize=False) / \
               self.total_variance(as_tensor=as_tensor, normalize=False)
         return var
-
-    ######################################################################################
 
     def _solve_primal(self) -> None:
         C = self.C
@@ -212,3 +207,133 @@ class _KPCA(_Level, metaclass=ABCMeta):
         return {'Original': self._loss_original().data.detach().cpu().item(),
                 'Projected': self._loss_projected().data.detach().cpu().item(),
                 **super(_KPCA, self).losses()}
+
+
+    ###################################################################################################
+
+    @property
+    @torch.no_grad()
+    def _Inv_primal(self) -> T:
+        def compute() -> T:
+            return torch.inv(self.weight.T @ self.weight)
+
+        return self._get(key="_Inv_primal", level_key="PPCA_Inv_primal", fun=compute)
+
+    @_Inv_primal.setter
+    @torch.no_grad()
+    def _Inv_primal(self, val: T) -> None:
+        val = utils.castf(val)
+        self._get(key="_Inv_primal", level_key="PPCA_Inv_primal", fun=lambda: val, overwrite=True)
+
+    @property
+    @torch.no_grad()
+    def _Inv_dual(self) -> T:
+        def compute() -> T:
+            return torch.inv(self.hidden.T @ self.K @ self.hidden)
+
+        return self._get(key="_Inv_dual", level_key="PPCA_Inv_dual", fun=compute)
+
+    @_Inv_dual.setter
+    @torch.no_grad()
+    def _Inv_dual(self, val: T) -> None:
+        val = utils.castf()
+        self._get(key="_Inv_dual", level_key="PPCA_Inv_dual", fun=lambda: val, overwrite=True)
+
+    ########################################################################################################################
+
+    @torch.no_grad()
+    def h_map(self, phi: T | None = None, k: T | None = None) -> T:
+        r"""
+        Draws a `h` given the maximum a posteriori of the distribution. By choosing the input, you either
+        choose a primal or dual representation.
+
+        :param phi: Primal representation.
+        :param k: Dual representation.
+        :type phi: Tensor[N, dim_input], optional
+        :type k: Tensor[N, num_idx], optional
+        :return: MAP of h given phi or k.
+        :rtype: Tensor[N, dim_output]
+        """
+
+        if phi is not None and k is None:
+            return phi @ self.weight.T @ self._Inv_primal
+        if phi is None and k is not None:
+            return k @ self.hidden.T @ self._Inv_dual
+        else:
+            raise AttributeError("One and only one attribute phi or k has to be specified.")
+
+    @torch.no_grad()
+    def phi_map(self, h: T) -> T:
+        r"""
+        Feature representation :math:`\phi(x^\star)` given a latent representation :math:`h^\star`.
+
+        .. math::
+            \phi(x^\star) = = W h^\star.
+
+        :param h: Latent representation :math:`h^\star`.
+        :type h: Tensor[N, dim_output]
+        :return: Feature representation :math:`\phi(x^\star)`.
+        :rtype: Tensor[N, dim_input]
+        """
+        return h @ self.weight.T
+
+    @torch.no_grad()
+    def k_map(self, h: T) -> T:
+        r"""
+        RKHS representation :math:`k(x^\star,\mathtt{sample})` given a latent representation :math:`h^\star`.
+
+        .. math::
+            k(x^\star, x_j) = KH^\toph^\star,
+
+        with :math:`K` the kernel matrix on the sample :py:attr:`self.K` and :math:`H` the hidden vectors :py:attr:`self.hidden`.
+
+        :param h: Latent representation :math:`h^\star`.
+        :type h: Tensor[N, dim_output]
+        :return: RKHS representation :math:`k(x^\star,\mathtt{sample})`.
+        :rtype: Tensor[N, num_idx]
+        """
+        return h @ self.hidden.T @ self.K
+
+    @torch.no_grad()
+    def draw_h(self, num: int = 1) -> T:
+        r"""
+        Draws a :math:`h^\star` normally.
+
+        :param num: Number of :math:`h^\star` to be sampled, defaults to 1.
+        :type num: int, optional
+        :return: Latent representation.
+        :rtype: Tensor[num, dim_output]
+        """
+        return torch.randn((num, self.dim_output), device=self.hidden.device, dtype=utils.FTYPE)
+
+    @torch.no_grad()
+    def draw_phi(self, num: int = 1, posterior: bool = True) -> T:
+        r"""
+        Draws a primal representation phi given its posterior distribution.
+
+        :param posterior: Indicates whether phi has to be drawn from its posterior distribution or its conditional
+            given the prior of h. Defaults to True.
+        :param num: Number of phi to be sampled, defaults to 1.
+        :type num: int, optional
+        :type posterior: bool, optional
+        :return: Primal representation.
+        :rtype: Tensor[num, dim_input]
+        """
+        h = self.draw_h(num)
+        return self.phi_map(h)
+
+    @torch.no_grad()
+    def draw_k(self, num: int = 1, posterior: bool = False) -> T:
+        r"""
+        Draws a dual representation k given its posterior distribution.
+
+        :param posterior: Indicates whether phi has to be drawn from its posterior distribution or its conditional
+            given the prior of h. Defaults to True.
+        :param num: Number of k to be sampled, defaults to 1.
+        :type num: int, optional
+        :type posterior: bool, optional
+        :return: Dual representation.
+        :rtype: Tensor[num, num_idx]
+        """
+        h = self.draw_h(num)
+        return self.k_map(h)

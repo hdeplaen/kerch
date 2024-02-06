@@ -17,7 +17,7 @@ from torch import Tensor
 from .. import utils
 from ._base_kernel import _BaseKernel
 from ..transform import TransformTree
-from ..transform.all.Sphere import UnitSphereNormalization
+from ..transform.all import MeanCentering, UnitSphereNormalization
 
 
 @utils.extend_docstring(_BaseKernel)
@@ -78,6 +78,24 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         return False
 
     @property
+    def centered(self) -> bool:
+        r"""
+        Indicates whether the feature map is centered relative to its sample or equivalently is the kernel in centered
+        in its RKHS space, spanned by the sample.
+        """
+        default = self.kernel_transform.final_transform
+        return (self._naturally_centered and default == TransformTree) or default == MeanCentering
+
+    @property
+    def normalized(self) -> bool:
+        r"""
+        Indicates whether the feature map is centered relative to its sample or equivalently is the kernel in centered
+        in its RKHS space, spanned by the sample.
+        """
+        default = self.kernel_transform.final_transform
+        return (self._naturally_normalized and default == TransformTree) or default == UnitSphereNormalization
+
+    @property
     def _required_transform(self) -> Union[List, None]:
         return None
 
@@ -105,30 +123,6 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         if transform is None:
             return self._default_kernel_transform
         return self._simplify_transform(transform)
-
-    @property
-    def centered(self) -> bool:
-        r"""
-        Returns if the kernel is centered in the feature maps.
-        """
-        if not self._naturally_centered:
-            try:
-                return self._default_kernel_transform[0] == 'center'
-            except IndexError:
-                return False
-        return True
-
-    @property
-    def normalized(self) -> bool:
-        r"""
-        Returns if the kernel is normalized in the feature maps.
-        """
-        if not self._naturally_normalized:
-            try:
-                return self._default_kernel_transform[0] == 'normalize'
-            except IndexError:
-                return False
-        return True
 
     @property
     def _kernel_explicit_transform(self) -> TransformTree:
@@ -212,8 +206,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         """
         x = utils.castf(x)
         transform = self._get_transform(transform)
-        return self._kernel_explicit_transform.apply(oos=self._explicit_with_none, x=self.transform_input(x),
-                                                     transform=transform)
+        return self._kernel_explicit_transform.apply(x=self.transform_input(x), transform=transform)
 
     def k(self, x=None, y=None, explicit=None, transform=None) -> Tensor:
         r"""
@@ -351,7 +344,8 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         var = torch.sqrt(torch.diag(cov))[:, None]
         return cov / (var * var.T)
 
-    def explicit_preimage(self, phi_image: torch.Tensor | None =None, method: str='explicit', **kwargs) -> torch.Tensor:
+    def explicit_preimage(self, phi_image: torch.Tensor | None = None, method: str = 'explicit',
+                          **kwargs) -> torch.Tensor:
         r"""
         Computes a pre-image of an explicit feature map of the kernel, given by ``phi_image``.
         Different methods are available:

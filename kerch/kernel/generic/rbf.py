@@ -63,7 +63,7 @@ class RBF(Exponential):
 
     def __str__(self):
         if self._sigma_defined:
-            return f"RBF kernel (sigma: {str(self.sigma)})"
+            return f"RBF kernel (sigma: {self.sigma:1.2e})"
         return f"RBF kernel (sigma undefined)"
 
     @property

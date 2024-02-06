@@ -1,4 +1,6 @@
 # coding=utf-8
+from __future__ import annotations
+
 from abc import ABCMeta, abstractmethod
 from random import shuffle
 from torch.utils.data import TensorDataset

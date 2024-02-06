@@ -42,7 +42,3 @@ class Distance(_Distance, metaclass=ABCMeta):
     @abstractmethod
     def _dist(self, x, y) -> torch.Tensor:
         pass
-
-    @property
-    def _sigma_fact(self) -> float | None:
-        return None

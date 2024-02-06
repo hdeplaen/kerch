@@ -32,16 +32,16 @@ class TransformTree(Transform):
     """
 
     _all_transform = {"normalize": UnitSphereNormalization,  # for legacy
-                     "center": MeanCentering,  # for legacy
-                     "sphere": UnitSphereNormalization,
-                     "min": MinimumCentering,
-                     "variance": UnitVarianceNormalization,
-                     "standard": [MeanCentering, UnitVarianceNormalization],
-                     "minmax": MinMaxNormalization,
-                     "unit_sphere_normalization": UnitSphereNormalization,
-                     "mean_centering": MeanCentering,
-                     "minimum_centering": MinimumCentering,
-                     "unit_variance_normalization": UnitVarianceNormalization,
+                      "center": MeanCentering,  # for legacy
+                      "sphere": UnitSphereNormalization,
+                      "min": MinimumCentering,
+                      "variance": UnitVarianceNormalization,
+                      "standard": [MeanCentering, UnitVarianceNormalization],
+                      "minmax": MinMaxNormalization,
+                      "unit_sphere_normalization": UnitSphereNormalization,
+                      "mean_centering": MeanCentering,
+                      "minimum_centering": MinimumCentering,
+                      "unit_variance_normalization": UnitVarianceNormalization,
                       "minmax_normalization": MinMaxNormalization,
                       "standardize": [MeanCentering, UnitVarianceNormalization],
                       "minmax_rescaling": [MinimumCentering, MinMaxNormalization]}
@@ -93,11 +93,11 @@ class TransformTree(Transform):
         if default_transform is None:
             default_transform = []
 
-        self._default_transform = TransformTree.beautify_transform(default_transform)
+        self._default_transforms = TransformTree.beautify_transform(default_transform)
 
         # create default tree
         node = self
-        for transform in self._default_transform:
+        for transform in self._default_transforms:
             offspring = transform(explicit=self.explicit, default_path=True, cache_level=self.cache_level)
             node.add_offspring(offspring)
             node = offspring
@@ -105,14 +105,13 @@ class TransformTree(Transform):
         node.default = True
 
         self._base = sample
-        self._data = None
         self._data_oos = None
 
         self._diag_fun = diag_fun
 
     def __str__(self):
         output = "Transforms: \n"
-        if len(self._default_transform) == 0:
+        if len(self._default_transforms) == 0:
             return output + "\t" + "None (default)"
         node = self._default_node
         while not isinstance(node, TransformTree):
@@ -121,11 +120,22 @@ class TransformTree(Transform):
         return output
 
     @property
-    def default_transform(self) -> List:
+    def default_transforms(self) -> List:
         r"""
-        Default list of transform to be applied.
+        Default list of transforms to be applied.
         """
-        return self._default_transform
+        return self._default_transforms
+
+    @property
+    def final_transform(self) -> type(Transform):
+        r"""
+        Final transform to be applied, which is the last element of
+        :py:attr:`~kerch.transform.TransformTree.default_transforms`.
+        """
+        try:
+            return self._default_transforms[-1]
+        except IndexError:
+            return TransformTree
 
     def _get_data(self) -> Union[Tensor, Parameter]:
         if callable(self._base):
@@ -170,20 +180,14 @@ class TransformTree(Transform):
         pass
 
     def _explicit_oos(self, x=None):
-        if x == 'oos1':
-            return self._data_oos
-        else:
-            assert callable(self._data_oos), 'data_oos should be callable when providing an x which is not None.'
-            return self._data_oos(x)
+        if callable(self._base):
+            return self._base(x)
+        return x
 
     def _implicit_oos(self, x=None, y=None):
-        if x == 'oos1' and y == 'oos2':
-            return self._data_oos
-        else:
-            assert callable(self._data_oos), "data_oos should be callable in the implicit case as it requires the " \
-                                             "computation of data_fun(x,sample) for the centering and data_fun(x,x) for " \
-                                             "the normalization."
-            return self._data_oos(x, y)
+        if callable(self._base):
+            return self._base(x, y)
+        raise NotImplementedError
 
     def _revert_explicit(self, oos):
         return oos
@@ -194,7 +198,7 @@ class TransformTree(Transform):
     def _get_tree(self, transform: List[str] = None) -> List[Transform]:
         transform = TransformTree.beautify_transform(transform)
         if transform is None:
-            transform = self._default_transform
+            transform = self._default_transforms
 
         tree_path = [self]
         for tr_class in transform:
@@ -216,36 +220,19 @@ class TransformTree(Transform):
             If value is a Tensor, some transform may not work in implicit formulation. For example, the unit sphere
             normalization requires k(x,x) for all out-of-sample points. Some combinations may be even more intricate.
 
-        :param oos: Out-of-sample data, defaults to the function handle used for the sample.
         :param x: Relevant if using a function handle for value.
         :param y: Relevant if using a function handle for value in implicit mode.
         :param transform: Transforms to be used. If none are to be used, i.e. getting the raw data back, please
             specify [], not None, which will return the default transform used for the sample., defaults to None,
             i.e., the default transform.
 
-        :type oos: function handle or Tensor
         :type x: Tensor
         :type y: Tensor
         :type transform: List[str]
         """
-
-        if oos is None:
-            if callable(self._base):
-                oos = self._base
-            else:
-                self._logger.error("No out-of-sample provided and the default one is not a function handle.")
-
         tree_path = self._get_tree(transform)
-        if (not isinstance(oos, Tensor)) and x is None and y is None:
-            return tree_path[-1].sample
-        elif isinstance(oos, Tensor):
-            x = 'oos1'
-            y = 'oos2'
-
-        self._data_oos = oos
         sol = tree_path[-1].oos(x=x, y=y)
         self._clean_cache()
-        self._data_oos = None  # to avoid blocking the destruction if necessary by the garbage collector
         return sol
 
     def revert(self, value, transform: List[str] = None) -> Tensor:

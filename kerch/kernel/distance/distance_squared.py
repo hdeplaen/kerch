@@ -42,7 +42,3 @@ class DistanceSquared(_Distance, metaclass=ABCMeta):
 
     def _dist(self, x, y) -> torch.Tensor:
         return torch.sqrt(self._square_dist(x, y))
-
-    @property
-    def _sigma_fact(self) -> float | None:
-        return None

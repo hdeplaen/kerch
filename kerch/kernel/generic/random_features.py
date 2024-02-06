@@ -102,7 +102,7 @@ class RandomFeatures(Explicit):
 
                 # zeroing the gradients if relevant
                 if self.weights_trainable and self._weights.grad is not None:
-                    self._weights.grad.sample.zero_()
+                    self._weights.grad.x_original.zero_()
             self._logger.debug("The weights has been (re)initialized")
         else:
             self._weights = torch.nn.Parameter(torch.empty(0, dtype=utils.FTYPE),

@@ -1,11 +1,15 @@
 import torch
+from torch.autograd import Variable
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
 from ..kernel._base_kernel import _BaseKernel as K
 from ..feature.cache import Cache
-from ._smoother import smoother
+from ._knn import knn
 from ..utils import castf
+from tqdm import tqdm
 
 
-def iterative(obj, x0: torch.Tensor, num_iter: int = 100, lr=1.e-3):
+def iterative(obj, x0: torch.Tensor, num_iter: int = 50, lr=1.e-3, verbose: bool = False):
     r"""
     Minimizes to following problem for each point in order to find the preimage:
 
@@ -14,11 +18,12 @@ def iterative(obj, x0: torch.Tensor, num_iter: int = 100, lr=1.e-3):
 
     The method optimizes with an SGD algorithm.
 
-
+    :param verbose: Shows the training loop. Defaults to ``False``.
+    :type verbose: bool, optional
     :param obj: Objective to minimize.
     :param x0: Starting value for the optimization.
     :type x0: torch.Tensor [num_points, dim_input]
-    :param num_iter: Number of iterations for the optimization process. Defaults to 100.
+    :param num_iter: Number of iterations for the optimization process. Defaults to 50.
     :type num_iter: int, optional
     :param lr: Learning rate of the optimizer. Defaults to 0.001.
     :type lr: float, optional
@@ -28,25 +33,36 @@ def iterative(obj, x0: torch.Tensor, num_iter: int = 100, lr=1.e-3):
     # PRELIMINARIES
     x0 = castf(x0)
 
-    x = torch.nn.Parameter(x0, requires_grad=True)
+    x = Variable(x0, requires_grad=True)
     optimizer = torch.optim.SGD([x], lr=lr)
+    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=.8, patience=50, cooldown=50)
 
     # OPTIMIZE
     def closure():
-        optimizer.zero_grad()
+        optimizer.zero_grad(set_to_none=True)
         loss = obj(x)
-        loss.backward(retain_graph=True)
+        loss.backward(retain_graph=False)
         return loss
 
-    for idx in range(num_iter):
-        optimizer.step(closure)
+    if verbose:
+        epochs = tqdm(range(num_iter))
+    else:
+        epochs = range(num_iter)
+    for _ in epochs:
+        l = optimizer.step(closure)
+        scheduler.step(l)
+        last_lr = scheduler._last_lr[0]
+        if verbose:
+            epochs.set_description(f"Loss: {l:1.2e}, lr: {last_lr:1.1e}")
+        if last_lr < 1.e-5:
+            break
 
     # RETURN
     return x.data
 
 
-def iterative_preimage_k(k_image: torch.Tensor, kernel: K, num_iter: int = 100, lr=1.e-3,
-                       light_cache=True) -> torch.Tensor:
+def iterative_preimage_k(k_image: torch.Tensor, kernel: K, num_iter: int = 50, lr=1.e-3,
+                         light_cache=True, verbose: bool = False) -> torch.Tensor:
     r"""
     Minimizes to following problem for each point in order to find the preimage:
 
@@ -55,11 +71,13 @@ def iterative_preimage_k(k_image: torch.Tensor, kernel: K, num_iter: int = 100, 
 
     The method optimizes with an SGD algorithm.
 
+    :param verbose: Shows the training loop. Defaults to ``False``.
+    :type verbose: bool, optional
     :param k_image: coefficients in the RKHS to be inverted.
     :type k_image: torch.Tensor [num_points, num_idx]
     :param kernel: kernel on which this RKHS is based.
     :type kernel: :py:class:`kerch.kernel.Kernel` instance.
-    :param num_iter: Number of iterations for the optimization process. Defaults to 100.
+    :param num_iter: Number of iterations for the optimization process. Defaults to 50.
     :type num_iter: int, optional
     :param lr: Learning rate of the optimizer. Defaults to 0.001.
     :type lr: float, optional
@@ -89,14 +107,15 @@ def iterative_preimage_k(k_image: torch.Tensor, kernel: K, num_iter: int = 100, 
     assert num_iter > 0, \
         f"The number of iterations num_iter ({num_iter}) must be strictly positive (num_iter > 0)."
 
-    loss_fn = torch.nn.MSELoss(reduction='none')
-    x0 = smoother(weights=k_image, observations=kernel.current_sample)
+    loss_fn = torch.nn.MSELoss()
+    # x0 = torch.zeros(k_image.shape[0], kernel.dim_input, dtype=k_image.dtype)
+    x0 = knn(dists=k_image, observations=kernel.current_sample)
 
     def obj(vals):
         k_current = kernel.k(x=vals)
         return loss_fn(k_current, k_image)
 
-    sol = iterative(obj=obj, x0=x0, num_iter=num_iter, lr=lr)
+    sol = iterative(obj=obj, x0=x0, num_iter=num_iter, lr=lr, verbose=verbose)
 
     # SET BACK THE ORIGINAL CACHE LEVEL
     if (cache_level > Cache._cache_level_switcher['light']) and light_cache:
@@ -105,9 +124,8 @@ def iterative_preimage_k(k_image: torch.Tensor, kernel: K, num_iter: int = 100, 
     return sol
 
 
-
-def iterative_preimage_phi(phi_image: torch.Tensor, kernel: K, num_iter: int = 100, lr=1.e-3,
-                       light_cache=True) -> torch.Tensor:
+def iterative_preimage_phi(phi_image: torch.Tensor, kernel: K, num_iter: int = 50, lr=1.e-3,
+                           light_cache=True, verbose: bool = False) -> torch.Tensor:
     r"""
     Minimizes to following problem for each point in order to find the preimage:
 
@@ -116,11 +134,13 @@ def iterative_preimage_phi(phi_image: torch.Tensor, kernel: K, num_iter: int = 1
 
     The method optimizes with an SGD algorithm.
 
+    :param verbose: Shows the training loop. Defaults to ``False``.
+    :type verbose: bool, optional
     :param phi_image: feature map image to be inverted.
     :type phi_image: torch.Tensor [num_points, dim_feature]
     :param kernel: kernel on which this RKHS is based.
     :type kernel: :py:class:`kerch.kernel.Kernel` instance.
-    :param num_iter: Number of iterations for the optimization process. Defaults to 100.
+    :param num_iter: Number of iterations for the optimization process. Defaults to 50.
     :type num_iter: int, optional
     :param lr: Learning rate of the optimizer. Defaults to 0.001.
     :type lr: float, optional
@@ -144,21 +164,21 @@ def iterative_preimage_phi(phi_image: torch.Tensor, kernel: K, num_iter: int = 1
                                    "temporarily lower during the pre-image computation.")
 
     assert phi_image.size(1) == kernel.num_idx, \
-        (f"Pre-image: the provided explicit feature map images dimensions ({phi_image.size(1)}) do not correspond to the "
-         f"feature dimension of the provided kernel ({kernel.dim_feature}).")
+        f"Pre-image: the provided explicit feature map images dimensions ({phi_image.size(1)}) do not correspond to " \
+        f"the feature dimension of the provided kernel ({kernel.dim_feature})."
 
     assert num_iter > 0, \
         f"The number of iterations num_iter ({num_iter}) must be strictly positive (num_iter > 0)."
 
-    loss_fn = torch.nn.MSELoss(reduction='none')
+    loss_fn = torch.nn.MSELoss()
     weights = phi_image @ kernel.Phi.T
-    x0 = smoother(weights=weights, observations=kernel.current_sample)
+    x0 = knn(dists=weights, observations=kernel.current_sample)
 
     def obj(vals):
         phi_current = kernel.phi(x=vals)
         return loss_fn(phi_current, phi_image)
 
-    sol = iterative(obj=obj, x0=x0, num_iter=num_iter, lr=lr)
+    sol = iterative(obj=obj, x0=x0, num_iter=num_iter, lr=lr, verbose=verbose)
 
     # SET BACK THE ORIGINAL CACHE LEVEL
     if (cache_level > Cache._cache_level_switcher['light']) and light_cache:

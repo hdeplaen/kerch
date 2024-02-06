@@ -197,9 +197,6 @@ class _BaseKernel(Sample, metaclass=ABCMeta):
 
         :raises: ExplicitError
         """
-        # if x is None and y is None:
-        #     return self.K
-
         if x is None and y is None:
             return self._K(explicit=self.explicit)
 
