@@ -14,13 +14,13 @@ from typing import List, Union
 import torch
 from torch import Tensor
 
-from .. import utils
+from ..utils import kwargs_decorator, extend_docstring, castf, RepresentationError, equal
 from ._base_kernel import _BaseKernel
 from ..transform import TransformTree
 from ..transform.all import MeanCentering, UnitSphereNormalization
 
 
-@utils.extend_docstring(_BaseKernel)
+@extend_docstring(_BaseKernel)
 class Kernel(_BaseKernel, metaclass=ABCMeta):
     r"""
     :param kernel_transform: A list composed of the elements `'normalize'` or `'center'`. For example a centered
@@ -32,7 +32,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
     """
 
     @abstractmethod
-    @utils.kwargs_decorator({
+    @kwargs_decorator({
         "center": False,
         "normalize": False
     })
@@ -204,7 +204,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         :rtype: Tensor[num_x, dim_feature]
         :raises: ExplicitError
         """
-        x = utils.castf(x)
+        x = castf(x)
         transform = self._get_transform(transform)
         return self._kernel_explicit_transform.apply(x=self.transform_input(x), transform=transform)
 
@@ -240,20 +240,20 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         if explicit is None:
             explicit = self.explicit
 
-        x = utils.castf(x)
-        y = utils.castf(y)
+        x = castf(x)
+        y = castf(y)
         transform = self._get_transform(transform)
         if explicit:
             phi_x = self._kernel_explicit_transform.apply(x=self.transform_input(x),
                                                           transform=transform)
-            if utils.equal(x, y):
+            if equal(x, y):
                 phi_y = phi_x
             else:
                 phi_y = self._kernel_explicit_transform.apply(x=self.transform_input(y),
                                                               transform=transform)
             return phi_x @ phi_y.T
         else:  # implicit
-            if utils.equal(x, y):
+            if equal(x, y):
                 x = self.transform_input(x)
                 return self._kernel_implicit_transform.apply(x=x,
                                                              y=x,
@@ -306,7 +306,7 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         switcher = {"primal": primal,
                     "dual": dual}
 
-        fun = switcher.get(representation, utils.RepresentationError)
+        fun = switcher.get(representation, RepresentationError)
         return fun(x)
 
     def cov(self, x=None) -> Tensor:
@@ -366,13 +366,13 @@ class Kernel(_BaseKernel, metaclass=ABCMeta):
         :rtype: torch.Tensor [num_points, dim_input]
 
         """
-        phi_image = utils.castf(phi_image)
+        phi_image = castf(phi_image)
         if phi_image is None:
             phi_image = self.phi()
 
         method = method.lower()
         if method == 'explicit':
-            phi = self._explicit_projected.revert(phi_image)
+            phi = self._kernel_explicit_transform.revert(phi_image)
             x_tilde = self._explicit_preimage(phi)
             return self.sample_transform.revert(x_tilde)
         elif method == 'knn':

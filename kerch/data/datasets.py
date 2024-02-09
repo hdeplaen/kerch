@@ -50,8 +50,8 @@ class PimaIndians(_LearningSetTrain):
 class Spiral(_LearningSetTrain):
     def __init__(self, *args, **kwargs):
         super(Spiral, self).__init__(name="Spiral",
-                                          dim_data=2,
-                                          dim_labels=1,
+                                      dim_data=2,
+                                      dim_labels=1,
                                      range=(-5, 6, -5, 5),
                                      **kwargs)
 

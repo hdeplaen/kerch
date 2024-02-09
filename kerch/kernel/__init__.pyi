@@ -12,12 +12,18 @@ from .distance.select_distance import SelectDistance as SelectDistance
 # GENERIC
 from .generic.linear import Linear as Linear
 from .generic.rbf import RBF as RBF
-from .generic.rff import RFF as RFF
+
 from .generic.laplacian import Laplacian as Laplacian
 from .generic.cosine import Cosine as Cosine
 from .generic.sigmoid import Sigmoid as Sigmoid
 from .generic.polynomial import Polynomial as Polynomial
-from .generic.random_features import RandomFeatures as RandomFeatures
+
+
+# RANDOM FEATURES
+from .random_features.random_features import RandomFeatures as RandomFeatures
+from .random_features.rff import RFF as RFF
+from .random_features.rf_lrelu import RFLReLU as RFLReLU
+from .random_features.rf_arcsinh import RFArcsinh as RFArcsinh
 
 # NETWORK
 from .network.explicit_nn import ExplicitNN as ExplicitNN

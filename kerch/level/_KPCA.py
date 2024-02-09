@@ -273,9 +273,9 @@ class _KPCA(_Level, metaclass=ABCMeta):
         :param h: Latent representation :math:`h^\star`.
         :type h: Tensor[N, dim_output]
         :return: Feature representation :math:`\phi(x^\star)`.
-        :rtype: Tensor[N, dim_input]
+        :rtype: Tensor[N, dim_feature]
         """
-        return h @ self.weight.T
+        return h @ self.weight
 
     @torch.no_grad()
     def k_map(self, h: T) -> T:
@@ -302,9 +302,9 @@ class _KPCA(_Level, metaclass=ABCMeta):
         :param num: Number of :math:`h^\star` to be sampled, defaults to 1.
         :type num: int, optional
         :return: Latent representation.
-        :rtype: Tensor[num, dim_output]
+        :rtype: torch.Tensor [num, dim_output]
         """
-        return torch.randn((num, self.dim_output), device=self.hidden.device, dtype=utils.FTYPE)
+        return torch.randn((num, self.dim_output), device=self._hidden.device, dtype=utils.FTYPE)
 
     @torch.no_grad()
     def draw_phi(self, num: int = 1, posterior: bool = True) -> T:

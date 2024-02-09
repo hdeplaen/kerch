@@ -1,6 +1,7 @@
 # coding=utf-8
 import torch
 from ..utils import castf, DEFAULT_KERNEL_TYPE
+from ..feature.logger import _GLOBAL_LOGGER
 
 
 @torch.no_grad()
@@ -44,7 +45,9 @@ def knn(dists: torch.Tensor, observations: torch.Tensor, num: int = 1) -> torch.
         f"The number of required neighbors num must be strictly positive ({num})."
 
     # PRE-IMAGE
-    assert dists.min() >=0, 'There are negative distances for kNN.'
+    if dists.min() >= 0:
+        _GLOBAL_LOGGER._logger.warning('There are negative distances for kNN. The coefficients are changed.')
+        dists = dists - dists.min()
     _, indices = torch.topk(-dists, k=num, dim=1)
     kept_sample = observations[indices]
     return torch.mean(kept_sample, dim=1)

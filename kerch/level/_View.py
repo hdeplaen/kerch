@@ -27,7 +27,7 @@ class _View(Stochastic, metaclass=ABCMeta):
         (proportional to the number of sample datapoints, hence the formulation will be lighter hence faster.
         Defaults to 'dual'.
     :param weight: Weight values to start with. This is most of the cases not necessary if the level is meant to be
-        trained based on a gr+adient or fitted. Defaults to None.
+        trained based on a gradient or fitted. Defaults to None.
     :param hidden: Hidden values to start with. This is most of the cases not necessary if the level is meant to be
         trained based on a gradient or fitted. Defaults to None.
     :param_trainable: Boolean specifying whether the model parameters (weight, hidden and bias if applicable) are meant
@@ -36,8 +36,8 @@ class _View(Stochastic, metaclass=ABCMeta):
 
     :type dim_output: int, optional
     :type representation: str, optional
-    :type weight: Tensor[dim_feature, dim_output], optional
-    :type hidden: Tensor[num_sample, dim_output], optional
+    :type weight: torch.Tensor [dim_feature, dim_output], optional
+    :type hidden: torch.Tensor [num_sample, dim_output], optional
     :param_trainable: bool, optional
     """
 
@@ -183,7 +183,7 @@ class _View(Stochastic, metaclass=ABCMeta):
                 idx_sample = self.idx
             self._hidden.copy_(val.data[idx_sample, :].T)
             if self._level_trainable and self._hidden.grad is not None:
-                self._hidden.grad.x_original.zero_()
+                self._hidden.grad.zero_()
             self._reset_weight()
 
     @hidden.setter
@@ -204,7 +204,7 @@ class _View(Stochastic, metaclass=ABCMeta):
                         self._hidden.copy_(val)
                         # zeroing the gradients if relevant
                         if self._level_trainable and self._hidden.grad is not None:
-                            self._hidden.grad.x_original.zero_()
+                            self._hidden.grad.zero_()
                     else:
                         del self._hidden
                         # torch.no_grad() does not affect the constructor
@@ -290,13 +290,13 @@ class _View(Stochastic, metaclass=ABCMeta):
                             self._weight.copy_(val.T)
                             # zeroing the gradients if relevant
                             if self._level_trainable and self._weight.grad is not None:
-                                self._weight.grad.x_original.zero_()
+                                self._weight.grad.data.zero_()
                         else:
                             del self._weight
                             # torch.no_grad() does not affect the constructor
                             self._weight = torch.nn.Parameter(val.T, requires_grad=self._level_trainable)
 
-                        self._dim_output = self._weight.shape[0]
+                        self._dim_output = self.weight.shape[0]
                 self._reset_hidden()
             else:
                 self._reset_weight()

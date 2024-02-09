@@ -10,12 +10,12 @@ from ..utils import kwargs_decorator, castf
 
 class _LearningSet(metaclass=ABCMeta):
     @kwargs_decorator({'shuffle': True})
-    def __init__(self, name: str, dim_data: int, dim_labels: int, plot_range:int = None, **kwargs):
+    def __init__(self, name: str, dim_data: int, dim_labels: int, range:int = None, **kwargs):
         super(_LearningSet, self).__init__()
         self._name = name
         self._dim_data = dim_data
         self._dim_labels = dim_labels
-        self._plot_range: list[int] | None = plot_range
+        self._plot_range: list[int] | None = range
         self._shuffle: bool = kwargs.pop('shuffle', True)
 
     def __str__(self):

@@ -85,8 +85,8 @@ class SGDG(Optimizer):
                     if p.grad is None:
                         continue
 
-                    unity, _ = unit(p.x_original.view(p.size()[0], -1))
-                    g = p.grad.x_original.view(p.size()[0], -1)
+                    unity, _ = unit(p.data.view(p.size()[0], -1))
+                    g = p.grad.data.view(p.size()[0], -1)
 
                     if omega != 0:
                         # L=|Y'Y-I|^2/2=|YY'-I|^2/2+c
@@ -109,7 +109,7 @@ class SGDG(Optimizer):
                     mom = param_state['momentum_buffer']
                     mom_new = momentum * mom - group['lr'] * h_hat
 
-                    p.x_original.copy_(gexp(unity, mom_new).view(p.size()))
+                    p.data.copy_(gexp(unity, mom_new).view(p.size()))
                     mom.copy_(gpt(unity, mom_new))
 
             else:
@@ -120,9 +120,9 @@ class SGDG(Optimizer):
                 for p in group['params']:
                     if p.grad is None:
                         continue
-                    d_p = p.grad.x_original
+                    d_p = p.grad.data
                     if weight_decay != 0:
-                        d_p.add_(weight_decay, p.x_original)
+                        d_p.add_(weight_decay, p.data)
                     if momentum != 0:
                         param_state = self.state[p]
                         if 'momentum_buffer' not in param_state:
@@ -135,7 +135,7 @@ class SGDG(Optimizer):
                         else:
                             d_p = buf
 
-                    p.x_original.add_(-group['lr'], d_p)
+                    p.data.add_(-group['lr'], d_p)
 
         return loss
 
@@ -215,8 +215,8 @@ class AdamG(Optimizer):
                     if p.grad is None:
                         continue
 
-                    unity, _ = unit(p.x_original.view(p.size()[0], -1))
-                    g = p.grad.x_original.view(p.size()[0], -1)
+                    unity, _ = unit(p.data.view(p.size()[0], -1))
+                    g = p.grad.data.view(p.size()[0], -1)
 
                     if omega != 0:
                         # L=|Y'Y-I|^2/2=|YY'-I|^2/2+c
@@ -254,7 +254,7 @@ class AdamG(Optimizer):
                     deltas = mnew / vnew.add(epsilon).sqrt()
                     deltas.mul_(-alpha * group['lr'])
 
-                    p.x_original.copy_(gexp(unity, deltas).view(p.size()))
+                    p.data.copy_(gexp(unity, deltas).view(p.size()))
                     m.copy_(gpt2(unity, mnew, deltas))
                     v.copy_(vnew)
 
@@ -268,9 +268,9 @@ class AdamG(Optimizer):
                 for p in group['params']:
                     if p.grad is None:
                         continue
-                    d_p = p.grad.x_original
+                    d_p = p.grad.data
                     if weight_decay != 0:
-                        d_p.add_(weight_decay, p.x_original)
+                        d_p.add_(weight_decay, p.data)
                     if momentum != 0:
                         param_state = self.state[p]
                         if 'momentum_buffer' not in param_state:
@@ -283,6 +283,6 @@ class AdamG(Optimizer):
                         else:
                             d_p = buf
 
-                    p.x_original.add_(-group['lr'], d_p)
+                    p.data.add_(-group['lr'], d_p)
 
         return loss
