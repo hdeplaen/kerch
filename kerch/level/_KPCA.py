@@ -256,9 +256,9 @@ class _KPCA(_Level, metaclass=ABCMeta):
         """
 
         if phi is not None and k is None:
-            return phi @ self.weight.T @ self._Inv_primal
+            return phi @ self.weight.T
         if phi is None and k is not None:
-            return k @ self.hidden.T @ self._Inv_dual
+            return k @ self.hidden.T
         else:
             raise AttributeError("One and only one attribute phi or k has to be specified.")
 
@@ -275,7 +275,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
         :return: Feature representation :math:`\phi(x^\star)`.
         :rtype: Tensor[N, dim_feature]
         """
-        return h @ self.weight
+        return h @ torch.diag(torch.sqrt(self.vals)) @ self.weight
 
     @torch.no_grad()
     def k_map(self, h: T) -> T:

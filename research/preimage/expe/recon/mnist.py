@@ -12,14 +12,14 @@ kerch.set_ftype(torch.double)
 
 # preliminaries
 kernel_type = 'rfarcsinh'
-alpha = .1
+alpha = .05
 num_data = 20000
 num_weights = 4000
 num_components = 10
 grid_size = 8
 num_draw = grid_size ** 2
 fig_size = 28
-sigma=.5
+sigma=.2
 
 # dataset
 mnist = torchvision.datasets.MNIST('./files/', train=True, download=True,
@@ -76,8 +76,8 @@ def interpolation(lambda1, latent_1, latent_2):
 
     return inter_image.reshape(fig_size, fig_size)
 
-lambda_range = np.linspace(0, 1, 5)
-fig, axs = plt.subplots(1, 5, figsize=(15, 3))
+lambda_range = np.linspace(0, 1, 10)
+fig, axs = plt.subplots(2, 5, figsize=(15, 6))
 fig.subplots_adjust(wspace=.1)
 axs = axs.ravel()
 

@@ -6,8 +6,8 @@ torch.manual_seed(95)
 
 # preliminaries
 kernel_type = "rflrelu"
-alpha = .1
-num_weights = 400
+alpha = .01
+num_weights = 5000
 num_components = 4
 num_data = 100
 num_draw = 100
@@ -29,6 +29,7 @@ kpca.solve()
 
 # reconstruction
 sample_recon = kpca.explicit_preimage(kpca.Phi)
+h_sample = kpca.h_map(phi=kpca.Phi)
 
 # # generation
 h_star = kpca.draw_h(num_draw)
@@ -50,6 +51,9 @@ fig_range = data.info["range"]
 
 ax.legend()
 fig.suptitle('Two Moons')
-plt.xlim(fig_range[0], fig_range[1])
-plt.ylim(fig_range[2], fig_range[3])
+# plt.xlim(fig_range[0], fig_range[1])
+# plt.ylim(fig_range[2], fig_range[3])
 plt.show()
+
+
+# plot h

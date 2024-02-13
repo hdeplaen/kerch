@@ -5,6 +5,8 @@
 )](https://pypi.org/project/kerch/)
 [![License: LGPL-3.0](https://img.shields.io/github/license/hdeplaen/kerch
 )](https://www.gnu.org/licenses/lgpl-3.0.html)
+[![Documentation Status](https://readthedocs.org/projects/kerch/badge/?version=latest
+)](https://kerch.readthedocs.io/en/latest/?badge=latest)
 [![Size of the repository](https://img.shields.io/github/repo-size/hdeplaen/kerch
 )](https://github.com/hdeplaen/kerch)
 [![Total number of commits](https://img.shields.io/github/commit-activity/t/hdeplaen/kerch
