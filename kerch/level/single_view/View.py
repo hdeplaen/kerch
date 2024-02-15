@@ -109,10 +109,10 @@ class View(Kernel, _View, Sample):
         self._requires_bias = val
         self._bias.requires_grad = val and self._param_trainable
 
-    def _reset_weight(self) -> None:
+    def _reset_primal(self) -> None:
         self._weight = torch.nn.Parameter(torch.empty(0, dtype=FTYPE,
-                                                      device=self._weight.device),
-                                          requires_grad=self._weight.requires_grad)
+                                                      device=self._primal_param.device),
+                                          requires_grad=self._primal_param.requires_grad)
 
     @property
     def kappa(self) -> float:
@@ -164,7 +164,7 @@ class View(Kernel, _View, Sample):
     @param_trainable.setter
     def level_trainable(self, val: bool) -> None:
         self._param_trainable = val
-        self._hidden.requires_grad = val
+        self._dual_param.requires_grad = val
         self._weight.requires_grad = val
         self._bias.requires_grad = self.bias_trainable
 
@@ -206,7 +206,7 @@ class View(Kernel, _View, Sample):
         """
         return self.target[self.idx, :]
 
-    def _update_weight_from_hidden(self):
+    def _update_primal_from_dual(self):
         if self._hidden_exists:
             # will return a ExplicitError if not available
             self.weight = self.Phi.T @ self.H
@@ -214,7 +214,7 @@ class View(Kernel, _View, Sample):
         else:
             self._logger.info("The weight cannot _Based on the hidden values as these are unset.")
 
-    def _update_hidden_from_weight(self):
+    def _update_dual_from_primal(self):
         raise NotImplementedError
 
     ## MATHS

@@ -226,8 +226,8 @@ class _PPCA(_Level, metaclass=ABCMeta):
     def _stiefel_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         super(_PPCA, self)._euclidean_parameters(recurse)
         if self._representation == 'primal':
-            if self._weight_exists:
-                yield self._weight
+            if self._primal_param_exists:
+                yield self._primal_param
         else:
             if self._hidden_exists:
-                yield self._hidden
+                yield self._dual_param

@@ -36,12 +36,12 @@ class LSSVM(Level):
     def gamma(self, val):
         val = utils.castf(val, dev=self._gamma.device, tensor=False)
         self._gamma.data = val
-        self._reset_hidden()
-        self._reset_weight()
+        self._reset_dual()
+        self._reset_primal()
 
     def _center_hidden(self):
         if self._hidden_exists:
-            self._hidden.data -= torch.mean(self._hidden.data, dim=1)
+            self._dual_param.data -= torch.mean(self._dual_param.data, dim=1)
         else:
             self._logger.debug("The hidden variables cannot be centered as they are not set.")
 
@@ -97,19 +97,27 @@ class LSSVM(Level):
         hidden = sol[0:-1].data
         bias = sol[-1].data
 
-        self.update_hidden(hidden, idx_sample=self.idx)
+        self.update_dual(hidden, idx_sample=self.idx)
         self.bias = bias
 
     def _euclidean_parameters(self, recurse=True) -> Iterator[torch.nn.Parameter]:
         yield from super(LSSVM, self)._euclidean_parameters(recurse)
         if self._representation == 'primal':
-            if self._weight_exists:
+            if self._primal_param_exists:
                 yield self._weight
                 yield self._bias
         else:
             if self._hidden_exists:
-                yield self._hidden
+                yield self._dual_param
                 yield self._bias
+
+    @property
+    def H(self) -> torch.Tensor:
+        return self.dual_param
+
+    @property
+    def W(self) -> torch.Tensor:
+        return self.primal_param
 
     def loss(self, representation=None) -> T:
         fact = 1 / self.num_idx
@@ -155,5 +163,5 @@ class LSSVM(Level):
         super(LSSVM, self).after_step()
         self._center_hidden()
 
-    def _update_hidden_from_weight(self):
+    def _update_dual_from_primal(self):
         raise NotImplementedError

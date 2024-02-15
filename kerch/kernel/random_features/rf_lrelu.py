@@ -9,7 +9,7 @@ from .random_features import RandomFeatures
 class RFLReLU(RandomFeatures):
     def __init__(self, *args, **kwargs):
         super(RFLReLU, self).__init__(*args, **kwargs)
-        self.alpha = kwargs.pop('alpha', .5)
+        self.alpha = kwargs.pop('alpha', .1)
 
     def __str__(self):
         return 'random Leaky-ReLU features' + super(RFLReLU, self).__str__()

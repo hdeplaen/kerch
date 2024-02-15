@@ -82,12 +82,12 @@ class MultiView(_View):
         # add a view to the count
         self._num_views += 1
 
-    def _reset_hidden(self) -> None:
-        super(MultiView, self)._reset_hidden()
+    def _reset_dual(self) -> None:
+        super(MultiView, self)._reset_dual()
         for v in self.views:
             v.hidden = self.hidden
 
-    def _reset_weight(self) -> None:
+    def _reset_primal(self) -> None:
         for view in self._views.values():
             view._reset_weight()
 
@@ -162,11 +162,11 @@ class MultiView(_View):
         else:
             return self.weight[dim[id - 1]:dim[id], :]
 
-    def _update_weight_from_hidden(self):
+    def _update_primal_from_dual(self):
         for v in self._views:
             v._update_weight_from_hidden()
 
-    def _update_hidden_from_weight(self):
+    def _update_dual_from_primal(self):
         raise NotImplementedError
 
     ## MATH

@@ -53,5 +53,5 @@ class KPCA(_KPCA, Level):
             R = H @ H.T
             return K @ R
 
-    def _update_hidden_from_weight(self):
+    def _update_dual_from_primal(self):
         self.hidden = self._forward(representation='primal') @ torch.diag(1 / self.vals)

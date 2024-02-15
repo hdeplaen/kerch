@@ -1,5 +1,6 @@
 # coding=utf-8
 from __future__ import annotations
+from math import sqrt
 import torch
 from torch import Tensor as T
 from abc import ABCMeta
@@ -28,6 +29,10 @@ class _KPCA(_Level, metaclass=ABCMeta):
         Eigenvalues of the model. The model has to be fitted for these values to exist.
         """
         return self._vals
+
+    @property
+    def sqrt_vals(self) -> T:
+        return self._get(key="sqrt_vals", fun=lambda: torch.sqrt(self.vals))
 
     @vals.setter
     def vals(self, val):
@@ -82,8 +87,8 @@ class _KPCA(_Level, metaclass=ABCMeta):
             return var
         return var.detach().cpu().numpy()
 
-    def _reset_hidden(self) -> None:
-        super(_KPCA, self)._reset_hidden()
+    def _reset_dual(self) -> None:
+        super(_KPCA, self)._reset_dual()
         self._remove_from_cache(["total_variance_primal", "total_variance_dual"])
 
     def relative_variance(self, as_tensor=False) -> Union[float, T]:
@@ -114,9 +119,9 @@ class _KPCA(_Level, metaclass=ABCMeta):
                               f"dimension is reduced to {self.dim_feature}.")
             self.dim_output = self.dim_feature
 
-        v, w = utils.eigs(C, k=self.dim_output, psd=True)
+        v, e = utils.eigs(C, k=self.dim_output, psd=True)
 
-        self.weight = w
+        self.primal_param = e
         self.vals = v
 
     def _solve_dual(self) -> None:
@@ -134,10 +139,11 @@ class _KPCA(_Level, metaclass=ABCMeta):
                               f"dimension is reduced to {self.num_idx}.")
             self.dim_output = self.num_idx
 
-        v, h = utils.eigs(K, k=self.dim_output, psd=True)
+        v, e = utils.eigs(K, k=self.dim_output, psd=True)
+        fact = 1 / self.num_idx
 
-        self.update_hidden(h)
-        self.vals = v
+        self.update_dual(e)
+        self.vals = fact * v
 
     @utils.extend_docstring(_Level.solve)
     @torch.no_grad()
@@ -158,11 +164,19 @@ class _KPCA(_Level, metaclass=ABCMeta):
         # the stiefel optimizer requires the first dimension to be the number of eigenvectors
         yield from super(_KPCA, self)._stiefel_parameters(recurse)
         if self._representation == 'primal':
-            if self._weight_exists:
-                yield self._weight
+            if self._primal_param_exists:
+                yield self._primal_param
         else:
             if self._hidden_exists:
-                yield self._hidden
+                yield self._dual_param
+
+    @property
+    def H(self) -> T:
+        return self.dual_param
+
+    @property
+    def W(self) -> T:
+        return self.primal_param @ torch.diag(self.sqrt_vals)
 
     def loss(self, representation=None) -> T:
         r"""
@@ -193,10 +207,10 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
         def fun():
             if representation == 'primal':
-                U = self._weight  # transposed compared to weight
+                U = self._primal_param  # transposed compared to primal_param
                 M = self.C
             else:
-                U = self._hidden  # transposed compared to hidden
+                U = self._dual_param  # transposed compared to dual_param
                 M = self.K
             return torch.trace(U.T @ U @ M)
 
@@ -208,41 +222,8 @@ class _KPCA(_Level, metaclass=ABCMeta):
                 'Projected': self._loss_projected().data.detach().cpu().item(),
                 **super(_KPCA, self).losses()}
 
-
-    ###################################################################################################
-
-    @property
     @torch.no_grad()
-    def _Inv_primal(self) -> T:
-        def compute() -> T:
-            return torch.inv(self.weight.T @ self.weight)
-
-        return self._get(key="_Inv_primal", level_key="PPCA_Inv_primal", fun=compute)
-
-    @_Inv_primal.setter
-    @torch.no_grad()
-    def _Inv_primal(self, val: T) -> None:
-        val = utils.castf(val)
-        self._get(key="_Inv_primal", level_key="PPCA_Inv_primal", fun=lambda: val, overwrite=True)
-
-    @property
-    @torch.no_grad()
-    def _Inv_dual(self) -> T:
-        def compute() -> T:
-            return torch.inv(self.hidden.T @ self.K @ self.hidden)
-
-        return self._get(key="_Inv_dual", level_key="PPCA_Inv_dual", fun=compute)
-
-    @_Inv_dual.setter
-    @torch.no_grad()
-    def _Inv_dual(self, val: T) -> None:
-        val = utils.castf()
-        self._get(key="_Inv_dual", level_key="PPCA_Inv_dual", fun=lambda: val, overwrite=True)
-
-    ########################################################################################################################
-
-    @torch.no_grad()
-    def h_map(self, phi: T | None = None, k: T | None = None) -> T:
+    def h(self, phi: T | None = None, k: T | None = None) -> T:
         r"""
         Draws a `h` given the maximum a posteriori of the distribution. By choosing the input, you either
         choose a primal or dual representation.
@@ -254,11 +235,10 @@ class _KPCA(_Level, metaclass=ABCMeta):
         :return: MAP of h given phi or k.
         :rtype: Tensor[N, dim_output]
         """
-
         if phi is not None and k is None:
-            return phi @ self.weight.T
+            return phi @ self.W @ torch.diag(1 / self.vals)
         if phi is None and k is not None:
-            return k @ self.hidden.T
+            return k @ self.H @ torch.diag(1 / self.vals)
         else:
             raise AttributeError("One and only one attribute phi or k has to be specified.")
 
@@ -275,7 +255,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
         :return: Feature representation :math:`\phi(x^\star)`.
         :rtype: Tensor[N, dim_feature]
         """
-        return h @ torch.diag(torch.sqrt(self.vals)) @ self.weight
+        return h @ self.W.T
 
     @torch.no_grad()
     def k_map(self, h: T) -> T:
@@ -292,7 +272,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
         :return: RKHS representation :math:`k(x^\star,\mathtt{sample})`.
         :rtype: Tensor[N, num_idx]
         """
-        return h @ self.hidden.T @ self.K
+        return h @ self.H.T @ self.K
 
     @torch.no_grad()
     def draw_h(self, num: int = 1) -> T:
@@ -304,7 +284,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
         :return: Latent representation.
         :rtype: torch.Tensor [num, dim_output]
         """
-        return torch.randn((num, self.dim_output), device=self._hidden.device, dtype=utils.FTYPE)
+        return torch.randn((num, self.dim_output), device=self._dual_param.device, dtype=utils.FTYPE)
 
     @torch.no_grad()
     def draw_phi(self, num: int = 1, posterior: bool = True) -> T:

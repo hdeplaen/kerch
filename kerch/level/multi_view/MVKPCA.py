@@ -112,7 +112,7 @@ class MVKPCA(_KPCA, MVLevel):
 
         return sol
 
-    def _update_hidden_from_weight(self):
+    def _update_dual_from_primal(self):
         self.hidden = sum([v(representation='primal') for v in self.views]) @ torch.diag(1 / self.vals)
 
     # def predict_opt(self, inputs: dict, representation='dual', lr: float = .001, tot_iter: int = 500) -> dict:
