@@ -1,8 +1,9 @@
 # coding=utf-8
 import os
 import numpy as np
+import torch
 
-from ..utils import kwargs_decorator
+from ..utils import kwargs_decorator, FTYPE
 from ._LearningSet import _LearningSetTrain, _LearningSetTrainTest
 
 def _get_file_path(name: str):
@@ -11,24 +12,50 @@ def _get_file_path(name: str):
 
 
 class TwoMoons(_LearningSetTrain):
-    @kwargs_decorator({'noise': .1})
     def __init__(self, *args, **kwargs):
-        self._noise = kwargs['noise']
+        self._noise = kwargs.pop('noise', .1)
+        self._separation = kwargs.pop('separation', [1, .5])
+        assert isinstance(self._noise, (int, float))
+        assert self._noise >= 0.
+        assert isinstance(self._separation, (list, tuple))
+        assert len(self._separation) == 2
+
+        # range computation
+        min_x = min(-1, self._separation[0]-1) - 2. * self._noise
+        max_x = max(1, self._separation[0]+1) + 2. * self._noise
+        min_y = min(0, self._separation[1]-1) - 2. * self._noise
+        max_y = max(1, self._separation[1]) + 2. * self._noise
+
+        fact_x = (max_x - min_x) / 2
+        fact_y = (max_y - min_y) / 2
+
+        range = (min_x - fact_x, max_x + fact_x,
+                 min_y - fact_y, max_y + fact_y)
+
         super(TwoMoons, self).__init__(name="Two Moons",
                                        dim_data=2,
                                        dim_labels=1,
-                                       range=(-4, 7, -4, 4),
+                                       range=range,
                                        **kwargs)
 
 
     def _training(self, num):
-        try:
-            from sklearn import datasets as skdata
-        except ModuleNotFoundError:
-            raise ModuleNotFoundError("This dataset requires sklearn to be installed. Please install it and try again.")
-        data, labels = skdata.make_moons(num, noise=self._noise)
-        labels = np.where(labels == 0, -1, 1)
-        return data * 2.5, labels
+        n_samples_out = num // 2
+        n_samples_in = num - n_samples_out
+
+        outer_circ_x = torch.cos(torch.linspace(0, torch.pi, n_samples_out))
+        outer_circ_y = torch.sin(torch.linspace(0, torch.pi, n_samples_out))
+        inner_circ_x = self._separation[0] - torch.cos(torch.linspace(0, torch.pi, n_samples_in))
+        inner_circ_y = self._separation[1] - torch.sin(torch.linspace(0, torch.pi, n_samples_in))
+
+        data = torch.cat((torch.stack([inner_circ_x, inner_circ_y], dim=1),
+                          torch.stack([outer_circ_x, outer_circ_y], dim=1)))
+        labels = torch.cat((torch.ones(n_samples_in, dtype=FTYPE), torch.zeros(n_samples_out, dtype=FTYPE)))[:, None]
+
+        if self._noise != 0.:
+            data += self._noise * torch.randn(data.shape)
+
+        return data, labels
 
 
 class PimaIndians(_LearningSetTrain):
