@@ -65,9 +65,10 @@ class Sample(Stochastic,  # manager stochastic indices
 
         self._sample = torch.nn.Parameter(torch.empty((0, 0)))
         self._sample_trainable = kwargs.pop('sample_trainable', False)
+        self._default_sample_transform = kwargs.pop('sample_transform', [])
 
         self.init_sample(sample, idx_sample=kwargs.pop('idx_sample', None), prop_sample=kwargs.pop('prop_sample', None))
-        self._default_sample_transform = kwargs.pop('sample_transform', [])
+
 
     @property
     def dim_input(self) -> int:
@@ -253,7 +254,7 @@ class Sample(Stochastic,  # manager stochastic indices
     def _sample_transform(self) -> TransformTree:
         def fun():
             return TransformTree(explicit=True,
-                                 sample=self._sample[self.idx, :],
+                                 sample=self.sample[self.idx, :],
                                  default_transform=self._default_sample_transform,
                                  cache_level=self._cache_level)
 

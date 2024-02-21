@@ -25,6 +25,7 @@ from .random_features.rff import RFF as RFF
 from .random_features.rf_lrelu import RFLReLU as RFLReLU
 from .random_features.rf_arcsinh import RFArcsinh as RFArcsinh
 from .random_features.rf_hyperbola import RFHyperbola as RFHyperbola
+from .random_features.rf_stacked import RFStacked as RFStacked
 
 # NETWORK
 from .network.explicit_nn import ExplicitNN as ExplicitNN

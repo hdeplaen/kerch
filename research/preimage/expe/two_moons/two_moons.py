@@ -8,12 +8,12 @@ torch.manual_seed(95)
 newline = '\n'
 
 # preliminaries
-kernel_type = "rfhyperbola"
+kernel_type = "rfstacked"
 alpha = 1
 beta = 2
 gamma=1
 delta=1
-num_weights = 200
+num_weights = [20, 100, 500]
 num_components = 6
 num_data = 100
 num_draw = 100
