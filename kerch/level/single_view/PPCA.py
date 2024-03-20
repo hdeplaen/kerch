@@ -10,25 +10,6 @@ from ... import utils
 class PPCA(_PPCA, Level):
     def __init__(self, *args, **kwargs):
         super(PPCA, self).__init__(*args, **kwargs)
-    @torch.no_grad()
-    def h_map(self, phi: Optional[T] = None, k: Optional[T] = None) -> T:
-        r"""
-        Draws a `h` given the maximum a posteriori of the distribution. By choosing the input, you either
-        choose a primal or dual representation.
-        :param phi: Primal representation.
-        :param k: Dual representation.
-        :type phi: Tensor[N, dim_input], optional
-        :type k: Tensor[N, num_idx], optional
-        :return: MAP of h given phi or k.
-        :rtype: Tensor[N, dim_output]
-        """
-
-        if phi is not None and k is None:
-            return (phi - self.mu) @ self.weight @ torch.diag(1 / self.vals) * self.num_idx
-        if phi is None and k is not None:
-            return k @ self.hidden @ torch.diag(1 / self.vals) * self.num_idx
-        else:
-            raise AttributeError("One and only one attribute phi or k has to be specified.")
 
     @torch.no_grad()
     def _solve_primal(self) -> None:
@@ -73,3 +54,11 @@ class PPCA(_PPCA, Level):
             self.sigma = (torch.trace(K) - torch.sum(v)) / (self.num_idx * (self.num_idx - self.dim_output))
         self.vals = v
         self.hidden = h @ torch.diag(torch.sqrt(1 / self.num_idx - self.sigma ** 2 / v))
+
+    @property
+    def H(self) -> T:
+        return self.dual_param
+
+    @property
+    def W(self) -> T:
+        return self.primal_param @ torch.diag(self.sqrt_vals)

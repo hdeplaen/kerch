@@ -13,6 +13,8 @@ from .. import utils
 class _KPCA(_Level, metaclass=ABCMeta):
     r"""
     Kernel Principal Component Analysis.
+
+    :param prune_small_vals: Indicates whether the eigenvalues smaller than the machine precision should be pruned.
     """
 
     @utils.extend_docstring(_Level)
@@ -22,6 +24,8 @@ class _KPCA(_Level, metaclass=ABCMeta):
                                         requires_grad=False)
         self._subloss_projected = None
         self._subloss_original = None
+
+        self._prune_small_vals = kwargs.pop('prune_small_vals', False)
 
     @property
     def vals(self) -> T:
@@ -121,6 +125,19 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
         v, e = utils.eigs(C, k=self.dim_output, psd=True)
 
+        # prune very small eigenvalues if they exist to avoid unstability due to the later inversion
+        idx_small = v < utils.EPS
+        sum_small = torch.sum(idx_small)
+        if sum_small > 0:
+            self._logger.warning(
+                f"{sum_small} very small or negative eigenvalues are detected on {self._dim_output}. "
+                f"To avoid numerical instability, these values are pruned. "
+                f"The new explicit dimension is now {self._dim_output - sum_small}.")
+            keep_idx = torch.logical_not(idx_small)
+            v = v[keep_idx]
+            e = e[:, keep_idx]
+            self._dim_output = self._dim_output - sum_small
+
         self.primal_param = e
         self.vals = v
 
@@ -141,6 +158,19 @@ class _KPCA(_Level, metaclass=ABCMeta):
 
         v, e = utils.eigs(K, k=self.dim_output, psd=True)
         fact = 1 / self.num_idx
+
+        # prune very small eigenvalues if they exist to avoid unstability due to the later inversion
+        idx_small = v < utils.EPS
+        sum_small = torch.sum(idx_small)
+        if sum_small > 0:
+            self._logger.warning(
+                f"{sum_small} very small or negative eigenvalues are detected on {self._dim_output}. "
+                f"To avoid numerical instability, these values are pruned. "
+                f"The new explicit dimension is now {self._dim_output - sum_small}.")
+            keep_idx = torch.logical_not(idx_small)
+            v = v[keep_idx]
+            e = e[:, keep_idx]
+            self._dim_output = self._dim_output - sum_small
 
         self.update_dual(e)
         self.vals = fact * v

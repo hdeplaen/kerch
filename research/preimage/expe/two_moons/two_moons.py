@@ -1,10 +1,13 @@
+from __future__ import annotations
+
 import kerch
 import torch
 import matplotlib as mpl
 from matplotlib import pyplot as plt
 import math
 
-
+kerch.set_ftype(torch.float64)
+kerch.set_eps(1.e-15)
 
 torch.manual_seed(95)
 newline = '\n'
@@ -15,8 +18,8 @@ alpha = 1
 beta = 2
 gamma=1
 delta=1
-num_weights = [20, 100, 500]
-num_components = 6
+num_weights = [10, 20, 50, 100, 150, 200]
+num_components = 200
 num_data = 100
 num_draw = 100
 sigma = .1
@@ -69,71 +72,10 @@ plt.xlim(fig_range[0], fig_range[1])
 plt.ylim(fig_range[2], fig_range[3])
 fig.savefig('input.png', format='png')
 
+kerch.plot.matplotlib.plot_vals(h_sample, 6, "Sample h").savefig('sample.png', format='png')
+kerch.plot.matplotlib.plot_vals(h_star, 6, 'Generated h').savefig('gen.png', format='png')
+kerch.plot.matplotlib.plot_eigenvalues(kpca, labels=True, num_vals=6, section_div=2).savefig("eigenvalues.png",
+                                                                                             format='png')
 
-# plot h
-def plot_individual(ax: plt.Axes, vals: torch.Tensor, title: str = ""):
-    vals = vals.squeeze()
-    assert len(vals.shape) == 1, 'Incorrect shape to be plotted.'
-    mean = torch.mean(vals)
-    std = torch.std(vals)
-
-    # hist
-    ax.hist(vals, bins=15, density=True, alpha=0.5, color='k')
-
-    # pdf
-    fact = 1 / (std * math.sqrt(2 * math.pi))
-    xmin, xmax = ax.get_xlim()
-    x = torch.linspace(xmin, xmax, 100)
-    y = fact * torch.exp(-.5*(x-mean)**2 / (std**2) )
-    ax.plot(x, y, 'k', linewidth=2)
-
-    # labels
-    ax.set_title(title + newline + f"($\mu$={mean:1.2f}, $\sigma$={std:1.2f})")
-    # ax.set_xlabel("Value")
-    # ax.set_ylabel("PDF")
-
-def plot_vals(vals: torch.Tensor, title: str=""):
-    vals = vals.squeeze()
-    if len(vals.shape) == 1:
-        vals = vals[:, None]
-    assert len(vals.shape) == 2, 'Incorrect shape, must be of dimension 2.'
-
-    num_plots = vals.shape[1]
-    num_columns = math.ceil(num_plots ** (.5))
-    num_rows = math.ceil(num_plots / num_columns)
-    fig, axs = plt.subplots(num_rows, num_columns)
-
-    for i, ax in enumerate(axs.ravel()):
-        try:
-            plot_individual(ax, vals[:,i], f"Component {i+1}")
-        except IndexError:
-            break
-    # fig.suptitle(title)
-    fig.tight_layout(pad=.5)
-    return fig
-
-plot_vals(h_sample, "Sample h").savefig('sample.png', format='png')
-plot_vals(h_star, 'Generated h').savefig('gen.png', format='png')
-
-# eigenvalues histogram
-mpl.rcParams['hatch.linewidth'] = 1.5
-fig, ax = plt.subplots()
-vals = 100*kpca.vals / kpca.total_variance(normalize=False)
-ax.bar(range(kpca.dim_output), vals, facecolor='none', edgecolor='k', hatch="///", linewidth=1.5)
-ax.set_ylim(0,100)
-ax.set_xlim(-.7,5.7)
-ax.axvline(x=1.5, color='k', linestyle='dashed', linewidth=2)
-ax.annotate(f"{vals[:2].sum():1.2f}%", xy=(0,85))
-ax.annotate(f"{vals[2:].sum():1.2f}%", xy=(3,85))
-ax.fill([1.5,1.5,5.7,5.7],[0,100,100,0], facecolor='k', edgecolor='none', alpha=.2)
-# fig.suptitle("Eigenvalues")
-ax.set_ylabel("Explained variance [%]")
-ax.set_xticks(range(kpca.dim_output), [f"$\lambda_{i+1}$" for i in range(kpca.dim_output)])
-fig.savefig("eigenvalues.png", format='png')
-
-
-# plot_vals(sample_recon, 'Sample Phi (recon.)').savefig('sample.png', format='png')
-# plot_vals(oos_recon, 'Generated Phi (recon.)').savefig('gen.png', format='png')
-
-
-
+# kerch.plot.matplotlib.plot_vals(sample_recon, 'Sample Phi (recon.)').savefig('sample.png', format='png')
+# kerch.plot.matplotlib.plot_vals(oos_recon, 'Generated Phi (recon.)').savefig('gen.png', format='png')

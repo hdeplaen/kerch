@@ -6,8 +6,8 @@ kerch.set_ftype(torch.double)
 
 # preliminaries
 num_components = 20
-num_data = 20
-num_draw = 100
+num_data = 500
+num_draw = 500
 num_iter = 10000
 
 # model
@@ -20,8 +20,8 @@ kpca.solve()
 h_star = kpca.draw_h(num_draw)
 k_star = kpca.k_map(h_star)
 
-sample_recon = kpca.implicit_preimage(kpca.K, method='knn') #, verbose=True, num_iter=num_iter, lr=1.e-1)
-oos_recon = kpca.implicit_preimage(k_star, method='knn') #, verbose=True, num_iter=num_iter, lr=1.e-1)
+sample_recon = kpca.implicit_preimage(kpca.K, method='iterative', verbose=True, num_iter=num_iter, lr=1.e-1)
+oos_recon = kpca.implicit_preimage(k_star, method='iterative', verbose=True, num_iter=num_iter, lr=1.e-1)
 
 
 # plot

@@ -22,6 +22,8 @@ def eigs(A, k=None, B=None, psd=True, sym=True):
             _GLOBAL_LOGGER._logger.info('Using hermitian eigendecomposition (eigh).')
             v = v[:, -k:]  # eigenvectors are vertical components of v
             s = s[-k:]
+            v = torch.flip(v, dims=(1,))
+            s = torch.flip(s, dims=(0,))
         elif psd:
             if B is None:
                 _, s, v = torch.svd(A)

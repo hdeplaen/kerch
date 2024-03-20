@@ -1,4 +1,6 @@
 # coding=utf-8
+from __future__ import annotations
+
 import torch
 from torch import Tensor as T
 from typing import Optional, Iterator
@@ -35,10 +37,79 @@ class _PPCA(_Level, metaclass=ABCMeta):
         """
         return self._vals
 
+    @property
+    def sqrt_vals(self) -> T:
+        return self._get(key="sqrt_vals", fun=lambda: torch.sqrt(self.vals))
+
     @vals.setter
     def vals(self, val):
         val = utils.castf(val, tensor=False, dev=self._vals.device)
         self._vals.data = val
+
+    def total_variance(self, as_tensor=False, normalize=True, representation=None) -> float | T:
+        r"""
+        Total variance contained in the feature map. In primal formulation,
+        this is given by :math:`\DeclareMathOperator{\tr}{tr}\tr(C)`, where :math:`C = \sum\phi(x)\phi(x)^\top` is
+        the covariance matrix on the sample. In dual, this is given by :math:`\DeclareMathOperator{\tr}{tr}\tr(K)`,
+        where :math:`K_{ij} = k(x_i,x_j)` is the kernel matrix on the sample.
+
+        :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
+            to ``False``
+        :type as_tensor: bool, optional
+
+        .. warning::
+            For this value to strictly be interpreted as a variance, the corresponding kernel (or feature map)
+            has to be normalized. In that case however, the total variance will amount to the dimension of the feature
+            map in primal and the number of datapoints in dual.
+        """
+        representation = utils.check_representation(representation=representation, default=self._representation)
+        level_key = "KPCA_total_variance_default_representation" if representation == self._representation \
+            else "KPCA_total_variance_other_representation"
+        if representation == 'primal':
+            var = self._get("total_variance_primal", level_key=level_key, fun=lambda: torch.trace(self.C))
+        else:
+            var = self._get("total_variance_dual", level_key=level_key, fun=lambda: torch.trace(self.K))
+        if normalize:
+            var /= self.num_idx
+        if as_tensor:
+            return var
+        return var.detach().cpu().numpy()
+
+    def model_variance(self, as_tensor=False, normalize=True) -> float | T:
+        r"""
+        Total variance learnt by the model given by the sum of the eigenvalues.
+
+        :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
+            to ``False``
+        :type as_tensor: bool, optional
+
+        .. warning::
+            For this value to strictly be interpreted as a variance, the corresponding kernel (or feature map)
+            has to be normalized. We refer to the remark of ``total_variance``.
+        """
+        var = torch.sum(self.vals)
+        if normalize:
+            var /= self.num_idx
+        if as_tensor:
+            return var
+        return var.detach().cpu().numpy()
+
+    def _reset_dual(self) -> None:
+        super(_PPCA, self)._reset_dual()
+        self._remove_from_cache(["total_variance_primal", "total_variance_dual"])
+
+    def relative_variance(self, as_tensor=False) -> float | T:
+        r"""
+        Relative variance learnt by the model given by ```model_variance``/``total_variance``.
+        This number is always comprised between 0 and 1 and avoids any considerations on normalization.
+
+        :param as_tensor: Indicated whether the variance has to be returned as a float or a torch.Tensor., defaults
+            to ``False``
+        :type as_tensor: bool, optional
+        """
+        var = self.model_variance(as_tensor=as_tensor, normalize=False) / \
+              self.total_variance(as_tensor=as_tensor, normalize=False)
+        return var
 
     @property
     def feature_noise(self) -> float:
