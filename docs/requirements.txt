@@ -7,3 +7,5 @@ sphinx-codeautolink
 sphinx-design
 sphinx-toolbox
 chardet
+matplotlib
+shpinxcontrib-bibtex

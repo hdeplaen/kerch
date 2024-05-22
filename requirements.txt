@@ -1,5 +1,5 @@
-kerch; python_version>="3.6"
-torch>=1.8
+torch
+matplotlib
 numpy
 pyyaml
 tqdm
