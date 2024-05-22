@@ -8,6 +8,7 @@ File containing the RBF kernel class.
 @date: March 2021
 """
 from __future__ import annotations
+from abc import ABCMeta, abstractmethod
 from .. import utils
 from .kernel import Kernel
 from torch import Tensor as T
@@ -49,3 +50,8 @@ class Implicit(Kernel, metaclass=ABCMeta):
 
         """
         raise ExplicitError(cms=self)
+
+    @abstractmethod
+    def _implicit(self, x, y):
+        pass
+

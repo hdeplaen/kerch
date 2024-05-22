@@ -40,7 +40,7 @@ class LSSVM(Level):
         self._reset_primal()
 
     def _center_hidden(self):
-        if self._hidden_exists:
+        if self._dual_param_exists:
             self._dual_param.data -= torch.mean(self._dual_param.data, dim=1)
         else:
             self._logger.debug("The hidden variables cannot be centered as they are not set.")
@@ -107,7 +107,7 @@ class LSSVM(Level):
                 yield self._weight
                 yield self._bias
         else:
-            if self._hidden_exists:
+            if self._dual_param_exists:
                 yield self._dual_param
                 yield self._bias
 

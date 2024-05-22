@@ -197,7 +197,7 @@ class _KPCA(_Level, metaclass=ABCMeta):
             if self._primal_param_exists:
                 yield self._primal_param
         else:
-            if self._hidden_exists:
+            if self._dual_param_exists:
                 yield self._dual_param
 
     @property

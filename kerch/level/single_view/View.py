@@ -207,7 +207,7 @@ class View(Kernel, _View, Sample):
         return self.target[self.idx, :]
 
     def _update_primal_from_dual(self):
-        if self._hidden_exists:
+        if self._dual_param_exists:
             # will return a ExplicitError if not available
             self.weight = self.Phi.T @ self.H
             self._logger.debug("Setting the weight _Based on the hidden values.")

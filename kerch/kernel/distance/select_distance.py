@@ -32,7 +32,7 @@ class SelectDistance(_Distance, metaclass=ABCMeta):
                 distance_class = Minkowski
             else:
                 raise ValueError('Unrecognized distance')
-        elif isinstance(distance, _Distance):
+        elif issubclass(distance, _Distance):
             distance_class = distance
         else:
             raise ValueError('The distance must either be a string or a class inheriting from '

@@ -1,0 +1,10 @@
+Class,Explicit Feature Map,Kernel,Parameters,Factory Type
+:py:class:`kerch.kernel.Uniform`,:octicon:`x;1em;sd-text-danger`,":math:`k(x,y)=1 \text{ for } \frac{d(x,y)}{\sigma} \leq 1`","``sigma``, ``distance``",``’uniform’``
+:py:class:`kerch.kernel.Triangular`,:octicon:`x;1em;sd-text-danger`,":math:`k(x,y)=1 - \frac{d(x,y)}{\sigma} \text{ for } \frac{d(x,y)}{\sigma} \leq 1`","``sigma``, ``distance``",``’triangular’``
+:py:class:`kerch.kernel.Epanechnikov`,:octicon:`x;1em;sd-text-danger`,":math:`k(x,y)=1 - \left(\frac{d(x,y)}{\sigma}\right)^2 \text{ for } \frac{d(x,y)}{\sigma} \leq 1`","``sigma``, ``distance``",``’epanechnikov’``
+:py:class:`kerch.kernel.Quartic`,:octicon:`x;1em;sd-text-danger`,":math:`k(x,y)= \left(1 - \left(\frac{d(x,y)}{\sigma}\right)^2\right)^2 \text{ for } \frac{d(x,y)}{\sigma} \leq 1`","``sigma``, ``distance``",``’quartic’``
+:py:class:`kerch.kernel.Triweight`,:octicon:`x;1em;sd-text-danger`,":math:`k(x,y)= \left(1 - \left(\frac{d(x,y)}{\sigma}\right)^2\right)^3 \text{ for } \frac{d(x,y)}{\sigma} \leq 1`","``sigma``, ``distance``",``’triweight’``
+:py:class:`kerch.kernel.Tricube`,:octicon:`x;1em;sd-text-danger`,":math:`k(x,y)= \left(1 - \left|\frac{d(x,y)}{\sigma}\right|^3\right)^3 \text{ for } \frac{d(x,y)}{\sigma} \leq 1`","``sigma``, ``distance``",``’tricube’``
+:py:class:`kerch.kernel.Exponential`,:octicon:`x;1em;sd-text-danger`,":math:`k(x,y)= \exp\left(-\frac{d(x,y)}{\sigma}\right)`","``sigma``, ``distance``, ``squared``",``’exponential’``
+:py:class:`kerch.kernel.Logistic`,:octicon:`x;1em;sd-text-danger`,":math:`k(x,y)= \frac{4}{\exp\left(d(x,y)/\sigma\right) + 2 + \exp\left(-d(x,y)/\sigma\right)}`","``sigma``, ``distance``",``’logistic’``
+:py:class:`kerch.kernel.Silverman`,:octicon:`x;1em;sd-text-danger`,":math:`k(x,y)= \exp\left(-\frac{d(x,y)}{\sqrt{2}\sigma}\right)\sin\left(\frac{d(x,y)}{\sqrt{2}\sigma} + \frac{\pi}{4}\right)`","``sigma``, ``distance``",``’silverman’``

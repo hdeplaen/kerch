@@ -6,7 +6,9 @@ This class is meant to be inherited for to create kernels that are of the form
 
 .. math::
 
-    k(x,y) = f\left(\frac{d(x,y)}{\sigma}\right)
+    k(x,y) = f\left(\frac{d(x,y)}{\sigma}\right),
+
+in particular the :py:class:`kerch.kernel.Exponential` class and its subclasses such as :py:class:`kerch.kernel.RBF`.
 
 Abstract Classes
 ================
@@ -49,7 +51,7 @@ Minimal Example
     from matplotlib import pyplot as plt
 
     # we define our l1 kernel
-    class MyDistance(kerch.kernel.Distance):
+    class MyExponential(kerch.kernel.Exponential):
         def _dist(self, x, y):
             # x: torch.Tensor of size [num_x, dim]
             # y: torch.Tensor of size [num_y, dim]
@@ -215,10 +217,6 @@ a name and the ``hparams`` property.
 
 .. code-block:: python
 
-    import kerch
-    import torch
-    import numpy as np
-
     # we define our l1 kernel
     class MyExponential(kerch.kernel.Exponential):
         def __init__(self, *args, **kwargs):
@@ -259,6 +257,116 @@ a name and the ``hparams`` property.
             # return torch.Tensor of size [num_x, num_y]
             return torch.sum(torch.abs(diff)**self.degree, dim=0, keepdim=False)
 
+
+Example without an Exponential
+------------------------------
+We can also directly use the :py:class:`kerch.kernel.Distance` class to create a kernel that is not an exponential.
+For example, let us consider the implementation of an :math:`\ell^1`-based and the use of the pre-defined
+:math:`\ell^2`-distance based kernel.
+
+.. code-block:: python
+
+    # we define our l1 kernel
+    class MyL1Distance(kerch.kernel.Distance):
+        def __init__(self, *args, **kwargs):
+            super(kerch.kernel.Distance, self).__init__(*args, **kwargs)
+
+        def _dist(self, x, y):
+            # x: torch.Tensor of size [num_x, dim]
+            # y: torch.Tensor of size [num_y, dim]
+            x = x.T[:, :, None]
+            y = y.T[:, None, :]
+
+            diff = x - y
+
+            # return torch.Tensor of size [num_x, num_y]
+            return torch.sum(torch.abs(diff), dim=0, keepdim=False)
+
+
+    # we define out kernel that is going to use the distances
+    class MyKernel(kerch.kernel.SelectDistance):
+        def __init__(self, *args, **kwargs):
+            super(kerch.kernel.SelectDistance, self).__init__(*args, **kwargs)
+
+        def _implicit(self, x, y):
+            # x: torch.Tensor of size [num_x, dim]
+            # y: torch.Tensor of size [num_y, dim]
+            # return torch.Tensor of size [num_x, num_y]
+            return -self._dist(x, y)
+
+    # we define our sample
+    t = np.expand_dims(np.arange(0,15), axis=1)
+    sample = np.concatenate((np.sin(t / np.pi) + 1, np.cos(t / np.pi) - 1), axis=1)
+
+    # we define our two kernels, the first one with our defined distance, the second one with a pre-defined distance
+    k1 = MyKernel(sample=sample, distance=MyL1Distance)
+    k2 = MyKernel(sample=sample, distance='euclidean')
+
+    # plot
+    plt.figure(1)
+    plt.imshow(k1.K)
+    plt.colorbar()
+    plt.title("L1")
+
+    plt.figure(2)
+    plt.imshow(k2.K)
+    plt.colorbar()
+    plt.title("L2")
+
+
+.. plot::
+
+    import kerch
+    import torch
+    import numpy as np
+    from matplotlib import pyplot as plt
+
+    # we define our l1 kernel
+    class MyL1Distance(kerch.kernel.Distance):
+        def __init__(self, *args, **kwargs):
+            super(kerch.kernel.Distance, self).__init__(*args, **kwargs)
+
+        def _dist(self, x, y):
+            # x: torch.Tensor of size [num_x, dim]
+            # y: torch.Tensor of size [num_y, dim]
+            x = x.T[:, :, None]
+            y = y.T[:, None, :]
+
+            diff = x - y
+
+            # return torch.Tensor of size [num_x, num_y]
+            return torch.sum(torch.abs(diff), dim=0, keepdim=False)
+
+
+    # we define out kernel that is going to use the distances
+    class MyKernel(kerch.kernel.SelectDistance):
+        def __init__(self, *args, **kwargs):
+            super(kerch.kernel.SelectDistance, self).__init__(*args, **kwargs)
+
+        def _implicit(self, x, y):
+            # x: torch.Tensor of size [num_x, dim]
+            # y: torch.Tensor of size [num_y, dim]
+            # return torch.Tensor of size [num_x, num_y]
+            return -self._dist(x, y)
+
+    # we define our sample
+    t = np.expand_dims(np.arange(0,15), axis=1)
+    sample = np.concatenate((np.sin(t / np.pi) + 1, np.cos(t / np.pi) - 1), axis=1)
+
+    # we define our two kernels, the first one with our defined distance, the second one with a pre-defined distance
+    k1 = MyKernel(sample=sample, distance=MyL1Distance)
+    k2 = MyKernel(sample=sample, distance='euclidean')
+
+    # plot
+    plt.figure(1)
+    plt.imshow(k1.K)
+    plt.colorbar()
+    plt.title("L1")
+
+    plt.figure(2)
+    plt.imshow(k2.K)
+    plt.colorbar()
+    plt.title("L2")
 
 
 Inheritance Diagram

@@ -53,6 +53,11 @@ all time, or in other words that the kernels are translational invariant. We typ
 
 Statistical Kernels
 -------------------
+
+.. csv-table::
+    :file: statistics/statistics.csv
+    :header-rows: 1
+
 .. toctree::
     :hidden:
     :maxdepth: 3
