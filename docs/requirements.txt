@@ -8,4 +8,4 @@ sphinx-design
 sphinx-toolbox
 chardet
 matplotlib
-shpinxcontrib-bibtex
+sphinxcontrib-bibtex
