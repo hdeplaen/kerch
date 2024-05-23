@@ -1,0 +1,5 @@
+[default]
+entity = hdeplaen
+project = Kerch
+base_url = https://api.wandb.ai
+

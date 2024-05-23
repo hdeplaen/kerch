@@ -1,6 +1,0 @@
-Key,Description,``'none'``,``'light'``,``'normal'``,``'heavy'``,``'total'``
-``"sample_phi"``,Explicit feature map of the sample,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
-``"sample_C"``,Explicit matrix of the sample,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
-``"sample_K"``,Kernel matrix of the sample,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
-``"kernel_explicit_transform"``,Explicit Transformation Tree,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` 
-``"kernel_implicit_transform"``,Implicit Transformation Tree,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` 

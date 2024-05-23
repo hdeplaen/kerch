@@ -1,0 +1,9 @@
+Key,Description,``'none'``,``'light'``,``'normal'``,``'heavy'``,``'total'``
+``"forward_sample_default_representation"``,Output value of the sample in the default representation,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"forward_sample_other_representation"``,Output value of the sample in the other representation,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"forward_oos_default_representation"``,Output value of an out-of-sample in the default representation,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"forward_oos_other_representation"``,Output value of an out-of-sample in the other representation,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info`
+``"Level_I_default_respresentation"``,Identity matrix in the default representation dimension,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"Level_I_other_respresentation"``,Identity matrix in the other representation dimension,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info`
+``"Level_subloss_default_respresentation"``,Individual sublosses in the default representation,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info` ,:octicon:`check;1em;sd-text-info`
+``"Level_subloss_other_respresentation"``,Individual sublosses in the other representation,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`x;1em` ,:octicon:`check;1em;sd-text-info`
