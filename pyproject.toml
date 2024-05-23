@@ -58,4 +58,7 @@ E-DUALITY = "https://www.esat.kuleuven.be/stadius/E/"
 ESAT-STADIUS = "https://www.esat.kuleuven.be/stadius/"
 
 [tool.setuptools.dynamic]
-version = {attr = "uotod.__version__"}
+version = {attr = "kerch.__version__"}
+
+[tool.setuptools]
+packages = ["kerch"]
