@@ -1,52 +1,48 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kernel Module &mdash; kerch 0.3 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sphinx-codeautolink.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
-  <!--[if lt IE 9]>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kernel Module — kerch 0.3 documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-codeautolink.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/design-tabs.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Linear Kernel" href="generic/linear.html" />
-    <link rel="prev" title="Models" href="../examples/models.html" /> 
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="generic/linear.html" rel="next" title="Linear Kernel"/>
+<link href="../examples/models.html" rel="prev" title="Models"/>
 </head>
-
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../index.html" class="icon icon-home">
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
             kerch
           </a>
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">General</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../general/index.html">Why Kerch?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general/install.html">Install</a></li>
@@ -131,32 +127,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../general/utils.html">Utilitaries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
 </ul>
-
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">kerch</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Kernel Module</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/kernel/index.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <div class="section" id="kernel-module">
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">kerch</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item active">Kernel Module</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/kernel/index.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<div class="section" id="kernel-module">
 <h1>Kernel Module<a class="headerlink" href="#kernel-module" title="Permalink to this headline"></a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h2>
@@ -185,13 +177,13 @@ formulation which can be computed otherwise than with an inner product of the ex
 <h3>Kernel Factory<a class="headerlink" href="#kernel-factory" title="Permalink to this headline"></a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.kernel.factory">
-<code class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></code><code class="sig-name descname"><span class="pre">factory</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">kernel_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="abstract/kernel.html#kerch.kernel.Kernel" title="kerch.kernel.kernel.Kernel"><span class="pre">kerch.kernel.kernel.Kernel</span></a></span></span><a class="reference internal" href="../_modules/kerch/kernel/_factory.html#factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.factory" title="Permalink to this definition"></a></dt>
+<code class="sig-prename descclassname"><span class="pre">kerch.kernel.</span></code><code class="sig-name descname"><span class="pre">factory</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">kernel_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="abstract/kernel.html#kerch.kernel.Kernel" title="kerch.kernel.kernel.Kernel"><span class="pre">kerch.kernel.kernel.Kernel</span></a></span></span><a class="reference internal" href="../_modules/kerch/kernel/_factory.html#factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.kernel.factory" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a kernel based on the specified name with the specified arguments. This is the same as
 calling <cite>kerch.kernel.name(*args, **kwargs)</cite> (if <cite>name</cite> is not a string here). This allows for the creation of kernel where
 the name of kernel is passed as a string.</p>
 <table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
+<col class="field-name"/>
+<col class="field-body"/>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>kernel_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Type of kernel chosen. For the possible choices, please refer to the <cite>Factory Type</cite> column of the
@@ -208,33 +200,32 @@ values, please refer to the default values of the requested kernel.</li>
 </tbody>
 </table>
 </dd></dl>
-
 </div>
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/index.html#module-numpy" title="numpy"><span class="nn">numpy</span></a> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/index.html#module-matplotlib" title="matplotlib"><span class="nn">matplotlib</span></a> <span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="matplotlib.pyplot"><span class="n">pyplot</span></a> <span class="k">as</span> <span class="n">plt</span>
 
-<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> <span class="mf">.1</span>
-<span class="n">oos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> <span class="mf">.1</span>
+<span class="n">sample</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.sin.html#numpy.sin" title="numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span> <span class="o">/</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/constants.html#numpy.pi" title="numpy.pi"><span class="n">np</span><span class="o">.</span><span class="n">pi</span></a><span class="p">)</span> <span class="o">+</span> <span class="mf">.1</span>
+<span class="n">oos</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.sin.html#numpy.sin" title="numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span> <span class="o">/</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/constants.html#numpy.pi" title="numpy.pi"><span class="n">np</span><span class="o">.</span><span class="n">pi</span></a><span class="p">)</span> <span class="o">+</span> <span class="mf">.1</span>
 
-<span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;polynomial&quot;</span><span class="p">,</span> <span class="n">sample</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="../kernel/abstract/kernel.html#kerch.kernel.Kernel" title="kerch.kernel.kernel.Kernel"><span class="n">k</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/index.html#kerch.kernel.factory" title="kerch.kernel.factory"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">factory</span></a><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">"polynomial"</span><span class="p">,</span> <span class="n">sample</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Sample - Sample&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Sample - Sample"</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">oos</span><span class="p">),</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Sample - OOS&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Sample - OOS"</span><span class="p">)</span>
 
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">oos</span><span class="p">),</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;OOS - Sample&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"OOS - Sample"</span><span class="p">)</span>
 
 <span class="n">im</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">oos</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">oos</span><span class="p">),</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;OOS - OOS&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"OOS - OOS"</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flat</span><span class="p">:</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
@@ -245,7 +236,7 @@ values, please refer to the default values of the requested kernel.</li>
 </div>
 <p>(<a class="reference download internal" download="" href="../_downloads/6dd1d3068eeb50b74271808b45d00de9/index-1.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="../_downloads/2bceac6cfbf4165141d5a9d0ead98d1f/index-1.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/eba04ee1c32f3c41454abba1a8393280/index-1.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/cd6918583d3d10a69209bc70e5592379/index-1.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
 <div class="figure align-default">
-<img alt="../_images/index-1.png" class="plot-directive" src="../_images/index-1.png" />
+<img alt="../_images/index-1.png" class="plot-directive" src="../_images/index-1.png"/>
 </div>
 </div>
 <div class="section" id="different-kernels">
@@ -254,11 +245,11 @@ values, please refer to the default values of the requested kernel.</li>
 <h3>Generic Kernels<a class="headerlink" href="#generic-kernels" title="Permalink to this headline"></a></h3>
 <table border="1" class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Class</th>
@@ -276,13 +267,13 @@ values, please refer to the default values of the requested kernel.</li>
 <td><code class="docutils literal notranslate"><span class="pre">’linear’</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generic/rbf.html#kerch.kernel.RBF" title="kerch.kernel.RBF"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.RBF</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)=\exp\left(-\frac{\left\lVert x-y\right\rVert^2_2}{2\sigma^2}\right)\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’rbf’</span></code></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generic/laplacian.html#kerch.kernel.Laplacian" title="kerch.kernel.Laplacian"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Laplacian</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)=\exp\left(-\frac{\left\lVert x-y\right\rVert_2}{2\sigma^2}\right)\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’laplacian’</span></code></td>
@@ -300,7 +291,7 @@ values, please refer to the default values of the requested kernel.</li>
 <td><code class="docutils literal notranslate"><span class="pre">’cosine’</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generic/sigmoid.html#kerch.kernel.Sigmoid" title="kerch.kernel.Sigmoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Sigmoid</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y) = \sigma\left( a (x^\top y) + b \right)\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’sigmoid’</span></code></td>
@@ -326,11 +317,11 @@ values, please refer to the default values of the requested kernel.</li>
 <h3>Network-Based Kernels<a class="headerlink" href="#network-based-kernels" title="Permalink to this headline"></a></h3>
 <table border="1" class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Class</th>
@@ -348,7 +339,7 @@ values, please refer to the default values of the requested kernel.</li>
 <td><code class="docutils literal notranslate"><span class="pre">’explicit_nn’</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="network/implicit_nn.html#kerch.kernel.ImplicitNN" title="kerch.kernel.ImplicitNN"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.ImplicitNN</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y) = NN\left( [x, y] \right).\)</span></td>
 <td>None</td>
 <td><code class="docutils literal notranslate"><span class="pre">’implicit_nn’</span></code></td>
@@ -364,11 +355,11 @@ values, please refer to the default values of the requested kernel.</li>
 all time, or in other words that the kernels are translational invariant. We typically consider the following kernels:</p>
 <table border="1" class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Class</th>
@@ -380,19 +371,19 @@ all time, or in other words that the kernels are translational invariant. We typ
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="time/indicator.html#kerch.kernel.Indicator" title="kerch.kernel.Indicator"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Indicator</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td>See documentation</td>
 <td><code class="docutils literal notranslate"><span class="pre">lag</span></code>, <code class="docutils literal notranslate"><span class="pre">gamma</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’indicator’</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generic/rbf.html#kerch.kernel.RBF" title="kerch.kernel.RBF"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.RBF</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)=\exp\left(-\frac{\left\lVert x-y\right\rVert^2_2}{2\sigma^2}\right)\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’rbf’</span></code></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="time/hat.html#kerch.kernel.Hat" title="kerch.kernel.Hat"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Hat</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td>See documentation</td>
 <td><code class="docutils literal notranslate"><span class="pre">lag</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’hat’</span></code></td>
@@ -406,11 +397,11 @@ all time, or in other words that the kernels are translational invariant. We typ
 <h3>Statistical Kernels<a class="headerlink" href="#statistical-kernels" title="Permalink to this headline"></a></h3>
 <table border="1" class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Class</th>
@@ -422,55 +413,55 @@ all time, or in other words that the kernels are translational invariant. We typ
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="statistics/uniform.html#kerch.kernel.Uniform" title="kerch.kernel.Uniform"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Uniform</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)=1 \text{ for } \frac{d(x,y)}{\sigma} \leq 1\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’uniform’</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="statistics/triangular.html#kerch.kernel.Triangular" title="kerch.kernel.Triangular"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Triangular</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)=1 - \frac{d(x,y)}{\sigma} \text{ for } \frac{d(x,y)}{\sigma} \leq 1\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’triangular’</span></code></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="statistics/epanechnikov.html#kerch.kernel.Epanechnikov" title="kerch.kernel.Epanechnikov"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Epanechnikov</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)=1 - \left(\frac{d(x,y)}{\sigma}\right)^2 \text{ for } \frac{d(x,y)}{\sigma} \leq 1\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’epanechnikov’</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="statistics/quartic.html#kerch.kernel.Quartic" title="kerch.kernel.Quartic"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Quartic</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)= \left(1 - \left(\frac{d(x,y)}{\sigma}\right)^2\right)^2 \text{ for } \frac{d(x,y)}{\sigma} \leq 1\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’quartic’</span></code></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="statistics/triweight.html#kerch.kernel.Triweight" title="kerch.kernel.Triweight"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Triweight</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)= \left(1 - \left(\frac{d(x,y)}{\sigma}\right)^2\right)^3 \text{ for } \frac{d(x,y)}{\sigma} \leq 1\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’triweight’</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="statistics/tricube.html#kerch.kernel.Tricube" title="kerch.kernel.Tricube"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Tricube</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)= \left(1 - \left|\frac{d(x,y)}{\sigma}\right|^3\right)^3 \text{ for } \frac{d(x,y)}{\sigma} \leq 1\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’tricube’</span></code></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="statistics/exponential.html#kerch.kernel.Exponential" title="kerch.kernel.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Exponential</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)= \exp\left(-\frac{d(x,y)}{\sigma}\right)\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>, <code class="docutils literal notranslate"><span class="pre">squared</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’exponential’</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="statistics/logistic.html#kerch.kernel.Logistic" title="kerch.kernel.Logistic"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Logistic</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)= \frac{4}{\exp\left(d(x,y)/\sigma\right) + 2 + \exp\left(-d(x,y)/\sigma\right)}\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’logistic’</span></code></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="statistics/silverman.html#kerch.kernel.Silverman" title="kerch.kernel.Silverman"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Silverman</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y)= \exp\left(-\frac{d(x,y)}{\sqrt{2}\sigma}\right)\sin\left(\frac{d(x,y)}{\sqrt{2}\sigma} + \frac{\pi}{4}\right)\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’silverman’</span></code></td>
@@ -484,11 +475,11 @@ all time, or in other words that the kernels are translational invariant. We typ
 <h3>Vision Kernels<a class="headerlink" href="#vision-kernels" title="Permalink to this headline"></a></h3>
 <table border="1" class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Class</th>
@@ -500,13 +491,13 @@ all time, or in other words that the kernels are translational invariant. We typ
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="vision/additive_chi2.html#kerch.kernel.AdditiveChi2" title="kerch.kernel.AdditiveChi2"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.AdditiveChi2</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y) = \sum_i \frac{2x_i y_i}{x_i + y_i}\)</span></td>
 <td>None</td>
 <td><code class="docutils literal notranslate"><span class="pre">’additive_chi_2’</span></code></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="vision/skewed_chi2.html#kerch.kernel.SkewedChi2" title="kerch.kernel.SkewedChi2"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.SkewedChi2</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><span class="math notranslate nohighlight">\(k(x,y) = \prod_i \frac{2\sqrt{x_i+p} \sqrt{y_i+p}}{x_i + y_i + 2}\)</span></td>
 <td><code class="docutils literal notranslate"><span class="pre">p</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">’skewed_chi_2’</span></code></td>
@@ -520,11 +511,11 @@ all time, or in other words that the kernels are translational invariant. We typ
 <h3>Abstract Kernels<a class="headerlink" href="#abstract-kernels" title="Permalink to this headline"></a></h3>
 <table border="1" class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
+<col width="20%"/>
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Class</th>
@@ -536,7 +527,7 @@ all time, or in other words that the kernels are translational invariant. We typ
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td><a class="reference internal" href="statistics/exponential.html#kerch.kernel.Exponential" title="kerch.kernel.Exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exponential</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><code class="xref py py-meth docutils literal notranslate"><span class="pre">_dist()</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">sigma</span></code></td>
 <td>N/A</td>
@@ -548,7 +539,7 @@ all time, or in other words that the kernels are translational invariant. We typ
 <td>N/A</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="abstract/implicit.html#kerch.kernel.Implicit" title="kerch.kernel.Implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Implicit</span></code></a></td>
-<td><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-x sd-text-danger" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x sd-text-danger" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
 <td><code class="xref py py-meth docutils literal notranslate"><span class="pre">_implicit()</span></code></td>
 <td>None</td>
 <td>N/A</td>
@@ -574,20 +565,16 @@ classes <a class="reference internal" href="statistics/exponential.html#kerch.ke
 <a class="reference internal" href="abstract/kernel.html#kerch.kernel.Kernel" title="kerch.kernel.Kernel"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Kernel</span></code></a>.</p>
 </div>
 </div>
-
-
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../examples/models.html" class="btn btn-neutral float-left" title="Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="generic/linear.html" class="btn btn-neutral float-right" title="Linear Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright KU Leuven, January 2024.</p>
-  </div>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="../examples/models.html" rel="prev" title="Models"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="generic/linear.html" rel="next" title="Linear Kernel">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright KU Leuven, January 2024.</p>
+</div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
@@ -595,15 +582,14 @@ classes <a class="reference internal" href="statistics/exponential.html#kerch.ke
    
 
 </footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
+</div>
+</div>
+</section>
+</div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
-
+  </script>
 </body>
 </html>

@@ -1,0 +1,9 @@
+recursive-exclude img *.*
+recursive-exclude docs *.*
+recursive-exclude examples *.*
+recursive-exclude test *.*
+recursive-exclude install *.*
+recursive-exclude misc *.*
+recursive-exclude research *.*
+recursive-exclude sandbox *.*
+global-exclude *.o *.a .git *.pyc *.swp

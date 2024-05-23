@@ -10,7 +10,6 @@ File containing the feature kernel class.
 
 import torch
 
-
 from .. import utils
 from .explicit import Explicit, Kernel
 from ._base_kernel import _BaseKernel
@@ -132,7 +131,7 @@ class Nystrom(Explicit):
                                   f"magnitude is non-negligible.")
 
             # prune very small eigenvalues if they exist to avoid unstability due to the later inversion
-            idx_small = lambdas < 1.e-10
+            idx_small = lambdas < utils.EPS
             sum_small = torch.sum(idx_small)
             if sum_small > 0:
                 self._logger.warning(

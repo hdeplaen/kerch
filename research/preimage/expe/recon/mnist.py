@@ -11,10 +11,10 @@ kerch.set_ftype(torch.double)
 
 
 # preliminaries
-kernel_type = 'rflrelu'
+kernel_type = 'rfstacked'
 alpha = .1
 num_data = 60000
-num_weights = 4000
+num_weights = [1000, 2000, 4000]
 num_components = 30
 grid_size = 8
 num_draw = grid_size ** 2
