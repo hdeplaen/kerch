@@ -1,0 +1,6 @@
+<map id="inheritance4c60e1209d" name="inheritance4c60e1209d">
+<area shape="rect" id="node1" href="#kerch.feature.Cache" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="118,157,269,184"/>
+<area shape="rect" id="node2" href="module.html#kerch.feature.Module" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="114,81,273,109"/>
+<area shape="rect" id="node3" href="logger.html#kerch.feature.Logger" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="5,5,161,33"/>
+<area shape="rect" id="node4" title="Base class for all neural network modules." alt="" coords="185,5,424,33"/>
+</map>

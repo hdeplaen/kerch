@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kerch.kernel.nystrom &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/design-tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kerch.kernel.nystrom</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kerch.kernel.nystrom</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">File containing the feature kernel class.</span>
+
+<span class="sd">@author: HENRI DE PLAEN</span>
+<span class="sd">@copyright: KU LEUVEN</span>
+<span class="sd">@license: MIT</span>
+<span class="sd">@date: May 2022</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">.explicit</span> <span class="kn">import</span> <span class="n">Explicit</span><span class="p">,</span> <span class="n">Kernel</span>
+<span class="kn">from</span> <span class="nn">._base_kernel</span> <span class="kn">import</span> <span class="n">_BaseKernel</span>
+<span class="kn">from</span> <span class="nn">._factory</span> <span class="kn">import</span> <span class="n">factory</span>
+
+<div class="viewcode-block" id="Nystrom"><a class="viewcode-back" href="../../../kernel/generic/nystrom.html#kerch.kernel.Nystrom">[docs]</a><span class="nd">@utils</span><span class="o">.</span><span class="n">extend_docstring</span><span class="p">(</span><span class="n">Kernel</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Nystrom</span><span class="p">(</span><span class="n">Explicit</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Nyström kernel. Constructs an explicit feature map based on the eigendecomposition of any kernel matrix based on</span>
+<span class="sd">    some sample.</span>
+
+<span class="sd">    :param dim: Dimension of the explicit feature map to be constructed. This value cannot exceed the number of sample</span>
+<span class="sd">        points. During eigendecomposition, very small eigenvalues are also going to be pruned to avoid numerical</span>
+<span class="sd">        instability. If `None`, the value will be assigned to `num_sample`., defaults to `None`</span>
+<span class="sd">    :param base_kernel_type: The name of kernel on which the explicit feature map is going to be constructed. Default to</span>
+<span class="sd">        kerch.DEFAULT_KERNEL_TYPE</span>
+<span class="sd">    :param base_kernel_transform: Same as kernel_transform but for the base kernel, when using the factory through</span>
+<span class="sd">        `base_type`. Defaults to [].</span>
+<span class="sd">    :param \**kwargs: Other arguments for the _Projected kernel (e.g. the bandwidth for an RBF kernel, the degree for a</span>
+<span class="sd">        polynomial kernel etc.). For the default values, please refer to the requested class in question.</span>
+<span class="sd">    :param base_kernel: Instead of creating a new kernel on which to use the Nyström method, one can also perform it</span>
+<span class="sd">        on an existing kernel. In that case, the other _Projected arguments are bypassed., defaults to `None`</span>
+<span class="sd">    :type dim: int, optional</span>
+<span class="sd">    :type \**kwargs: dict, optional</span>
+<span class="sd">    :type base_type: str, optional</span>
+<span class="sd">    :type base_kernel_transforms: list(str), optional</span>
+<span class="sd">    :type base_kernel: kerch.kernel.*, optional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">base_kernel_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;base_kernel_type&#39;</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">DEFAULT_KERNEL_TYPE</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">base_kernel_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;nystrom&quot;</span><span class="p">,</span> <span class="s1">&#39;Cannot create a Nyström kernel based on another Nyström &#39;</span> \
+                                                         <span class="s1">&#39;kernel.&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">k</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;base_kernel&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;base_kernel must be of kernel type (use base_type instead).&quot;</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># normal case with a kernel created from the factory</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Nystrom</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span> <span class="o">=</span> <span class="n">factory</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                                               <span class="s2">&quot;kernel_type&quot;</span><span class="p">:</span> <span class="n">base_kernel_type</span><span class="p">,</span>
+                                               <span class="s2">&quot;kernel_transform&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;base_kernel_transform&#39;</span><span class="p">,</span> <span class="p">[])})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span><span class="o">.</span><span class="n">init_sample</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_sample_projected</span><span class="p">,</span> <span class="n">idx_sample</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># nystromizing some existing kernel</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">_BaseKernel</span><span class="p">),</span> <span class="s2">&quot;The provided kernel is not of the kernel class.&quot;</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Nystrom</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                                             <span class="s2">&quot;sample&quot;</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span>
+                                             <span class="s2">&quot;sample_trainable&quot;</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">sample_trainable</span><span class="p">,</span>
+                                             <span class="s2">&quot;idx_sample&quot;</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">idx</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Keeping original kernel transform (no overwriting, so base_kernel_transform is &quot;</span>
+                           <span class="s2">&quot;neglected).&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;dim&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_total</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dimension of the explicit feature map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@dim</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">dim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_total</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_total</span><span class="p">,</span> <span class="s1">&#39;Cannot construct an explicit feature map of greater dimension than &#39;</span> \
+                                           <span class="s1">&#39;the number of sample points.&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">casti</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_cache</span><span class="p">(</span><span class="n">reset_persisting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dim_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_decomposition</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Nystrom kernel&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">base_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Kernel on which Nystrom performs the decomposition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">utils</span><span class="o">.</span><span class="n">NotInitializedError</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;The base kernel has not been defined yet.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span>
+
+<div class="viewcode-block" id="Nystrom.hparams_fixed"><a class="viewcode-back" href="../../../kernel/generic/nystrom.html#kerch.kernel.Nystrom.hparams_fixed">[docs]</a>    <span class="k">def</span> <span class="nf">hparams_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;Kernel&quot;</span><span class="p">:</span> <span class="s2">&quot;Nystrom&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Base Kernel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span><span class="o">.</span><span class="n">hparams_fixed</span><span class="p">[</span><span class="s1">&#39;Kernel&#39;</span><span class="p">],</span>
+                <span class="o">**</span><span class="nb">super</span><span class="p">(</span><span class="n">Nystrom</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">hparams_fixed</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Nystrom.init_sample"><a class="viewcode-back" href="../../../kernel/generic/nystrom.html#kerch.kernel.Nystrom.init_sample">[docs]</a>    <span class="k">def</span> <span class="nf">init_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">idx_sample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prop_sample</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Nystrom</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">init_sample</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span> <span class="n">idx_sample</span><span class="o">=</span><span class="n">idx_sample</span><span class="p">,</span> <span class="n">prop_sample</span><span class="o">=</span><span class="n">prop_sample</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span><span class="o">.</span><span class="n">init_sample</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_sample_projected</span><span class="p">,</span> <span class="n">idx_sample</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">)</span></div>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_compute_decomposition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;H&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_keys</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing the eigendecomposition for the Nystrom kernel.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_total</span>
+
+            <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span><span class="o">.</span><span class="n">K</span>
+            <span class="n">lambdas</span><span class="p">,</span> <span class="n">H</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">eigs</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="p">)</span>
+
+            <span class="c1"># verify that the decomposed kernel is PSD</span>
+            <span class="n">sum_neg</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lambdas</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sum_neg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The decomposed kernel is not positive semi-definite as it possesses </span><span class="si">{</span><span class="n">sum_neg</span><span class="si">}</span><span class="s2"> &quot;</span>
+                                  <span class="sa">f</span><span class="s2">&quot;negative eigenvalues. These will be discarded, but may prove relevant if their &quot;</span>
+                                  <span class="sa">f</span><span class="s2">&quot;magnitude is non-negligible.&quot;</span><span class="p">)</span>
+
+            <span class="c1"># prune very small eigenvalues if they exist to avoid unstability due to the later inversion</span>
+            <span class="n">idx_small</span> <span class="o">=</span> <span class="n">lambdas</span> <span class="o">&lt;</span> <span class="n">utils</span><span class="o">.</span><span class="n">EPS</span>
+            <span class="n">sum_small</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">idx_small</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sum_small</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sum_small</span><span class="si">}</span><span class="s2"> very small or negative eigenvalues are detected on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="si">}</span><span class="s2">. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;To avoid numerical instability, these values are pruned. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;The new explicit dimension is now </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">sum_small</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">keep_idx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">idx_small</span><span class="p">)</span>
+                <span class="n">lambdas</span> <span class="o">=</span> <span class="n">lambdas</span><span class="p">[</span><span class="n">keep_idx</span><span class="p">]</span>
+                <span class="n">H</span> <span class="o">=</span> <span class="n">H</span><span class="p">[:,</span> <span class="n">keep_idx</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span> <span class="o">-=</span> <span class="n">sum_small</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_save</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;_nystrom_H&quot;</span><span class="p">,</span> <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">H</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="s1">&#39;_nystrom_elements&#39;</span><span class="p">)</span>
+            <span class="n">lambdas_sqrt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lambdas</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_save</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;_nystrom_lambdas_sqrt_inv&quot;</span><span class="p">,</span>
+                       <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">lambdas_sqrt</span><span class="p">))</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="s1">&#39;_nystrom_elements&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_save</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;_nystrom_sample_phi&quot;</span><span class="p">,</span>
+                       <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">H</span> <span class="o">@</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">lambdas_sqrt</span><span class="p">))</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="s1">&#39;_nystrom_elements&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Nystrom.update_sample"><a class="viewcode-back" href="../../../kernel/generic/nystrom.html#kerch.kernel.Nystrom.update_sample">[docs]</a>    <span class="k">def</span> <span class="nf">update_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_values</span><span class="p">,</span> <span class="n">idx_sample</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="k">def</span> <span class="nf">_explicit_with_none</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_decomposition</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;_nystrom_sample_phi&quot;</span><span class="p">)</span>
+
+        <span class="n">Kx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_kernel</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Kx</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;_nystrom_H&quot;</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;_nystrom_lambdas_sqrt_inv&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_explicit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># should never happen</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;This should never happen, a bug must have occurred.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_explicit_preimage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">utils</span><span class="o">.</span><span class="n">ExplicitError</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Explicit pre-image is not possible with the Nystrom kernel.&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

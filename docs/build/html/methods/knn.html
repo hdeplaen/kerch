@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nearest Neighbors &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Iterative Solver" href="iterative.html" />
+    <link rel="prev" title="Kernel Smoother" href="smoother.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Model Module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Methods Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smoother.html">Kernel Smoother</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Nearest Neighbors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iterative.html">Iterative Solver</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Methods Module</a></li>
+      <li class="breadcrumb-item active">Nearest Neighbors</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/methods/knn.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="nearest-neighbors">
+<h1>Nearest Neighbors<a class="headerlink" href="#nearest-neighbors" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.method.knn">
+<code class="sig-prename descclassname"><span class="pre">kerch.method.</span></code><code class="sig-name descname"><span class="pre">knn</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">dists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></em>, <em><span class="n"><span class="pre">observations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></em>, <em><span class="n"><span class="pre">num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></span><a class="reference internal" href="../_modules/kerch/method/_knn.html#knn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.method.knn" title="Permalink to this definition"></a></dt>
+<dd><p>For each distance <code class="docutils literal notranslate"><span class="pre">dists</span></code>, returns the average of the <code class="docutils literal notranslate"><span class="pre">num</span></code> smallest corresponding observations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dists</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> [</em><em>num_points</em><em>, </em><em>num_observations</em><em>]</em>) – coefficients used in the knn.</li>
+<li><strong>observations</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> [</em><em>num_observations</em><em>, </em><em>dim_observations</em><em>]</em>) – observation corresponding to each weight dimension.</li>
+<li><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – number of nearest neighbors. Defaults to 1.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">KNN</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)">torch.Tensor</a> [num_points, dim_observations]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.method.kernel_knn">
+<code class="sig-prename descclassname"><span class="pre">kerch.method.</span></code><code class="sig-name descname"><span class="pre">kernel_knn</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></em>, <em><span class="n"><span class="pre">observations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></em>, <em><span class="n"><span class="pre">num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em><span class="n"><span class="pre">kernel_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></span><a class="reference internal" href="../_modules/kerch/method/_knn.html#kernel_knn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.method.kernel_knn" title="Permalink to this definition"></a></dt>
+<dd><p>For each coefficient, returns the average of the <code class="docutils literal notranslate"><span class="pre">num</span></code> greatest corresponding kernel values on the domain.
+The kernel is defined as in <a class="reference internal" href="../kernel/index.html#kerch.kernel.factory" title="kerch.kernel.factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.kernel.factory()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>domain</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> [</em><em>num_observations</em><em>, </em><em>dim_domain</em><em>]</em>) – domain corresponding to each observation.</li>
+<li><strong>observations</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> [</em><em>num_observations</em><em>, </em><em>dim_observations</em><em>]</em>) – observation corresponding to each domain entry.</li>
+<li><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – number of nearest neighbors. Defaults to 1.</li>
+<li><strong>kernel_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Type of kernel chosen. For the possible choices, please refer to the <cite>Factory Type</cite> column of the
+<a class="reference internal" href="../kernel/index.html"><span class="doc">Kernel Module</span></a> documentation. Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">kerch.DEFAULT_KERNEL_TYPE</span></code>.</li>
+<li><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – Arguments to be passed to the kernel constructor, such as <cite>sample</cite> or <cite>sigma</cite>. If an argument is
+passed that does not exist (e.g. <cite>sigma</cite> to a <cite>linear</cite> kernel), it will just be neglected. For the default
+values, please refer to the default values of the requested kernel.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">KNN</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)">torch.Tensor</a> [num_points, dim_observations]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="smoother.html" class="btn btn-neutral float-left" title="Kernel Smoother" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="iterative.html" class="btn btn-neutral float-right" title="Iterative Solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kerch.feature.logger &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/design-tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kerch.feature.logger</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kerch.feature.logger</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This abstract class has only one purpose, add a self._log property meant to log various information across the toolbox.</span>
+<span class="sd">Doing it this way allows to get the name of the class instantiated and print more precise messages.</span>
+
+<span class="sd">Author: HENRI DE PLAEN</span>
+<span class="sd">Date: June 2022</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">_GLOBALS</span>
+
+
+<div class="viewcode-block" id="Logger"><a class="viewcode-back" href="../../../features/logger.html#kerch.Logger">[docs]</a><span class="k">class</span> <span class="nc">Logger</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param logging_level: Logging level for this specific instance.</span>
+<span class="sd">        If the value is ``None``, the current default kerch global log level will be used.</span>
+<span class="sd">        Defaults to ``None`` (default kerch logging level).</span>
+<span class="sd">        We refer to the :doc:`/features/logger` documentation for further information.</span>
+<span class="sd">    :type logging_level: int, optional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s1">&#39;gettrace&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">gettrace</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># debugger is active</span>
+        <span class="n">_LOGGING_FORMAT</span> <span class="o">=</span> <span class="s2">&quot;Kerch </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(name)s</span><span class="s2">]: </span><span class="si">%(message)s</span><span class="s2"> [</span><span class="si">%(pathname)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">]&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_LOGGING_FORMAT</span> <span class="o">=</span> <span class="s2">&quot;Kerch </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(name)s</span><span class="s2">]: </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+
+    <span class="n">_kerch_format</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">_LOGGING_FORMAT</span><span class="p">)</span>
+    <span class="n">_kerch_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">_kerch_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">_kerch_format</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;logger_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">class_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">class_name</span> <span class="o">!=</span> <span class="s2">&quot;Logger&quot;</span><span class="p">:</span>
+            <span class="n">log_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">class_name</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log_name</span> <span class="o">=</span> <span class="n">class_name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger_internal</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">log_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger_internal</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">Logger</span><span class="o">.</span><span class="n">_kerch_handler</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logging_level</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;logging_level&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Instantiating&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logger of the instance.</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">        .. exec_code::</span>
+
+<span class="sd">            # --- hide: start ---</span>
+<span class="sd">            import sys</span>
+<span class="sd">            import logging</span>
+<span class="sd">            logging.basicConfig(stream=sys.stdout)</span>
+<span class="sd">            # --- hide: stop ---</span>
+
+<span class="sd">            import kerch</span>
+<span class="sd">            import logging</span>
+
+<span class="sd">            class MyClass(kerch.feature.Logger):</span>
+<span class="sd">                def __init__(self, *args, **kwargs):</span>
+<span class="sd">                    super(MyClass, self).__init__(*args, **kwargs)</span>
+<span class="sd">                    self._logger.info(&#39;Instantiation done information.&#39;)</span>
+<span class="sd">                    self._logger.warn(&#39;Instantiation done warning.&#39;)</span>
+
+<span class="sd">            print(&#39;First class with default logging level:&#39;)</span>
+<span class="sd">            my_class1 = MyClass()</span>
+
+<span class="sd">            print(&#39;\nSecond instance with logging.INFO logging level:&#39;)</span>
+<span class="sd">            my_class2 = MyClass(logging_level=logging.INFO)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger_internal</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">logging_level</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logging level of this specific instance.</span>
+<span class="sd">        If the value is ``None``, the current default kerch global log Level will be used.</span>
+<span class="sd">        Defaults to ``None`` (default global kerch level).</span>
+<span class="sd">        We refer to the :doc:`/features/logger` documentation for further information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger_internal</span><span class="o">.</span><span class="n">level</span>
+
+    <span class="nd">@logging_level</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">logging_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="n">_GLOBALS</span><span class="p">[</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger_internal</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span></div>
+
+
+<span class="n">_GLOBAL_LOGGER</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="n">logger_name</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="set_logging_level"><a class="viewcode-back" href="../../../features/logger.html#kerch.set_logging_level">[docs]</a><span class="k">def</span> <span class="nf">set_logging_level</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Changes the default logging level of the kerch package.</span>
+
+<span class="sd">    :param level: Default kerch logging value</span>
+<span class="sd">    :type level: int</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import kerch</span>
+<span class="sd">        import logging</span>
+
+<span class="sd">        kerch.set_logging_level(logging.DEBUG)</span>
+
+
+<span class="sd">    .. warning::</span>
+<span class="sd">        Changing the default logging value does not affect the already instantiated objects. We advise to set those values in</span>
+<span class="sd">        the beginning of the code.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_GLOBALS</span><span class="p">[</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">level</span>
+    <span class="n">_GLOBAL_LOGGER</span><span class="o">.</span><span class="n">logging_level</span> <span class="o">=</span> <span class="n">level</span></div>
+
+
+<div class="viewcode-block" id="get_logging_level"><a class="viewcode-back" href="../../../features/logger.html#kerch.get_logging_level">[docs]</a><span class="k">def</span> <span class="nf">get_logging_level</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the default logging level of the kerch package.</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">    .. exec_code::</span>
+
+<span class="sd">        import kerch</span>
+<span class="sd">        import logging</span>
+
+<span class="sd">        default_level = kerch.get_logging_level()</span>
+<span class="sd">        default_level = logging.getLevelName(default_level)</span>
+<span class="sd">        print(default_level)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_GLOBALS</span><span class="p">[</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

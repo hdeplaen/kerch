@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kerch.utils.errors &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/design-tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kerch.utils.errors</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kerch.utils.errors</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">..feature.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
+
+
+<div class="viewcode-block" id="KerchError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.KerchError">[docs]</a><span class="k">class</span> <span class="nc">KerchError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="KerchError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.KerchError.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="k">if</span> <span class="n">msg</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">Logger</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;] &quot;</span> <span class="o">+</span> <span class="n">msg</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">KerchError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ImplicitError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.ImplicitError">[docs]</a><span class="k">class</span> <span class="nc">ImplicitError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="ImplicitError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.ImplicitError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Implicit representation not available.&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ImplicitError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ExplicitError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.ExplicitError">[docs]</a><span class="k">class</span> <span class="nc">ExplicitError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="ExplicitError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.ExplicitError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Explicit representation not available.</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                       <span class="s2">&quot;[Example 1]: The explicit representation does not exist as it lies in an infinite &quot;</span> \
+                       <span class="s2">&quot;dimensional Hilbert space.</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                       <span class="s2">&quot;[Example 2]: Only the inner product (implicit representation) is known, but not the &quot;</span> \
+                       <span class="s2">&quot;original vectors.&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ExplicitError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RepresentationError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.RepresentationError">[docs]</a><span class="k">class</span> <span class="nc">RepresentationError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="RepresentationError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.RepresentationError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Unrecognized or unspecified representation (must be primal or dual).&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RepresentationError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BijectionError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.BijectionError">[docs]</a><span class="k">class</span> <span class="nc">BijectionError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="BijectionError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.BijectionError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Mathematically undefined operation. A transform is not bijective, thus non invertible.&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BijectionError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="NotInitializedError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.NotInitializedError">[docs]</a><span class="k">class</span> <span class="nc">NotInitializedError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="NotInitializedError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.NotInitializedError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;The model has not been initialized yet.&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NotInitializedError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="MultiViewError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.MultiViewError">[docs]</a><span class="k">class</span> <span class="nc">MultiViewError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="MultiViewError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.MultiViewError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Primal operations are not defined a multi-view context. You must ask them for the different &quot;</span> \
+                       <span class="s2">&quot;known separately, if it exists for it.&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultiViewError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

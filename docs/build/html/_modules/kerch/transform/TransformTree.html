@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kerch.transform.TransformTree &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/design-tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kerch.transform.TransformTree</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kerch.transform.TransformTree</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Parameter</span>
+
+<span class="kn">from</span> <span class="nn">.Transform</span> <span class="kn">import</span> <span class="n">Transform</span>
+<span class="kn">from</span> <span class="nn">.all</span> <span class="kn">import</span> <span class="p">(</span><span class="n">UnitSphereNormalization</span><span class="p">,</span>
+                  <span class="n">MinimumCentering</span><span class="p">,</span>
+                  <span class="n">MeanCentering</span><span class="p">,</span>
+                  <span class="n">UnitVarianceNormalization</span><span class="p">,</span>
+                  <span class="n">MinMaxNormalization</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TransformTree"><a class="viewcode-back" href="../../../features/transform.html#kerch.transform.TransformTree">[docs]</a><span class="nd">@kerch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">extend_docstring</span><span class="p">(</span><span class="n">Transform</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TransformTree</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a tree of transform for efficient computing, with cache management.</span>
+
+<span class="sd">    :param explicit: True is the transform are to be computed in the explicit formulation, False instead.</span>
+<span class="sd">    :param sample: Default sample on which the statistics are to be computed.</span>
+<span class="sd">    :param default_transform: Optional default list of transform., defaults to None.</span>
+<span class="sd">    :param diag_fun: Optional function handle to directly compute the diagonal of the implicit formulation to increase</span>
+<span class="sd">        computation speed.</span>
+
+<span class="sd">    :type explicit: bool</span>
+<span class="sd">    :type sample: Tensor or function handle</span>
+<span class="sd">    :type default_transform: List[str]</span>
+<span class="sd">    :type diag_fun: Function handle</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_all_transform</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;normalize&quot;</span><span class="p">:</span> <span class="n">UnitSphereNormalization</span><span class="p">,</span>  <span class="c1"># for legacy</span>
+                      <span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="n">MeanCentering</span><span class="p">,</span>  <span class="c1"># for legacy</span>
+                      <span class="s2">&quot;sphere&quot;</span><span class="p">:</span> <span class="n">UnitSphereNormalization</span><span class="p">,</span>
+                      <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="n">MinimumCentering</span><span class="p">,</span>
+                      <span class="s2">&quot;variance&quot;</span><span class="p">:</span> <span class="n">UnitVarianceNormalization</span><span class="p">,</span>
+                      <span class="s2">&quot;standard&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">MeanCentering</span><span class="p">,</span> <span class="n">UnitVarianceNormalization</span><span class="p">],</span>
+                      <span class="s2">&quot;minmax&quot;</span><span class="p">:</span> <span class="n">MinMaxNormalization</span><span class="p">,</span>
+                      <span class="s2">&quot;unit_sphere_normalization&quot;</span><span class="p">:</span> <span class="n">UnitSphereNormalization</span><span class="p">,</span>
+                      <span class="s2">&quot;mean_centering&quot;</span><span class="p">:</span> <span class="n">MeanCentering</span><span class="p">,</span>
+                      <span class="s2">&quot;minimum_centering&quot;</span><span class="p">:</span> <span class="n">MinimumCentering</span><span class="p">,</span>
+                      <span class="s2">&quot;unit_variance_normalization&quot;</span><span class="p">:</span> <span class="n">UnitVarianceNormalization</span><span class="p">,</span>
+                      <span class="s2">&quot;minmax_normalization&quot;</span><span class="p">:</span> <span class="n">MinMaxNormalization</span><span class="p">,</span>
+                      <span class="s2">&quot;standardize&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">MeanCentering</span><span class="p">,</span> <span class="n">UnitVarianceNormalization</span><span class="p">],</span>
+                      <span class="s2">&quot;minmax_rescaling&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">MinimumCentering</span><span class="p">,</span> <span class="n">MinMaxNormalization</span><span class="p">]}</span>
+
+<div class="viewcode-block" id="TransformTree.beautify_transform"><a class="viewcode-back" href="../../../features/transform.html#kerch.transform.TransformTree.beautify_transform">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">beautify_transform</span><span class="p">(</span><span class="n">transform</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Transform</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a list of _Transform classes and removes duplicates.</span>
+
+<span class="sd">        :param transform: list of the different transform.</span>
+<span class="sd">        :type transform: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">transform_classes</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">transform</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
+                        <span class="n">transform_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="n">new_transform</span> <span class="o">=</span> <span class="n">TransformTree</span><span class="o">.</span><span class="n">_all_transform</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="n">tr</span><span class="p">,</span> <span class="ne">NameError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognized transform key </span><span class="si">{</span><span class="n">tr</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_transform</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="n">new_transform</span>
+                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_transform</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">ntr</span> <span class="ow">in</span> <span class="n">new_transform</span><span class="p">:</span>
+                            <span class="n">transform_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ntr</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">new_transform</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
+                        <span class="n">transform_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_transform</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">kerch</span><span class="o">.</span><span class="n">_GLOBAL_LOGGER</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error while creating TransformTree list of transform&quot;</span><span class="p">)</span>
+
+            <span class="c1"># remove same following elements</span>
+            <span class="n">previous_item</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">current_item</span> <span class="ow">in</span> <span class="n">transform_classes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">current_item</span> <span class="o">==</span> <span class="n">previous_item</span><span class="p">:</span>
+                    <span class="n">transform_classes</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">previous_item</span> <span class="o">=</span> <span class="n">current_item</span>
+                    <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">return</span> <span class="n">transform_classes</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">explicit</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">default_transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">diag_fun</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TransformTree</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">explicit</span><span class="o">=</span><span class="n">explicit</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;base&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">default_transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">default_transform</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_transforms</span> <span class="o">=</span> <span class="n">TransformTree</span><span class="o">.</span><span class="n">beautify_transform</span><span class="p">(</span><span class="n">default_transform</span><span class="p">)</span>
+
+        <span class="c1"># create default tree</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">for</span> <span class="n">transform</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_transforms</span><span class="p">:</span>
+            <span class="n">offspring</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">explicit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">explicit</span><span class="p">,</span> <span class="n">default_path</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_level</span><span class="p">)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">add_offspring</span><span class="p">(</span><span class="n">offspring</span><span class="p">)</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">offspring</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_node</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span> <span class="o">=</span> <span class="n">sample</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_oos</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diag_fun</span> <span class="o">=</span> <span class="n">diag_fun</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;Transforms: </span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_transforms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">output</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;None (default)&quot;</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_node</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">TransformTree</span><span class="p">):</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Default list of transforms to be applied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_transforms</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">final_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Final transform to be applied, which is the last element of</span>
+<span class="sd">        :py:attr:`~kerch.transform.TransformTree.default_transforms`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_transforms</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TransformTree</span>
+
+    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Parameter</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span>
+
+    <span class="k">def</span> <span class="nf">_explicit_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_implicit_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_explicit_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span>
+
+    <span class="k">def</span> <span class="nf">_implicit_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span>
+
+    <span class="k">def</span> <span class="nf">_implicit_diag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diag_fun</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diag_fun</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_implicit_sample</span><span class="p">())[:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_implicit_oos</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">))[:,</span> <span class="kc">None</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">projected_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample after transform. Retrieved from cache if relevant.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_node</span><span class="o">.</span><span class="n">sample</span>
+
+    <span class="k">def</span> <span class="nf">_explicit_statistics_oos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oos</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_implicit_statistics_oos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oos</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_explicit_oos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">_implicit_oos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_revert_explicit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oos</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">oos</span>
+
+    <span class="k">def</span> <span class="nf">_revert_implicit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oos</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">oos</span>
+
+    <span class="k">def</span> <span class="nf">_get_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Transform</span><span class="p">]:</span>
+        <span class="n">transform</span> <span class="o">=</span> <span class="n">TransformTree</span><span class="o">.</span><span class="n">beautify_transform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">transform</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_transforms</span>
+
+        <span class="n">tree_path</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">tr_class</span> <span class="ow">in</span> <span class="n">transform</span><span class="p">:</span>
+            <span class="n">current_tr</span> <span class="o">=</span> <span class="n">tree_path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">tr_class</span> <span class="ow">in</span> <span class="n">current_tr</span><span class="o">.</span><span class="n">offspring</span><span class="p">:</span>
+                <span class="n">offspring</span> <span class="o">=</span> <span class="n">current_tr</span><span class="o">.</span><span class="n">offspring</span><span class="p">[</span><span class="n">tr_class</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">offspring</span> <span class="o">=</span> <span class="n">tr_class</span><span class="p">(</span><span class="n">explicit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">explicit</span><span class="p">,</span> <span class="n">cache_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_level</span><span class="p">)</span>
+                <span class="n">current_tr</span><span class="o">.</span><span class="n">add_offspring</span><span class="p">(</span><span class="n">offspring</span><span class="p">)</span>
+            <span class="n">tree_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">offspring</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tree_path</span>
+
+<div class="viewcode-block" id="TransformTree.apply"><a class="viewcode-back" href="../../../features/transform.html#kerch.transform.TransformTree.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applies the transform to the value to out-of-sample data. Either value is a function handle and you can use</span>
+<span class="sd">        x (explicit) and x, y (explicit) to specify the data. Either directly give a Tensor.</span>
+
+<span class="sd">        .. warning::</span>
+<span class="sd">            If value is a Tensor, some transform may not work in implicit formulation. For example, the unit sphere</span>
+<span class="sd">            normalization requires k(x,x) for all out-of-sample points. Some combinations may be even more intricate.</span>
+
+<span class="sd">        :param x: Relevant if using a function handle for value.</span>
+<span class="sd">        :param y: Relevant if using a function handle for value in implicit mode.</span>
+<span class="sd">        :param transform: Transforms to be used. If none are to be used, i.e. getting the raw data back, please</span>
+<span class="sd">            specify [], not None, which will return the default transform used for the sample., defaults to None,</span>
+<span class="sd">            i.e., the default transform.</span>
+
+<span class="sd">        :type x: Tensor</span>
+<span class="sd">        :type y: Tensor</span>
+<span class="sd">        :type transform: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tree_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tree</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">tree_path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">oos</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clean_cache</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">sol</span></div>
+
+<div class="viewcode-block" id="TransformTree.revert"><a class="viewcode-back" href="../../../features/transform.html#kerch.transform.TransformTree.revert">[docs]</a>    <span class="k">def</span> <span class="nf">revert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reverts the transform (runs the tree backwards) to the value to out-of-sample data.</span>
+
+<span class="sd">        :param value: Out-of-sample data.</span>
+<span class="sd">        :param transform: Transforms to be used. If none are to be used, i.e. getting the raw data back, please</span>
+<span class="sd">            specify [], not None, which will return the default transform used for the sample., defaults to None,</span>
+<span class="sd">            i.e., the default transform.</span>
+
+<span class="sd">        :type value: Tensor</span>
+<span class="sd">        :type transform: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tree_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tree</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">transform</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">tree_path</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">_revert</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+<map id="inheritance074f6794fc" name="inheritance074f6794fc">
+<area shape="rect" id="node1" href="../../features/cache.html#kerch.feature.Cache" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="118,157,269,184"/>
+<area shape="rect" id="node6" href="../../features/stochastic.html#kerch.feature.Stochastic" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="105,232,283,260"/>
+<area shape="rect" id="node2" href="../../features/module.html#kerch.feature.Module" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="114,81,273,109"/>
+<area shape="rect" id="node3" href="../../features/logger.html#kerch.feature.Logger" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="5,5,161,33"/>
+<area shape="rect" id="node4" title="Base class for all neural network modules." alt="" coords="185,5,424,33"/>
+<area shape="rect" id="node5" href="../../features/sample.html#kerch.feature.Sample" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="114,308,274,336"/>
+<area shape="rect" id="node9" href="../abstract/kernel.html#kerch.kernel._BaseKernel" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="102,384,286,411"/>
+<area shape="rect" id="node7" href="../abstract/implicit.html#kerch.kernel.Implicit" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="117,535,270,563"/>
+<area shape="rect" id="node11" title=":param sigma: Bandwidth :math:`sigma` of the kernel. If `None`, the value is filled by a heuristic on" alt="" coords="47,611,340,638"/>
+<area shape="rect" id="node8" href="../abstract/kernel.html#kerch.kernel.Kernel" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="121,459,266,487"/>
+<area shape="rect" id="node10" title=":param distance: The normed used. Defaults to ``&#39;euclidean&#39;```. Other options are ``&#39;manhattan&#39;``, ``&#39;chebyshev&#39;``," alt="" coords="64,686,324,714"/>
+<area shape="rect" id="node12" title="Uniform (window) kernel." alt="" coords="84,762,304,790"/>
+</map>

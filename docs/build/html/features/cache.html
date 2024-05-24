@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cache Management — kerch 0.3.1 documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-codeautolink.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="stochastic.html" rel="next" title="Stochastic Training"/>
+<link href="module.html" rel="prev" title="Kerch Module"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            kerch
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Features</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logging in Kerch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">Kerch Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Cache Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functionalities">Functionalities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#automatic-getter-and-saver">Automatic Getter and Saver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cache-levels">Cache Levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resetter">Resetter</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#default-cache-levels">Default Cache Levels</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sample-specific">Sample-Specific</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kernel-specific">Kernel-Specific</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transformation-specific">Transformation-Specific</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#level-specific">Level-Specific</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#abstract-class">Abstract Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kpca">KPCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#managing-the-cache">Managing the Cache</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stochastic.html">Stochastic Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample.html">Sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transform.html">Data and Kernel Transformations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">kerch</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Features</a></li>
+<li class="breadcrumb-item active">Cache Management</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/features/cache.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<div class="section" id="cache-management">
+<h1>Cache Management<a class="headerlink" href="#cache-management" title="Permalink to this headline"></a></h1>
+<p>When performing various operations on the Kerch modules, it may happen that some results are necessary multiple times.
+Some of these operations are however expensive to compute and it would be ideal to avoid recomputation and load them
+from memory when already computed previously. This justifies the addition of a cache manager. The purpose of the
+<a class="reference internal" href="#kerch.feature.Cache" title="kerch.feature.Cache"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Cache</span></code></a> class is to extend the <a class="reference internal" href="module.html#kerch.feature.Module" title="kerch.feature.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Module</span></code></a> class with a cache manager.
+To illustrate its relevance, we can consider two example use cases:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Kernel Matrix:</dt><dd>Due to its quadratic complexity, computing the kernel matrix may be very expensive, in particular if
+not computed through explicit feature maps. Let us suppose that the kernel matrix has already been computed
+in order to be plotted for example. If one wants to then compute its eigendecomposition for KPCA, the matrix is
+reloaded from memory and not computed a second time.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Data Transformations:</dt><dd>We consider a big sample dataset that we want to be centered and normalized. When working with out-of-sample
+datasets, these have to be centered using the same statistics as sample in order to keep the model consistent.
+These statistics can be stored and re-used every time computations have to be performed on out-of-sample datasets.</dd>
+</dl>
+</li>
+</ul>
+<p>In other words, this is a way to bypass the garbage-collector, but with a lot of granularity.</p>
+<div class="section" id="functionalities">
+<h2>Functionalities<a class="headerlink" href="#functionalities" title="Permalink to this headline"></a></h2>
+<div class="section" id="automatic-getter-and-saver">
+<h3>Automatic Getter and Saver<a class="headerlink" href="#automatic-getter-and-saver" title="Permalink to this headline"></a></h3>
+<p>Essentially most of the work is done through the <a class="reference internal" href="#kerch.feature.Cache._get" title="kerch.feature.Cache._get"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_get()</span></code></a> method that allows to check in
+one line if the result of an operation (a kernel matrix, sample statistics…) have already been computed and return
+it. If not computed, the information is stored in the cache, ready for further re-use (through the
+<a class="reference internal" href="#kerch.feature.Cache._save" title="kerch.feature.Cache._save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_save()</span></code></a> method that is automatically called by <a class="reference internal" href="#kerch.feature.Cache._get" title="kerch.feature.Cache._get"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_get()</span></code></a> in
+if not already present in the cache).</p>
+</div>
+<div class="section" id="cache-levels">
+<h3>Cache Levels<a class="headerlink" href="#cache-levels" title="Permalink to this headline"></a></h3>
+<p>It would be totally inefficient to store everything in the cache. Therefore, different cache levels exist meant for
+storing different values. Each value is assigned to a specific value when computed for the first time. Each module
+has a internal cache level (<a class="reference internal" href="#kerch.feature.Cache.cache_level" title="kerch.feature.Cache.cache_level"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cache_level</span></code></a>) that serves as a threshold when new values
+are computed. If the specified cache level of the newly computed result exceeds the default cache level of the module,
+the information is not saved. The next time that the same computation is required, it will thus not be loaded from the
+cache, but computed again. We distinguish the following cache levels:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">"none"</span></code>: the cache is non-existent and everything is computed on the go. This is the lightest for the memory.</li>
+<li><code class="docutils literal notranslate"><span class="pre">"light"</span></code>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</li>
+<li><code class="docutils literal notranslate"><span class="pre">"normal"</span></code>: same as light, but the statistics of the out-of-sample points are also saved, not the kernel matrices.</li>
+<li><code class="docutils literal notranslate"><span class="pre">"heavy"</span></code>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</li>
+<li><code class="docutils literal notranslate"><span class="pre">"total"</span></code>: every step of any computation is saved. This is very heavy on the memory.</li>
+</ul>
+<p>The higher the cache level, the more will be stored into memory and the less redundancy will be introduced in the need
+for recomputations. The module’s <a class="reference internal" href="#kerch.feature.Cache.cache_level" title="kerch.feature.Cache.cache_level"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cache_level</span></code></a> attribute therefore controls a time versus
+memory trade-off.</p>
+</div>
+<div class="section" id="resetter">
+<h3>Resetter<a class="headerlink" href="#resetter" title="Permalink to this headline"></a></h3>
+<p>If the sample changes for example, most of the cache entries require te be recomputed. The two
+private methods <a class="reference internal" href="#kerch.feature.Cache._reset_cache" title="kerch.feature.Cache._reset_cache"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_reset_cache()</span></code></a> and <a class="reference internal" href="#kerch.feature.Cache._clean_cache" title="kerch.feature.Cache._clean_cache"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_clean_cache()</span></code></a> therefore
+exists to reset and clean the cache. This is done automatically when necessary. In practice, unless wanting to tweak
+the package’s internal working, these methods should not be called by the user. If the user really wants to reset the
+cache, he may use the <a class="reference internal" href="#kerch.feature.Cache.reset" title="kerch.feature.Cache.reset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code></a> method. He may also visualize the current cache entries by
+calling the <a class="reference internal" href="#kerch.feature.Cache.print_cache" title="kerch.feature.Cache.print_cache"><code class="xref py py-meth docutils literal notranslate"><span class="pre">print_cache()</span></code></a> method or the <a class="reference internal" href="#kerch.feature.Cache.cache_keys" title="kerch.feature.Cache.cache_keys"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cache_keys()</span></code></a>
+method to retrieve the keys of the cached values.</p>
+</div>
+</div>
+<div class="section" id="default-cache-levels">
+<h2>Default Cache Levels<a class="headerlink" href="#default-cache-levels" title="Permalink to this headline"></a></h2>
+<p>For each possible value to be stored, default cache levels are saved defined in <code class="xref py py-data docutils literal notranslate"><span class="pre">kerch.DEFAULT_CACHE_LEVELS</span></code>.
+These values can be changed if the user wants to customize the granularity. Here follows a summary.</p>
+<div class="section" id="sample-specific">
+<h3>Sample-Specific<a class="headerlink" href="#sample-specific" title="Permalink to this headline"></a></h3>
+<p>The Transformation Tree refers to an instance of <a class="reference internal" href="transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.transform.TransformTree</span></code></a> and does not hold any data in
+itself apart from the successive operations in themselves to perform the transformations, i.e., the tree of the transformations.
+We refer further the cache levels inside the tree.</p>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key</th>
+<th class="head">Description</th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'none'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'light'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'normal'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'heavy'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'total'</span></code></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"sample_transform"</span></code></td>
+<td>Sample Transformation Tree</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="kernel-specific">
+<h3>Kernel-Specific<a class="headerlink" href="#kernel-specific" title="Permalink to this headline"></a></h3>
+<p>This is relevant for all classes who inherit from <a class="reference internal" href="../kernel/abstract/kernel.html#kerch.kernel.Kernel" title="kerch.kernel.Kernel"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.Kernel</span></code></a>. The attributes <a class="reference internal" href="../kernel/abstract/kernel.html#kerch.kernel.Kernel.K" title="kerch.kernel.Kernel.K"><code class="xref py py-attr docutils literal notranslate"><span class="pre">K</span></code></a>,
+<a class="reference internal" href="../kernel/abstract/kernel.html#kerch.kernel.Kernel.Phi" title="kerch.kernel.Kernel.Phi"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Phi</span></code></a> and <a class="reference internal" href="../kernel/abstract/kernel.html#kerch.kernel.Kernel.C" title="kerch.kernel.Kernel.C"><code class="xref py py-attr docutils literal notranslate"><span class="pre">C</span></code></a> are always saved once computed until the sample
+changes. The Transformation Trees refer to instances <a class="reference internal" href="transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.transform.TransformTree</span></code></a> (one for the explicit and one for the implicit)
+and do not hold any data in
+themselves apart from the successive operations themselves to perform the transformations, i.e., the tree of the transformations.
+We refer further the cache levels inside the trees.</p>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key</th>
+<th class="head">Description</th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'none'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'light'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'normal'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'heavy'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'total'</span></code></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"sample_phi"</span></code></td>
+<td>Explicit feature map of the sample</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"sample_C"</span></code></td>
+<td>Explicit matrix of the sample</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"sample_K"</span></code></td>
+<td>Kernel matrix of the sample</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"kernel_explicit_transform"</span></code></td>
+<td>Explicit Transformation Tree</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"kernel_implicit_transform"</span></code></td>
+<td>Implicit Transformation Tree</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="transformation-specific">
+<h3>Transformation-Specific<a class="headerlink" href="#transformation-specific" title="Permalink to this headline"></a></h3>
+<p>The tree itself contains the transformations in themselves. These values refer to which values are stored inside a
+transformation tree instance <a class="reference internal" href="transform.html#kerch.transform.TransformTree" title="kerch.transform.TransformTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.transform.TransformTree</span></code></a>. The tree can store both the statistics
+(average, variance, minimum…) required to perform the transformations and the transformed values themselves
+(centered valued, normalized values…). De <cite>default</cite> refers to the default transformation. We refer to the
+documentation of <a class="reference internal" href="transform.html"><span class="doc">Data and Kernel Transformations</span></a> for further information.</p>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key</th>
+<th class="head">Description</th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'none'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'light'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'normal'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'heavy'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'total'</span></code></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"transform_sample_data_default"</span></code></td>
+<td>Transformed sample value of the default transformation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"transform_sample_data_nondefault"</span></code></td>
+<td>Transformed sample value of  another transformation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"transform_sample_statistics_default"</span></code></td>
+<td>Transformed sample statistics of the default transformation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"transform_sample_statistics_nondefault"</span></code></td>
+<td>Transformed sample statistics of another transformation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"transform_oos_data_default"</span></code></td>
+<td>Transformed out-of-sample value of the default transformation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"transform_oos_data_nondefault"</span></code></td>
+<td>Transformed out-of-sample value of  another transformation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"transform_oos_statistics_default"</span></code></td>
+<td>Transformed out-of-sample statistics of the default transformation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"transform_oos_statistics_nondefault"</span></code></td>
+<td>Transformed out-of-sample statistics of another transformation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="level-specific">
+<h3>Level-Specific<a class="headerlink" href="#level-specific" title="Permalink to this headline"></a></h3>
+<p>The output of a level is also saved by default, until the sample or the model parameters change. The default representation
+refers to <code class="docutils literal notranslate"><span class="pre">primal</span></code> or <code class="docutils literal notranslate"><span class="pre">dual</span></code>. We refer to the documentation of the <a class="reference internal" href="../level/index.html"><span class="doc">Level Module</span></a> for further information.
+Many models require an identity matrix to solve the model. This matrix can be stored for further usage, unless the
+dimensions change. The different constituents of the loss (regularization term, recontruction term…), referred to as <cite>sublosses</cite>, are saved
+independently from the total loss for monitoring. These are also resetted once the <a class="reference internal" href="module.html#kerch.feature.Module.before_step" title="kerch.feature.Module.before_step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">before_step()</span></code></a>
+method is called.</p>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Key</th>
+<th class="head">Description</th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'none'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'light'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'normal'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'heavy'</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">'total'</span></code></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"forward_sample_default_representation"</span></code></td>
+<td>Output value of the sample in the default representation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"forward_sample_other_representation"</span></code></td>
+<td>Output value of the sample in the other representation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"forward_oos_default_representation"</span></code></td>
+<td>Output value of an out-of-sample in the default representation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"forward_oos_other_representation"</span></code></td>
+<td>Output value of an out-of-sample in the other representation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"Level_I_default_respresentation"</span></code></td>
+<td>Identity matrix in the default representation dimension</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"Level_I_other_respresentation"</span></code></td>
+<td>Identity matrix in the other representation dimension</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">"Level_subloss_default_respresentation"</span></code></td>
+<td>Individual sublosses in the default representation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">"Level_subloss_other_respresentation"</span></code></td>
+<td>Individual sublosses in the other representation</td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-x" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></td>
+<td><svg aria-hidden="true" class="sd-octicon sd-octicon-check sd-text-info" height="1.0em" version="1.1" viewbox="0 0 16 16" width="1.0em"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" fill-rule="evenodd"></path></svg></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="abstract-class">
+<h2>Abstract Class<a class="headerlink" href="#abstract-class" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="kerch.feature.Cache">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.feature.</span></code><code class="sig-name descname"><span class="pre">Cache</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="module.html#kerch.feature.Module" title="kerch.feature.module.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.module.Module</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cache_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Cache level for saving temporary execution results during the execution. The higher the cache,
+the more is saved. Defaults to <code class="docutils literal notranslate"><span class="pre">'normal'</span></code>. We refer to the <a class="reference internal" href="#"><span class="doc">Cache Management</span></a> documentation for further
+information.</li>
+<li><strong>logging_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Logging level for this specific instance.
+If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current default kerch global log level will be used.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code> (default kerch logging level).
+We refer to the <a class="reference internal" href="logger.html"><span class="doc">Logging in Kerch</span></a> documentation for further information.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Cache._apply">
+<code class="sig-name descname"><span class="pre">_apply</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">fn</span></span></em>, <em><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache._apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache._apply" title="Permalink to this definition"></a></dt>
+<dd><p>This if the native function by <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></a>, used when porting the
+module. This ensures that the cache is also ported. This is used for example to port the data to the GPU or CPU.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method is documented for completeness, but it should never be required to call it directly.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Cache._clean_cache">
+<code class="sig-name descname"><span class="pre">_clean_cache</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">max_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache._clean_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache._clean_cache" title="Permalink to this definition"></a></dt>
+<dd><p>Cleans all cache elements above a certain level. This is relevant for cleaning the cache elements that have
+been forced (see <a class="reference internal" href="#kerch.feature.Cache._save" title="kerch.feature.Cache._save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_save()</span></code></a>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – all levels above this level will be cleaned, <code class="docutils literal notranslate"><span class="pre">max_level</span></code> excluded. Defaults to the default
+cache level.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method is documented for completeness, but it should never be required to call it directly.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Cache._get">
+<code class="sig-name descname"><span class="pre">_get</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">key</span></span></em>, <em><span class="n"><span class="pre">fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">level_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">default_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'normal'</span></span></em>, <em><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em><span class="n"><span class="pre">persisting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em><span class="n"><span class="pre">destroy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache._get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache._get" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieves an element from the cache. If the element is not present, it saved to the cache provided its level
+is lower or equal to the default level. This can be overwritten by the overwrite argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – key of the cache element.</li>
+<li><strong>fun</strong> (<em>function handle</em>) – function to compute the element if not in the cache already.</li>
+<li><strong>level_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – key referencing the default level to use in <code class="docutils literal notranslate"><span class="pre">kerch.DEFAULT_CACHE_LEVELS</span></code>. If not specified, the <code class="docutils literal notranslate"><span class="pre">default_level</span></code> argument is used.</li>
+<li><strong>default_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – level where to save the cache element. Defaults to ‘normal’.</li>
+<li><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – if the value is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the element will nevertheless be saved whatever level is specified. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</li>
+<li><strong>persisting</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – These values are meant to persist after a cache reset when calling
+<a class="reference internal" href="#kerch.feature.Cache.reset" title="kerch.feature.Cache.reset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code></a> with <code class="docutils literal notranslate"><span class="pre">reset_persisting=False</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</li>
+<li><strong>destroy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – This destroys the value from the cache after being read/computed. This is meant for short-term
+memory. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The result of <code class="docutils literal notranslate"><span class="pre">fun()</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Cache._remove_from_cache">
+<code class="sig-name descname"><span class="pre">_remove_from_cache</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache._remove_from_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache._remove_from_cache" title="Permalink to this definition"></a></dt>
+<dd><p>Removes one or more specific element(s) from the cache.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>]</em>) – Key(s) of the cache element to be removed.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method is documented for completeness, but it should never be required to call it directly.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Cache._reset_cache">
+<code class="sig-name descname"><span class="pre">_reset_cache</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">reset_persisting</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em><span class="n"><span class="pre">avoid_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">list</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache._reset_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache._reset_cache" title="Permalink to this definition"></a></dt>
+<dd><p>This just resets the cache and makes it empty.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>reset_persisting</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Persisting elements are meant to resist to a cache reset
+(see <a class="reference internal" href="#kerch.feature.Cache._save" title="kerch.feature.Cache._save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_save()</span></code></a>). The option allows to also reset them if <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>avoid_classes</strong> (list(type(<a class="reference internal" href="#kerch.feature.Cache" title="kerch.feature.Cache"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cache</span></code></a>)), optional) – Class of which the elements must be avoided to be resetted. Default to <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method is documented for completeness, but it should never be required to call it directly.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Cache._save">
+<code class="sig-name descname"><span class="pre">_save</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">key</span></span></em>, <em><span class="n"><span class="pre">fun</span></span></em>, <em><span class="n"><span class="pre">level_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">default_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'total'</span></span></em>, <em><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em><span class="n"><span class="pre">persisting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache._save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache._save" title="Permalink to this definition"></a></dt>
+<dd><p>Saves an element in the cache.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – key of the cache element.</li>
+<li><strong>fun</strong> (<em>function handle</em>) – function to compute the element if not in the cache already.</li>
+<li><strong>level_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – key referencing the default level to use in <code class="docutils literal notranslate"><span class="pre">kerch.DEFAULT_CACHE_LEVELS</span></code>. If not specified, the <code class="docutils literal notranslate"><span class="pre">default_level</span></code> argument is used.</li>
+<li><strong>default_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – level where to save the cache element. Defaults to ‘total’.</li>
+<li><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – if the value is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the element will nevertheless be saved whatever level is specified. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</li>
+<li><strong>persisting</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – These values are meant to persist after a cache reset when calling
+<a class="reference internal" href="#kerch.feature.Cache.reset" title="kerch.feature.Cache.reset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code></a> with <code class="docutils literal notranslate"><span class="pre">reset_persisting=False</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The result of <code class="docutils literal notranslate"><span class="pre">fun()</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Cache.cache_keys">
+<code class="sig-name descname"><span class="pre">cache_keys</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache.cache_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache.cache_keys" title="Permalink to this definition"></a></dt>
+<dd><p>Returns an iterable containing the different cache keys.
+We refer to the <a class="reference internal" href="#"><span class="doc">Cache Management</span></a> documentation for more information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.feature.Cache.cache_level">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">cache_level</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#kerch.feature.Cache.cache_level" title="Permalink to this definition"></a></dt>
+<dd><p>Cache level for saving temporary execution results during the execution. The higher the cache,
+the more is saved. Defaults to <code class="docutils literal notranslate"><span class="pre">'normal'</span></code> unless set otherwise during instantiation. The different possible
+values are:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">"none"</span></code>: the cache is non-existent and everything is computed on the go.</li>
+<li><code class="docutils literal notranslate"><span class="pre">"light"</span></code>: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</li>
+<li><code class="docutils literal notranslate"><span class="pre">"normal"</span></code>: same as light, but the statistics of the out-of-sample points are also saved.</li>
+<li><code class="docutils literal notranslate"><span class="pre">"heavy"</span></code>: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</li>
+<li><code class="docutils literal notranslate"><span class="pre">"total"</span></code>: every step of any computation is saved.</li>
+</ul>
+<p>We refer to the <a class="reference internal" href="#"><span class="doc">Cache Management</span></a> documentation for further information.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Cache.print_cache">
+<code class="sig-name descname"><span class="pre">print_cache</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">private</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache.print_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache.print_cache" title="Permalink to this definition"></a></dt>
+<dd><p>Prints the cache content. We refer to the <a class="reference internal" href="#"><span class="doc">Cache Management</span></a> documentation for further information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>private</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Some cache elements are private and are not returned unless set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Cache.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em><span class="n"><span class="pre">reset_persisting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/feature/cache.html#Cache.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Cache.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the cache to be empty. We refer to the <a class="reference internal" href="#"><span class="doc">Cache Management</span></a> documentation for more information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, resets the cache of this module and also of its potential children. otherwise,
+it only resets the cache for this module. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>reset_persisting</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Persisting elements are meant to resist to a cache reset (see
+<a class="reference internal" href="#kerch.feature.Cache._save" title="kerch.feature.Cache._save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_save()</span></code></a>). The option allows to also reset them if <code class="docutils literal notranslate"><span class="pre">True</span></code>. Defaults to
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<p>For a proper usage of the Kerch package, there is no need to manage the cache. For the sake of completeness, we however
+provide two examples. The first one shows how the cache works on an existing implementation. The second example shows
+how one can manage cache elements by itself.</p>
+<div class="section" id="kpca">
+<h3>KPCA<a class="headerlink" href="#kpca" title="Permalink to this headline"></a></h3>
+<p>The following example illustrates the working of the cache. We will consider two examples of a
+<a class="reference internal" href="../level/kpca.html#kerch.level.KPCA" title="kerch.level.KPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.level.KPCA</span></code></a>, one with a <code class="docutils literal notranslate"><span class="pre">light</span></code> cache level and another with a <code class="docutils literal notranslate"><span class="pre">total</span></code> cache level.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">sample</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">oos</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">kpca_light_cache</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">KPCA</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span>                  <span class="c1"># random sample</span>
+                                    <span class="n">dim_output</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                   <span class="c1"># we want an output dimension of 2 (the input is 3)</span>
+                                    <span class="n">sample_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">'min'</span><span class="p">],</span>       <span class="c1"># we want the input to be normalized (based on the statistics of the sample)</span>
+                                    <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">'center'</span><span class="p">],</span>    <span class="c1"># we want the kernel to be center</span>
+                                    <span class="n">cache_level</span><span class="o">=</span><span class="s1">'light'</span><span class="p">)</span>            <span class="c1"># a 'light' cache level (only related to the sample)</span>
+
+<span class="n">kpca_total_cache</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">KPCA</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span>                  <span class="c1"># idem</span>
+                                    <span class="n">dim_output</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                   <span class="c1"># idem</span>
+                                    <span class="n">sample_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">'min'</span><span class="p">],</span>       <span class="c1"># idem</span>
+                                    <span class="n">kernel_transform</span><span class="o">=</span><span class="p">[</span><span class="s1">'center'</span><span class="p">],</span>    <span class="c1"># idem</span>
+                                    <span class="n">cache_level</span><span class="o">=</span><span class="s1">'total'</span><span class="p">)</span>            <span class="c1"># a 'total' cache level (saves everything)</span>
+</pre></div>
+</div>
+<p>If we plot the cache now, nothing is printed: the cache is empty. The advantage of this package is that it does not perform any
+unnecessary computations. Depending of what is required, it will compute what is strictly necessary.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kpca_light_cache</span><span class="o">.</span><span class="n">print_cache</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>kernel_implicit_transform [none] : Transforms: 
+	Mean centering (default)
+
+KERNEL_IMPLICIT_TRANSFORM:
+</pre></div>
+</div>
+<p>After solving the model and passing an out-of-sample through the model, we can see that the cache is pretty much
+loaded. Nothing however has been saved on related to the out-of-sample, even if it has been computed. This is a
+consequence of <code class="docutils literal notranslate"><span class="pre">light</span></code> cache level of the module. Similarly, nor has the original non-centered kernel matrix, nor has
+the original non-transformed sample been saved.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kpca_light_cache</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+<span class="n">kpca_light_cache</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">oos</span><span class="p">)</span>
+<span class="n">kpca_light_cache</span><span class="o">.</span><span class="n">print_cache</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sample_transform [none] : Transforms: 
+	Minimum Centering (default)
+K [light] : tensor([[ 0.7424,  0.0142, -0.2422, -0.2459, -0.2685],
+        [ 0.0142,  0.6743, -0.2509, -0.1506, -0.2870],
+        [-0.2422, -0.2509,  0.6180, -0.1665,  0.0415],
+        [-0.2459, -0.1506, -0.1665,  0.7539, -0.1910],
+        [-0.2685, -0.2870,  0.0415, -0.1910,  0.7049]])
+kernel_implicit_transform [none] : Transforms: 
+	Mean centering (default)
+
+SAMPLE_TRANSFORM:
+Minimum Centering statistics_sample [light] : tensor([-0.8567, -1.0845, -2.1788])
+Minimum Centering data_sample [light] : tensor([[2.3977, 0.7911, 0.0000],
+        [1.4251, 0.0000, 0.7802],
+        [1.2600, 1.9225, 1.4595],
+        [0.4533, 0.4879, 2.3608],
+        [0.0000, 2.1851, 1.1076]])
+
+KERNEL_IMPLICIT_TRANSFORM:
+Mean centering statistics_sample [light] : (tensor([[0.2794],
+        [0.3135],
+        [0.3416],
+        [0.2737],
+        [0.2982]]), tensor(0.3013))
+</pre></div>
+</div>
+<p>We can optionally reset the cache. Nothing is printed: the cache is empty again.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kpca_light_cache</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">kpca_light_cache</span><span class="o">.</span><span class="n">print_cache</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can now have a look at the <code class="docutils literal notranslate"><span class="pre">'total'</span></code> version. Again, before anything is required, the cache remains empty: nothing
+has computed yet.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kpca_total_cache</span><span class="o">.</span><span class="n">print_cache</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>kernel_implicit_transform [none] : Transforms: 
+	Mean centering (default)
+
+KERNEL_IMPLICIT_TRANSFORM:
+</pre></div>
+</div>
+<p>We now see that everything is saved.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kpca_total_cache</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+<span class="n">kpca_total_cache</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">oos</span><span class="p">)</span>
+<span class="n">kpca_total_cache</span><span class="o">.</span><span class="n">print_cache</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sample_transform [none] : Transforms: 
+	Minimum Centering (default)
+K [light] : tensor([[ 0.7424,  0.0142, -0.2422, -0.2459, -0.2685],
+        [ 0.0142,  0.6743, -0.2509, -0.1506, -0.2870],
+        [-0.2422, -0.2509,  0.6180, -0.1665,  0.0415],
+        [-0.2459, -0.1506, -0.1665,  0.7539, -0.1910],
+        [-0.2685, -0.2870,  0.0415, -0.1910,  0.7049]])
+kernel_implicit_transform [none] : Transforms: 
+	Mean centering (default)
+forward_140404332271072_dual [normal] : tensor([[-0.0591,  0.6962],
+        [-0.0009,  0.4885]])
+
+SAMPLE_TRANSFORM:
+base data_sample [normal] : tensor([[ 1.5410, -0.2934, -2.1788],
+        [ 0.5684, -1.0845, -1.3986],
+        [ 0.4033,  0.8380, -0.7193],
+        [-0.4033, -0.5966,  0.1820],
+        [-0.8567,  1.1006, -1.0712]])
+base data_oos_140404332271072 [normal] : tensor([[ 0.1227, -0.5663,  0.3731],
+        [-0.8920, -1.5091,  0.3704]])
+Minimum Centering statistics_sample [light] : tensor([-0.8567, -1.0845, -2.1788])
+Minimum Centering data_sample [light] : tensor([[2.3977, 0.7911, 0.0000],
+        [1.4251, 0.0000, 0.7802],
+        [1.2600, 1.9225, 1.4595],
+        [0.4533, 0.4879, 2.3608],
+        [0.0000, 2.1851, 1.1076]])
+Minimum Centering statistics_oos_140404332271072 [normal] : tensor([-0.8567, -1.0845, -2.1788])
+Minimum Centering data_oos_140404332271072 [normal] : tensor([[ 0.9794,  0.5182,  2.5519],
+        [-0.0353, -0.4246,  2.5492]])
+
+KERNEL_IMPLICIT_TRANSFORM:
+base data_oos_140401075513104 [normal] : tensor([[9.3538e-03, 1.4093e-01, 1.7157e-01, 8.4308e-01, 4.2237e-02],
+        [5.2590e-04, 5.1963e-02, 1.0564e-02, 5.4803e-01, 7.9825e-03]])
+base data_sample [normal] : tensor([[1.0000, 0.3058, 0.0776, 0.0059, 0.0079],
+        [0.3058, 1.0000, 0.1029, 0.1353, 0.0234],
+        [0.0776, 0.1029, 1.0000, 0.1476, 0.3801],
+        [0.0059, 0.1353, 0.1476, 1.0000, 0.0796],
+        [0.0079, 0.0234, 0.3801, 0.0796, 1.0000]])
+Mean centering statistics_sample [light] : (tensor([[0.2794],
+        [0.3135],
+        [0.3416],
+        [0.2737],
+        [0.2982]]), tensor(0.3013))
+Mean centering statistics_oos_140401075513104 [normal] : (tensor([[0.2414],
+        [0.1238]]), tensor(0.3013))
+Mean centering data_oos_140401075513104 [normal] : tensor([[-0.2102, -0.1127, -0.1102,  0.6292, -0.1961],
+        [-0.1014, -0.0841, -0.1536,  0.4518, -0.1127]])
+</pre></div>
+</div>
+<p>We can optionally reset the cache again. Nothing is printed: the cache is empty again.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kpca_total_cache</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">kpca_total_cache</span><span class="o">.</span><span class="n">print_cache</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="managing-the-cache">
+<h3>Managing the Cache<a class="headerlink" href="#managing-the-cache" title="Permalink to this headline"></a></h3>
+<p>In the following example, we show how we can add an element to the cache and recover it when called.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/torch.html#module-torch" title="torch"><span class="nn">torch</span></a>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/time.html#module-time" title="time"><span class="nn">time</span></a>
+
+<span class="k">class</span> <span class="nc">MyCacheExample</span><span class="p">(</span><a class="sphinx-codeautolink-a" href="../features/cache.html#kerch.feature.Cache" title="kerch.feature.cache.Cache"><span class="n">kerch</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">Cache</span></a><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#super" title="super"><span class="nb">super</span></a><span class="p">(</span><span class="n">MyCacheExample</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">big_matrix</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'big_matrix'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_qr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">qr_fun</span><span class="p">():</span>
+            <span class="k">return</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.linalg.qr.html#torch.linalg.qr" title="torch.linalg.qr"><span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span></a><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">big_matrix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s1">'qr'</span><span class="p">,</span> <span class="n">fun</span><span class="o">=</span><span class="n">qr_fun</span><span class="p">)</span>
+
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#property" title="property"><span class="nd">@property</span></a>
+    <span class="k">def</span> <span class="nf">Q</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_qr</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">q</span>
+
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#property" title="property"><span class="nd">@property</span></a>
+    <span class="k">def</span> <span class="nf">R</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_qr</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+<span class="c1"># we instantiate our new class</span>
+<span class="n">m</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">my_example</span> <span class="o">=</span> <span class="n">MyCacheExample</span><span class="p">(</span><span class="n">big_matrix</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+
+<span class="c1"># we time our Q property</span>
+<span class="n">start</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+<span class="n">my_example</span><span class="o">.</span><span class="n">Q</span>
+<span class="n">end</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'First access: '</span> <span class="o">+</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/stdtypes.html#str" title="str"><span class="nb">str</span></a><span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">'</span><span class="se">\n\n</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="c1"># we time it again</span>
+<span class="n">start</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+<span class="n">my_example</span><span class="o">.</span><span class="n">Q</span>
+<span class="n">end</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/time.html#time.time" title="time.time"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'Second access: '</span> <span class="o">+</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/stdtypes.html#str" title="str"><span class="nb">str</span></a><span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">'</span><span class="se">\n\n</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="c1"># we now have a look at our cache</span>
+<span class="n">my_example</span><span class="o">.</span><span class="n">print_cache</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>First access: 0.01804661750793457
+
+Second access: 1.3589859008789062e-05
+
+qr [normal] : torch.return_types.linalg_qr(
+Q=tensor([[-0.0481,  0.0721, -0.0945,  ..., -0.0426,  0.1056, -0.0288],
+        [ 0.0473, -0.0368,  0.0504,  ...,  0.0244,  0.1189, -0.1762],
+        [-0.0010,  0.0414, -0.1085,  ...,  0.0197, -0.0063,  0.0128],
+        ...,
+        [ 0.0052,  0.0495,  0.0208,  ..., -0.0446,  0.0654, -0.0508],
+        [-0.0971,  0.0800, -0.0674,  ..., -0.0472,  0.0399, -0.0133],
+        [ 0.0359, -0.0140,  0.0036,  ..., -0.0727, -0.0499,  0.0026]]),
+R=tensor([[-1.4523e+01, -1.3529e+00,  1.0283e+00,  ...,  1.3318e+00,
+          1.0005e-03, -5.0223e-01],
+        [ 0.0000e+00,  1.4382e+01, -1.0619e-02,  ..., -1.8346e+00,
+         -7.0990e-02,  5.5942e-01],
+        [ 0.0000e+00,  0.0000e+00,  1.3398e+01,  ...,  7.2516e-01,
+          9.8586e-02, -6.8472e-01],
+        ...,
+        [ 0.0000e+00,  0.0000e+00,  0.0000e+00,  ...,  1.0209e+01,
+         -5.2387e-01,  1.0148e+00],
+        [ 0.0000e+00,  0.0000e+00,  0.0000e+00,  ...,  0.0000e+00,
+          9.7442e+00, -1.3787e+00],
+        [ 0.0000e+00,  0.0000e+00,  0.0000e+00,  ...,  0.0000e+00,
+          0.0000e+00, -9.6815e+00]]))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="inheritance-diagram">
+<h2>Inheritance Diagram<a class="headerlink" href="#inheritance-diagram" title="Permalink to this headline"></a></h2>
+<div class="graphviz"><img alt="Inheritance diagram of kerch.feature.Cache" class="inheritance graphviz" src="../_images/inheritance-094ccac89f87ec466ab7ff6436b98d84a37434f4.png" usemap="#inheritance4c60e1209d"/></div>
+<map id="inheritance4c60e1209d" name="inheritance4c60e1209d">
+<area alt="" coords="118,157,269,184" href="#kerch.feature.Cache" id="node1" shape="rect" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache,"/>
+<area alt="" coords="114,81,273,109" href="module.html#kerch.feature.Module" id="node2" shape="rect" target="_top" title=":param logging_level: Logging level for this specific instance."/>
+<area alt="" coords="5,5,161,33" href="logger.html#kerch.feature.Logger" id="node3" shape="rect" target="_top" title=":param logging_level: Logging level for this specific instance."/>
+</map></div>
+</div>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="module.html" rel="prev" title="Kerch Module"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="stochastic.html" rel="next" title="Stochastic Training">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright KU Leuven, January 2024.</p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

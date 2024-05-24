@@ -1,5 +1,5 @@
 # coding=utf-8
-__version__ = "0.3.1"
+__version__ = "0.3.1.1post1"
 __author__ = "HENRI DE PLAEN"
 __credits__ = "KU Leuven"
 __status__ = "beta"

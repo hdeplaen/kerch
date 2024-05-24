@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kernel Smoother — kerch 0.3.1 documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-codeautolink.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="knn.html" rel="next" title="Nearest Neighbors"/>
+<link href="index.html" rel="prev" title="Methods Module"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            kerch
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Model Module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Methods Module</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Kernel Smoother</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#coefficients-based-smoother">Coefficients-Based Smoother</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Kernel Smoother</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#different-kernels-same-bandwidth">Different Kernels, Same Bandwidth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#same-kernels-different-bandwidths">Same Kernels, Different Bandwidths</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="knn.html">Nearest Neighbors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iterative.html">Iterative Solver</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">kerch</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Methods Module</a></li>
+<li class="breadcrumb-item active">Kernel Smoother</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/methods/smoother.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<div class="section" id="kernel-smoother">
+<h1>Kernel Smoother<a class="headerlink" href="#kernel-smoother" title="Permalink to this headline"></a></h1>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
+<div class="section" id="coefficients-based-smoother">
+<h3>Coefficients-Based Smoother<a class="headerlink" href="#coefficients-based-smoother" title="Permalink to this headline"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.method.smoother">
+<code class="sig-prename descclassname"><span class="pre">kerch.method.</span></code><code class="sig-name descname"><span class="pre">smoother</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">coefficients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></em>, <em><span class="n"><span class="pre">observations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></em>, <em><span class="n"><span class="pre">num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></span><a class="reference internal" href="../_modules/kerch/method/_smoother.html#smoother"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.method.smoother" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a weighted sum of the observations by the coefficients.</p>
+<div class="math notranslate nohighlight">
+\[\mathtt{out}_{i,j} = \frac{\sum_l\mathtt{weights}_{i,l} * \mathtt{observations}_{l,j}}{\sum_l\mathtt{weights}_{i,l}}.\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coefficients</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> [</em><em>num_points</em><em>, </em><em>num_observations</em><em>]</em>) – coefficients used in the smoother.</li>
+<li><strong>observations</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> [</em><em>num_observations</em><em>, </em><em>dim_observations</em><em>]</em>) – observation corresponding to each weight dimension.</li>
+<li><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Number of closest points to be used. Either an integer representing the number or
+the string <code class="docutils literal notranslate"><span class="pre">'all'</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">'all'</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Weighted observations</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)">torch.Tensor</a> [num_points, dim_observations]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+</div>
+<div class="section" id="id1">
+<h3>Kernel Smoother<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.method.kernel_smoother">
+<code class="sig-prename descclassname"><span class="pre">kerch.method.</span></code><code class="sig-name descname"><span class="pre">kernel_smoother</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></em>, <em><span class="n"><span class="pre">observations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></em>, <em><span class="n"><span class="pre">num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em><span class="n"><span class="pre">kernel_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a></span></span><a class="reference internal" href="../_modules/kerch/method/_smoother.html#kernel_smoother"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.method.kernel_smoother" title="Permalink to this definition"></a></dt>
+<dd><p>Smoothens the function <span class="math notranslate nohighlight">\(f(\mathtt{domain}_{i,:}) = \mathtt{observation}_{i,:}\)</span> with weights defined
+as a kernel on the domain.</p>
+<div class="math notranslate nohighlight">
+\[\mathtt{out}_{i,j} = \frac{\sum_l k\left(\mathtt{domain}_{i,:},\mathtt{domain}_{l,:}\right) * \mathtt{observations}_{l,j}}{\sum_l k\left(\mathtt{domain}_{i,:},\mathtt{domain}_{l,:}\right)}.\]</div>
+<p>The kernel is defined as in <a class="reference internal" href="../kernel/index.html#kerch.kernel.factory" title="kerch.kernel.factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerch.kernel.factory()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>domain</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> [</em><em>num_observations</em><em>, </em><em>dim_domain</em><em>]</em>) – domain corresponding to each observation.</li>
+<li><strong>observations</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> [</em><em>num_observations</em><em>, </em><em>dim_observations</em><em>]</em>) – observation corresponding to each domain entry.</li>
+<li><strong>num</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Number of closest points to be used. Either an integer representing the number or
+the string <code class="docutils literal notranslate"><span class="pre">'all'</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">'all'</span></code>.</li>
+<li><strong>kernel_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Type of kernel chosen. For the possible choices, please refer to the <cite>Factory Type</cite> column of the
+<a class="reference internal" href="../kernel/index.html"><span class="doc">Kernel Module</span></a> documentation. Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">kerch.DEFAULT_KERNEL_TYPE</span></code>.</li>
+<li><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – Arguments to be passed to the kernel constructor, such as <cite>sample</cite> or <cite>sigma</cite>. If an argument is
+passed that does not exist (e.g. <cite>sigma</cite> to a <cite>linear</cite> kernel), it will just be neglected. For the default
+values, please refer to the default values of the requested kernel.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Smoothed function <span class="math notranslate nohighlight">\(f\)</span> according to kernel <span class="math notranslate nohighlight">\(k\)</span>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)">torch.Tensor</a> [num_observations, dim_observations]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h2>
+<div class="section" id="different-kernels-same-bandwidth">
+<h3>Different Kernels, Same Bandwidth<a class="headerlink" href="#different-kernels-same-bandwidth" title="Permalink to this headline"></a></h3>
+<p>As we can see in the following example, different kernels have different behaviors. They all use the same bandwidth as
+without specification, the bandwidth is based on the distance matrix which is here the same for all as they are all
+based on the same domain. The same bandwidth is not always appropriate for different kernels.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/torch.html#module-torch" title="torch"><span class="nn">torch</span></a>
+<span class="kn">from</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/index.html#module-matplotlib" title="matplotlib"><span class="nn">matplotlib</span></a> <span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="matplotlib.pyplot"><span class="n">pyplot</span></a> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># data</span>
+<span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.sin.html#torch.sin" title="torch.sin"><span class="n">torch</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">x_equal</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.linspace.html#torch.linspace" title="torch.linspace"><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">x_nonequal</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.sort.html#torch.sort" title="torch.sort"><span class="n">torch</span><span class="o">.</span><span class="n">sort</span></a><span class="p">(</span><a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">40</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">y_original</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">x_equal</span><span class="p">)</span>
+<span class="n">y_noisy</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">x_nonequal</span><span class="p">)</span> <span class="o">+</span> <span class="mf">.2</span> <span class="o">*</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.randn_like.html#torch.randn_like" title="torch.randn_like"><span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span></a><span class="p">(</span><span class="n">x_nonequal</span><span class="p">)</span>
+
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x_equal</span><span class="p">,</span> <span class="n">y_original</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Original Data"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dotted'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.scatter.html#matplotlib.pyplot.scatter" title="matplotlib.pyplot.scatter"><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span></a><span class="p">(</span><span class="n">x_nonequal</span><span class="p">,</span> <span class="n">y_noisy</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Noisy Data"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">)</span>
+
+<span class="c1"># kernels</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">'RBF'</span><span class="p">,</span> <span class="s1">'red'</span><span class="p">),</span>
+           <span class="p">(</span><span class="s1">'Laplacian'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">),</span>
+           <span class="p">(</span><span class="s1">'Logistic'</span><span class="p">,</span> <span class="s1">'olive'</span><span class="p">),</span>
+           <span class="p">(</span><span class="s1">'Epanechnikov'</span><span class="p">,</span> <span class="s1">'gold'</span><span class="p">),</span>
+           <span class="p">(</span><span class="s1">'Quartic'</span><span class="p">,</span> <span class="s1">'chartreuse'</span><span class="p">),</span>
+           <span class="p">(</span><span class="s1">'Silverman'</span><span class="p">,</span> <span class="s1">'green'</span><span class="p">),</span>
+           <span class="p">(</span><span class="s1">'Triangular'</span><span class="p">,</span> <span class="s1">'teal'</span><span class="p">),</span>
+           <span class="p">(</span><span class="s1">'Tricube'</span><span class="p">,</span> <span class="s1">'cyan'</span><span class="p">),</span>
+           <span class="p">(</span><span class="s1">'Triweight'</span><span class="p">,</span> <span class="s1">'royalblue'</span><span class="p">),</span>
+           <span class="p">(</span><span class="s1">'Uniform'</span><span class="p">,</span> <span class="s1">'purple'</span><span class="p">)]</span>
+
+<span class="c1"># kernel smoother</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">kernels</span><span class="p">:</span>
+    <span class="n">y_reconstructed</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../methods/smoother.html#kerch.method.kernel_smoother" title="kerch.method.kernel_smoother"><span class="n">kerch</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="n">kernel_smoother</span></a><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">x_nonequal</span><span class="p">,</span> <span class="n">observations</span><span class="o">=</span><span class="n">y_noisy</span><span class="p">,</span> <span class="n">kernel_type</span><span class="o">=</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x_nonequal</span><span class="p">,</span> <span class="n">y_reconstructed</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+
+<span class="c1"># plot</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s1">'Kernel Smoothing'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="s1">'x'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s1">'y'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'lower center'</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/6bf8e5da18022b91a622842ac44a0257/smoother-1.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="../_downloads/f8cd5dd798266293d25cf1c3c87a97a2/smoother-1.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/836121d1ff01e9f008358f9a69ad08cd/smoother-1.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/72d337560a94fe4f50899aeaabe83333/smoother-1.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<div class="figure align-default">
+<img alt="../_images/smoother-1.png" class="plot-directive" src="../_images/smoother-1.png"/>
+</div>
+</div>
+<div class="section" id="same-kernels-different-bandwidths">
+<h3>Same Kernels, Different Bandwidths<a class="headerlink" href="#same-kernels-different-bandwidths" title="Permalink to this headline"></a></h3>
+<p>In this example, we show how two different kernels react differently based on the prescribed bandwidth. We will
+consider two kernels, the <a class="reference internal" href="../kernel/generic/laplacian.html#kerch.kernel.Laplacian" title="kerch.kernel.Laplacian"><code class="xref py py-class docutils literal notranslate"><span class="pre">Laplacian</span></code></a> with a very heavy tail and the very restricted
+<a class="reference internal" href="../kernel/statistics/triweight.html#kerch.kernel.Triweight" title="kerch.kernel.Triweight"><code class="xref py py-class docutils literal notranslate"><span class="pre">Triweight</span></code></a>. We can first have a view at their respective shapes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/torch.html#module-torch" title="torch"><span class="nn">torch</span></a>
+<span class="kn">from</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/index.html#module-matplotlib" title="matplotlib"><span class="nn">matplotlib</span></a> <span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="matplotlib.pyplot"><span class="n">pyplot</span></a> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># domain</span>
+<span class="n">x</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.linspace.html#torch.linspace" title="torch.linspace"><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+
+<span class="c1"># define the kernels</span>
+<a class="sphinx-codeautolink-a" href="../kernel/generic/laplacian.html#kerch.kernel.Laplacian" title="kerch.kernel.generic.laplacian.Laplacian"><span class="n">k_l1</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/generic/laplacian.html#kerch.kernel.Laplacian" title="kerch.kernel.generic.laplacian.Laplacian"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Laplacian</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="../kernel/generic/laplacian.html#kerch.kernel.Laplacian" title="kerch.kernel.generic.laplacian.Laplacian"><span class="n">k_l2</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/generic/laplacian.html#kerch.kernel.Laplacian" title="kerch.kernel.generic.laplacian.Laplacian"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Laplacian</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="../kernel/statistics/triweight.html#kerch.kernel.Triweight" title="kerch.kernel.statistics.triweight.Triweight"><span class="n">k_t1</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/statistics/triweight.html#kerch.kernel.Triweight" title="kerch.kernel.statistics.triweight.Triweight"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Triweight</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="../kernel/statistics/triweight.html#kerch.kernel.Triweight" title="kerch.kernel.statistics.triweight.Triweight"><span class="n">k_t2</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/statistics/triweight.html#kerch.kernel.Triweight" title="kerch.kernel.statistics.triweight.Triweight"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">Triweight</span></a><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># plot the shapes</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k_l1</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.Tensor.squeeze.html#torch.Tensor.squeeze" title="torch.Tensor.squeeze"><span class="n">squeeze</span></a><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Laplacian with $\sigma$=</span><span class="si">{</span><span class="n">k_l1</span><span class="o">.</span><span class="n">sigma</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k_l2</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.Tensor.squeeze.html#torch.Tensor.squeeze" title="torch.Tensor.squeeze"><span class="n">squeeze</span></a><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Laplacian with $\sigma$=</span><span class="si">{</span><span class="n">k_l2</span><span class="o">.</span><span class="n">sigma</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k_t1</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.Tensor.squeeze.html#torch.Tensor.squeeze" title="torch.Tensor.squeeze"><span class="n">squeeze</span></a><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Triweight with $\sigma$=</span><span class="si">{</span><span class="n">k_t1</span><span class="o">.</span><span class="n">sigma</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'red'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k_t2</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.Tensor.squeeze.html#torch.Tensor.squeeze" title="torch.Tensor.squeeze"><span class="n">squeeze</span></a><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Triweight with $\sigma$=</span><span class="si">{</span><span class="n">k_t2</span><span class="o">.</span><span class="n">sigma</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+
+<span class="c1"># annotate the plot</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s1">'Kernel Shape'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="s1">'x'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s1">'k(x,y=0)'</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylim.html#matplotlib.pyplot.ylim" title="matplotlib.pyplot.ylim"><span class="n">plt</span><span class="o">.</span><span class="n">ylim</span></a><span class="p">(</span><span class="o">-</span><span class="mf">.25</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'lower center'</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/1fe49f75600b2ad1c31c085a0a075628/smoother-2.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="../_downloads/2f63e2cd4642ea2bc46faf3a9da48cd8/smoother-2.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/e68d52094f4c9f2891ebd5b12175d5ca/smoother-2.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/468503cab826cb997267b4c057a9efe5/smoother-2.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<div class="figure align-default">
+<img alt="../_images/smoother-2.png" class="plot-directive" src="../_images/smoother-2.png"/>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/torch.html#module-torch" title="torch"><span class="nn">torch</span></a>
+<span class="kn">from</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/index.html#module-matplotlib" title="matplotlib"><span class="nn">matplotlib</span></a> <span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="matplotlib.pyplot"><span class="n">pyplot</span></a> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># data</span>
+<span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.sin.html#torch.sin" title="torch.sin"><span class="n">torch</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">x_equal</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.linspace.html#torch.linspace" title="torch.linspace"><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">x_nonequal</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.sort.html#torch.sort" title="torch.sort"><span class="n">torch</span><span class="o">.</span><span class="n">sort</span></a><span class="p">(</span><a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">40</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">y_original</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">x_equal</span><span class="p">)</span>
+<span class="n">y_noisy</span> <span class="o">=</span> <span class="n">fun</span><span class="p">(</span><span class="n">x_nonequal</span><span class="p">)</span> <span class="o">+</span> <span class="mf">.2</span> <span class="o">*</span> <a class="sphinx-codeautolink-a" href="https://pytorch.org/docs/stable/generated/torch.randn_like.html#torch.randn_like" title="torch.randn_like"><span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span></a><span class="p">(</span><span class="n">x_nonequal</span><span class="p">)</span>
+
+<span class="c1"># plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_equal</span><span class="p">,</span> <span class="n">y_original</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Original Data"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dotted'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_nonequal</span><span class="p">,</span> <span class="n">y_noisy</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Noisy Data"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">)</span>
+    <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="s1">'Kernel Smoothing'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'x'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'y'</span><span class="p">)</span>
+
+<span class="c1"># kernel smoother</span>
+<span class="n">sigmas</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.05</span><span class="p">,</span> <span class="s1">'red'</span><span class="p">),</span>
+          <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'green'</span><span class="p">),</span>
+          <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">'cyan'</span><span class="p">),</span>
+          <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">'purple'</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sigmas</span><span class="p">:</span>
+    <span class="n">y_laplacian</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../methods/smoother.html#kerch.method.kernel_smoother" title="kerch.method.kernel_smoother"><span class="n">kerch</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="n">kernel_smoother</span></a><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">x_nonequal</span><span class="p">,</span> <span class="n">observations</span><span class="o">=</span><span class="n">y_noisy</span><span class="p">,</span> <span class="n">kernel_type</span><span class="o">=</span><span class="s1">'laplacian'</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">y_triweight</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../methods/smoother.html#kerch.method.kernel_smoother" title="kerch.method.kernel_smoother"><span class="n">kerch</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="n">kernel_smoother</span></a><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">x_nonequal</span><span class="p">,</span> <span class="n">observations</span><span class="o">=</span><span class="n">y_noisy</span><span class="p">,</span> <span class="n">kernel_type</span><span class="o">=</span><span class="s1">'triweight'</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_nonequal</span><span class="p">,</span> <span class="n">y_laplacian</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Bandwidth $\sigma$=</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_nonequal</span><span class="p">,</span> <span class="n">y_triweight</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+
+<span class="c1"># plot</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">'Kernel Smoothing'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Laplacian'</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Triweight'</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="o">*</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">(),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'lower center'</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>(<a class="reference download internal" download="" href="../_downloads/070298c85ab387682e2c0cab658fad86/smoother-3.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="../_downloads/5197643c2aa5bb68813da53e5d511732/smoother-3.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/e986319952df8a38035f3a7f246254c4/smoother-3.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/57bc89819feee592236c82ae04ca7950/smoother-3.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<div class="figure align-default">
+<img alt="../_images/smoother-3.png" class="plot-directive" src="../_images/smoother-3.png"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="index.html" rel="prev" title="Methods Module"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="knn.html" rel="next" title="Nearest Neighbors">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright KU Leuven, January 2024.</p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

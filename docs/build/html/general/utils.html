@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Utilitaries &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Structure" href="../structure/index.html" />
+    <link rel="prev" title="Views and Levels" href="../views/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utilitaries</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.defaults">Defaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.cast">Casting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.decorators">Decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.math">Mathematics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.type">Typing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.errors">Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tensors">Tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Utilitaries</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/general/utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="utilitaries">
+<h1>Utilitaries<a class="headerlink" href="#utilitaries" title="Permalink to this headline"></a></h1>
+<div class="section" id="module-kerch.utils.defaults">
+<span id="defaults"></span><h2>Defaults<a class="headerlink" href="#module-kerch.utils.defaults" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-kerch.utils.cast">
+<span id="casting"></span><h2>Casting<a class="headerlink" href="#module-kerch.utils.cast" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.cast.capitalize_only_first">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.cast.</span></code><code class="sig-name descname"><span class="pre">capitalize_only_first</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/kerch/utils/cast.html#capitalize_only_first"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.cast.capitalize_only_first" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.cast.castf">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.cast.</span></code><code class="sig-name descname"><span class="pre">castf</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span></em>, <em><span class="n"><span class="pre">dev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/utils/cast.html#castf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.cast.castf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.cast.casti">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.cast.</span></code><code class="sig-name descname"><span class="pre">casti</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span></em>, <em><span class="n"><span class="pre">dev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/utils/cast.html#casti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.cast.casti" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.cast.check_representation">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.cast.</span></code><code class="sig-name descname"><span class="pre">check_representation</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">representation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">cls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/cast.html#check_representation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.cast.check_representation" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-kerch.utils.decorators">
+<span id="decorators"></span><h2>Decorators<a class="headerlink" href="#module-kerch.utils.decorators" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="kerch.utils.decorators.extend_docstring">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.decorators.</span></code><code class="sig-name descname"><span class="pre">extend_docstring</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/decorators.html#extend_docstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.decorators.extend_docstring" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.decorators.kwargs_decorator">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.decorators.</span></code><code class="sig-name descname"><span class="pre">kwargs_decorator</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">dict_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/decorators.html#kwargs_decorator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.decorators.kwargs_decorator" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">special-members:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">show-inheritance:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="module-kerch.utils.math">
+<span id="mathematics"></span><h2>Mathematics<a class="headerlink" href="#module-kerch.utils.math" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.math.eigs">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.math.</span></code><code class="sig-name descname"><span class="pre">eigs</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">A</span></span></em>, <em><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">psd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em><span class="n"><span class="pre">sym</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/math.html#eigs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.math.eigs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-kerch.utils.type">
+<span id="typing"></span><h2>Typing<a class="headerlink" href="#module-kerch.utils.type" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.type.gpu_available">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.type.</span></code><code class="sig-name descname"><span class="pre">gpu_available</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/kerch/utils/type.html#gpu_available"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.type.gpu_available" title="Permalink to this definition"></a></dt>
+<dd><p>Returns whether GPU-enhanced computation is possible and configured on this machine.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.type.set_eps">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.type.</span></code><code class="sig-name descname"><span class="pre">set_eps</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/type.html#set_eps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.type.set_eps" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.type.set_ftype">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.type.</span></code><code class="sig-name descname"><span class="pre">set_ftype</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/type.html#set_ftype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.type.set_ftype" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.utils.type.set_itype">
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.type.</span></code><code class="sig-name descname"><span class="pre">set_itype</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/type.html#set_itype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.type.set_itype" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-kerch.utils.errors">
+<span id="errors"></span><h2>Errors<a class="headerlink" href="#module-kerch.utils.errors" title="Permalink to this headline"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="kerch.utils.errors.BijectionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">BijectionError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#BijectionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.BijectionError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.BijectionError.__abstractmethods__">
+<code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.BijectionError.__abstractmethods__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">frozenset</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.utils.errors.BijectionError.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#BijectionError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.BijectionError.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.BijectionError.__module__">
+<code class="sig-name descname"><span class="pre">__module__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kerch.utils.errors'</span></em><a class="headerlink" href="#kerch.utils.errors.BijectionError.__module__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="kerch.utils.errors.ExplicitError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">ExplicitError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#ExplicitError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.ExplicitError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.ExplicitError.__abstractmethods__">
+<code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.ExplicitError.__abstractmethods__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">frozenset</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.ExplicitError.__annotations__">
+<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#kerch.utils.errors.ExplicitError.__annotations__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.utils.errors.ExplicitError.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#ExplicitError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.ExplicitError.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.ExplicitError.__module__">
+<code class="sig-name descname"><span class="pre">__module__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kerch.utils.errors'</span></em><a class="headerlink" href="#kerch.utils.errors.ExplicitError.__module__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="kerch.utils.errors.ImplicitError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">ImplicitError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#ImplicitError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.ImplicitError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.ImplicitError.__abstractmethods__">
+<code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.ImplicitError.__abstractmethods__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">frozenset</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.ImplicitError.__annotations__">
+<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#kerch.utils.errors.ImplicitError.__annotations__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.utils.errors.ImplicitError.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#ImplicitError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.ImplicitError.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.ImplicitError.__module__">
+<code class="sig-name descname"><span class="pre">__module__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kerch.utils.errors'</span></em><a class="headerlink" href="#kerch.utils.errors.ImplicitError.__module__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="kerch.utils.errors.KerchError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">KerchError</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">cls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#KerchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.KerchError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.KerchError.__abstractmethods__">
+<code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({'__init__'})</span></em><a class="headerlink" href="#kerch.utils.errors.KerchError.__abstractmethods__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">frozenset</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.KerchError.__annotations__">
+<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#kerch.utils.errors.KerchError.__annotations__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.utils.errors.KerchError.__init__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">cls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#KerchError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.KerchError.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.KerchError.__module__">
+<code class="sig-name descname"><span class="pre">__module__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kerch.utils.errors'</span></em><a class="headerlink" href="#kerch.utils.errors.KerchError.__module__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.KerchError.__weakref__">
+<code class="sig-name descname"><span class="pre">__weakref__</span></code><a class="headerlink" href="#kerch.utils.errors.KerchError.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/types.html#types.GetSetDescriptorType" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">GetSetDescriptorType</span></code></a></p>
+<p>list of weak references to the object</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="kerch.utils.errors.MultiViewError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">MultiViewError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#MultiViewError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.MultiViewError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.MultiViewError.__abstractmethods__">
+<code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.MultiViewError.__abstractmethods__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">frozenset</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.MultiViewError.__annotations__">
+<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#kerch.utils.errors.MultiViewError.__annotations__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.utils.errors.MultiViewError.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#MultiViewError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.MultiViewError.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.MultiViewError.__module__">
+<code class="sig-name descname"><span class="pre">__module__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kerch.utils.errors'</span></em><a class="headerlink" href="#kerch.utils.errors.MultiViewError.__module__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="kerch.utils.errors.NotInitializedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">NotInitializedError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#NotInitializedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.NotInitializedError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.NotInitializedError.__abstractmethods__">
+<code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.NotInitializedError.__abstractmethods__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">frozenset</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.NotInitializedError.__annotations__">
+<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#kerch.utils.errors.NotInitializedError.__annotations__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.utils.errors.NotInitializedError.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#NotInitializedError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.NotInitializedError.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.NotInitializedError.__module__">
+<code class="sig-name descname"><span class="pre">__module__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kerch.utils.errors'</span></em><a class="headerlink" href="#kerch.utils.errors.NotInitializedError.__module__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="kerch.utils.errors.RepresentationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">RepresentationError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#RepresentationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.RepresentationError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.RepresentationError.__abstractmethods__">
+<code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.RepresentationError.__abstractmethods__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">frozenset</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.RepresentationError.__annotations__">
+<code class="sig-name descname"><span class="pre">__annotations__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#kerch.utils.errors.RepresentationError.__annotations__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.utils.errors.RepresentationError.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#RepresentationError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.RepresentationError.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kerch.utils.errors.RepresentationError.__module__">
+<code class="sig-name descname"><span class="pre">__module__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kerch.utils.errors'</span></em><a class="headerlink" href="#kerch.utils.errors.RepresentationError.__module__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Type:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="tensors">
+<h2>Tensors<a class="headerlink" href="#tensors" title="Permalink to this headline"></a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../views/index.html" class="btn btn-neutral float-left" title="Views and Levels" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../structure/index.html" class="btn btn-neutral float-right" title="Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

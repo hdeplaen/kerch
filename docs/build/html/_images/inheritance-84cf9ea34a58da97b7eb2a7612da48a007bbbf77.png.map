@@ -1,0 +1,5 @@
+<map id="inheritance8ea479fc96" name="inheritance8ea479fc96">
+<area shape="rect" id="node1" href="logger.html#kerch.feature.Logger" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="5,5,161,33"/>
+<area shape="rect" id="node2" href="#kerch.feature.Module" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="114,81,273,109"/>
+<area shape="rect" id="node3" title="Base class for all neural network modules." alt="" coords="185,5,424,33"/>
+</map>

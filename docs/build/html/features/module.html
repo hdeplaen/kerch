@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kerch Module — kerch 0.3.1 documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-codeautolink.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="cache.html" rel="next" title="Cache Management"/>
+<link href="logger.html" rel="prev" title="Logging in Kerch"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            kerch
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Features</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logging in Kerch</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Kerch Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functionalities">Functionalities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#before-and-after-step-operations">Before and After Step Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#different-parameter-types">Different Parameter Types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hyperparameters-dictionaries">Hyperparameters Dictionaries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#abstract-class">Abstract Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kpca">KPCA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-module">Creating a Module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#inheritance-diagram">Inheritance Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">Cache Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stochastic.html">Stochastic Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample.html">Sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transform.html">Data and Kernel Transformations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">kerch</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Features</a></li>
+<li class="breadcrumb-item active">Kerch Module</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/features/module.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<div class="section" id="kerch-module">
+<h1>Kerch Module<a class="headerlink" href="#kerch-module" title="Permalink to this headline"></a></h1>
+<p>The <a class="reference internal" href="#kerch.feature.Module" title="kerch.feature.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Module</span></code></a> class is aimed at modules that must be trained trough gradient descent. It extends the
+<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></a> to add the logging
+features of the <a class="reference internal" href="logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Logger</span></code></a> class.</p>
+<div class="section" id="functionalities">
+<h2>Functionalities<a class="headerlink" href="#functionalities" title="Permalink to this headline"></a></h2>
+<p>It also adds the following functionalities necessary for more complex gradient descent than what PyTorch offers. In
+particular:</p>
+<div class="section" id="before-and-after-step-operations">
+<h3>Before and After Step Operations<a class="headerlink" href="#before-and-after-step-operations" title="Permalink to this headline"></a></h3>
+<p>The methods <a class="reference internal" href="#kerch.feature.Module.before_step" title="kerch.feature.Module.before_step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">before_step()</span></code></a> and <a class="reference internal" href="#kerch.feature.Module.after_step" title="kerch.feature.Module.after_step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">after_step()</span></code></a> for
+operations that must be executed before and after a parameter update through an optimization step.</p>
+</div>
+<div class="section" id="different-parameter-types">
+<h3>Different Parameter Types<a class="headerlink" href="#different-parameter-types" title="Permalink to this headline"></a></h3>
+<p>The support for various groups of parameters that require specific learning rates or lie on the Stiefel manifold. The
+following group types are available</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Euclidean</dt><dd>Parameters lying on the Euclidean manifold (standard optimization). The optimization is
+done onto <span class="math notranslate nohighlight">\(\mathbb{R}^{n \times m}\)</span>, <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> depending on the size of each parameter.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Stiefel</dt><dd>Parameters that must lie on the Stiefel manifold (optimization is done onto that manifold).
+The Stiefel manifold corresponds to the orthonormal parameters <span class="math notranslate nohighlight">\(U \in \mathrm{St}(n,m)\)</span>, i.e., all
+<span class="math notranslate nohighlight">\(U \in \mathbb{R}^{n \times m}\)</span> such that <span class="math notranslate nohighlight">\(U^\top U = I\)</span>. The dimensions <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> are
+proper to each parameter.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Slow</dt><dd>Parameters lying on the Euclidean manifold (standard optimization). The optimization is
+done onto <span class="math notranslate nohighlight">\(\mathbb{R}^{n \times m}\)</span>, <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> depending on the size of each parameter.
+The specificity of these slow Euclidean parameters is that they are better trained with a lower learning rate that the
+others, hence their name and the necessity to group them apart.</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="hyperparameters-dictionaries">
+<h3>Hyperparameters Dictionaries<a class="headerlink" href="#hyperparameters-dictionaries" title="Permalink to this headline"></a></h3>
+<p>This is relevant for automatically recording values before, during of after the training. All the relevant hyperparameters are
+listed into two dictionaries.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Fixed Hyperparameters</dt><dd>The attribute <a class="reference internal" href="#kerch.feature.Module.hparams_fixed" title="kerch.feature.Module.hparams_fixed"><code class="xref py py-attr docutils literal notranslate"><span class="pre">hparams_fixed</span></code></a> return the fixed hyperparameters of the module. By contrast with <code class="xref py py-attr docutils literal notranslate"><span class="pre">hparams_variable</span></code>, these are the values that are fixed and
+cannot possibly change during the training. If applicable, these can be specific architecture values for example.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Variable Hyperparameters</dt><dd>The attribute <a class="reference internal" href="#kerch.feature.Module.hparams_variable" title="kerch.feature.Module.hparams_variable"><code class="xref py py-attr docutils literal notranslate"><span class="pre">hparams_variable</span></code></a> return the fixed hyperparameters of the module. By contrast with <code class="xref py py-attr docutils literal notranslate"><span class="pre">hparams_fixed</span></code>, these are the values that are may change during
+the training and may be monitored at various stages during the training. If applicable, these can be kernel bandwidth parameters for example.</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="abstract-class">
+<h2>Abstract Class<a class="headerlink" href="#abstract-class" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="kerch.feature.Module">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.feature.</span></code><code class="sig-name descname"><span class="pre">Module</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/feature/module.html#Module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Module" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="logger.html#kerch.feature.Logger" title="kerch.feature.logger.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.logger.Logger</span></code></a>, <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>logging_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Logging level for this specific instance.
+If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current default kerch global log level will be used.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code> (default kerch logging level).
+We refer to the <a class="reference internal" href="logger.html"><span class="doc">Logging in Kerch</span></a> documentation for further information.</td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Module._euclidean_parameters">
+<code class="sig-name descname"><span class="pre">_euclidean_parameters</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.parameter.Parameter.html#torch.nn.parameter.Parameter" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.nn.parameter.Parameter</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/kerch/feature/module.html#Module._euclidean_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Module._euclidean_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Iterator yielding all parameters lying on the Euclidean manifold (standard optimization). The optimization is
+done onto <span class="math notranslate nohighlight">\(\mathbb{R}^{n \times m}\)</span>, <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> depending on the size of each parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, yields both the Euclidean parameters of this module and its potential children.
+otherwise, it only yields Euclidean parameters from this module. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Euclidean parameters</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Iterator[torch.nn.Parameter]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Module._slow_parameters">
+<code class="sig-name descname"><span class="pre">_slow_parameters</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.parameter.Parameter.html#torch.nn.parameter.Parameter" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.nn.parameter.Parameter</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/kerch/feature/module.html#Module._slow_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Module._slow_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Iterator yielding all parameters lying on the Euclidean manifold (standard optimization). The optimization is
+done onto <span class="math notranslate nohighlight">\(\mathbb{R}^{n \times m}\)</span>, <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> depending on the size of each parameter.</p>
+<p>The specificity of these slow Euclidean parameters is that they are better trained with a lower learning rate that the
+others, hence their name and the necessity to group them apart.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, yields both the slow (Euclidean) parameters of this module and its potential children.
+otherwise, it only yields slow (Euclidean) parameters from this module. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Slow (Euclidean) parameters</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Iterator[torch.nn.Parameter]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Module._stiefel_parameters">
+<code class="sig-name descname"><span class="pre">_stiefel_parameters</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.parameter.Parameter.html#torch.nn.parameter.Parameter" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.nn.parameter.Parameter</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/kerch/feature/module.html#Module._stiefel_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Module._stiefel_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Iterator yielding all parameters that must lie on the Stiefel manifold (optimization is done onto that manifold).
+The Stiefel manifold corresponds to the orthonormal parameters <span class="math notranslate nohighlight">\(U \in \mathrm{St}(n,m)\)</span>, i.e., all
+<span class="math notranslate nohighlight">\(U \in \mathbb{R}^{n \times m}\)</span> such that <span class="math notranslate nohighlight">\(U^\top U = I\)</span>. The dimensions <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> are
+proper to each parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, yields both the Stiefel parameters of this module and its potential children.
+otherwise, it only yields Stiefel parameters from this module. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Stiefel parameters</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Iterator[torch.nn.Parameter]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Module.after_step">
+<code class="sig-name descname"><span class="pre">after_step</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/feature/module.html#Module.after_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Module.after_step" title="Permalink to this definition"></a></dt>
+<dd><p>Specific operations to be performed after a training step. We refer to the documentation of
+<a class="reference internal" href="#"><span class="doc">Kerch Module</span></a> for further information.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Module.before_step">
+<code class="sig-name descname"><span class="pre">before_step</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/feature/module.html#Module.before_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Module.before_step" title="Permalink to this definition"></a></dt>
+<dd><p>Specific operations to be performed before a training step. We refer to the documentation of
+<a class="reference internal" href="#"><span class="doc">Kerch Module</span></a> for further information.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.feature.Module.hparams_fixed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">hparams_fixed</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">dict</span></a></em><a class="headerlink" href="#kerch.feature.Module.hparams_fixed" title="Permalink to this definition"></a></dt>
+<dd><p>Fixed hyperparameters of the module. By contrast with <a class="reference internal" href="#kerch.feature.Module.hparams_variable" title="kerch.feature.Module.hparams_variable"><code class="xref py py-attr docutils literal notranslate"><span class="pre">hparams_variable</span></code></a>, these are the values that are fixed and
+cannot possibly change during the training. If applicable, these can be specific architecture values for example.
+We refer to the documentation of <a class="reference internal" href="#"><span class="doc">Kerch Module</span></a> for further information.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.feature.Module.hparams_variable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">hparams_variable</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">dict</span></a></em><a class="headerlink" href="#kerch.feature.Module.hparams_variable" title="Permalink to this definition"></a></dt>
+<dd><p>Variable hyperparameters of the module. By contrast with <a class="reference internal" href="#kerch.feature.Module.hparams_fixed" title="kerch.feature.Module.hparams_fixed"><code class="xref py py-attr docutils literal notranslate"><span class="pre">hparams_fixed</span></code></a>, these are the values that are may change during
+the training and may be monitored at various stages during the training.
+If applicable, these can be kernel bandwidth parameters for example.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All parameters that are potentially trainable, like a kernel bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span> for example, are
+included in this dictionary, even if the corresponding trainable argument is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>. In the
+latter case, they will be not evolve during training iterations, but will still be included in this
+dictionary.</p>
+</div>
+<p>We refer to the documentation of <a class="reference internal" href="#"><span class="doc">Kerch Module</span></a> for further information.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.feature.Module.logging_level">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">logging_level</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.feature.Module.logging_level" title="Permalink to this definition"></a></dt>
+<dd><p>Logging level of this specific instance.
+If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current default kerch global log Level will be used.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code> (default global kerch level).
+We refer to the <a class="reference internal" href="logger.html"><span class="doc">Logging in Kerch</span></a> documentation for further information.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kerch.feature.Module.manifold_parameters">
+<code class="sig-name descname"><span class="pre">manifold_parameters</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euclidean'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.parameter.Parameter.html#torch.nn.parameter.Parameter" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.nn.parameter.Parameter</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/kerch/feature/module.html#Module.manifold_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Module.manifold_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Iterator yielding the parameters of a specific type. A distinction is made between three types:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'euclidean'</span></code>:</dt><dd>parameters lying on the Euclidean manifold (standard optimization). The optimization is
+done onto <span class="math notranslate nohighlight">\(\mathbb{R}^{n \times m}\)</span>, <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> depending on the size of each parameter.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'stiefel'</span></code>:</dt><dd>parameters that must lie on the Stiefel manifold (optimization is done onto that manifold).
+The Stiefel manifold corresponds to the orthonormal parameters <span class="math notranslate nohighlight">\(U \in \mathrm{St}(n,m)\)</span>, i.e., all
+<span class="math notranslate nohighlight">\(U \in \mathbb{R}^{n \times m}\)</span> such that <span class="math notranslate nohighlight">\(U^\top U = I\)</span>. The dimensions <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> are
+proper to each parameter.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">'slow'</span></code>:</dt><dd>parameters lying on the Euclidean manifold (standard optimization). The optimization is
+done onto <span class="math notranslate nohighlight">\(\mathbb{R}^{n \times m}\)</span>, <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(m\)</span> depending on the size of each parameter.
+The specificity of these slow Euclidean parameters is that they are better trained with a lower learning rate that the
+others, hence their name and the necessity to group them apart.</dd>
+</dl>
+</li>
+</ul>
+<p>We refer to the documentation of <a class="reference internal" href="#"><span class="doc">Kerch Module</span></a> for further information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Which parameters group the method must return. The three values above are accepted. Defaults to <code class="docutils literal notranslate"><span class="pre">'euclidean'</span></code>.</li>
+<li><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, yields both the specified parameters of this module and its potential children.
+otherwise, it only yields the specified parameters from this module. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Parameters of the specified type</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Iterator[torch.nn.Parameter]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<div class="section" id="kpca">
+<h3>KPCA<a class="headerlink" href="#kpca" title="Permalink to this headline"></a></h3>
+<p>In the following example, we create a <a class="reference internal" href="../level/kpca.html#kerch.level.KPCA" title="kerch.level.KPCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.level.KPCA</span></code></a> level based on a <a class="reference internal" href="../kernel/generic/rbf.html#kerch.kernel.RBF" title="kerch.kernel.RBF"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.kernel.RBF</span></code></a> kernel
+where we specify that only the level parameters are trainable by gradient descent.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">kpca</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">KPCA</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>                 <span class="c1"># random sample</span>
+                        <span class="n">kernel_type</span><span class="o">=</span><span class="s1">'rbf'</span><span class="p">,</span>        <span class="c1"># we use a rbf kernel (this is the default value, but we specify it for clarity)</span>
+                        <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                  <span class="c1"># we specify a RBF bandwidth value</span>
+                        <span class="n">representation</span><span class="o">=</span><span class="s1">'dual'</span><span class="p">,</span>    <span class="c1"># we work in dual representation (also default value, but specified for clarity)</span>
+                        <span class="n">dim_output</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>             <span class="c1"># we want an output dimension of 2 (the input is 3)</span>
+                        <span class="n">sample_trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>   <span class="c1"># the sample can be trained, but we don't want that: we want it fixed</span>
+                        <span class="n">sigma_trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>    <span class="c1"># the sigma can also be trained, but we don't want that either</span>
+                        <span class="n">level_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>     <span class="c1"># the level parameters are trainable, meaning that the eigenvectors are trainable by gradient</span>
+</pre></div>
+</div>
+<p>We indeed see that from all
+parameters printed, only the eigenvectors <code class="xref py py-attr docutils literal notranslate"><span class="pre">hidden</span></code> (lying on the Stiefel manifold) have <code class="docutils literal notranslate"><span class="pre">requires_grad=True</span></code>. The Euclidean
+parameters correspond here to the sample <a class="reference internal" href="sample.html#kerch.feature.Sample.sample" title="kerch.feature.Sample.sample"><code class="xref py py-attr docutils literal notranslate"><span class="pre">sample</span></code></a>, that we do not want to be trained. The slow (Euclidean) parameters correspond
+to the bandwidth of the kernel <a class="reference internal" href="../kernel/generic/rbf.html#kerch.kernel.RBF.sigma" title="kerch.kernel.RBF.sigma"><code class="xref py py-attr docutils literal notranslate"><span class="pre">sigma</span></code></a>, which we also want to remain fixed and not optimized through gradient descent.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Euclidean parameters</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'EUCLIDEAN PARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">kpca</span><span class="o">.</span><span class="n">manifold_parameters</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'euclidean'</span><span class="p">):</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+<span class="c1"># Stiefel parameters</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">STIEFEL PARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">kpca</span><span class="o">.</span><span class="n">manifold_parameters</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'stiefel'</span><span class="p">):</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+<span class="c1"># Slow (Euclidean) parameters</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">SLOW (EUCLIDEAN) PARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">kpca</span><span class="o">.</span><span class="n">manifold_parameters</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'slow'</span><span class="p">):</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>EUCLIDEAN PARAMETERS:
+Parameter containing:
+tensor([[-1.6809,  0.3609, -0.6566],
+        [ 0.8784, -1.2979, -1.3302],
+        [-0.8879, -0.6791, -0.3592],
+        [ 1.7466,  0.7167, -0.0109],
+        [-0.4657,  1.5356, -1.3600]])
+
+STIEFEL PARAMETERS:
+Parameter containing:
+tensor([[-0.4833, -0.2549,  0.7117, -0.4410, -0.0210],
+        [ 0.0759,  0.3720, -0.3470, -0.8551, -0.0658]], requires_grad=True)
+
+SLOW (EUCLIDEAN) PARAMETERS:
+Parameter containing:
+tensor(2.)
+</pre></div>
+</div>
+<p>We can have a look at the hyperparameters. The parameter <code class="docutils literal notranslate"><span class="pre">sigma</span></code>, even if not trainable is always listed in the
+variable hyperparameters. Its value will just not change during the training.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'FIXED HYPERPARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kpca</span><span class="o">.</span><span class="n">hparams_fixed</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">VARIABLE HYPERPARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kpca</span><span class="o">.</span><span class="n">hparams_variable</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>FIXED HYPERPARAMETERS:
+Level type : KPCA
+Level eta : 1.0
+Kernel : Exponential
+Squared exp. distance : True
+Trainable sigma : False
+Default kernel transforms : []
+Output dimension : 2
+Representation : dual
+Parameters trainable : True
+Constraint : soft
+Input dimension : 3
+Trainable sample : False
+Default sample transforms : []
+
+VARIABLE HYPERPARAMETERS:
+Kernel parameter sigma : 2.0
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-a-module">
+<h3>Creating a Module<a class="headerlink" href="#creating-a-module" title="Permalink to this headline"></a></h3>
+<p>In this example, we create a module containing a parameter on the Euclidean manifold. We therefore overwrite the
+<a class="reference internal" href="#kerch.feature.Module._euclidean_parameters" title="kerch.feature.Module._euclidean_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_euclidean_parameters()</span></code></a> method and not forget to call the inherited classes to not forget to return all
+parameters returned by the mother classes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span>
+
+
+<span class="k">class</span> <span class="nc">MyModule</span><span class="p">(</span><span class="n">kerch</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MyModule</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># we recover the parameter size by the argument param_size</span>
+        <span class="n">param_size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'param_size'</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># we create our parameter of float type kerch.FTYPE</span>
+        <span class="c1"># (this value can be modified and ensures that all floating types are the same throughout the code)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">my_param</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">param_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">kerch</span><span class="o">.</span><span class="n">FTYPE</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_euclidean_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">]:</span>
+        <span class="c1"># important not to forget, otherwise the parameters returned by mother classes will be skipped</span>
+        <span class="k">yield from</span> <span class="nb">super</span><span class="p">(</span><span class="n">MyModule</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_euclidean_parameters</span><span class="p">(</span><span class="n">recurse</span><span class="o">=</span><span class="n">recurse</span><span class="p">)</span>
+
+        <span class="c1"># we yield our additional new parameter</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_param</span>
+
+    <span class="k">def</span> <span class="nf">after_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># after each training step, we want the columns to be centered</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">my_param</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_param</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">my_param</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hparams_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># we add the shape of our parameter to the fixed hyperparameters</span>
+        <span class="c1"># we don't forget to return the other possible hyperparameters issued by parent classes</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">'my_param size'</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_param</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+                <span class="o">**</span><span class="nb">super</span><span class="p">(</span><span class="n">MyModule</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">hparams_fixed</span><span class="p">}</span>
+
+<span class="c1"># We instantiate our class</span>
+<span class="n">my_module</span> <span class="o">=</span> <span class="n">MyModule</span><span class="p">(</span><span class="n">param_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We can have a look at the parameters. The same can be done for the <a class="reference internal" href="#kerch.feature.Module._stiefel_parameters" title="kerch.feature.Module._stiefel_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_stiefel_parameters()</span></code></a> and
+<a class="reference internal" href="#kerch.feature.Module._slow_parameters" title="kerch.feature.Module._slow_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_slow_parameters()</span></code></a> methods.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Euclidean parameters</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'EUCLIDEAN PARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">my_module</span><span class="o">.</span><span class="n">manifold_parameters</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'euclidean'</span><span class="p">):</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+<span class="c1"># Stiefel parameters</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">STIEFEL PARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">my_module</span><span class="o">.</span><span class="n">manifold_parameters</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'stiefel'</span><span class="p">):</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+<span class="c1"># Slow (Euclidean) parameters</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">SLOW (EUCLIDEAN) PARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">my_module</span><span class="o">.</span><span class="n">manifold_parameters</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'slow'</span><span class="p">):</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>EUCLIDEAN PARAMETERS:
+Parameter containing:
+tensor([[ 1.5410, -0.2934, -2.1788],
+        [ 0.5684, -1.0845, -1.3986]], requires_grad=True)
+
+STIEFEL PARAMETERS:
+
+SLOW (EUCLIDEAN) PARAMETERS:
+</pre></div>
+</div>
+<p>If <a class="reference internal" href="#kerch.feature.Module.after_step" title="kerch.feature.Module.after_step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">after_step()</span></code></a> is called, we can observe that the parameter is centered along the columns.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># we suppose that an optimization step has been performed</span>
+<span class="n">my_module</span><span class="o">.</span><span class="n">after_step</span><span class="p">()</span>
+
+<span class="c1"># Euclidean parameters</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'EUCLIDEAN PARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">my_module</span><span class="o">.</span><span class="n">manifold_parameters</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'euclidean'</span><span class="p">):</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>EUCLIDEAN PARAMETERS:
+Parameter containing:
+tensor([[ 0.4863,  0.3955, -0.3901],
+        [-0.4863, -0.3955,  0.3901]], requires_grad=True)
+</pre></div>
+</div>
+<p>Similarly, let us print the hyperparameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'FIXED HYPERPARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">my_module</span><span class="o">.</span><span class="n">hparams_fixed</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">VARIABLE HYPERPARAMETERS:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">my_module</span><span class="o">.</span><span class="n">hparams_variable</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>FIXED HYPERPARAMETERS:
+my_param size : torch.Size([2, 3])
+
+VARIABLE HYPERPARAMETERS:
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="inheritance-diagram">
+<h2>Inheritance Diagram<a class="headerlink" href="#inheritance-diagram" title="Permalink to this headline"></a></h2>
+<div class="graphviz"><img alt="Inheritance diagram of kerch.feature.Module" class="inheritance graphviz" src="../_images/inheritance-84cf9ea34a58da97b7eb2a7612da48a007bbbf77.png" usemap="#inheritance8ea479fc96"/></div>
+<map id="inheritance8ea479fc96" name="inheritance8ea479fc96">
+<area alt="" coords="5,5,161,33" href="logger.html#kerch.feature.Logger" id="node1" shape="rect" target="_top" title=":param logging_level: Logging level for this specific instance."/>
+<area alt="" coords="114,81,273,109" href="#kerch.feature.Module" id="node2" shape="rect" target="_top" title=":param logging_level: Logging level for this specific instance."/>
+</map></div>
+</div>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="logger.html" rel="prev" title="Logging in Kerch"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="cache.html" rel="next" title="Cache Management">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright KU Leuven, January 2024.</p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

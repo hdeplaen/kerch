@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kerch.method._iterative &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/design-tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kerch.method._iterative</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kerch.method._iterative</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
+<span class="kn">from</span> <span class="nn">torch.optim.lr_scheduler</span> <span class="kn">import</span> <span class="n">ReduceLROnPlateau</span>
+
+<span class="kn">from</span> <span class="nn">..kernel._base_kernel</span> <span class="kn">import</span> <span class="n">_BaseKernel</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span> <span class="nn">..feature.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
+<span class="kn">from</span> <span class="nn">._knn</span> <span class="kn">import</span> <span class="n">knn</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">castf</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+
+<div class="viewcode-block" id="iterative"><a class="viewcode-back" href="../../../methods/iterative.html#kerch.method.iterative">[docs]</a><span class="k">def</span> <span class="nf">iterative</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">num_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1.e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Minimizes to following problem for each point in order to find the preimage:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \tilde{\mathbf{x}} = \mathrm{argmin}_{\mathbf{x}} \mathtt{obj}(\mathbf{x}).</span>
+
+<span class="sd">    The method optimizes with an SGD algorithm.</span>
+
+<span class="sd">    :param verbose: Shows the training loop. Defaults to ``False``.</span>
+<span class="sd">    :type verbose: bool, optional</span>
+<span class="sd">    :param obj: Objective to minimize.</span>
+<span class="sd">    :param x0: Starting value for the optimization.</span>
+<span class="sd">    :type x0: torch.Tensor [num_points, dim_input]</span>
+<span class="sd">    :param num_iter: Number of iterations for the optimization process. Defaults to 50.</span>
+<span class="sd">    :type num_iter: int, optional</span>
+<span class="sd">    :param lr: Learning rate of the optimizer. Defaults to 0.001.</span>
+<span class="sd">    :type lr: float, optional</span>
+<span class="sd">    :return: Solution :math:`\tilde{\mathbf{x}}`</span>
+<span class="sd">    :rtype: torch.Tensor [num_points, dim_input]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># PRELIMINARIES</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">castf</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">ReduceLROnPlateau</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">.8</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">cooldown</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+    <span class="c1"># OPTIMIZE</span>
+    <span class="k">def</span> <span class="nf">closure</span><span class="p">():</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">obj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">retain_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">epochs</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_iter</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">epochs</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iter</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">epochs</span><span class="p">:</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">closure</span><span class="p">)</span>
+        <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+        <span class="n">last_lr</span> <span class="o">=</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">_last_lr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">epochs</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">l</span><span class="si">:</span><span class="s2">1.2e</span><span class="si">}</span><span class="s2">, lr: </span><span class="si">{</span><span class="n">last_lr</span><span class="si">:</span><span class="s2">1.1e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">last_lr</span> <span class="o">&lt;</span> <span class="mf">1.e-5</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="c1"># RETURN</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="iterative_preimage_k"><a class="viewcode-back" href="../../../methods/iterative.html#kerch.method.iterative_preimage_k">[docs]</a><span class="k">def</span> <span class="nf">iterative_preimage_k</span><span class="p">(</span><span class="n">k_image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">kernel</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">num_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1.e-3</span><span class="p">,</span>
+                         <span class="n">light_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Minimizes to following problem for each point in order to find the preimage:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \tilde{\mathbf{x}} = \mathrm{argmin}_{\mathbf{x}} \big\lVert \mathtt{k\_image} - \mathtt{kernel.k(x)} \big\rVert_2^2</span>
+
+<span class="sd">    The method optimizes with an SGD algorithm.</span>
+
+<span class="sd">    :param verbose: Shows the training loop. Defaults to ``False``.</span>
+<span class="sd">    :type verbose: bool, optional</span>
+<span class="sd">    :param k_image: coefficients in the RKHS to be inverted.</span>
+<span class="sd">    :type k_image: torch.Tensor [num_points, num_idx]</span>
+<span class="sd">    :param kernel: kernel on which this RKHS is based.</span>
+<span class="sd">    :type kernel: :py:class:`kerch.kernel.Kernel` instance.</span>
+<span class="sd">    :param num_iter: Number of iterations for the optimization process. Defaults to 50.</span>
+<span class="sd">    :type num_iter: int, optional</span>
+<span class="sd">    :param lr: Learning rate of the optimizer. Defaults to 0.001.</span>
+<span class="sd">    :type lr: float, optional</span>
+<span class="sd">    :param light_cache: Specifies whether the cache has to made lighter during the pre-image to avoid keeping the</span>
+<span class="sd">        statistics of each iteration. This results in a speedup. Defaults to ``True``.</span>
+<span class="sd">    :type light_cache: bool, optional</span>
+<span class="sd">    :return: Pre-image</span>
+<span class="sd">    :rtype: torch.Tensor [num_points, dim_input]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k_image</span> <span class="o">=</span> <span class="n">castf</span><span class="p">(</span><span class="n">k_image</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+
+    <span class="c1"># CHECK IF THE CACHE LEVEL HAS TO BE CHANGED</span>
+    <span class="n">cache_level</span> <span class="o">=</span> <span class="n">Cache</span><span class="o">.</span><span class="n">_cache_level_switcher</span><span class="p">[</span><span class="n">kernel</span><span class="o">.</span><span class="n">cache_level</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">cache_level</span> <span class="o">&gt;</span> <span class="n">Cache</span><span class="o">.</span><span class="n">_cache_level_switcher</span><span class="p">[</span><span class="s1">&#39;light&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">light_cache</span><span class="p">:</span>
+            <span class="n">kernel</span><span class="o">.</span><span class="n">cache_level</span> <span class="o">=</span> <span class="s1">&#39;light&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kernel</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;The cache level is recommended to be at light at maximum in order to ease the &quot;</span>
+                                   <span class="s2">&quot;memory load during the pre-image computation. It is temporarily being set to &quot;</span>
+                                   <span class="s2">&quot;light. You can also set the argument light_cache to True to set it &quot;</span>
+                                   <span class="s2">&quot;temporarily lower during the pre-image computation.&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">k_image</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">kernel</span><span class="o">.</span><span class="n">num_idx</span><span class="p">,</span> \
+        <span class="sa">f</span><span class="s2">&quot;Pre-image: the provided kernel coefficients (</span><span class="si">{</span><span class="n">k_image</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">) do not correspond to the number &quot;</span> \
+        <span class="sa">f</span><span class="s2">&quot;of sample datapoints (</span><span class="si">{</span><span class="n">kernel</span><span class="o">.</span><span class="n">num_idx</span><span class="si">}</span><span class="s2">).&quot;</span>
+
+    <span class="k">assert</span> <span class="n">num_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> \
+        <span class="sa">f</span><span class="s2">&quot;The number of iterations num_iter (</span><span class="si">{</span><span class="n">num_iter</span><span class="si">}</span><span class="s2">) must be strictly positive (num_iter &gt; 0).&quot;</span>
+
+    <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+    <span class="c1"># x0 = torch.zeros(k_image.shape[0], kernel.dim_input, dtype=k_image.dtype)</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">knn</span><span class="p">(</span><span class="n">dists</span><span class="o">=-</span><span class="n">k_image</span> <span class="o">+</span> <span class="n">k_image</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">observations</span><span class="o">=</span><span class="n">kernel</span><span class="o">.</span><span class="n">current_sample</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">obj</span><span class="p">(</span><span class="n">vals</span><span class="p">):</span>
+        <span class="n">k_current</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vals</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">k_current</span><span class="p">,</span> <span class="n">k_image</span><span class="p">)</span>
+
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">iterative</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">num_iter</span><span class="o">=</span><span class="n">num_iter</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># SET BACK THE ORIGINAL CACHE LEVEL</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cache_level</span> <span class="o">&gt;</span> <span class="n">Cache</span><span class="o">.</span><span class="n">_cache_level_switcher</span><span class="p">[</span><span class="s1">&#39;light&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="n">light_cache</span><span class="p">:</span>
+        <span class="n">kernel</span><span class="o">.</span><span class="n">cache_level</span> <span class="o">=</span> <span class="n">cache_level</span>
+
+    <span class="k">return</span> <span class="n">sol</span></div>
+
+
+<div class="viewcode-block" id="iterative_preimage_phi"><a class="viewcode-back" href="../../../methods/iterative.html#kerch.method.iterative_preimage_phi">[docs]</a><span class="k">def</span> <span class="nf">iterative_preimage_phi</span><span class="p">(</span><span class="n">phi_image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">kernel</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">num_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1.e-3</span><span class="p">,</span>
+                           <span class="n">light_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Minimizes to following problem for each point in order to find the preimage:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \tilde{\mathbf{x}} = \mathrm{argmin}_{\mathbf{x}} \big\lVert \mathtt{phi\_image} - \mathtt{kernel.phi(x)} \big\rVert_2^2</span>
+
+<span class="sd">    The method optimizes with an SGD algorithm.</span>
+
+<span class="sd">    :param verbose: Shows the training loop. Defaults to ``False``.</span>
+<span class="sd">    :type verbose: bool, optional</span>
+<span class="sd">    :param phi_image: feature map image to be inverted.</span>
+<span class="sd">    :type phi_image: torch.Tensor [num_points, dim_feature]</span>
+<span class="sd">    :param kernel: kernel on which this RKHS is based.</span>
+<span class="sd">    :type kernel: :py:class:`kerch.kernel.Kernel` instance.</span>
+<span class="sd">    :param num_iter: Number of iterations for the optimization process. Defaults to 50.</span>
+<span class="sd">    :type num_iter: int, optional</span>
+<span class="sd">    :param lr: Learning rate of the optimizer. Defaults to 0.001.</span>
+<span class="sd">    :type lr: float, optional</span>
+<span class="sd">    :param light_cache: Specifies whether the cache has to made lighter during the pre-image to avoid keeping the</span>
+<span class="sd">        statistics of each iteration. This results in a speedup. Defaults to ``True``.</span>
+<span class="sd">    :type light_cache: bool, optional</span>
+<span class="sd">    :return: Pre-image</span>
+<span class="sd">    :rtype: torch.Tensor [num_points, dim_feature]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">phi_image</span> <span class="o">=</span> <span class="n">castf</span><span class="p">(</span><span class="n">phi_image</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+
+    <span class="c1"># CHECK IF THE CACHE LEVEL HAS TO BE CHANGED</span>
+    <span class="n">cache_level</span> <span class="o">=</span> <span class="n">Cache</span><span class="o">.</span><span class="n">_cache_level_switcher</span><span class="p">[</span><span class="n">kernel</span><span class="o">.</span><span class="n">cache_level</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">cache_level</span> <span class="o">&gt;</span> <span class="n">Cache</span><span class="o">.</span><span class="n">_cache_level_switcher</span><span class="p">[</span><span class="s1">&#39;light&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">light_cache</span><span class="p">:</span>
+            <span class="n">kernel</span><span class="o">.</span><span class="n">cache_level</span> <span class="o">=</span> <span class="s1">&#39;light&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kernel</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;The cache level is recommended to be at light at maximum in order to ease the &quot;</span>
+                                   <span class="s2">&quot;memory load during the pre-image computation. It is temporarily being set to &quot;</span>
+                                   <span class="s2">&quot;light. You can also set the argument light_cache to True to set it &quot;</span>
+                                   <span class="s2">&quot;temporarily lower during the pre-image computation.&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">phi_image</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">kernel</span><span class="o">.</span><span class="n">num_idx</span><span class="p">,</span> \
+        <span class="sa">f</span><span class="s2">&quot;Pre-image: the provided explicit feature map images dimensions (</span><span class="si">{</span><span class="n">phi_image</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">) do not correspond to &quot;</span> \
+        <span class="sa">f</span><span class="s2">&quot;the feature dimension of the provided kernel (</span><span class="si">{</span><span class="n">kernel</span><span class="o">.</span><span class="n">dim_feature</span><span class="si">}</span><span class="s2">).&quot;</span>
+
+    <span class="k">assert</span> <span class="n">num_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> \
+        <span class="sa">f</span><span class="s2">&quot;The number of iterations num_iter (</span><span class="si">{</span><span class="n">num_iter</span><span class="si">}</span><span class="s2">) must be strictly positive (num_iter &gt; 0).&quot;</span>
+
+    <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">phi_image</span> <span class="o">@</span> <span class="n">kernel</span><span class="o">.</span><span class="n">Phi</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">knn</span><span class="p">(</span><span class="n">dists</span><span class="o">=-</span><span class="n">weights</span><span class="p">,</span> <span class="n">observations</span><span class="o">=</span><span class="n">kernel</span><span class="o">.</span><span class="n">current_sample</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">obj</span><span class="p">(</span><span class="n">vals</span><span class="p">):</span>
+        <span class="n">phi_current</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vals</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">phi_current</span><span class="p">,</span> <span class="n">phi_image</span><span class="p">)</span>
+
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">iterative</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">num_iter</span><span class="o">=</span><span class="n">num_iter</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># SET BACK THE ORIGINAL CACHE LEVEL</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cache_level</span> <span class="o">&gt;</span> <span class="n">Cache</span><span class="o">.</span><span class="n">_cache_level_switcher</span><span class="p">[</span><span class="s1">&#39;light&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="n">light_cache</span><span class="p">:</span>
+        <span class="n">kernel</span><span class="o">.</span><span class="n">cache_level</span> <span class="o">=</span> <span class="n">cache_level</span>
+
+    <span class="k">return</span> <span class="n">sol</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

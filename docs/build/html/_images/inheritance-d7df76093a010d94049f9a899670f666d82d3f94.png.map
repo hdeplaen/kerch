@@ -1,0 +1,14 @@
+<map id="inheritancee883c335de" name="inheritancee883c335de">
+<area shape="rect" id="node1" href="../../features/cache.html#kerch.feature.Cache" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="175,157,326,184"/>
+<area shape="rect" id="node6" href="../../features/stochastic.html#kerch.feature.Stochastic" target="_top" title=":param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache," alt="" coords="161,232,339,260"/>
+<area shape="rect" id="node2" href="../../features/module.html#kerch.feature.Module" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="171,81,330,109"/>
+<area shape="rect" id="node3" href="../../features/logger.html#kerch.feature.Logger" target="_top" title=":param logging_level: Logging level for this specific instance." alt="" coords="62,5,217,33"/>
+<area shape="rect" id="node4" title="Base class for all neural network modules." alt="" coords="241,5,481,33"/>
+<area shape="rect" id="node5" href="../../features/sample.html#kerch.feature.Sample" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="170,308,330,336"/>
+<area shape="rect" id="node9" href="kernel.html#kerch.kernel._BaseKernel" target="_top" title=":param sample: Sample points used to compute the kernel matrix. When an out&#45;of&#45;sample computation is asked, it will" alt="" coords="158,384,342,411"/>
+<area shape="rect" id="node7" href="implicit.html#kerch.kernel.Implicit" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="174,535,327,563"/>
+<area shape="rect" id="node11" title=":param sigma: Bandwidth :math:`sigma` of the kernel. If `None`, the value is filled by a heuristic on" alt="" coords="104,611,397,638"/>
+<area shape="rect" id="node8" href="kernel.html#kerch.kernel.Kernel" target="_top" title=":param kernel_transform: A list composed of the elements `&#39;normalize&#39;` or `&#39;center&#39;`. For example a centered" alt="" coords="178,459,323,487"/>
+<area shape="rect" id="node10" title=":param sigma: Bandwidth :math:`sigma` of the kernel. If `None`, the value is filled by a heuristic on" alt="" coords="5,686,226,714"/>
+<area shape="rect" id="node12" title=":param sigma: Bandwidth :math:`sigma` of the kernel. If `None`, the value is filled by a heuristic on" alt="" coords="250,686,523,714"/>
+</map>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kerch.kernel.generic.polynomial &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/design-tabs.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kerch.kernel.generic.polynomial</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kerch.kernel.generic.polynomial</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">File containing the polynomial kernel class.</span>
+
+<span class="sd">@author: HENRI DE PLAEN</span>
+<span class="sd">@copyright: KU LEUVEN</span>
+<span class="sd">@license: MIT</span>
+<span class="sd">@date: March 2021</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">factorial</span><span class="p">,</span> <span class="n">comb</span><span class="p">,</span> <span class="n">prod</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">inf</span>
+
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+
+<span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">..kernel</span> <span class="kn">import</span> <span class="n">Kernel</span>
+<span class="kn">from</span> <span class="nn">..explicit</span> <span class="kn">import</span> <span class="n">Explicit</span>
+<span class="kn">from</span> <span class="nn">..implicit</span> <span class="kn">import</span> <span class="n">Implicit</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+
+
+<div class="viewcode-block" id="Polynomial"><a class="viewcode-back" href="../../../../kernel/generic/polynomial.html#kerch.kernel.Polynomial">[docs]</a><span class="nd">@utils</span><span class="o">.</span><span class="n">extend_docstring</span><span class="p">(</span><span class="n">Kernel</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Polynomial</span><span class="p">(</span><span class="n">Implicit</span><span class="p">,</span> <span class="n">Explicit</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Polynomial kernel of degree :math:`\alpha \geq 0` and parameter :math:`\beta`.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        k(x,y) = \left(x^\top y + \beta\right)^\alpha.</span>
+
+<span class="sd">    Provided the degree :math:`\alpha` is a natural number, this kernel accepts both an explicit feature map and an equivalent kernel formulation not depending on the</span>
+<span class="sd">    inner product of the explicit feature maps (implicit). Its components are given by</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \left[\phi(x)\right]_k = \sqrt{\frac{\alpha!}{j_0!j_1! \ldots j_\texttt{dim_input}!}}x_0^{j_0}x_1^{j_1}\ldots x_{\texttt{dim_input}-1}^{j_{\texttt{dim_input}-1}}\sqrt{\beta}^{j_\texttt{dim_input}},</span>
+
+
+<span class="sd">    where :math:`k = 0, \ldots, \texttt{dim_feature}-1` correspond to all permutations satisfying</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        j_0 + j_1 + \ldots + j_{\texttt{dim_input}} = \alpha,</span>
+
+<span class="sd">    and</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">            \texttt{dim_feature} = \left(\begin{array}{c}\texttt{dim_input} + \alpha \\ \alpha\end{array}\right).</span>
+
+<span class="sd">    One can verify that :math:`k(x,y) = \phi(x)^\top\phi(y)`. An example is also given in the Example section of its</span>
+<span class="sd">    documentation.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        For a natural number degree :math:`\alpha` . The computation of a kernel matrix of :math:`n` points is typically</span>
+<span class="sd">        more efficient to compute as an inner product of the explicit feature map if :math:`\texttt{dim_feature} &lt; n`</span>
+<span class="sd">        and using the kernel formula otherwise. If the degree is not a natural number, only the latter is possible as</span>
+<span class="sd">        the explicit feature map does not exist.</span>
+
+<span class="sd">        This can be specified when calling :py:meth:`..Polynomial.k` by specifying the boolean ``explicit`` to</span>
+<span class="sd">        ``True`` (using the explicit feature map) or ``False`` (directly using the kernel formula).</span>
+
+<span class="sd">        Other considerations may come into play. If a centered or normalized kernel on an out-of-sample is required, this may require extra</span>
+<span class="sd">        computations when directly using the kernel matrix as doing it on the explicit feature is more straightforward.</span>
+
+<span class="sd">    :param alpha: Degree :math:`\alpha` of the polynomial kernel. Defaults to 2.</span>
+<span class="sd">    :param beta: Value :math:`\beta` of the polynomial kernel. Defaults to 1.</span>
+<span class="sd">    :param alpha_trainable: `True` if the gradient of the degree is to be computed. If so, a graph is computed</span>
+<span class="sd">        and the degree can be updated. `False` just leads to a static computation., defaults to `False`</span>
+<span class="sd">    :param beta_trainable: `True` if the gradient of the degree is to be computed. If so, a graph is computed</span>
+<span class="sd">        and the degree can be updated. `False` just leads to a static computation., defaults to `False`</span>
+<span class="sd">    :type alpha: double, optional</span>
+<span class="sd">    :type beta: double, optional</span>
+<span class="sd">    :type alpha_trainable: bool, optional</span>
+<span class="sd">    :type beta_trainable: bool, optional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">kwargs_decorator</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">2.</span><span class="p">,</span> <span class="s2">&quot;alpha_trainable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span> <span class="s2">&quot;beta_trainable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Polynomial</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alpha_trainable</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;alpha_trainable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_beta_trainable</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;beta_trainable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">),</span>
+                                         <span class="n">requires_grad</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_trainable</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_beta</span><span class="p">),</span>
+                                        <span class="n">requires_grad</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_trainable</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;polynomial kernel (alpha=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="si">}</span><span class="s2">, beta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">explicit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the method has an explicit formulation, False otherwise. This is the case only if the degree</span>
+<span class="sd">        :math:`\alpha` is a natural number.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">%</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dim_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">inf</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Feature dimension. Provided the degree :math:`\alpha` is a natural number, it is given by</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            \texttt{dim_feature} = \left(\begin{array}{c}\texttt{dim_input} + \alpha \\ \alpha\end{array}\right).</span>
+
+
+<span class="sd">        If the degree :math:`\alpha` is not a natural number, the explicit feature does not exist and by consequence</span>
+<span class="sd">        the feature dimension is infinite.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">%</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">comb</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim_input</span> <span class="o">+</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">inf</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Degree of the polynomial. This is argument plays a similar role to the bandwidth of</span>
+<span class="sd">        an exponential kernel, such as the RBF kernel.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            The explicit feature map only exists if the degree is a natural number.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span>
+
+    <span class="nd">@alpha</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_cache</span><span class="p">(</span><span class="n">reset_persisting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remove_from_cache</span><span class="p">(</span><span class="s2">&quot;_poly_explicit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">alpha_trainable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Boolean indicating if the alpha/degree is trainable. In other words, this argument provides or not a gradient</span>
+<span class="sd">        to the degree for potential gradient-based training.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha_trainable</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">beta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Beta of the polynomial.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_beta</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span>
+
+    <span class="nd">@alpha</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_cache</span><span class="p">(</span><span class="n">reset_persisting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remove_from_cache</span><span class="p">(</span><span class="s2">&quot;_poly_explicit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">beta_trainable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Boolean indicating if the beta is trainable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_beta_trainable</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hparams_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;Kernel alpha&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span>
+                <span class="s1">&#39;Kernel beta&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span>
+                <span class="o">**</span><span class="nb">super</span><span class="p">(</span><span class="n">Polynomial</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">hparams_variable</span><span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hparams_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;Kernel&quot;</span><span class="p">:</span> <span class="s2">&quot;Polynomial&quot;</span><span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_phi_fun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">%</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">utils</span><span class="o">.</span><span class="n">ExplicitError</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                      <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Explicit formulation is only possible for degrees that are natural numbers.&#39;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">multichoose</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="p">:</span> <span class="k">return</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">n</span><span class="p">:</span> <span class="k">return</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="p">[[</span><span class="n">k</span><span class="p">]]</span>
+            <span class="k">return</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">multichoose</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="p">)]</span> <span class="o">+</span> \
+                <span class="p">[[</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">multichoose</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+
+        <span class="n">permutations</span> <span class="o">=</span> <span class="n">multichoose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim_input</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">))</span>
+
+        <span class="n">sqrt_d_fact</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">factorial</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)))</span>
+        <span class="n">sqrt_beta</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span>
+
+        <span class="n">permutations</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">casti</span><span class="p">(</span><span class="n">permutations</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">permutation_out</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">perm</span><span class="p">):</span>
+            <span class="n">denominator</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">prod</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">factorial</span><span class="p">,</span> <span class="n">perm</span><span class="p">)))</span>
+            <span class="n">fact</span> <span class="o">=</span> <span class="n">sqrt_d_fact</span> <span class="o">/</span> <span class="n">denominator</span>
+            <span class="k">return</span> <span class="n">fact</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">((</span><span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">sqrt_beta</span> <span class="o">**</span> <span class="n">perm</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">phi</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim_feature</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">perm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">permutations</span><span class="p">):</span>
+                <span class="n">sol</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">permutation_out</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">perm</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">sol</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;_poly_explicit_fun&quot;</span><span class="p">,</span> <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">phi</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="s1">&#39;_poly_explicit_fun&#39;</span><span class="p">,</span>
+                         <span class="n">persisting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_trainable</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_implicit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">@</span> <span class="n">y</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span>
+
+    <span class="k">def</span> <span class="nf">_explicit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">%</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Explicit formulation is only possible for degrees that are natural numbers.&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi_fun</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_slow_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">]:</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span>
+        <span class="k">yield from</span> <span class="nb">super</span><span class="p">(</span><span class="n">Polynomial</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_slow_parameters</span><span class="p">(</span><span class="n">recurse</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Polynomial.k"><a class="viewcode-back" href="../../../../kernel/generic/polynomial.html#kerch.kernel.Polynomial.k">[docs]</a>    <span class="nd">@utils</span><span class="o">.</span><span class="n">extend_docstring</span><span class="p">(</span><span class="n">Kernel</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">explicit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note::</span>
+<span class="sd">            For the specific case of the polynomial kernel, the optimal value for ``explicit`` is automatically determined</span>
+<span class="sd">            based on the size of the inputs if ``explicit=None``. This does not take into account possible transforms.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># automatically determining best representation</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">castf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">castf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">explicit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">num_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_idx</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">num_x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">num_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_idx</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">num_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim_feature</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_x</span> <span class="o">+</span> <span class="n">num_y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_x</span> <span class="o">*</span> <span class="n">num_y</span><span class="p">:</span>
+                <span class="n">explicit</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">explicit</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Polynomial</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">explicit</span><span class="o">=</span><span class="n">explicit</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Polynomial.explicit_preimage"><a class="viewcode-back" href="../../../../kernel/generic/polynomial.html#kerch.kernel.Polynomial.explicit_preimage">[docs]</a>    <span class="nd">@utils</span><span class="o">.</span><span class="n">extend_docstring</span><span class="p">(</span><span class="n">Kernel</span><span class="o">.</span><span class="n">explicit_preimage</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">explicit_preimage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ne">NotImplementedError</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

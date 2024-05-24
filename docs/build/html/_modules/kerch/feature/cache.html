@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kerch.feature.cache &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/design-tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kerch.feature.cache</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kerch.feature.cache</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Abstract class allowing for torch.nn.Modules to also host a cache of torch objects</span>
+<span class="sd">which can also be ported like torch.nn.Parameters are, on GPU for example.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Type</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
+
+<span class="kn">from</span> <span class="nn">.module</span> <span class="kn">import</span> <span class="n">Module</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">reverse_dict</span><span class="p">,</span> <span class="n">extend_docstring</span><span class="p">,</span> <span class="n">DEFAULT_CACHE_LEVEL</span>
+
+
+<div class="viewcode-block" id="Cache"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache">[docs]</a><span class="nd">@extend_docstring</span><span class="p">(</span><span class="n">Module</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Cache</span><span class="p">(</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param cache_level: Cache level for saving temporary execution results during the execution. The higher the cache,</span>
+<span class="sd">        the more is saved. Defaults to ``&#39;normal&#39;``. We refer to the :doc:`/features/cache` documentation for further</span>
+<span class="sd">        information.</span>
+<span class="sd">    :type cache_level: str, optional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_cache_elements</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">_cache_level_switcher</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;none&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                             <span class="s2">&quot;light&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                             <span class="s2">&quot;normal&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                             <span class="s2">&quot;heavy&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                             <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Cache</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># we initiate the cache</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_level</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;cache_level&#39;</span><span class="p">,</span> <span class="s1">&#39;normal&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cache_level</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cache level for saving temporary execution results during the execution. The higher the cache,</span>
+<span class="sd">        the more is saved. Defaults to ``&#39;normal&#39;`` unless set otherwise during instantiation. The different possible</span>
+<span class="sd">        values are:</span>
+
+<span class="sd">        * ``&quot;none&quot;``: the cache is non-existent and everything is computed on the go.</span>
+<span class="sd">        * ``&quot;light&quot;``: the cache is very light. For example, only the kernel matrix and statistics of the sample points are saved.</span>
+<span class="sd">        * ``&quot;normal&quot;``: same as light, but the statistics of the out-of-sample points are also saved.</span>
+<span class="sd">        * ``&quot;heavy&quot;``: in addition to the statistics, the final kernel matrices of the out-of-sample points are saved.</span>
+<span class="sd">        * ``&quot;total&quot;``: every step of any computation is saved.</span>
+
+<span class="sd">        We refer to the :doc:`/features/cache` documentation for further information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">switcher</span> <span class="o">=</span> <span class="n">Cache</span><span class="o">.</span><span class="n">_cache_level_switcher</span>
+        <span class="n">inv_switcher</span> <span class="o">=</span> <span class="p">{</span><span class="n">switcher</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">switcher</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">inv_switcher</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_cache_level</span><span class="p">]</span>
+
+    <span class="nd">@cache_level</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">cache_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_level</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_level</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Cache</span><span class="p">):</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">_cache_level</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">_get_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transforms the cache level to an int if not already.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_level</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="n">Cache</span><span class="o">.</span><span class="n">_cache_level_switcher</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s2">&quot;Unrecognized cache level.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">level</span>
+
+<div class="viewcode-block" id="Cache._apply"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache._apply">[docs]</a>    <span class="k">def</span> <span class="nf">_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This if the native function by :external+torch:py:class:`torch.nn.modules.module.Module`, used when porting the</span>
+<span class="sd">        module. This ensures that the cache is also ported. This is used for example to port the data to the GPU or CPU.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method is documented for completeness, but it should never be required to call it directly.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">cache_entry</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cache_entry</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+                    <span class="n">cache_entry</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">cache_entry</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cache_entry</span><span class="p">,</span> <span class="n">Cache</span><span class="p">):</span>
+                    <span class="n">cache_entry</span><span class="o">.</span><span class="n">_apply</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">recurse</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+                <span class="n">child</span><span class="o">.</span><span class="n">_apply</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="n">recurse</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Cache</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_apply</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Cache._save"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache._save">[docs]</a>    <span class="k">def</span> <span class="nf">_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fun</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;total&#39;</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="n">persisting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves an element in the cache.</span>
+
+<span class="sd">        :param key: key of the cache element.</span>
+<span class="sd">        :param fun: function to compute the element if not in the cache already.</span>
+<span class="sd">        :param level_key: key referencing the default level to use in ``kerch.DEFAULT_CACHE_LEVELS``. If not specified, the ``default_level`` argument is used.</span>
+<span class="sd">        :param default_level: level where to save the cache element. Defaults to &#39;total&#39;.</span>
+<span class="sd">        :param force: if the value is ``True``, the element will nevertheless be saved whatever level is specified. Defaults to ``False``.</span>
+<span class="sd">        :param persisting: These values are meant to persist after a cache reset when calling</span>
+<span class="sd">            :py:meth:`~kerch.feature.Cache.reset` with ``reset_persisting=False``. Defaults to ``False``.</span>
+
+<span class="sd">        :type key: str</span>
+<span class="sd">        :type fun: function handle</span>
+<span class="sd">        :type level_key: str, optional</span>
+<span class="sd">        :type default_level: str, optional</span>
+<span class="sd">        :type force: bool, optional</span>
+<span class="sd">        :type persisting: bool, optional</span>
+<span class="sd">        :return: The result of ``fun()``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># determine which level to store in</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="n">DEFAULT_CACHE_LEVEL</span><span class="p">[</span><span class="n">level_key</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="n">default_level</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_level</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+
+        <span class="c1"># we now compute, store if the level corresponds and return the value</span>
+        <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+            <span class="sa">f</span><span class="s2">&quot;Cannot store </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> in the cache as no callable argument fun has been provided&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">fun</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_level</span> <span class="ow">or</span> <span class="n">force</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">persisting</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+<div class="viewcode-block" id="Cache._get"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache._get">[docs]</a>    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fun</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+             <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">persisting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">destroy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves an element from the cache. If the element is not present, it saved to the cache provided its level</span>
+<span class="sd">        is lower or equal to the default level. This can be overwritten by the overwrite argument.</span>
+
+<span class="sd">        :param key: key of the cache element.</span>
+<span class="sd">        :param fun: function to compute the element if not in the cache already.</span>
+<span class="sd">        :param level_key: key referencing the default level to use in ``kerch.DEFAULT_CACHE_LEVELS``. If not specified, the ``default_level`` argument is used.</span>
+<span class="sd">        :param default_level: level where to save the cache element. Defaults to &#39;normal&#39;.</span>
+<span class="sd">        :param force: if the value is ``True``, the element will nevertheless be saved whatever level is specified. Defaults to ``False``.</span>
+<span class="sd">        :param persisting: These values are meant to persist after a cache reset when calling</span>
+<span class="sd">            :py:meth:`~kerch.feature.Cache.reset` with ``reset_persisting=False``. Defaults to ``False``.</span>
+<span class="sd">        :param destroy: This destroys the value from the cache after being read/computed. This is meant for short-term</span>
+<span class="sd">            memory. Defaults to ``False``.</span>
+
+<span class="sd">        :type key: str</span>
+<span class="sd">        :type level_key: str, optional</span>
+<span class="sd">        :type default_level: str, optional</span>
+<span class="sd">        :type fun: function handle</span>
+<span class="sd">        :type force: bool, optional</span>
+<span class="sd">        :type overwrite: bool, optional</span>
+<span class="sd">        :type persisting: bool, optional</span>
+<span class="sd">        :type destroy: bool, optional</span>
+
+<span class="sd">        :return: The result of ``fun()``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># a cache element is represented by the tuple(level, persisting, value)</span>
+
+        <span class="c1"># we first check if the value is already in the cache</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+            <span class="c1"># elif type(key) is tuple:</span>
+            <span class="c1">#     reverted_key = (key[1], key[0])</span>
+            <span class="c1">#     if reverted_key in self._cache:</span>
+            <span class="c1">#         return self._cache[reverted_key][1].T</span>
+
+        <span class="c1"># if it is not, we save it</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_save</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">fun</span><span class="o">=</span><span class="n">fun</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="n">level_key</span><span class="p">,</span> <span class="n">default_level</span><span class="o">=</span><span class="n">default_level</span><span class="p">,</span>
+                         <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span> <span class="n">persisting</span><span class="o">=</span><span class="n">persisting</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">destroy</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remove_from_cache</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+<div class="viewcode-block" id="Cache._reset_cache"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache._reset_cache">[docs]</a>    <span class="k">def</span> <span class="nf">_reset_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reset_persisting</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">avoid_classes</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This just resets the cache and makes it empty.</span>
+
+<span class="sd">        :param reset_persisting: Persisting elements are meant to resist to a cache reset</span>
+<span class="sd">            (see :py:meth:`~kerch.feature.Cache._save`). The option allows to also reset them if ``True``. Defaults to ``True``.</span>
+<span class="sd">        :type reset_persisting: bool, optional</span>
+<span class="sd">        :param avoid_classes: Class of which the elements must be avoided to be resetted. Default to ``[]``.</span>
+<span class="sd">        :type avoid_classes: list(type(:class:`~kerch.feature.Cache`)), optional</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method is documented for completeness, but it should never be required to call it directly.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">elements_avoided</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">avoid_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">avoid_classes</span><span class="p">:</span>
+                <span class="n">elements_avoided</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">_cache_elements</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">reset_persisting</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements_avoided</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;The cache is fully resetted.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;The cache is resetted at the exception of the persisting elements and avoided classes.&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">elements_avoided</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="n">reset_persisting</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Cache._clean_cache"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache._clean_cache">[docs]</a>    <span class="k">def</span> <span class="nf">_clean_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cleans all cache elements above a certain level. This is relevant for cleaning the cache elements that have</span>
+<span class="sd">        been forced (see :py:meth:`~kerch.feature.Cache._save`).</span>
+
+<span class="sd">        :param max_level: all levels above this level will be cleaned, ``max_level`` excluded. Defaults to the default</span>
+<span class="sd">            cache level.</span>
+<span class="sd">        :type max_level: str | int, optional</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method is documented for completeness, but it should never be required to call it directly.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">max_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_level</span><span class="p">(</span><span class="n">max_level</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The cache is cleaned for levels </span><span class="si">{</span><span class="n">max_level</span><span class="si">}</span><span class="s2"> and above).&quot;</span><span class="p">)</span>
+        <span class="c1"># for val in self._cache.values(): del val</span>
+        <span class="k">if</span> <span class="n">max_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_cache</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_level</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Cache._remove_from_cache"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache._remove_from_cache">[docs]</a>    <span class="k">def</span> <span class="nf">_remove_from_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes one or more specific element(s) from the cache.</span>
+
+<span class="sd">        :param key: Key(s) of the cache element to be removed.</span>
+<span class="sd">        :type key: str | list[str]</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method is documented for completeness, but it should never be required to call it directly.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">_remove_entry</span><span class="p">(</span><span class="n">key_item</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key_item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key_item</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;__iter__&#39;</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">key_item</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">_remove_entry</span><span class="p">(</span><span class="n">key_item</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Cache.reset"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reset_persisting</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the cache to be empty. We refer to the :doc:`/features/cache` documentation for more information.</span>
+
+<span class="sd">        :param recurse: If ``True``, resets the cache of this module and also of its potential children. otherwise,</span>
+<span class="sd">            it only resets the cache for this module. Defaults to ``True``.</span>
+<span class="sd">        :type recurse: bool, optional</span>
+<span class="sd">        :param reset_persisting: Persisting elements are meant to resist to a cache reset (see</span>
+<span class="sd">            :py:meth:`~kerch.feature.Cache._save`). The option allows to also reset them if ``True``. Defaults to</span>
+<span class="sd">            ``True``.</span>
+<span class="sd">        :type reset_persisting: bool, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_cache</span><span class="p">(</span><span class="n">reset_persisting</span><span class="o">=</span><span class="n">reset_persisting</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">recurse</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cache</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="n">Cache</span><span class="p">):</span>
+                    <span class="n">cache</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">recurse</span><span class="o">=</span><span class="n">recurse</span><span class="p">,</span> <span class="n">reset_persisting</span><span class="o">=</span><span class="n">reset_persisting</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Cache.cache_keys"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache.cache_keys">[docs]</a>    <span class="k">def</span> <span class="nf">cache_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an iterable containing the different cache keys.</span>
+<span class="sd">        We refer to the :doc:`/features/cache` documentation for more information.</span>
+
+<span class="sd">        :param private: Some cache elements are private and are not returned unless set to ``True``. Defaults to ``False``.</span>
+<span class="sd">        :type private: bool, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;_&quot;</span> <span class="ow">or</span> <span class="n">private</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">key</span></div>
+
+<div class="viewcode-block" id="Cache.print_cache"><a class="viewcode-back" href="../../../features/cache.html#kerch.feature.Cache.print_cache">[docs]</a>    <span class="k">def</span> <span class="nf">print_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints the cache content. We refer to the :doc:`/features/cache` documentation for further information.</span>
+
+<span class="sd">        :param private: Some cache elements are private and are not returned unless set to ``True``. Defaults to ``False``.</span>
+<span class="sd">        :type private: bool, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">..transform</span> <span class="kn">import</span> <span class="n">TransformTree</span>
+        <span class="n">transforms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;_&quot;</span> <span class="ow">or</span> <span class="n">private</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">TransformTree</span><span class="p">):</span>
+                    <span class="n">transforms</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; [&#39;</span><span class="p">)</span>
+                <span class="n">level</span> <span class="o">=</span> <span class="n">reverse_dict</span><span class="p">(</span><span class="n">Cache</span><span class="o">.</span><span class="n">_cache_level_switcher</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;] &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;persisting&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;: &#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">transform</span> <span class="ow">in</span> <span class="n">transforms</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">key</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="n">transform</span><span class="o">.</span><span class="n">print_cache</span><span class="p">(</span><span class="n">private</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

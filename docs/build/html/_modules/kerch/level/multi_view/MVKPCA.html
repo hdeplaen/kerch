@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kerch.level.multi_view.MVKPCA &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/design-tabs.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kerch.level.multi_view.MVKPCA</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kerch.level.multi_view.MVKPCA</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span> <span class="k">as</span> <span class="n">T</span>
+
+<span class="kn">from</span> <span class="nn">.MVLevel</span> <span class="kn">import</span> <span class="n">MVLevel</span>
+<span class="kn">from</span> <span class="nn">.._KPCA</span> <span class="kn">import</span> <span class="n">_KPCA</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">utils</span>
+
+
+<div class="viewcode-block" id="MVKPCA"><a class="viewcode-back" href="../../../../level/mvkpca.html#kerch.level.MVKPCA">[docs]</a><span class="k">class</span> <span class="nc">MVKPCA</span><span class="p">(</span><span class="n">_KPCA</span><span class="p">,</span> <span class="n">MVLevel</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Multi-View Kernel Principal Component Analysis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">extend_docstring</span><span class="p">(</span><span class="n">_KPCA</span><span class="p">)</span>
+    <span class="nd">@utils</span><span class="o">.</span><span class="n">extend_docstring</span><span class="p">(</span><span class="n">MVLevel</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MVKPCA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;multi-view KPCA(&quot;</span> <span class="o">+</span> <span class="n">MVLevel</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_project_primal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">known</span><span class="p">,</span> <span class="n">to_predict</span><span class="p">):</span>
+        <span class="n">phi_known</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">known</span><span class="p">)</span>
+        <span class="n">weight_known</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_by_name</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">known</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="n">weight_predict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_by_name</span><span class="p">(</span><span class="n">to_predict</span><span class="p">)</span>
+
+        <span class="n">Inv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vals</span><span class="p">)</span> <span class="o">-</span> <span class="n">weight_predict</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">weight_predict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">phi_known</span> <span class="o">@</span> <span class="n">weight_known</span> <span class="o">@</span> <span class="n">Inv</span> <span class="o">@</span> <span class="n">weight_predict</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">def</span> <span class="nf">_project_dual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">known</span><span class="p">,</span> <span class="n">to_predict</span><span class="p">):</span>
+        <span class="n">k_known</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">known</span><span class="p">)</span>
+        <span class="n">K_predict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">to_predict</span><span class="p">)</span>
+
+        <span class="n">sqrt_vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vals</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">Norm</span> <span class="o">=</span> <span class="n">sqrt_vals</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">sqrt_vals</span>
+
+        <span class="n">Inv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vals</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">K_predict</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+        <span class="c1"># Inv = torch.linalg.inv(self.H.T @ K_predict @ self.H / Norm)</span>
+
+        <span class="c1"># return K_predict @ self.H.T @ Inv @ self.H @ k_known</span>
+        <span class="k">return</span> <span class="n">k_known</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">@</span> <span class="n">Inv</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">K_predict</span>
+
+    <span class="k">def</span> <span class="nf">_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">known</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">representation</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predicts the feature map of the known not specified in the inputs, based on the values specified in the</span>
+<span class="sd">        inputs.</span>
+
+<span class="sd">        :param known: Dictionary of the inputs where the key is the view identifier (``str`` or ``int``) and the</span>
+<span class="sd">            values the inputs to the known.</span>
+<span class="sd">        :type known: dict</span>
+<span class="sd">        :return:</span>
+<span class="sd">        :rtype: Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">representation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">check_representation</span><span class="p">(</span><span class="n">representation</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># CONSISTENCY</span>
+        <span class="n">num_points_known</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">to_predict</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_views</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">known</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">known</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="c1"># verify consistency of number of datapoints across the various provided inputs for the known.</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">num_points_known</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">num_points_known</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">assert</span> <span class="n">num_points_known</span> <span class="o">==</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> \
+                            <span class="sa">f</span><span class="s2">&quot;Inconsistent number of datapoints to predict across the &quot;</span> \
+                            <span class="sa">f</span><span class="s2">&quot;different known: </span><span class="si">{</span><span class="n">num_points_known</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">to_predict</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">num_points_known</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Nothing to predict.&#39;</span>
+
+        <span class="c1"># PREDICTION</span>
+        <span class="n">switcher</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;primal&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_primal</span><span class="p">,</span>
+                    <span class="s1">&#39;dual&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_dual</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">switcher</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">representation</span><span class="p">,</span> <span class="s1">&#39;Error with the specified representation&#39;</span><span class="p">)(</span><span class="n">known</span><span class="p">,</span> <span class="n">to_predict</span><span class="p">),</span> <span class="n">to_predict</span>
+
+<div class="viewcode-block" id="MVKPCA.project"><a class="viewcode-back" href="../../../../level/mvkpca.html#kerch.level.MVKPCA.project">[docs]</a>    <span class="k">def</span> <span class="nf">project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">known</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">representation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+        <span class="n">representation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">check_representation</span><span class="p">(</span><span class="n">representation</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project</span><span class="p">(</span><span class="n">known</span><span class="p">,</span> <span class="n">representation</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MVKPCA.predict"><a class="viewcode-back" href="../../../../level/mvkpca.html#kerch.level.MVKPCA.predict">[docs]</a>    <span class="nd">@utils</span><span class="o">.</span><span class="n">kwargs_decorator</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;representation&quot;</span><span class="p">:</span> <span class="s2">&quot;dual&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;smoother&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;knn&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+         <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">known</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">representation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">check_representation</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;representation&quot;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_representation</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">transform</span><span class="p">,</span> <span class="n">to_predict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project</span><span class="p">(</span><span class="n">known</span><span class="p">,</span> <span class="n">representation</span><span class="p">)</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span>
+
+        <span class="n">sol</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">representation</span> <span class="o">==</span> <span class="s1">&#39;primal&#39;</span><span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">view</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">views_by_name</span><span class="p">(</span><span class="n">to_predict</span><span class="p">),</span> <span class="n">to_predict</span><span class="p">):</span>
+                <span class="n">view_phi</span> <span class="o">=</span> <span class="n">transform</span><span class="p">[:,</span> <span class="n">dim</span><span class="p">:</span><span class="n">view</span><span class="o">.</span><span class="n">dim_feature</span><span class="p">]</span>
+                <span class="n">dim</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="n">dim_feature</span>
+                <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;smoother&#39;</span><span class="p">:</span>
+                    <span class="n">sol</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">implicit_preimage</span><span class="p">(</span><span class="n">view_phi</span> <span class="o">@</span> <span class="n">view</span><span class="o">.</span><span class="n">phi</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knn&quot;</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;pinv&#39;</span><span class="p">:</span>
+                    <span class="n">sol</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">explicit_preimage</span><span class="p">(</span><span class="n">view_phi</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">elif</span> <span class="n">representation</span> <span class="o">==</span> <span class="s1">&#39;dual&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">view</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">views_by_name</span><span class="p">(</span><span class="n">to_predict</span><span class="p">),</span> <span class="n">to_predict</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;smoother&#39;</span><span class="p">:</span>
+                    <span class="n">sol</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">implicit_preimage</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;knn&quot;</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="k">return</span> <span class="n">sol</span></div>
+
+    <span class="k">def</span> <span class="nf">_update_dual_from_primal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">v</span><span class="p">(</span><span class="n">representation</span><span class="o">=</span><span class="s1">&#39;primal&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">views</span><span class="p">])</span> <span class="o">@</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">vals</span><span class="p">)</span></div>
+
+    <span class="c1"># def predict_opt(self, inputs: dict, representation=&#39;dual&#39;, lr: float = .001, tot_iter: int = 500) -&gt; dict:</span>
+    <span class="c1">#     # initiate parameters</span>
+    <span class="c1">#     num_predict = None</span>
+    <span class="c1">#     to_predict = []</span>
+    <span class="c1">#     for key in self.views:</span>
+    <span class="c1">#         if key in inputs:</span>
+    <span class="c1">#             value = inputs[key]</span>
+    <span class="c1">#             # verify consistency of number of datapoints across the various known.</span>
+    <span class="c1">#             if num_predict is None:</span>
+    <span class="c1">#                 num_predict = value.shape[0]</span>
+    <span class="c1">#             else:</span>
+    <span class="c1">#                 assert num_predict == value.shape[0], f&quot;Inconsistent number of datapoints to predict across the &quot; \</span>
+    <span class="c1">#                                                       f&quot;different known: {num_predict} and {value.shape[0]}.&quot;</span>
+    <span class="c1">#         else:</span>
+    <span class="c1">#             to_predict.append(key)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     # if nothing is given, only one datapoint is predicted</span>
+    <span class="c1">#     if num_predict is None:</span>
+    <span class="c1">#         num_predict = 1</span>
+    <span class="c1">#</span>
+    <span class="c1">#     # initialize the other datapoints to be predicted</span>
+    <span class="c1">#     params = torch.nn.ParameterList([])</span>
+    <span class="c1">#</span>
+    <span class="c1">#     def init_primal(params):</span>
+    <span class="c1">#         for key in to_predict:</span>
+    <span class="c1">#             v = self.view(key)</span>
+    <span class="c1">#             inputs[key] = torch.nn.Parameter(</span>
+    <span class="c1">#                 torch.zeros((num_predict, v.dim_input), dtype=utils.FTYPE),</span>
+    <span class="c1">#                 requires_grad=True)</span>
+    <span class="c1">#             params.append(inputs[key])</span>
+    <span class="c1">#         return MVKPCA._primal_obj, params</span>
+    <span class="c1">#</span>
+    <span class="c1">#     def init_dual(params):</span>
+    <span class="c1">#         for key in to_predict:</span>
+    <span class="c1">#             v = self.view(key)</span>
+    <span class="c1">#             inputs[key] = torch.nn.Parameter(</span>
+    <span class="c1">#                 torch.zeros((num_predict, v.dim_input), dtype=utils.FTYPE),</span>
+    <span class="c1">#                 requires_grad=True)</span>
+    <span class="c1">#             params.append(inputs[key])</span>
+    <span class="c1">#         return MVKPCA._dual_obj, params</span>
+    <span class="c1">#</span>
+    <span class="c1">#     switcher = {&#39;primal&#39;: init_primal,</span>
+    <span class="c1">#                 &#39;dual&#39;: init_dual}</span>
+    <span class="c1">#     if representation in switcher:</span>
+    <span class="c1">#         fun, params = switcher.get(representation)(params)</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         raise NameError(&#39;Invalid representation (must be primal or dual)&#39;)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     # optimize</span>
+    <span class="c1">#     bar = trange(tot_iter)</span>
+    <span class="c1">#     opt = torch.optim.SGD(params, lr=lr)</span>
+    <span class="c1">#     for _ in bar:</span>
+    <span class="c1">#         opt.zero_grad()</span>
+    <span class="c1">#         loss = fun(self, x=inputs)</span>
+    <span class="c1">#         loss.backward(retain_graph=True)</span>
+    <span class="c1">#         opt.step()</span>
+    <span class="c1">#         bar.set_description(f&quot;{loss:1.2e}&quot;)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     return inputs</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

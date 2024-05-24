@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kerch.kernel._base_kernel &mdash; kerch 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/design-tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            kerch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/index.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure/index.html">Structure</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kerch.kernel._base_kernel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kerch.kernel._base_kernel</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">File containing the abstract kernel classes.</span>
+
+<span class="sd">@author: HENRI DE PLAEN</span>
+<span class="sd">@copyright: KU LEUVEN</span>
+<span class="sd">@license: MIT</span>
+<span class="sd">@date: March 2021</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">inf</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">..feature.sample</span> <span class="kn">import</span> <span class="n">Sample</span>
+
+
+<div class="viewcode-block" id="_BaseKernel"><a class="viewcode-back" href="../../../kernel/abstract/kernel.html#kerch.kernel._BaseKernel">[docs]</a><span class="nd">@utils</span><span class="o">.</span><span class="n">extend_docstring</span><span class="p">(</span><span class="n">Sample</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">_BaseKernel</span><span class="p">(</span><span class="n">Sample</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_BaseKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># PROPERTIES</span>
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">explicit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the method has an explicit formulation, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hparams_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dictionnary containing the hyper-parameters and their values. This can be relevant for monitoring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="nb">super</span><span class="p">(</span><span class="n">_BaseKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">hparams_fixed</span><span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hparams_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dictionnary containing the parameters and their values. This can be relevant for monitoring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="nb">super</span><span class="p">(</span><span class="n">_BaseKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">hparams_variable</span><span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">dim_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">inf</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the dimension of the explicit feature map if it exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># def merge_idxs(self, *args, **kwargs):</span>
+    <span class="c1">#     raise NotImplementedError</span>
+    <span class="c1">#     # self.dmatrix()</span>
+    <span class="c1">#     # return torch.nonzero(torch.triu(self.dmatrix()) &gt; (1 - kwargs[&quot;mtol&quot;]), as_tuple=False)</span>
+    <span class="c1">#</span>
+    <span class="c1"># def merge(self, idxs):</span>
+    <span class="c1">#     raise NotImplementedError</span>
+    <span class="c1">#     # # suppress added up kernel</span>
+    <span class="c1">#     # self._Sample = (self._Sample.gather(dim=0, index=idxs[:, 1]) +</span>
+    <span class="c1">#     #                 self._Sample.gather(dim=0, index=idxs[:, 0])) / 2</span>
+    <span class="c1">#</span>
+    <span class="c1">#     self.dmatrix()</span>
+    <span class="c1">#     # suppress added up kernel entries in the kernel matrix</span>
+    <span class="c1">#     self._Cache[&quot;K&quot;].gather(dim=0, index=idxs[:, 1], out=self._Cache[&quot;K&quot;])</span>
+    <span class="c1">#     self._Cache[&quot;K&quot;].gather(dim=1, index=idxs[:, 1], out=self._Cache[&quot;K&quot;])</span>
+    <span class="c1">#</span>
+    <span class="c1"># def reduce(self, idxs):</span>
+    <span class="c1">#     raise NotImplementedError</span>
+    <span class="c1">#     self._Sample.gather(dim=0, index=idxs, out=self._Sample)</span>
+
+    <span class="c1">###################################################################################################</span>
+    <span class="c1">################################### MATHS ARE HERE ################################################</span>
+    <span class="c1">###################################################################################################</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_implicit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_implicit_with_none</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="c1"># implicit raw</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_sample_projected</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_sample_projected</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_implicit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_implicit_self</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_implicit_with_none</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_explicit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_explicit_with_none</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># explicit raw</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_sample_projected</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_explicit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the explicit feature map with default centering and normalization. If already computed, it is</span>
+<span class="sd">        recovered from the cache.</span>
+
+<span class="sd">        :param overwrite: By default, the feature map is recovered from cache if already computed. Force overwrites</span>
+<span class="sd">            this if True., defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_sample</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">utils</span><span class="o">.</span><span class="n">NotInitializedError</span><span class="p">(</span><span class="s1">&#39;The sample has not been initialized yet.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;phi&quot;</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="s2">&quot;sample_phi&quot;</span><span class="p">,</span> <span class="n">fun</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">explicit</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_C</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the covariance matrix with default centering and normalization. If already computed, it is recovered</span>
+<span class="sd">        from the cache.</span>
+
+<span class="sd">        :param overwrite: By default, the covariance matrix is recovered from cache if already computed. Force overwrites</span>
+<span class="sd">            this if True., defaults to False</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">fun</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_sample</span><span class="p">()</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_idx</span>
+            <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">phi</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">phi</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="s2">&quot;sample_C&quot;</span><span class="p">,</span> <span class="n">fun</span><span class="o">=</span><span class="n">fun</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_K</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">explicit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span> <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the kernel matrix with default centering and normalization. If already computed, it is recovered from</span>
+<span class="sd">        the cache.</span>
+
+<span class="sd">        :param explicit: Specifies whether the explicit or implicit formulation has to be used. Always uses the</span>
+<span class="sd">            the explicit if available.</span>
+<span class="sd">        :param force: By default, the kernel matrix is recovered from cache if already computed. Force overwrites</span>
+<span class="sd">            this if True., defaults to False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">explicit</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_sample</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">explicit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">explicit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">explicit</span>
+            <span class="k">if</span> <span class="n">explicit</span><span class="p">:</span>
+                <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">phi</span> <span class="o">@</span> <span class="n">phi</span><span class="o">.</span><span class="n">T</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_explicit_with_none</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="n">level_key</span><span class="o">=</span><span class="s2">&quot;sample_K&quot;</span><span class="p">,</span> <span class="n">fun</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">fun</span><span class="p">(</span><span class="n">explicit</span><span class="p">))</span>
+
+    <span class="c1"># ACCESSIBLE METHODS</span>
+<div class="viewcode-block" id="_BaseKernel.phi"><a class="viewcode-back" href="../../../kernel/abstract/kernel.html#kerch.kernel._BaseKernel.phi">[docs]</a>    <span class="k">def</span> <span class="nf">phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the explicit feature map :math:`\phi(\cdot)` of the specified points.</span>
+
+<span class="sd">        :param x: The datapoints serving as input of the explicit feature map. If `None`, the sample will be used.,</span>
+<span class="sd">            defaults to `None`</span>
+<span class="sd">        :type x: Tensor(,dim_input), optional</span>
+<span class="sd">        :raises: ExplicitError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span><span class="p">()</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">castf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_input</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_explicit_with_none</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="_BaseKernel.k"><a class="viewcode-back" href="../../../kernel/abstract/kernel.html#kerch.kernel._BaseKernel.k">[docs]</a>    <span class="k">def</span> <span class="nf">k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">explicit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            K = [k(x_i,y_j)]_{i,j=1}^{N,M},</span>
+
+<span class="sd">        with :math:`\{x_i\}_{i=1}^N` the out-of-sample points (`x`) and :math:`\{y_i\}_{j=1}^N` the sample points</span>
+<span class="sd">        (`y`).</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            In the case of centered kernels, this computation is more expensive as it requires to _center according to</span>
+<span class="sd">            the sample data, which implies computing a statistic on the out-of-sample kernel matrix and thus</span>
+<span class="sd">            also computing it.</span>
+
+<span class="sd">        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`</span>
+<span class="sd">        :param y: Out-of-sample points (second dimension). If `None`, the default sample will be used., defaults to `None`</span>
+
+<span class="sd">        :type x: Tensor(N,dim_input), optional</span>
+<span class="sd">        :type y: Tensor(M,dim_input), optional</span>
+
+<span class="sd">        :return: Kernel matrix</span>
+<span class="sd">        :rtype: Tensor(N,M)</span>
+
+<span class="sd">        :raises: ExplicitError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_K</span><span class="p">(</span><span class="n">explicit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">explicit</span><span class="p">)</span>
+
+        <span class="c1"># in order to get the values in the correct format (e.g. coming from numpy)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">castf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">castf</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_input</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_input</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_implicit_with_none</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="_BaseKernel.c"><a class="viewcode-back" href="../../../kernel/abstract/kernel.html#kerch.kernel._BaseKernel.c">[docs]</a>    <span class="k">def</span> <span class="nf">c</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Out-of-sample explicit matrix.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            C = \frac1M\sum_{i}^{M} \phi(x_i)\phi(x_i)^\top.</span>
+
+<span class="sd">        :param x: Out-of-sample points (first dimension). If `None`, the default sample will be used., defaults to `None`</span>
+<span class="sd">        :type x: Tensor(N,dim_input), optional</span>
+
+<span class="sd">        :return: Covariance matrix</span>
+<span class="sd">        :rtype: Tensor(dim_feature,dim_feature)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">phi</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">phi</span></div>
+
+<div class="viewcode-block" id="_BaseKernel.forward"><a class="viewcode-back" href="../../../kernel/abstract/kernel.html#kerch.kernel._BaseKernel.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">representation</span><span class="o">=</span><span class="s2">&quot;implicit&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Passes datapoints through the kernel.</span>
+
+<span class="sd">        :param x: Datapoints to be passed through the kernel.</span>
+<span class="sd">        :param representation: Chosen representation. If `dual`, an out-of-sample kernel matrix is returned. If</span>
+<span class="sd">            `primal` is specified, it returns the explicit feature map., defaults to `dual`</span>
+
+<span class="sd">        :type x: Tensor(,dim_input)</span>
+<span class="sd">        :type representation: str, optional</span>
+
+<span class="sd">        :return: Out-of-sample kernel matrix or explicit feature map depending on `representation`.</span>
+
+<span class="sd">        :raises: RepresentationError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">explicit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">implicit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">switcher</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;explicit&quot;</span><span class="p">:</span> <span class="n">explicit</span><span class="p">,</span>
+                    <span class="s2">&quot;implicit&quot;</span><span class="p">:</span> <span class="n">implicit</span><span class="p">}</span>
+
+        <span class="n">fun</span> <span class="o">=</span> <span class="n">switcher</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">representation</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">RepresentationError</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">fun</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">K</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the kernel matrix on the sample data. Same result as calling :py:func:`k()`, but faster.</span>
+<span class="sd">        It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently</span>
+<span class="sd">        called.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            K_{ij} = k(x_i,x_j).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_K</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the explicit matrix on the sample datapoints.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            C = \frac{1}{\texttt{num_idx}}\sum_i^\texttt{num_idx} \phi(x_i)\phi(x_i)^\top.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_C</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Phi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the explicit feature map :math:`\phi(\cdot)` of the sample datapoints. Same as calling</span>
+<span class="sd">        :py:func:`phi()`, but slightly faster.</span>
+<span class="sd">        It is loaded from memory if already computed and unchanged since then, to avoid re-computation when recurrently</span>
+<span class="sd">        called.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span><span class="p">()</span>
+
+    <span class="c1">## DIRECT ATTRIBUTES</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Cov</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the covariance matrix of the sample. Same as calling self.cov().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cov</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Corr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the correlation matrix of the sample. Same as calling self.corr().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+
+<div class="viewcode-block" id="_BaseKernel.implicit_preimage"><a class="viewcode-back" href="../../../kernel/abstract/kernel.html#kerch.kernel._BaseKernel.implicit_preimage">[docs]</a>    <span class="k">def</span> <span class="nf">implicit_preimage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k_image</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes a pre-image of coefficients in the RKHS of the kernel, given by ``k_image``.</span>
+<span class="sd">        Different methods are available:</span>
+
+<span class="sd">        * ``&#39;knn&#39;``: Nearest neighbors. We refer to :py:func:`kerch.method.knn` for more details.</span>
+<span class="sd">        * ``&#39;smoother&#39;``: Kernel smoothing. We refer to :py:func:`kerch.method.smoother` for more details</span>
+<span class="sd">        * ``&#39;iterative&#39;``: Iterative optimization. We refer to :py:func:`kerch.method.iterative_preimage_k` for more details</span>
+
+<span class="sd">        :param k_image: RKHS coefficients to be inverted. If not specified (``None``), the kernel matrix on the sample is used.</span>
+<span class="sd">        :type k_image: torch.Tensor [num_points, num_idx], optional</span>
+<span class="sd">        :param method: Pre-image method to be used. Defaults to ``&#39;knn&#39;``.</span>
+<span class="sd">        :type method: str, optional</span>
+<span class="sd">        :param \**kwargs: Additional parameters of the pre-image method used. Please refer to its documentation for</span>
+<span class="sd">            further details.</span>
+<span class="sd">        :type \**kwargs: dict, optional</span>
+<span class="sd">        :return: Pre-image</span>
+<span class="sd">        :rtype: torch.Tensor [num_points, dim_input]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># DEFENSIVE</span>
+        <span class="n">k_image</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">castf</span><span class="p">(</span><span class="n">k_image</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">k_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">k_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span>
+
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">k_image</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The argument k_coefficient contains negative values, which should never be the case by &quot;</span>
+                              <span class="sa">f</span><span class="s2">&quot;definition of a RKHS.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># PRE-IMAGE</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;knn&#39;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">..method</span> <span class="kn">import</span> <span class="n">knn</span>
+            <span class="k">return</span> <span class="n">knn</span><span class="p">(</span><span class="n">dists</span><span class="o">=-</span><span class="n">k_image</span><span class="p">,</span> <span class="n">observations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_sample</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;smoother&#39;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">..method</span> <span class="kn">import</span> <span class="n">smoother</span>
+            <span class="k">return</span> <span class="n">smoother</span><span class="p">(</span><span class="n">coefficients</span><span class="o">=</span><span class="n">k_image</span><span class="p">,</span> <span class="n">observations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_sample</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;iterative&#39;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">..method</span> <span class="kn">import</span> <span class="n">iterative_preimage_k</span>
+            <span class="k">return</span> <span class="n">iterative_preimage_k</span><span class="p">(</span><span class="n">k_image</span><span class="o">=</span><span class="n">k_image</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Unknown or non-implemented preimage method.&#39;</span><span class="p">)</span></div></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

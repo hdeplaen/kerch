@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Logging in Kerch — kerch 0.3.1 documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-codeautolink.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="module.html" rel="next" title="Kerch Module"/>
+<link href="index.html" rel="prev" title="Features"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            kerch
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">General</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Why Kerch?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/first_steps.html">First Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/contribute.html">Contribute to Kerch</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/kernels.html">Using Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/levels.html">Working with Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../level/index.html">Level Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Model Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../methods/index.html">Methods Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">In Depth</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Features</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Logging in Kerch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functionalities">Functionalities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#logging-messages">Logging Messages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#logging-level">Logging Level</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#default-logging-level">Default Logging Level</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#abstract-class">Abstract Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#default">Default</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#info">Info</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#inheritance">Inheritance</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">Kerch Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">Cache Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stochastic.html">Stochastic Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample.html">Sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transform.html">Data and Kernel Transformations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../views/index.html">Views and Levels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../general/utils.html">Utilitaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">kerch</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Features</a></li>
+<li class="breadcrumb-item active">Logging in Kerch</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/features/logger.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<div class="section" id="logging-in-kerch">
+<h1>Logging in Kerch<a class="headerlink" href="#logging-in-kerch" title="Permalink to this headline"></a></h1>
+<p>Many classes throughout this package display various messages during instantiation and usage. This abstract from
+which they descend allows the dislpaying of those messages and control which are printed using the <a class="reference internal" href="#kerch.feature.Logger.logging_level" title="kerch.feature.Logger.logging_level"><code class="xref py py-attr docutils literal notranslate"><span class="pre">logging_level</span></code></a>
+attribute.</p>
+<div class="section" id="functionalities">
+<h2>Functionalities<a class="headerlink" href="#functionalities" title="Permalink to this headline"></a></h2>
+<p>This abstract class has only one purpose: adding a <a class="reference internal" href="#kerch.feature.Logger._logger" title="kerch.feature.Logger._logger"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_logger</span></code></a> attribute meant to log various
+messages across the package.
+Doing it this way allows to get the name of the class instantiated and print more precise messages.</p>
+<div class="section" id="logging-messages">
+<h3>Logging Messages<a class="headerlink" href="#logging-messages" title="Permalink to this headline"></a></h3>
+<p>The private property <code class="docutils literal notranslate"><span class="pre">self._logger</span></code> is an instance of the class
+<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Logger</span></code></a> of the Python standard library <a class="reference external" href="https://docs.python.org/3/library/logging.html" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span>logging — Logging facility for Python</span></a>.
+This allows logging messages by calling, e.g., <code class="docutils literal notranslate"><span class="pre">self._logger.debug(message:</span> <span class="pre">str)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">self._logger.info(message:</span> <span class="pre">str)</span></code>, <code class="docutils literal notranslate"><span class="pre">self._logger.warning(message:</span> <span class="pre">str)</span></code> or <code class="docutils literal notranslate"><span class="pre">self._logger.error(message:</span> <span class="pre">str)</span></code>. The
+messages will be automatically formatted to reference the appropriate class and give file and line information in debug
+mode.</p>
+</div>
+<div class="section" id="logging-level">
+<h3>Logging Level<a class="headerlink" href="#logging-level" title="Permalink to this headline"></a></h3>
+<p>A particular log level can be set for each instance using the attribute <a class="reference internal" href="#kerch.feature.Logger.logging_level" title="kerch.feature.Logger.logging_level"><code class="xref py py-attr docutils literal notranslate"><span class="pre">logging_level</span></code></a>.
+If assigned to <code class="docutils literal notranslate"><span class="pre">None</span></code>,the default logging level will be used.
+This value is also set during instantiation using the <code class="docutils literal notranslate"><span class="pre">logging_level</span></code> argument. If nothing is specified, <code class="docutils literal notranslate"><span class="pre">None</span></code> is
+passed leading to the genral default logging level.</p>
+<p>The log level always corresponds to an integer. We refer to <a class="reference external" href="https://docs.python.org/3/library/logging.html" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span>logging — Logging facility for Python</span></a> for the
+different values.</p>
+</div>
+<div class="section" id="default-logging-level">
+<h3>Default Logging Level<a class="headerlink" href="#default-logging-level" title="Permalink to this headline"></a></h3>
+<p>This is the default logging level that is used if <a class="reference internal" href="#kerch.feature.Logger.logging_level" title="kerch.feature.Logger.logging_level"><code class="xref py py-attr docutils literal notranslate"><span class="pre">logging_level</span></code></a> is never specified (which corresponds to setting it to <code class="docutils literal notranslate"><span class="pre">None</span></code>).
+By default, the logging level is 30, which corresponds to a <cite>warning</cite> level. This default package value can also be changed
+and read using the following functions.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.set_logging_level">
+<code class="sig-prename descclassname"><span class="pre">kerch.</span></code><code class="sig-name descname"><span class="pre">set_logging_level</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/feature/logger.html#set_logging_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.set_logging_level" title="Permalink to this definition"></a></dt>
+<dd><p>Changes the default logging level of the kerch package.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a>) – Default kerch logging value</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/logging.html#module-logging" title="logging"><span class="nn">logging</span></a>
+
+<a class="sphinx-codeautolink-a" href="../features/logger.html#kerch.set_logging_level" title="kerch.set_logging_level"><span class="n">kerch</span><span class="o">.</span><span class="n">set_logging_level</span></a><span class="p">(</span><a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/logging.html#logging.DEBUG" title="logging.DEBUG"><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Changing the default logging value does not affect the already instantiated objects. We advise to set those values in
+the beginning of the code.</p>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="kerch.get_logging_level">
+<code class="sig-prename descclassname"><span class="pre">kerch.</span></code><code class="sig-name descname"><span class="pre">get_logging_level</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../_modules/kerch/feature/logger.html#get_logging_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.get_logging_level" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the default logging level of the kerch package.</p>
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/logging.html#module-logging" title="logging"><span class="nn">logging</span></a>
+
+<span class="n">default_level</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../features/logger.html#kerch.get_logging_level" title="kerch.get_logging_level"><span class="n">kerch</span><span class="o">.</span><span class="n">get_logging_level</span></a><span class="p">()</span>
+<span class="n">default_level</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/logging.html#logging.getLevelName" title="logging.getLevelName"><span class="n">logging</span><span class="o">.</span><span class="n">getLevelName</span></a><span class="p">(</span><span class="n">default_level</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">default_level</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>WARNING
+</pre></div>
+</div>
+</dd></dl>
+</div>
+</div>
+<div class="section" id="abstract-class">
+<h2>Abstract Class<a class="headerlink" href="#abstract-class" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="kerch.feature.Logger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.feature.</span></code><code class="sig-name descname"><span class="pre">Logger</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/feature/logger.html#Logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.feature.Logger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>logging_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Logging level for this specific instance.
+If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current default kerch global log level will be used.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code> (default kerch logging level).
+We refer to the <a class="reference internal" href="#"><span class="doc">Logging in Kerch</span></a> documentation for further information.</td>
+</tr>
+</tbody>
+</table>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.feature.Logger._logger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">_logger</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">logging.Logger</span></a></em><a class="headerlink" href="#kerch.feature.Logger._logger" title="Permalink to this definition"></a></dt>
+<dd><p>Logger of the instance.</p>
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/logging.html#module-logging" title="logging"><span class="nn">logging</span></a>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><a class="sphinx-codeautolink-a" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.logger.Logger"><span class="n">kerch</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">Logger</span></a><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#super" title="super"><span class="nb">super</span></a><span class="p">(</span><span class="n">MyClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Instantiation done information.'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'Instantiation done warning.'</span><span class="p">)</span>
+
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'First class with default logging level:'</span><span class="p">)</span>
+<span class="n">my_class1</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Second instance with logging.INFO logging level:'</span><span class="p">)</span>
+<span class="n">my_class2</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="n">logging_level</span><span class="o">=</span><a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/logging.html#logging.INFO" title="logging.INFO"><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>First class with default logging level:
+WARNING:MyClass:Instantiation done warning.
+
+Second instance with logging.INFO logging level:
+INFO:MyClass:Instantiation done information.
+WARNING:MyClass:Instantiation done warning.
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kerch.feature.Logger.logging_level">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><code class="sig-name descname"><span class="pre">logging_level</span></code><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#kerch.feature.Logger.logging_level" title="Permalink to this definition"></a></dt>
+<dd><p>Logging level of this specific instance.
+If the value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the current default kerch global log Level will be used.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code> (default global kerch level).
+We refer to the <a class="reference internal" href="#"><span class="doc">Logging in Kerch</span></a> documentation for further information.</p>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h2>
+<div class="section" id="default">
+<h3>Default<a class="headerlink" href="#default" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+
+<a class="sphinx-codeautolink-a" href="../kernel/generic/rbf.html#kerch.kernel.RBF" title="kerch.kernel.generic.rbf.RBF"><span class="n">k</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/generic/rbf.html#kerch.kernel.RBF" title="kerch.kernel.generic.rbf.RBF"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">RBF</span></a><span class="p">()</span>
+<span class="n">k</span><span class="o">.</span><span class="n">sample</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/stdtypes.html#range" title="range"><span class="nb">range</span></a><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>                                          <span class="c1"># first warning (the sigma is defined)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>WARNING:RBF:The kernel bandwidth sigma has not been provided and is assigned by a heuristic (sigma=5.00e-01).
+tensor([[1.0000e+00, 1.3534e-01, 3.3546e-04],
+        [1.3534e-01, 1.0000e+00, 1.3534e-01],
+        [3.3546e-04, 1.3534e-01, 1.0000e+00]])
+</pre></div>
+</div>
+</div>
+<div class="section" id="info">
+<h3>Info<a class="headerlink" href="#info" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
+<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/logging.html#module-logging" title="logging"><span class="nn">logging</span></a>
+
+<a class="sphinx-codeautolink-a" href="../kernel/generic/rbf.html#kerch.kernel.RBF" title="kerch.kernel.generic.rbf.RBF"><span class="n">k</span></a> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="../kernel/generic/rbf.html#kerch.kernel.RBF" title="kerch.kernel.generic.rbf.RBF"><span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">RBF</span></a><span class="p">(</span><span class="n">logging_level</span><span class="o">=</span><a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/logging.html#logging.INFO" title="logging.INFO"><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span></a><span class="p">)</span>    <span class="c1"># first info (no sample initialized yet)</span>
+<span class="n">k</span><span class="o">.</span><span class="n">sample</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/stdtypes.html#range" title="range"><span class="nb">range</span></a><span class="p">(</span><span class="mi">3</span><span class="p">)</span>                                 <span class="c1"># second info (the sample is initialized)</span>
+<a class="sphinx-codeautolink-a" href="https://docs.python.org/3/library/functions.html#print" title="print"><span class="nb">print</span></a><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>                                          <span class="c1"># first warning (the sigma is defined)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:RBF:The sample cannot be initialized because no sample data has been provided nor the sample dimensions have been initialized yet.
+WARNING:RBF:The kernel bandwidth sigma has not been provided and is assigned by a heuristic (sigma=5.00e-01).
+tensor([[1.0000e+00, 1.3534e-01, 3.3546e-04],
+        [1.3534e-01, 1.0000e+00, 1.3534e-01],
+        [3.3546e-04, 1.3534e-01, 1.0000e+00]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="inheritance">
+<h2>Inheritance<a class="headerlink" href="#inheritance" title="Permalink to this headline"></a></h2>
+<p>This is a base class that directly inherits from <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a>.</p>
+</div>
+</div>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="index.html" rel="prev" title="Features"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="module.html" rel="next" title="Kerch Module">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright KU Leuven, January 2024.</p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>
