@@ -1054,9 +1054,6 @@
   "general/first_steps": [],
   "general/index": [],
   "general/install": [],
-  "general/utils": [],
-  "index": [],
-  "kerch.utils": [],
   "kernel/abstract/distance": [
     {
       "source": "import kerch\nimport torch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\n# we define our l1 kernel\nclass MyExponential(kerch.kernel.Exponential):\n    def _dist(self, x, y):\n        # x: torch.Tensor of size [num_x, dim]\n        # y: torch.Tensor of size [num_y, dim]\n        x = x.T[:, :, None]\n        y = y.T[:, None, :]\n\n        diff = x - y\n\n        # return torch.Tensor of size [num_x, num_y]\n        return torch.sum(torch.abs(diff), dim=0, keepdim=False)\n\n# we define our sample\nt = np.expand_dims(np.arange(0,15), axis=1)\nsample = np.concatenate((np.sin(t / np.pi) + 1, np.cos(t / np.pi) - 1), axis=1)\n\n# now we can just use the kernel\nk = MyExponential(sample=sample)\n\nplt.figure(1)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Sigma = \"+str(k.sigma))\n\nk.sigma = 1\n\nplt.figure(2)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Sigma = \"+str(k.sigma))",
@@ -1746,18 +1743,6 @@
         },
         {
           "import_components": [
-            "kerch",
-            "utils",
-            "castf"
-          ],
-          "code_str": "kerch.utils.castf",
-          "lineno": 15,
-          "end_lineno": 15,
-          "context": "none",
-          "resolved_location": "kerch.utils.castf"
-        },
-        {
-          "import_components": [
             "torch",
             "nn",
             "Parameter"
@@ -2120,18 +2105,6 @@
         },
         {
           "import_components": [
-            "kerch",
-            "utils",
-            "castf"
-          ],
-          "code_str": "kerch.utils.castf",
-          "lineno": 15,
-          "end_lineno": 15,
-          "context": "none",
-          "resolved_location": "kerch.utils.castf"
-        },
-        {
-          "import_components": [
             "super"
           ],
           "code_str": "super",
@@ -2207,153 +2180,8 @@
     }
   ],
   "kernel/abstract/kernel": [],
-  "kernel/additive_chi2": [],
   "kernel/all_kernels": [],
-  "kernel/base": [],
-  "kernel/cosine": [
-    {
-      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi) + 1.5\nplt.figure(0)\nplt.plot(x)\n\nk = kerch.kernel.cosine(sample=x, center=True)\nplt.figure(1)\nplt.imshow(k.K)\nplt.colorbar()",
-      "names": [
-        {
-          "import_components": [
-            "numpy"
-          ],
-          "code_str": "numpy",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_target",
-          "resolved_location": "numpy"
-        },
-        {
-          "import_components": [
-            "matplotlib"
-          ],
-          "code_str": "matplotlib",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_from",
-          "resolved_location": "matplotlib"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot"
-          ],
-          "code_str": "pyplot",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_target",
-          "resolved_location": "matplotlib.pyplot"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "arange"
-          ],
-          "code_str": "np.arange",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.arange"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "pi"
-          ],
-          "code_str": "np.pi",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.pi"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "sin"
-          ],
-          "code_str": "np.sin",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.sin"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "figure"
-          ],
-          "code_str": "plt.figure",
-          "lineno": 6,
-          "end_lineno": 6,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.figure"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "plot"
-          ],
-          "code_str": "plt.plot",
-          "lineno": 7,
-          "end_lineno": 7,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.plot"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "figure"
-          ],
-          "code_str": "plt.figure",
-          "lineno": 10,
-          "end_lineno": 10,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.figure"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "imshow"
-          ],
-          "code_str": "plt.imshow",
-          "lineno": 11,
-          "end_lineno": 11,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.imshow"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "colorbar"
-          ],
-          "code_str": "plt.colorbar",
-          "lineno": 12,
-          "end_lineno": 12,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.colorbar"
-        }
-      ],
-      "example": {
-        "document": "kernel/cosine",
-        "ref_id": "sine",
-        "headings": [
-          "Cosine Kernel",
-          "Examples",
-          "Sine"
-        ]
-      },
-      "doc_lineno": 2
-    }
-  ],
   "kernel/explicit": [],
-  "kernel/explicit_nn": [],
-  "kernel/exponential": [],
   "kernel/generic/cosine": [
     {
       "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi)\n\nk_cos = kerch.kernel.Cosine(sample=x)\nk_lin = kerch.kernel.Linear(sample=x, kernel_transform=['normalize'])\n\nfig, axs = plt.subplots(1, 2)\n\naxs[0].imshow(k_cos.K)\naxs[0].set_title(\"Cosine\")\n\nim = axs[1].imshow(k_lin.K)\naxs[1].set_title(\"Normalized Linear\")\n\nfig.colorbar(im, ax=axs.ravel().tolist(), orientation='horizontal')",
@@ -5362,102 +5190,7 @@
       "doc_lineno": 2
     }
   ],
-  "kernel/hat": [
-    {
-      "source": "import kerch\nfrom matplotlib import pyplot as plt\n\nk = kerch.kernel.hat(sample=range(10), lag=3)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Hat with lag \" + str(k.lag))",
-      "names": [
-        {
-          "import_components": [
-            "matplotlib"
-          ],
-          "code_str": "matplotlib",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_from",
-          "resolved_location": "matplotlib"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot"
-          ],
-          "code_str": "pyplot",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_target",
-          "resolved_location": "matplotlib.pyplot"
-        },
-        {
-          "import_components": [
-            "range"
-          ],
-          "code_str": "range",
-          "lineno": 4,
-          "end_lineno": 4,
-          "context": "none",
-          "resolved_location": "range"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "imshow"
-          ],
-          "code_str": "plt.imshow",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.imshow"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "colorbar"
-          ],
-          "code_str": "plt.colorbar",
-          "lineno": 6,
-          "end_lineno": 6,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.colorbar"
-        },
-        {
-          "import_components": [
-            "str"
-          ],
-          "code_str": "str",
-          "lineno": 7,
-          "end_lineno": 7,
-          "context": "none",
-          "resolved_location": "str"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "title"
-          ],
-          "code_str": "plt.title",
-          "lineno": 7,
-          "end_lineno": 7,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.title"
-        }
-      ],
-      "example": {
-        "document": "kernel/hat",
-        "ref_id": "linear-time",
-        "headings": [
-          "Hat Kernel",
-          "Examples",
-          "Linear (Time)"
-        ]
-      },
-      "doc_lineno": 2
-    }
-  ],
   "kernel/implicit": [],
-  "kernel/implicit_nn": [],
   "kernel/index": [
     {
       "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nsample = np.sin(np.arange(0,15) / np.pi) + .1\noos = np.sin(np.arange(15,30) / np.pi) + .1\n\nk = kerch.kernel.factory(type=\"polynomial\", sample=sample, center=True, normalize=True)\n\nfig, axs = plt.subplots(2,2)\n\naxs[0,0].imshow(k.K, vmin=-1, vmax=1)\naxs[0,0].set_title(\"Sample - Sample\")\n\naxs[0,1].imshow(k.k(y=oos), vmin=-1, vmax=1)\naxs[0,1].set_title(\"Sample - OOS\")\n\naxs[1,0].imshow(k.k(x=oos), vmin=-1, vmax=1)\naxs[1,0].set_title(\"OOS - Sample\")\n\nim = axs[1,1].imshow(k.k(x=oos, y=oos), vmin=-1, vmax=1)\naxs[1,1].set_title(\"OOS - OOS\")\n\nfor ax in axs.flat:\n    ax.set_xticks([])\n    ax.set_yticks([])\n\nfig.colorbar(im, ax=axs.ravel().tolist())",
@@ -5608,794 +5341,9 @@
       "doc_lineno": 2
     }
   ],
-  "kernel/indicator": [
-    {
-      "source": "import kerch\nfrom matplotlib import pyplot as plt\n\nk = kerch.kernel.indicator(sample=range(10), lag=3)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Indicator with lag \" + str(k.lag))",
-      "names": [
-        {
-          "import_components": [
-            "matplotlib"
-          ],
-          "code_str": "matplotlib",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_from",
-          "resolved_location": "matplotlib"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot"
-          ],
-          "code_str": "pyplot",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_target",
-          "resolved_location": "matplotlib.pyplot"
-        },
-        {
-          "import_components": [
-            "range"
-          ],
-          "code_str": "range",
-          "lineno": 4,
-          "end_lineno": 4,
-          "context": "none",
-          "resolved_location": "range"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "imshow"
-          ],
-          "code_str": "plt.imshow",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.imshow"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "colorbar"
-          ],
-          "code_str": "plt.colorbar",
-          "lineno": 6,
-          "end_lineno": 6,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.colorbar"
-        },
-        {
-          "import_components": [
-            "str"
-          ],
-          "code_str": "str",
-          "lineno": 7,
-          "end_lineno": 7,
-          "context": "none",
-          "resolved_location": "str"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "title"
-          ],
-          "code_str": "plt.title",
-          "lineno": 7,
-          "end_lineno": 7,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.title"
-        }
-      ],
-      "example": {
-        "document": "kernel/indicator",
-        "ref_id": "linear-time",
-        "headings": [
-          "Indicator Kernel",
-          "Examples",
-          "Linear (Time)"
-        ]
-      },
-      "doc_lineno": 2
-    }
-  ],
-  "kernel/laplacian": [],
-  "kernel/linear": [
-    {
-      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi) + 1.5\nplt.figure(0)\nplt.plot(x)\n\nk = kerch.kernel.linear(sample=x)\nplt.figure(1)\nplt.imshow(k.K)\nplt.colorbar()",
-      "names": [
-        {
-          "import_components": [
-            "numpy"
-          ],
-          "code_str": "numpy",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_target",
-          "resolved_location": "numpy"
-        },
-        {
-          "import_components": [
-            "matplotlib"
-          ],
-          "code_str": "matplotlib",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_from",
-          "resolved_location": "matplotlib"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot"
-          ],
-          "code_str": "pyplot",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_target",
-          "resolved_location": "matplotlib.pyplot"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "arange"
-          ],
-          "code_str": "np.arange",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.arange"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "pi"
-          ],
-          "code_str": "np.pi",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.pi"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "sin"
-          ],
-          "code_str": "np.sin",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.sin"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "figure"
-          ],
-          "code_str": "plt.figure",
-          "lineno": 6,
-          "end_lineno": 6,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.figure"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "plot"
-          ],
-          "code_str": "plt.plot",
-          "lineno": 7,
-          "end_lineno": 7,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.plot"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "figure"
-          ],
-          "code_str": "plt.figure",
-          "lineno": 10,
-          "end_lineno": 10,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.figure"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "imshow"
-          ],
-          "code_str": "plt.imshow",
-          "lineno": 11,
-          "end_lineno": 11,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.imshow"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "colorbar"
-          ],
-          "code_str": "plt.colorbar",
-          "lineno": 12,
-          "end_lineno": 12,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.colorbar"
-        }
-      ],
-      "example": {
-        "document": "kernel/linear",
-        "ref_id": "sine",
-        "headings": [
-          "Linear Kernel",
-          "Examples",
-          "Sine"
-        ]
-      },
-      "doc_lineno": 2
-    }
-  ],
   "kernel/network/explicit_nn": [],
   "kernel/network/implicit_nn": [],
   "kernel/nystrom": [],
-  "kernel/polynomial": [
-    {
-      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi)\nplt.figure(0)\nplt.plot(x)\n\nk = kerch.kernel.polynomial(sample=x, degree=2)\nplt.figure(1)\nplt.imshow(k.K)\nplt.colorbar()",
-      "names": [
-        {
-          "import_components": [
-            "numpy"
-          ],
-          "code_str": "numpy",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_target",
-          "resolved_location": "numpy"
-        },
-        {
-          "import_components": [
-            "matplotlib"
-          ],
-          "code_str": "matplotlib",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_from",
-          "resolved_location": "matplotlib"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot"
-          ],
-          "code_str": "pyplot",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_target",
-          "resolved_location": "matplotlib.pyplot"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "arange"
-          ],
-          "code_str": "np.arange",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.arange"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "pi"
-          ],
-          "code_str": "np.pi",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.pi"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "sin"
-          ],
-          "code_str": "np.sin",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.sin"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "figure"
-          ],
-          "code_str": "plt.figure",
-          "lineno": 6,
-          "end_lineno": 6,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.figure"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "plot"
-          ],
-          "code_str": "plt.plot",
-          "lineno": 7,
-          "end_lineno": 7,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.plot"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "figure"
-          ],
-          "code_str": "plt.figure",
-          "lineno": 10,
-          "end_lineno": 10,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.figure"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "imshow"
-          ],
-          "code_str": "plt.imshow",
-          "lineno": 11,
-          "end_lineno": 11,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.imshow"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "colorbar"
-          ],
-          "code_str": "plt.colorbar",
-          "lineno": 12,
-          "end_lineno": 12,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.colorbar"
-        }
-      ],
-      "example": {
-        "document": "kernel/polynomial",
-        "ref_id": "sine",
-        "headings": [
-          "Polynomial Kernel",
-          "Examples",
-          "Sine"
-        ]
-      },
-      "doc_lineno": 2
-    }
-  ],
-  "kernel/rbf": [
-    {
-      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi)\nplt.figure(0)\nplt.plot(x)\n\nk = kerch.kernel.rbf(sample=x)\n\nplt.figure(1)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Sigma = \"+str(k.sigma))\n\nk.sigma = 1\n\nplt.figure(2)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Sigma = \"+str(k.sigma))",
-      "names": [
-        {
-          "import_components": [
-            "numpy"
-          ],
-          "code_str": "numpy",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_target",
-          "resolved_location": "numpy"
-        },
-        {
-          "import_components": [
-            "matplotlib"
-          ],
-          "code_str": "matplotlib",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_from",
-          "resolved_location": "matplotlib"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot"
-          ],
-          "code_str": "pyplot",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_target",
-          "resolved_location": "matplotlib.pyplot"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "arange"
-          ],
-          "code_str": "np.arange",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.arange"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "pi"
-          ],
-          "code_str": "np.pi",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.pi"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "sin"
-          ],
-          "code_str": "np.sin",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.sin"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "figure"
-          ],
-          "code_str": "plt.figure",
-          "lineno": 6,
-          "end_lineno": 6,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.figure"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "plot"
-          ],
-          "code_str": "plt.plot",
-          "lineno": 7,
-          "end_lineno": 7,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.plot"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "figure"
-          ],
-          "code_str": "plt.figure",
-          "lineno": 11,
-          "end_lineno": 11,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.figure"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "imshow"
-          ],
-          "code_str": "plt.imshow",
-          "lineno": 12,
-          "end_lineno": 12,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.imshow"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "colorbar"
-          ],
-          "code_str": "plt.colorbar",
-          "lineno": 13,
-          "end_lineno": 13,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.colorbar"
-        },
-        {
-          "import_components": [
-            "str"
-          ],
-          "code_str": "str",
-          "lineno": 14,
-          "end_lineno": 14,
-          "context": "none",
-          "resolved_location": "str"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "title"
-          ],
-          "code_str": "plt.title",
-          "lineno": 14,
-          "end_lineno": 14,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.title"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "figure"
-          ],
-          "code_str": "plt.figure",
-          "lineno": 18,
-          "end_lineno": 18,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.figure"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "imshow"
-          ],
-          "code_str": "plt.imshow",
-          "lineno": 19,
-          "end_lineno": 19,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.imshow"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "colorbar"
-          ],
-          "code_str": "plt.colorbar",
-          "lineno": 20,
-          "end_lineno": 20,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.colorbar"
-        },
-        {
-          "import_components": [
-            "str"
-          ],
-          "code_str": "str",
-          "lineno": 21,
-          "end_lineno": 21,
-          "context": "none",
-          "resolved_location": "str"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "title"
-          ],
-          "code_str": "plt.title",
-          "lineno": 21,
-          "end_lineno": 21,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.title"
-        }
-      ],
-      "example": {
-        "document": "kernel/rbf",
-        "ref_id": "sine",
-        "headings": [
-          "RBF Kernel",
-          "Examples",
-          "Sine"
-        ]
-      },
-      "doc_lineno": 2
-    },
-    {
-      "source": "import kerch\nfrom matplotlib import pyplot as plt\n\nk = kerch.kernel.rbf(sample=range(10), sigma=3)\n\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"RBF with sigma \" + str(k.sigma))",
-      "names": [
-        {
-          "import_components": [
-            "matplotlib"
-          ],
-          "code_str": "matplotlib",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_from",
-          "resolved_location": "matplotlib"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot"
-          ],
-          "code_str": "pyplot",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_target",
-          "resolved_location": "matplotlib.pyplot"
-        },
-        {
-          "import_components": [
-            "range"
-          ],
-          "code_str": "range",
-          "lineno": 4,
-          "end_lineno": 4,
-          "context": "none",
-          "resolved_location": "range"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "imshow"
-          ],
-          "code_str": "plt.imshow",
-          "lineno": 6,
-          "end_lineno": 6,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.imshow"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "colorbar"
-          ],
-          "code_str": "plt.colorbar",
-          "lineno": 7,
-          "end_lineno": 7,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.colorbar"
-        },
-        {
-          "import_components": [
-            "str"
-          ],
-          "code_str": "str",
-          "lineno": 8,
-          "end_lineno": 8,
-          "context": "none",
-          "resolved_location": "str"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "title"
-          ],
-          "code_str": "plt.title",
-          "lineno": 8,
-          "end_lineno": 8,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.title"
-        }
-      ],
-      "example": {
-        "document": "kernel/rbf",
-        "ref_id": "time",
-        "headings": [
-          "RBF Kernel",
-          "Examples",
-          "Time"
-        ]
-      },
-      "doc_lineno": 2
-    }
-  ],
-  "kernel/rff": [
-    {
-      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi)\n\nk_rbf = kerch.kernel.rbf(sample=x, sigma=1)\nk_rff = kerch.kernel.rff(sample=x, num_weights=50)\n\nfig, axs = plt.subplots(1, 2)\n\naxs[0].imshow(k_rbf.K)\naxs[0].set_title(\"RBF\")\n\nim = axs[1].imshow(k_rff.K)\naxs[1].set_title(\"RFF\")\n\nfig.colorbar(im, ax=axs.ravel().tolist(), orientation='horizontal')",
-      "names": [
-        {
-          "import_components": [
-            "numpy"
-          ],
-          "code_str": "numpy",
-          "lineno": 2,
-          "end_lineno": 2,
-          "context": "import_target",
-          "resolved_location": "numpy"
-        },
-        {
-          "import_components": [
-            "matplotlib"
-          ],
-          "code_str": "matplotlib",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_from",
-          "resolved_location": "matplotlib"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot"
-          ],
-          "code_str": "pyplot",
-          "lineno": 3,
-          "end_lineno": 3,
-          "context": "import_target",
-          "resolved_location": "matplotlib.pyplot"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "arange"
-          ],
-          "code_str": "np.arange",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.arange"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "pi"
-          ],
-          "code_str": "np.pi",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.pi"
-        },
-        {
-          "import_components": [
-            "numpy",
-            "sin"
-          ],
-          "code_str": "np.sin",
-          "lineno": 5,
-          "end_lineno": 5,
-          "context": "none",
-          "resolved_location": "numpy.sin"
-        },
-        {
-          "import_components": [
-            "matplotlib",
-            "pyplot",
-            "subplots"
-          ],
-          "code_str": "plt.subplots",
-          "lineno": 10,
-          "end_lineno": 10,
-          "context": "none",
-          "resolved_location": "matplotlib.pyplot.subplots"
-        }
-      ],
-      "example": {
-        "document": "kernel/rff",
-        "ref_id": "sine",
-        "headings": [
-          "Random Fourier Features Kernel",
-          "Examples",
-          "Sine"
-        ]
-      },
-      "doc_lineno": 2
-    }
-  ],
-  "kernel/sigmoid": [],
-  "kernel/skewed_chi2": [],
   "kernel/statistics/epanechnikov": [
     {
       "source": "import kerch\nimport torch\nfrom matplotlib import pyplot as plt\n\nx = torch.linspace(-1.2, 1.2, 100)\nk = kerch.kernel.Epanechnikov(sample=x, sigma=1)\nshape = k.k(y=0).squeeze()\n\nplt.figure()\nplt.plot(x, shape)\nplt.title('Epanechnikov Shape')\nplt.xlabel('x')\nplt.ylabel('k(x,y=0)')",
@@ -9867,7 +8815,1034 @@
   ],
   "model/index": [],
   "model/lssvm": [],
-  "modules": [],
   "structure/index": [],
-  "views/index": []
+  "views/index": [],
+  "index": [],
+  "modules": [],
+  "general/utils": [],
+  "kernel/additive_chi2": [],
+  "kernel/base": [],
+  "kernel/cosine": [
+    {
+      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi) + 1.5\nplt.figure(0)\nplt.plot(x)\n\nk = kerch.kernel.cosine(sample=x, center=True)\nplt.figure(1)\nplt.imshow(k.K)\nplt.colorbar()",
+      "names": [
+        {
+          "import_components": [
+            "numpy"
+          ],
+          "code_str": "numpy",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_target",
+          "resolved_location": "numpy"
+        },
+        {
+          "import_components": [
+            "matplotlib"
+          ],
+          "code_str": "matplotlib",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_from",
+          "resolved_location": "matplotlib"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot"
+          ],
+          "code_str": "pyplot",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_target",
+          "resolved_location": "matplotlib.pyplot"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "arange"
+          ],
+          "code_str": "np.arange",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.arange"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "pi"
+          ],
+          "code_str": "np.pi",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.pi"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "sin"
+          ],
+          "code_str": "np.sin",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.sin"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "figure"
+          ],
+          "code_str": "plt.figure",
+          "lineno": 6,
+          "end_lineno": 6,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.figure"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "plot"
+          ],
+          "code_str": "plt.plot",
+          "lineno": 7,
+          "end_lineno": 7,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.plot"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "figure"
+          ],
+          "code_str": "plt.figure",
+          "lineno": 10,
+          "end_lineno": 10,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.figure"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "imshow"
+          ],
+          "code_str": "plt.imshow",
+          "lineno": 11,
+          "end_lineno": 11,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.imshow"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "colorbar"
+          ],
+          "code_str": "plt.colorbar",
+          "lineno": 12,
+          "end_lineno": 12,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.colorbar"
+        }
+      ],
+      "example": {
+        "document": "kernel/cosine",
+        "ref_id": "sine",
+        "headings": [
+          "Cosine Kernel",
+          "Examples",
+          "Sine"
+        ]
+      },
+      "doc_lineno": 2
+    }
+  ],
+  "kernel/explicit_nn": [],
+  "kernel/exponential": [],
+  "kernel/hat": [
+    {
+      "source": "import kerch\nfrom matplotlib import pyplot as plt\n\nk = kerch.kernel.hat(sample=range(10), lag=3)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Hat with lag \" + str(k.lag))",
+      "names": [
+        {
+          "import_components": [
+            "matplotlib"
+          ],
+          "code_str": "matplotlib",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_from",
+          "resolved_location": "matplotlib"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot"
+          ],
+          "code_str": "pyplot",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_target",
+          "resolved_location": "matplotlib.pyplot"
+        },
+        {
+          "import_components": [
+            "range"
+          ],
+          "code_str": "range",
+          "lineno": 4,
+          "end_lineno": 4,
+          "context": "none",
+          "resolved_location": "range"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "imshow"
+          ],
+          "code_str": "plt.imshow",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.imshow"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "colorbar"
+          ],
+          "code_str": "plt.colorbar",
+          "lineno": 6,
+          "end_lineno": 6,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.colorbar"
+        },
+        {
+          "import_components": [
+            "str"
+          ],
+          "code_str": "str",
+          "lineno": 7,
+          "end_lineno": 7,
+          "context": "none",
+          "resolved_location": "str"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "title"
+          ],
+          "code_str": "plt.title",
+          "lineno": 7,
+          "end_lineno": 7,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.title"
+        }
+      ],
+      "example": {
+        "document": "kernel/hat",
+        "ref_id": "linear-time",
+        "headings": [
+          "Hat Kernel",
+          "Examples",
+          "Linear (Time)"
+        ]
+      },
+      "doc_lineno": 2
+    }
+  ],
+  "kernel/implicit_nn": [],
+  "kernel/indicator": [
+    {
+      "source": "import kerch\nfrom matplotlib import pyplot as plt\n\nk = kerch.kernel.indicator(sample=range(10), lag=3)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Indicator with lag \" + str(k.lag))",
+      "names": [
+        {
+          "import_components": [
+            "matplotlib"
+          ],
+          "code_str": "matplotlib",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_from",
+          "resolved_location": "matplotlib"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot"
+          ],
+          "code_str": "pyplot",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_target",
+          "resolved_location": "matplotlib.pyplot"
+        },
+        {
+          "import_components": [
+            "range"
+          ],
+          "code_str": "range",
+          "lineno": 4,
+          "end_lineno": 4,
+          "context": "none",
+          "resolved_location": "range"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "imshow"
+          ],
+          "code_str": "plt.imshow",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.imshow"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "colorbar"
+          ],
+          "code_str": "plt.colorbar",
+          "lineno": 6,
+          "end_lineno": 6,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.colorbar"
+        },
+        {
+          "import_components": [
+            "str"
+          ],
+          "code_str": "str",
+          "lineno": 7,
+          "end_lineno": 7,
+          "context": "none",
+          "resolved_location": "str"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "title"
+          ],
+          "code_str": "plt.title",
+          "lineno": 7,
+          "end_lineno": 7,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.title"
+        }
+      ],
+      "example": {
+        "document": "kernel/indicator",
+        "ref_id": "linear-time",
+        "headings": [
+          "Indicator Kernel",
+          "Examples",
+          "Linear (Time)"
+        ]
+      },
+      "doc_lineno": 2
+    }
+  ],
+  "kernel/laplacian": [],
+  "kernel/linear": [
+    {
+      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi) + 1.5\nplt.figure(0)\nplt.plot(x)\n\nk = kerch.kernel.linear(sample=x)\nplt.figure(1)\nplt.imshow(k.K)\nplt.colorbar()",
+      "names": [
+        {
+          "import_components": [
+            "numpy"
+          ],
+          "code_str": "numpy",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_target",
+          "resolved_location": "numpy"
+        },
+        {
+          "import_components": [
+            "matplotlib"
+          ],
+          "code_str": "matplotlib",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_from",
+          "resolved_location": "matplotlib"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot"
+          ],
+          "code_str": "pyplot",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_target",
+          "resolved_location": "matplotlib.pyplot"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "arange"
+          ],
+          "code_str": "np.arange",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.arange"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "pi"
+          ],
+          "code_str": "np.pi",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.pi"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "sin"
+          ],
+          "code_str": "np.sin",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.sin"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "figure"
+          ],
+          "code_str": "plt.figure",
+          "lineno": 6,
+          "end_lineno": 6,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.figure"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "plot"
+          ],
+          "code_str": "plt.plot",
+          "lineno": 7,
+          "end_lineno": 7,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.plot"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "figure"
+          ],
+          "code_str": "plt.figure",
+          "lineno": 10,
+          "end_lineno": 10,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.figure"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "imshow"
+          ],
+          "code_str": "plt.imshow",
+          "lineno": 11,
+          "end_lineno": 11,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.imshow"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "colorbar"
+          ],
+          "code_str": "plt.colorbar",
+          "lineno": 12,
+          "end_lineno": 12,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.colorbar"
+        }
+      ],
+      "example": {
+        "document": "kernel/linear",
+        "ref_id": "sine",
+        "headings": [
+          "Linear Kernel",
+          "Examples",
+          "Sine"
+        ]
+      },
+      "doc_lineno": 2
+    }
+  ],
+  "kernel/polynomial": [
+    {
+      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi)\nplt.figure(0)\nplt.plot(x)\n\nk = kerch.kernel.polynomial(sample=x, degree=2)\nplt.figure(1)\nplt.imshow(k.K)\nplt.colorbar()",
+      "names": [
+        {
+          "import_components": [
+            "numpy"
+          ],
+          "code_str": "numpy",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_target",
+          "resolved_location": "numpy"
+        },
+        {
+          "import_components": [
+            "matplotlib"
+          ],
+          "code_str": "matplotlib",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_from",
+          "resolved_location": "matplotlib"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot"
+          ],
+          "code_str": "pyplot",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_target",
+          "resolved_location": "matplotlib.pyplot"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "arange"
+          ],
+          "code_str": "np.arange",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.arange"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "pi"
+          ],
+          "code_str": "np.pi",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.pi"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "sin"
+          ],
+          "code_str": "np.sin",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.sin"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "figure"
+          ],
+          "code_str": "plt.figure",
+          "lineno": 6,
+          "end_lineno": 6,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.figure"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "plot"
+          ],
+          "code_str": "plt.plot",
+          "lineno": 7,
+          "end_lineno": 7,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.plot"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "figure"
+          ],
+          "code_str": "plt.figure",
+          "lineno": 10,
+          "end_lineno": 10,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.figure"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "imshow"
+          ],
+          "code_str": "plt.imshow",
+          "lineno": 11,
+          "end_lineno": 11,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.imshow"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "colorbar"
+          ],
+          "code_str": "plt.colorbar",
+          "lineno": 12,
+          "end_lineno": 12,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.colorbar"
+        }
+      ],
+      "example": {
+        "document": "kernel/polynomial",
+        "ref_id": "sine",
+        "headings": [
+          "Polynomial Kernel",
+          "Examples",
+          "Sine"
+        ]
+      },
+      "doc_lineno": 2
+    }
+  ],
+  "kernel/rbf": [
+    {
+      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi)\nplt.figure(0)\nplt.plot(x)\n\nk = kerch.kernel.rbf(sample=x)\n\nplt.figure(1)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Sigma = \"+str(k.sigma))\n\nk.sigma = 1\n\nplt.figure(2)\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"Sigma = \"+str(k.sigma))",
+      "names": [
+        {
+          "import_components": [
+            "numpy"
+          ],
+          "code_str": "numpy",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_target",
+          "resolved_location": "numpy"
+        },
+        {
+          "import_components": [
+            "matplotlib"
+          ],
+          "code_str": "matplotlib",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_from",
+          "resolved_location": "matplotlib"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot"
+          ],
+          "code_str": "pyplot",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_target",
+          "resolved_location": "matplotlib.pyplot"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "arange"
+          ],
+          "code_str": "np.arange",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.arange"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "pi"
+          ],
+          "code_str": "np.pi",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.pi"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "sin"
+          ],
+          "code_str": "np.sin",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.sin"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "figure"
+          ],
+          "code_str": "plt.figure",
+          "lineno": 6,
+          "end_lineno": 6,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.figure"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "plot"
+          ],
+          "code_str": "plt.plot",
+          "lineno": 7,
+          "end_lineno": 7,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.plot"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "figure"
+          ],
+          "code_str": "plt.figure",
+          "lineno": 11,
+          "end_lineno": 11,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.figure"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "imshow"
+          ],
+          "code_str": "plt.imshow",
+          "lineno": 12,
+          "end_lineno": 12,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.imshow"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "colorbar"
+          ],
+          "code_str": "plt.colorbar",
+          "lineno": 13,
+          "end_lineno": 13,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.colorbar"
+        },
+        {
+          "import_components": [
+            "str"
+          ],
+          "code_str": "str",
+          "lineno": 14,
+          "end_lineno": 14,
+          "context": "none",
+          "resolved_location": "str"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "title"
+          ],
+          "code_str": "plt.title",
+          "lineno": 14,
+          "end_lineno": 14,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.title"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "figure"
+          ],
+          "code_str": "plt.figure",
+          "lineno": 18,
+          "end_lineno": 18,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.figure"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "imshow"
+          ],
+          "code_str": "plt.imshow",
+          "lineno": 19,
+          "end_lineno": 19,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.imshow"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "colorbar"
+          ],
+          "code_str": "plt.colorbar",
+          "lineno": 20,
+          "end_lineno": 20,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.colorbar"
+        },
+        {
+          "import_components": [
+            "str"
+          ],
+          "code_str": "str",
+          "lineno": 21,
+          "end_lineno": 21,
+          "context": "none",
+          "resolved_location": "str"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "title"
+          ],
+          "code_str": "plt.title",
+          "lineno": 21,
+          "end_lineno": 21,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.title"
+        }
+      ],
+      "example": {
+        "document": "kernel/rbf",
+        "ref_id": "sine",
+        "headings": [
+          "RBF Kernel",
+          "Examples",
+          "Sine"
+        ]
+      },
+      "doc_lineno": 2
+    },
+    {
+      "source": "import kerch\nfrom matplotlib import pyplot as plt\n\nk = kerch.kernel.rbf(sample=range(10), sigma=3)\n\nplt.imshow(k.K)\nplt.colorbar()\nplt.title(\"RBF with sigma \" + str(k.sigma))",
+      "names": [
+        {
+          "import_components": [
+            "matplotlib"
+          ],
+          "code_str": "matplotlib",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_from",
+          "resolved_location": "matplotlib"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot"
+          ],
+          "code_str": "pyplot",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_target",
+          "resolved_location": "matplotlib.pyplot"
+        },
+        {
+          "import_components": [
+            "range"
+          ],
+          "code_str": "range",
+          "lineno": 4,
+          "end_lineno": 4,
+          "context": "none",
+          "resolved_location": "range"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "imshow"
+          ],
+          "code_str": "plt.imshow",
+          "lineno": 6,
+          "end_lineno": 6,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.imshow"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "colorbar"
+          ],
+          "code_str": "plt.colorbar",
+          "lineno": 7,
+          "end_lineno": 7,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.colorbar"
+        },
+        {
+          "import_components": [
+            "str"
+          ],
+          "code_str": "str",
+          "lineno": 8,
+          "end_lineno": 8,
+          "context": "none",
+          "resolved_location": "str"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "title"
+          ],
+          "code_str": "plt.title",
+          "lineno": 8,
+          "end_lineno": 8,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.title"
+        }
+      ],
+      "example": {
+        "document": "kernel/rbf",
+        "ref_id": "time",
+        "headings": [
+          "RBF Kernel",
+          "Examples",
+          "Time"
+        ]
+      },
+      "doc_lineno": 2
+    }
+  ],
+  "kernel/rff": [
+    {
+      "source": "import kerch\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\nx = np.sin(np.arange(50) / np.pi)\n\nk_rbf = kerch.kernel.rbf(sample=x, sigma=1)\nk_rff = kerch.kernel.rff(sample=x, num_weights=50)\n\nfig, axs = plt.subplots(1, 2)\n\naxs[0].imshow(k_rbf.K)\naxs[0].set_title(\"RBF\")\n\nim = axs[1].imshow(k_rff.K)\naxs[1].set_title(\"RFF\")\n\nfig.colorbar(im, ax=axs.ravel().tolist(), orientation='horizontal')",
+      "names": [
+        {
+          "import_components": [
+            "numpy"
+          ],
+          "code_str": "numpy",
+          "lineno": 2,
+          "end_lineno": 2,
+          "context": "import_target",
+          "resolved_location": "numpy"
+        },
+        {
+          "import_components": [
+            "matplotlib"
+          ],
+          "code_str": "matplotlib",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_from",
+          "resolved_location": "matplotlib"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot"
+          ],
+          "code_str": "pyplot",
+          "lineno": 3,
+          "end_lineno": 3,
+          "context": "import_target",
+          "resolved_location": "matplotlib.pyplot"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "arange"
+          ],
+          "code_str": "np.arange",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.arange"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "pi"
+          ],
+          "code_str": "np.pi",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.pi"
+        },
+        {
+          "import_components": [
+            "numpy",
+            "sin"
+          ],
+          "code_str": "np.sin",
+          "lineno": 5,
+          "end_lineno": 5,
+          "context": "none",
+          "resolved_location": "numpy.sin"
+        },
+        {
+          "import_components": [
+            "matplotlib",
+            "pyplot",
+            "subplots"
+          ],
+          "code_str": "plt.subplots",
+          "lineno": 10,
+          "end_lineno": 10,
+          "context": "none",
+          "resolved_location": "matplotlib.pyplot.subplots"
+        }
+      ],
+      "example": {
+        "document": "kernel/rff",
+        "ref_id": "sine",
+        "headings": [
+          "Random Fourier Features Kernel",
+          "Examples",
+          "Sine"
+        ]
+      },
+      "doc_lineno": 2
+    }
+  ],
+  "kernel/sigmoid": [],
+  "kernel/skewed_chi2": []
 }

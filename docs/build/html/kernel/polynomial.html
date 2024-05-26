@@ -1,45 +1,49 @@
 <!DOCTYPE html>
-
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" >
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Polynomial Kernel — kerch 0.3.1 documentation</title>
-<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sphinx-codeautolink.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" rel="stylesheet" type="text/css"/>
-<!--[if lt IE 9]>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polynomial Kernel &mdash; kerch 0.3.1.1post2 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sphinx-codeautolink.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" type="text/css" />
+  <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-<script src="../_static/jquery.js"></script>
-<script src="../_static/underscore.js"></script>
-<script src="../_static/doctools.js"></script>
-<script src="../_static/design-tabs.js"></script>
-<script src="../_static/js/theme.js"></script>
-<link href="../genindex.html" rel="index" title="Index"/>
-<link href="../search.html" rel="search" title="Search"/>
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
-<body class="wy-body-for-nav">
-<div class="wy-grid-for-nav">
-<nav class="wy-nav-side" data-toggle="wy-nav-shift">
-<div class="wy-side-scroll">
-<div class="wy-side-nav-search">
-<a class="icon icon-home" href="../index.html">
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
             kerch
           </a>
 <div role="search">
-<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
-<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
-</form>
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
-</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
-<p class="caption" role="heading"><span class="caption-text">General</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../general/index.html">Why Kerch?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../general/install.html">Install</a></li>
@@ -66,28 +70,32 @@
 <li class="toctree-l1"><a class="reference internal" href="../general/utils.html">Utilitaries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
 </ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kerch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Polynomial Kernel</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/kernel/polynomial.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
 </div>
-</div>
-</nav>
-<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
-<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
-<a href="../index.html">kerch</a>
-</nav>
-<div class="wy-nav-content">
-<div class="rst-content">
-<div aria-label="Page navigation" role="navigation">
-<ul class="wy-breadcrumbs">
-<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
-<li class="breadcrumb-item active">Polynomial Kernel</li>
-<li class="wy-breadcrumbs-aside">
-<a href="../_sources/kernel/polynomial.rst.txt" rel="nofollow"> View page source</a>
-</li>
-</ul>
-<hr/>
-</div>
-<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
-<div itemprop="articleBody">
-<div class="section" id="polynomial-kernel">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="polynomial-kernel">
 <h1>Polynomial Kernel<a class="headerlink" href="#polynomial-kernel" title="Permalink to this headline"></a></h1>
 <div class="section" id="class">
 <h2>Class<a class="headerlink" href="#class" title="Permalink to this headline"></a></h2>
@@ -97,30 +105,34 @@
 <div class="section" id="sine">
 <h3>Sine<a class="headerlink" href="#sine" title="Permalink to this headline"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kerch</span>
-<span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/index.html#module-numpy" title="numpy"><span class="nn">numpy</span></a> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/index.html#module-matplotlib" title="matplotlib"><span class="nn">matplotlib</span></a> <span class="kn">import</span> <a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="matplotlib.pyplot"><span class="n">pyplot</span></a> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
-<span class="n">x</span> <span class="o">=</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.sin.html#numpy.sin" title="numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <a class="sphinx-codeautolink-a" href="https://numpy.org/doc/stable/reference/constants.html#numpy.pi" title="numpy.pi"><span class="n">np</span><span class="o">.</span><span class="n">pi</span></a><span class="p">)</span>
-<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
 <span class="n">k</span> <span class="o">=</span> <span class="n">kerch</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">polynomial</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.imshow.html#matplotlib.pyplot.imshow" title="matplotlib.pyplot.imshow"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span></a><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
-<a class="sphinx-codeautolink-a" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.colorbar.html#matplotlib.pyplot.colorbar" title="matplotlib.pyplot.colorbar"><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span></a><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>(<a class="reference download internal" download="" href="../_downloads/6cb8bf66cabc6b6e1819110dc68f3829/polynomial-1.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>)</p>
 </div>
 </div>
 </div>
-</div>
-</div>
-<footer>
-<hr/>
-<div role="contentinfo">
-<p>© Copyright KU Leuven, January 2024.</p>
-</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright KU Leuven, January 2024.</p>
+  </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
@@ -128,14 +140,15 @@
    
 
 </footer>
-</div>
-</div>
-</section>
-</div>
-<script>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
+  </script> 
+
 </body>
 </html>

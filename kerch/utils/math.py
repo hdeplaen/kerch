@@ -4,6 +4,28 @@ from ..feature.logger import _GLOBAL_LOGGER
 
 
 def eigs(A, k=None, B=None, psd=True, sym=True):
+    r"""
+    Eigenvalue decomposition. This method is a wrapper calling other methods depending on the context. In a kernel 
+    context, most matrices are symmetric because kernels also are. Hence, they are Hermitian and a faster SVD can be 
+    used. Alternatively, all the eigenvalues are not necessarily required and we may thus skip the computation of a 
+    full eigendecomposition. The goal of this method is to always choose the most efficient method depending on the
+    context.
+    
+    :param A: Matrix to be decomposed.
+    :param k: Number of greatest eigenpairs requested. Defaults to `None`, which corresponds to computing all of them.
+    :param B: Matrix in the case of a generalized eigenvalue problem. Specify `None` (default) for a classical
+        eigenvalue decomposition.
+    :param psd: Specifies whether the matrix `A` is positive semi-definite. Defaults to `True`.
+    :param sym: Specifies whether the matrix `A` is positive symmetric. Defaults to `True`.
+    :return: eigenvalues, eigenvectors.
+
+    :type A: torch.Tensor
+    :type k: int, optional
+    :type B: torch.Tensor, optional
+    :type psd: bool, optional
+    :type sym: bool, optional
+    :rtype: Tuple[torch.Tensor, torch.Tensor]
+    """
     assert A is not None, 'Cannot decompose an empty matrix.'
     k1, k2 = A.shape
     assert k1 == k2, f'This function can only decompose square matrices (found {k1}x{k2}).'

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kerch.utils.math &mdash; kerch 0.3.1 documentation</title>
+  <title>kerch.utils.math &mdash; kerch 0.3.1.1post2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -102,6 +102,28 @@
 
 
 <div class="viewcode-block" id="eigs"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.math.eigs">[docs]</a><span class="k">def</span> <span class="nf">eigs</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">psd</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sym</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Eigenvalue decomposition. This method is a wrapper calling other methods depending on the context. In a kernel </span>
+<span class="sd">    context, most matrices are symmetric because kernels also are. Hence, they are Hermitian and a faster SVD can be </span>
+<span class="sd">    used. Alternatively, all the eigenvalues are not necessarily required and we may thus skip the computation of a </span>
+<span class="sd">    full eigendecomposition. The goal of this method is to always choose the most efficient method depending on the</span>
+<span class="sd">    context.</span>
+<span class="sd">    </span>
+<span class="sd">    :param A: Matrix to be decomposed.</span>
+<span class="sd">    :param k: Number of greatest eigenpairs requested. Defaults to `None`, which corresponds to computing all of them.</span>
+<span class="sd">    :param B: Matrix in the case of a generalized eigenvalue problem. Specify `None` (default) for a classical</span>
+<span class="sd">        eigenvalue decomposition.</span>
+<span class="sd">    :param psd: Specifies whether the matrix `A` is positive semi-definite. Defaults to `True`.</span>
+<span class="sd">    :param sym: Specifies whether the matrix `A` is positive symmetric. Defaults to `True`.</span>
+<span class="sd">    :return: eigenvalues, eigenvectors.</span>
+
+<span class="sd">    :type A: torch.Tensor</span>
+<span class="sd">    :type k: int, optional</span>
+<span class="sd">    :type B: torch.Tensor, optional</span>
+<span class="sd">    :type psd: bool, optional</span>
+<span class="sd">    :type sym: bool, optional</span>
+<span class="sd">    :rtype: Tuple[torch.Tensor, torch.Tensor]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">A</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Cannot decompose an empty matrix.&#39;</span>
     <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
     <span class="k">assert</span> <span class="n">k1</span> <span class="o">==</span> <span class="n">k2</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;This function can only decompose square matrices (found </span><span class="si">{</span><span class="n">k1</span><span class="si">}</span><span class="s1">x</span><span class="si">{</span><span class="n">k2</span><span class="si">}</span><span class="s1">).&#39;</span>

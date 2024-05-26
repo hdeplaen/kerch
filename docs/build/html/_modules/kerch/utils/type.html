@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kerch.utils.type &mdash; kerch 0.3.1 documentation</title>
+  <title>kerch.utils.type &mdash; kerch 0.3.1.1post2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -101,11 +101,9 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="n">FTYPE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
-<span class="n">ITYPE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">int16</span>
+<span class="n">ITYPE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">int32</span>
 
-<span class="n">EPS</span> <span class="o">=</span> <span class="mf">1.e-7</span>
-
-<div class="viewcode-block" id="gpu_available"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.type.gpu_available">[docs]</a><span class="k">def</span> <span class="nf">gpu_available</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="gpu_available"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.type.gpu_available">[docs]</a><span class="k">def</span> <span class="nf">gpu_available</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns whether GPU-enhanced computation is possible and configured on this machine.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -116,14 +114,39 @@
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="set_ftype"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.type.set_ftype">[docs]</a><span class="k">def</span> <span class="nf">set_ftype</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<div class="viewcode-block" id="set_ftype"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.type.set_ftype">[docs]</a><span class="k">def</span> <span class="nf">set_ftype</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the generic floating type :attr:`kerch.FTYPE` used throughout the package. Typical choices include half precision</span>
+<span class="sd">    :attr:`torch.float16`, single precision :attr:`torch.float32` (default) and double precision :attr:`torch.float64`.</span>
+
+<span class="sd">    :param type: Default floating type to be used.</span>
+<span class="sd">    :type type: PyTorch type</span>
+
+<span class="sd">    .. warning:</span>
+<span class="sd">        This does not affect the already instantiated tensors. It is thus preferable to set this in the beginning of</span>
+<span class="sd">        the code to avoid any type mismatch.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span> <span class="s1">&#39;The type is not an instance of torch.dtype.&#39;</span>
     <span class="k">global</span> <span class="n">FTYPE</span>
     <span class="n">FTYPE</span> <span class="o">=</span> <span class="nb">type</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Changing name has to be carefully considered as changes &#39;</span>
                     <span class="s1">&#39;after initialization may lead to inconsistencies.&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="set_itype"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.type.set_itype">[docs]</a><span class="k">def</span> <span class="nf">set_itype</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<div class="viewcode-block" id="set_itype"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.type.set_itype">[docs]</a><span class="k">def</span> <span class="nf">set_itype</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the generic integer type :attr:`kerch.ITYPE` used throughout the package. Typical choices include short</span>
+<span class="sd">    integers :attr:`torch.int16` (-32 768 to 32 767), classical integers :attr:`torch.int32` (-2^31-1 to</span>
+<span class="sd">    2^31, default) and long integers :attr:`torch.int64` (-2^63-1 to 2^63). We do not advise on using unsigned integers</span>
+<span class="sd">    because of their limited support in PyTorch.</span>
+
+<span class="sd">    :param type: Default integer type to be used.</span>
+<span class="sd">    :type type: PyTorch type</span>
+
+<span class="sd">    .. warning:</span>
+<span class="sd">        This does not affect the already instantiated tensors. It is thus preferable to set this in the beginning of</span>
+<span class="sd">        the code to avoid any type mismatch.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span> <span class="s1">&#39;The type is not an instance of torch.dtype.&#39;</span>
     <span class="k">global</span> <span class="n">ITYPE</span>
     <span class="n">ITYPE</span> <span class="o">=</span> <span class="nb">type</span>
@@ -131,9 +154,23 @@
                     <span class="s1">&#39;after initialization may lead to inconsistencies.&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="set_eps"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.type.set_eps">[docs]</a><span class="k">def</span> <span class="nf">set_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="set_eps"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.type.set_eps">[docs]</a><span class="k">def</span> <span class="nf">set_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the generic epsilon value used throughout the toolbox to guarantee stability.</span>
+
+<span class="sd">    :param eps: Default epsilon type to be used.</span>
+<span class="sd">    :type eps: float</span>
+
+<span class="sd">    .. warning:</span>
+<span class="sd">        It is preferable to set this in the beginning of the code to avoid any type mismatch, preferably after setting</span>
+<span class="sd">        the data type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">eps</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;The EPS value has to be positive&#39;</span>
-    <span class="n">EPS</span> <span class="o">=</span> <span class="n">eps</span></div>
+    <span class="k">global</span> <span class="n">EPS</span>
+    <span class="n">EPS</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">FTYPE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">EPS</span></div>
+
+<span class="n">EPS</span> <span class="o">=</span> <span class="n">set_eps</span><span class="p">(</span><span class="mf">1.e-7</span><span class="p">)</span>
 </pre></div>
 
            </div>

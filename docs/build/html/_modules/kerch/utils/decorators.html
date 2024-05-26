@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kerch.utils.decorators &mdash; kerch 0.3.1 documentation</title>
+  <title>kerch.utils.decorators &mdash; kerch 0.3.1.1post2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -101,6 +101,18 @@
 
 
 <div class="viewcode-block" id="kwargs_decorator"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.decorators.kwargs_decorator">[docs]</a><span class="k">def</span> <span class="nf">kwargs_decorator</span><span class="p">(</span><span class="n">dict_kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator that appends the dictionnary of method keyword arguments (kwargs) with additional values provided in</span>
+<span class="sd">    `dict_kwargs`. If a keyword already exists in the original dictionnary, its value is neglected. This is useful for</span>
+<span class="sd">    adding default values to the keyword arguments of methods, e.g., constructors. An alternative is to use the</span>
+<span class="sd">    `kwargs.pop(keyword, default)` instead.</span>
+<span class="sd">    </span>
+<span class="sd">    :param dict_kwargs: Dictionnary to be appended to the original dictionary. Redundant keywords are neglected.</span>
+<span class="sd">    :return: Appended dictionnary.</span>
+
+<span class="sd">    :type dict_kwargs: dict</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">inner_wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -113,6 +125,10 @@
 
 
 <div class="viewcode-block" id="extend_docstring"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.decorators.extend_docstring">[docs]</a><span class="k">class</span> <span class="nc">extend_docstring</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator adding the documentation of the provided definition to the decorated definition. This useful for</span>
+<span class="sd">    inheriting the documentation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="vm">__doc__</span>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kerch.utils.errors &mdash; kerch 0.3.1 documentation</title>
+  <title>kerch.utils.errors &mdash; kerch 0.3.1.1post2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -99,9 +99,16 @@
 <span></span><span class="c1"># coding=utf-8</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span> <span class="nn">..feature.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-
+<span class="kn">from</span> <span class="nn">.decorators</span> <span class="kn">import</span> <span class="n">extend_docstring</span>
 
 <div class="viewcode-block" id="KerchError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.KerchError">[docs]</a><span class="k">class</span> <span class="nc">KerchError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param cls: Optional class throwing the exception. This is helpful to add a context to the error message.</span>
+<span class="sd">    :param message: Optional error message.</span>
+
+<span class="sd">    :type cls: Instance of :class:`kerch.feature.Logger`</span>
+<span class="sd">    :type message: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="KerchError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.KerchError.__init__">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">message</span>
@@ -114,13 +121,21 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">KerchError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="ImplicitError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.ImplicitError">[docs]</a><span class="k">class</span> <span class="nc">ImplicitError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="ImplicitError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.ImplicitError">[docs]</a><span class="nd">@extend_docstring</span><span class="p">(</span><span class="n">KerchError</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ImplicitError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error thrown when an implicit representation is requested and mathematically not available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ImplicitError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.ImplicitError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Implicit representation not available.&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ImplicitError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="ExplicitError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.ExplicitError">[docs]</a><span class="k">class</span> <span class="nc">ExplicitError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="ExplicitError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.ExplicitError">[docs]</a><span class="nd">@extend_docstring</span><span class="p">(</span><span class="n">KerchError</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ExplicitError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error thrown when an explicit representation is requested and mathematically not available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="ExplicitError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.ExplicitError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Explicit representation not available.</span><span class="se">\n</span><span class="s2">&quot;</span> \
                        <span class="s2">&quot;[Example 1]: The explicit representation does not exist as it lies in an infinite &quot;</span> \
@@ -130,25 +145,41 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">ExplicitError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="RepresentationError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.RepresentationError">[docs]</a><span class="k">class</span> <span class="nc">RepresentationError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="RepresentationError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.RepresentationError">[docs]</a><span class="nd">@extend_docstring</span><span class="p">(</span><span class="n">KerchError</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RepresentationError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error thrown when the requested representation is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="RepresentationError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.RepresentationError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Unrecognized or unspecified representation (must be primal or dual).&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RepresentationError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BijectionError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.BijectionError">[docs]</a><span class="k">class</span> <span class="nc">BijectionError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="BijectionError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.BijectionError">[docs]</a><span class="nd">@extend_docstring</span><span class="p">(</span><span class="n">KerchError</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BijectionError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error thrown when an inverse is requested from a non-bijective function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="BijectionError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.BijectionError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Mathematically undefined operation. A transform is not bijective, thus non invertible.&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BijectionError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="NotInitializedError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.NotInitializedError">[docs]</a><span class="k">class</span> <span class="nc">NotInitializedError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="NotInitializedError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.NotInitializedError">[docs]</a><span class="nd">@extend_docstring</span><span class="p">(</span><span class="n">KerchError</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">NotInitializedError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error thrown when a model is asked to perform some tasks, but is not yet fully initialized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="NotInitializedError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.NotInitializedError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;The model has not been initialized yet.&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">NotInitializedError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="MultiViewError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.MultiViewError">[docs]</a><span class="k">class</span> <span class="nc">MultiViewError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<div class="viewcode-block" id="MultiViewError"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.errors.MultiViewError">[docs]</a><span class="nd">@extend_docstring</span><span class="p">(</span><span class="n">KerchError</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MultiViewError</span><span class="p">(</span><span class="n">KerchError</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Error thrown when some operations are requested, but not defined in a multi-view context.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="MultiViewError.__init__"><a class="viewcode-back" href="../../../general/utils.html#kerch.utils.errors.MultiViewError.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Primal operations are not defined a multi-view context. You must ask them for the different &quot;</span> \
                        <span class="s2">&quot;known separately, if it exists for it.&quot;</span>

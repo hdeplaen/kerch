@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kerch.utils.tensor &mdash; kerch 0.3.1 documentation</title>
+  <title>kerch.utils.tensor &mdash; kerch 0.3.1.1post2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -104,14 +104,42 @@
 
 
 <div class="viewcode-block" id="eye_like"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.eye_like">[docs]</a><span class="k">def</span> <span class="nf">eye_like</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates an identity matrix of the same size, data type and on the same device as the provided one.</span>
+<span class="sd">    :param m: Provided matrix to create an identity matrix from.</span>
+<span class="sd">    :return: Identity matrix of the same size, data type and on the same device.</span>
+
+<span class="sd">    :type m: torch.Tensor</span>
+<span class="sd">    :rtype: torch.Tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">out</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">m</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="ones_like"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.ones_like">[docs]</a><span class="k">def</span> <span class="nf">ones_like</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a matrix full of ones of the same size, data type and on the same device as the provided one.</span>
+<span class="sd">    :param m: Provided matrix to create the new matrix from.</span>
+<span class="sd">    :return: Matrix full of ones matrix of the same size, data type and on the same device.</span>
+
+<span class="sd">    :type m: torch.Tensor</span>
+<span class="sd">    :rtype: torch.Tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">out</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">m</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="equal"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.equal">[docs]</a><span class="k">def</span> <span class="nf">equal</span><span class="p">(</span><span class="n">val1</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">val2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="kc">None</span><span class="p">]):</span>
+<div class="viewcode-block" id="equal"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.equal">[docs]</a><span class="k">def</span> <span class="nf">equal</span><span class="p">(</span><span class="n">val1</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">val2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Verifies whether the two provided tensors are identical in content. Can also provide `None` values which will only</span>
+<span class="sd">    be identical to other `None` values.</span>
+
+<span class="sd">    :param val1: First tensor to compare.</span>
+<span class="sd">    :param val2: Second tensor to compare.</span>
+<span class="sd">    :return: `True` if the two provided tensors are identical, `False` otherwise.</span>
+
+<span class="sd">    :type val1: Union[T, None]</span>
+<span class="sd">    :type val2: Union[T, None]</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val1</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val2</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">val1</span><span class="p">,</span> <span class="n">val2</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val1</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val2</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>

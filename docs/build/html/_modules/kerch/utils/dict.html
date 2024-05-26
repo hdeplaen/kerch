@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kerch.utils.dict &mdash; kerch 0.3.1 documentation</title>
+  <title>kerch.utils.dict &mdash; kerch 0.3.1.1post2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -98,6 +98,15 @@
   <h1>Source code for kerch.utils.dict</h1><div class="highlight"><pre>
 <span></span><span class="c1"># coding=utf-8</span>
 <div class="viewcode-block" id="reverse_dict"><a class="viewcode-back" href="../../../kerch.utils.html#kerch.utils.reverse_dict">[docs]</a><span class="k">def</span> <span class="nf">reverse_dict</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inverts to keywords and the values in a dictionnary.</span>
+
+<span class="sd">    :param val: Dictionary to be inverted.</span>
+<span class="sd">    :return: Inverted dictionnary.</span>
+
+<span class="sd">    :type val: dict</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">val</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
 </pre></div>
 

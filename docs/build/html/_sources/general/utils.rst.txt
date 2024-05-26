@@ -2,16 +2,6 @@ Utilitaries
 ===========
 
 
-Defaults
---------
-
-.. automodule:: kerch.utils.defaults
-    :members:
-    :undoc-members:
-    :special-members:
-    :show-inheritance:
-
-
 Casting
 -------
 
@@ -48,20 +38,21 @@ Typing
     :special-members:
     :show-inheritance:
 
-Errors
+
+Tensor
 ------
 
-.. automodule:: kerch.utils.errors
+.. automodule::kerch.utils.tensor
     :members:
     :undoc-members:
     :special-members:
     :show-inheritance:
 
 
-Tensors
--------
+Errors
+------
 
-.. automodule::kerch.utils.tensor
+.. automodule:: kerch.utils.errors
     :members:
     :undoc-members:
     :special-members:

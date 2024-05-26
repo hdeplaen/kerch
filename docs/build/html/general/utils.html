@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Utilitaries &mdash; kerch 0.3.1 documentation</title>
+  <title>Utilitaries &mdash; kerch 0.3.1.1post2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
@@ -70,13 +70,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../features/index.html">Features</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../views/index.html">Views and Levels</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Utilitaries</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.defaults">Defaults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.cast">Casting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.decorators">Decorators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.math">Mathematics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.type">Typing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tensor">Tensor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-kerch.utils.errors">Errors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tensors">Tensors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structure/index.html">Structure</a></li>
@@ -108,30 +107,109 @@
              
   <div class="section" id="utilitaries">
 <h1>Utilitaries<a class="headerlink" href="#utilitaries" title="Permalink to this headline"></a></h1>
-<div class="section" id="module-kerch.utils.defaults">
-<span id="defaults"></span><h2>Defaults<a class="headerlink" href="#module-kerch.utils.defaults" title="Permalink to this headline"></a></h2>
-</div>
 <div class="section" id="module-kerch.utils.cast">
 <span id="casting"></span><h2>Casting<a class="headerlink" href="#module-kerch.utils.cast" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.utils.cast.capitalize_only_first">
 <code class="sig-prename descclassname"><span class="pre">kerch.utils.cast.</span></code><code class="sig-name descname"><span class="pre">capitalize_only_first</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/kerch/utils/cast.html#capitalize_only_first"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.cast.capitalize_only_first" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method returns the input string with the first letter capitalized and the rest of the string unchanged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>val</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – String to be capitalized.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Capitalized string.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.utils.cast.castf">
 <code class="sig-prename descclassname"><span class="pre">kerch.utils.cast.</span></code><code class="sig-name descname"><span class="pre">castf</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span></em>, <em><span class="n"><span class="pre">dev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/utils/cast.html#castf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.cast.castf" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Casts the input to a PyTorch float tensor. If the input is a scalar, it is cast to a tensor. The cast can be done
+to a 1D or a 2D tensor depending on the parameter <cite>tensor</cite>. If the provided data x has more than 2 dimensions, an
+error is raised. The default floating type used is <code class="xref py py-attr docutils literal notranslate"><span class="pre">kerch.FTYPE</span></code>. The <cite>None</cite> values are not casted and 
+returned as is.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>float</em></a><em> | </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> | </em><em>np.ndarray</em><em> | </em><em>None</em>) – The input to cast.</li>
+<li><strong>dev</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.device</em></a><em>]</em>) – The device to cast the tensor to. Defaults to <cite>None</cite>, which corresponds to no device change.</li>
+<li><strong>tensor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a>) – If True, the input is cast to a 2D tensor. If False, the input is cast to a 1D tensor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The input cast to a PyTorch float tensor, with optional device.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)">torch.Tensor</a> | None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.utils.cast.casti">
 <code class="sig-prename descclassname"><span class="pre">kerch.utils.cast.</span></code><code class="sig-name descname"><span class="pre">casti</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">x</span></span></em>, <em><span class="n"><span class="pre">dev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><span class="pre">torch.Tensor</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/kerch/utils/cast.html#casti"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.cast.casti" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Casts the input to a PyTorch integer tensor. If the input is a scalar, it is cast to a tensor. The cast can be done
+to a 1D or a 2D tensor depending on the parameter <cite>tensor</cite>. If the provided data x has more than 2 dimensions, an
+error is raised. The default floating type used is <code class="xref py py-attr docutils literal notranslate"><span class="pre">kerch.ITYPE</span></code>. The <cite>None</cite> values are not casted and 
+returned as is.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em> | </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em> | </em><em>np.ndarray</em><em> | </em><em>None</em>) – The input to cast.</li>
+<li><strong>dev</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.device</em></a><em>]</em>) – The device to cast the tensor to. Defaults to <cite>None</cite>, which corresponds to no device change.</li>
+<li><strong>tensor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a>) – If True, the input is cast to a 2D tensor. If False, the input is cast to a 1D tensor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The input cast to a PyTorch integer tensor, with optional device.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)">torch.Tensor</a> | None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.utils.cast.check_representation">
-<code class="sig-prename descclassname"><span class="pre">kerch.utils.cast.</span></code><code class="sig-name descname"><span class="pre">check_representation</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">representation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">cls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/cast.html#check_representation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.cast.check_representation" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname"><span class="pre">kerch.utils.cast.</span></code><code class="sig-name descname"><span class="pre">check_representation</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">representation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">cls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/kerch/utils/cast.html#check_representation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.cast.check_representation" title="Permalink to this definition"></a></dt>
+<dd><p>This model verifies whether the provided representation is valid. If the representation is <cite>None</cite> and a default
+value is provided, the default value is returned. If the representation is not <cite>None</cite> and is not valid, an error is
+raised. The valid representations are <cite>primal</cite> and <cite>dual</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>representation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The representation to check.</li>
+<li><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – Default representation for the case where <cite>representation</cite> is <cite>None</cite>.</li>
+<li><strong>cls</strong> (<a class="reference internal" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><em>kerch.feature.Logger</em></a><em>, </em><em>optional</em>) – An instance of <a class="reference internal" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Logger</span></code></a> to throw the error from, typically the one calling this
+method. This is optional.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">“primal” | “dual”</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)">str</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-kerch.utils.decorators">
@@ -139,12 +217,30 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="kerch.utils.decorators.extend_docstring">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.decorators.</span></code><code class="sig-name descname"><span class="pre">extend_docstring</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/decorators.html#extend_docstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.decorators.extend_docstring" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Decorator adding the documentation of the provided definition to the decorated definition. This useful for
+inheriting the documentation.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.utils.decorators.kwargs_decorator">
 <code class="sig-prename descclassname"><span class="pre">kerch.utils.decorators.</span></code><code class="sig-name descname"><span class="pre">kwargs_decorator</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">dict_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/decorators.html#kwargs_decorator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.decorators.kwargs_decorator" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Decorator that appends the dictionnary of method keyword arguments (kwargs) with additional values provided in
+<cite>dict_kwargs</cite>. If a keyword already exists in the original dictionnary, its value is neglected. This is useful for
+adding default values to the keyword arguments of methods, e.g., constructors. An alternative is to use the
+<cite>kwargs.pop(keyword, default)</cite> instead.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>dict</em></a>) – Dictionnary to be appended to the original dictionary. Redundant keywords are neglected.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Appended dictionnary.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -170,7 +266,34 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.utils.math.eigs">
 <code class="sig-prename descclassname"><span class="pre">kerch.utils.math.</span></code><code class="sig-name descname"><span class="pre">eigs</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">A</span></span></em>, <em><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">psd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em><span class="n"><span class="pre">sym</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/math.html#eigs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.math.eigs" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Eigenvalue decomposition. This method is a wrapper calling other methods depending on the context. In a kernel 
+context, most matrices are symmetric because kernels also are. Hence, they are Hermitian and a faster SVD can be 
+used. Alternatively, all the eigenvalues are not necessarily required and we may thus skip the computation of a 
+full eigendecomposition. The goal of this method is to always choose the most efficient method depending on the
+context.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a>) – Matrix to be decomposed.</li>
+<li><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – Number of greatest eigenpairs requested. Defaults to <cite>None</cite>, which corresponds to computing all of them.</li>
+<li><strong>B</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)"><em>torch.Tensor</em></a><em>, </em><em>optional</em>) – Matrix in the case of a generalized eigenvalue problem. Specify <cite>None</cite> (default) for a classical
+eigenvalue decomposition.</li>
+<li><strong>psd</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Specifies whether the matrix <cite>A</cite> is positive semi-definite. Defaults to <cite>True</cite>.</li>
+<li><strong>sym</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – Specifies whether the matrix <cite>A</cite> is positive symmetric. Defaults to <cite>True</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">eigenvalues, eigenvectors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Tuple[<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)">torch.Tensor</a>, <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" rel="noopener noreferrer" target="_blank" title="(in PyTorch v2.3)">torch.Tensor</a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-kerch.utils.type">
@@ -184,18 +307,52 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.utils.type.set_eps">
 <code class="sig-prename descclassname"><span class="pre">kerch.utils.type.</span></code><code class="sig-name descname"><span class="pre">set_eps</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/type.html#set_eps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.type.set_eps" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Sets the generic epsilon value used throughout the toolbox to guarantee stability.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>float</em></a>) – Default epsilon type to be used.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.utils.type.set_ftype">
 <code class="sig-prename descclassname"><span class="pre">kerch.utils.type.</span></code><code class="sig-name descname"><span class="pre">set_ftype</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/type.html#set_ftype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.type.set_ftype" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Sets the generic floating type <code class="xref py py-attr docutils literal notranslate"><span class="pre">kerch.FTYPE</span></code> used throughout the package. Typical choices include half precision
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">torch.float16</span></code>, single precision <code class="xref py py-attr docutils literal notranslate"><span class="pre">torch.float32</span></code> (default) and double precision <code class="xref py py-attr docutils literal notranslate"><span class="pre">torch.float64</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type</strong> (<em>PyTorch type</em>) – Default floating type to be used.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kerch.utils.type.set_itype">
 <code class="sig-prename descclassname"><span class="pre">kerch.utils.type.</span></code><code class="sig-name descname"><span class="pre">set_itype</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/type.html#set_itype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.type.set_itype" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Sets the generic integer type <code class="xref py py-attr docutils literal notranslate"><span class="pre">kerch.ITYPE</span></code> used throughout the package. Typical choices include short
+integers <code class="xref py py-attr docutils literal notranslate"><span class="pre">torch.int16</span></code> (-32 768 to 32 767), classical integers <code class="xref py py-attr docutils literal notranslate"><span class="pre">torch.int32</span></code> (-2^31-1 to
+2^31, default) and long integers <code class="xref py py-attr docutils literal notranslate"><span class="pre">torch.int64</span></code> (-2^63-1 to 2^63). We do not advise on using unsigned integers
+because of their limited support in PyTorch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type</strong> (<em>PyTorch type</em>) – Default integer type to be used.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
+</div>
+<div class="section" id="tensor">
+<h2>Tensor<a class="headerlink" href="#tensor" title="Permalink to this headline"></a></h2>
 </div>
 <div class="section" id="module-kerch.utils.errors">
 <span id="errors"></span><h2>Errors<a class="headerlink" href="#module-kerch.utils.errors" title="Permalink to this headline"></a></h2>
@@ -203,6 +360,19 @@
 <dt class="sig sig-object py" id="kerch.utils.errors.BijectionError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">BijectionError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#BijectionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.BijectionError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<p>Error thrown when an inverse is requested from a non-bijective function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cls</strong> (Instance of <a class="reference internal" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Logger</span></code></a>) – Optional class throwing the exception. This is helpful to add a context to the error message.</li>
+<li><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – Optional error message.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kerch.utils.errors.BijectionError.__abstractmethods__">
 <code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.BijectionError.__abstractmethods__" title="Permalink to this definition"></a></dt>
@@ -226,6 +396,19 @@
 <dt class="sig sig-object py" id="kerch.utils.errors.ExplicitError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">ExplicitError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#ExplicitError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.ExplicitError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<p>Error thrown when an explicit representation is requested and mathematically not available.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cls</strong> (Instance of <a class="reference internal" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Logger</span></code></a>) – Optional class throwing the exception. This is helpful to add a context to the error message.</li>
+<li><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – Optional error message.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kerch.utils.errors.ExplicitError.__abstractmethods__">
 <code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.ExplicitError.__abstractmethods__" title="Permalink to this definition"></a></dt>
@@ -255,6 +438,19 @@
 <dt class="sig sig-object py" id="kerch.utils.errors.ImplicitError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">ImplicitError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#ImplicitError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.ImplicitError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<p>Error thrown when an implicit representation is requested and mathematically not available.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cls</strong> (Instance of <a class="reference internal" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Logger</span></code></a>) – Optional class throwing the exception. This is helpful to add a context to the error message.</li>
+<li><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – Optional error message.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kerch.utils.errors.ImplicitError.__abstractmethods__">
 <code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.ImplicitError.__abstractmethods__" title="Permalink to this definition"></a></dt>
@@ -284,6 +480,18 @@
 <dt class="sig sig-object py" id="kerch.utils.errors.KerchError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">KerchError</span></code><span class="sig-paren">(</span><em><span class="n"><span class="pre">cls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#KerchError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.KerchError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cls</strong> (Instance of <a class="reference internal" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Logger</span></code></a>) – Optional class throwing the exception. This is helpful to add a context to the error message.</li>
+<li><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – Optional error message.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kerch.utils.errors.KerchError.__abstractmethods__">
 <code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({'__init__'})</span></em><a class="headerlink" href="#kerch.utils.errors.KerchError.__abstractmethods__" title="Permalink to this definition"></a></dt>
@@ -320,6 +528,19 @@
 <dt class="sig sig-object py" id="kerch.utils.errors.MultiViewError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">MultiViewError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#MultiViewError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.MultiViewError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<p>Error thrown when some operations are requested, but not defined in a multi-view context.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cls</strong> (Instance of <a class="reference internal" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Logger</span></code></a>) – Optional class throwing the exception. This is helpful to add a context to the error message.</li>
+<li><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – Optional error message.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kerch.utils.errors.MultiViewError.__abstractmethods__">
 <code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.MultiViewError.__abstractmethods__" title="Permalink to this definition"></a></dt>
@@ -349,6 +570,19 @@
 <dt class="sig sig-object py" id="kerch.utils.errors.NotInitializedError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">NotInitializedError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#NotInitializedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.NotInitializedError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<p>Error thrown when a model is asked to perform some tasks, but is not yet fully initialized.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cls</strong> (Instance of <a class="reference internal" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Logger</span></code></a>) – Optional class throwing the exception. This is helpful to add a context to the error message.</li>
+<li><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – Optional error message.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kerch.utils.errors.NotInitializedError.__abstractmethods__">
 <code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.NotInitializedError.__abstractmethods__" title="Permalink to this definition"></a></dt>
@@ -378,6 +612,19 @@
 <dt class="sig sig-object py" id="kerch.utils.errors.RepresentationError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><code class="sig-prename descclassname"><span class="pre">kerch.utils.errors.</span></code><code class="sig-name descname"><span class="pre">RepresentationError</span></code><span class="sig-paren">(</span><em><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kerch/utils/errors.html#RepresentationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kerch.utils.errors.RepresentationError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#kerch.utils.errors.KerchError" title="kerch.utils.errors.KerchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.utils.errors.KerchError</span></code></a></p>
+<p>Error thrown when the requested representation is invalid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cls</strong> (Instance of <a class="reference internal" href="../features/logger.html#kerch.feature.Logger" title="kerch.feature.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">kerch.feature.Logger</span></code></a>) – Optional class throwing the exception. This is helpful to add a context to the error message.</li>
+<li><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" rel="noopener noreferrer" target="_blank" title="(in Python v3.12)"><em>str</em></a>) – Optional error message.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="kerch.utils.errors.RepresentationError.__abstractmethods__">
 <code class="sig-name descname"><span class="pre">__abstractmethods__</span></code><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">frozenset({})</span></em><a class="headerlink" href="#kerch.utils.errors.RepresentationError.__abstractmethods__" title="Permalink to this definition"></a></dt>
@@ -403,9 +650,6 @@
 
 </dd></dl>
 
-</div>
-<div class="section" id="tensors">
-<h2>Tensors<a class="headerlink" href="#tensors" title="Permalink to this headline"></a></h2>
 </div>
 </div>
 
