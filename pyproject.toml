@@ -68,6 +68,7 @@ packages = [
     "kerch.kernel",
     "kerch.level",
     "kerch.method",
+    "kerch.model",
     "kerch.monitor",
     "kerch.opt",
     "kerch.plot",
