@@ -75,6 +75,5 @@ packages = [
     "kerch.script",
     "kerch.train",
     "kerch.transform",
-    "kerch.utils",
-    "kerch.watch"
+    "kerch.utils"
 ]
