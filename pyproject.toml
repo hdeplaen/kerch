@@ -63,15 +63,18 @@ version = {attr = "kerch.__version__"}
 [tool.setuptools]
 packages = [
     "kerch",
+    "kerch.data",
+    "kerch.feature",
     "kerch.kernel",
     "kerch.level",
-    "kerch.model",
-    "kerch.data",
-    "kerch.train",
-    "kerch.monitor",
-    "kerch.plot",
-    "kerch.opt",
-    "kerch.script",
     "kerch.method",
-    "kerch.utils"
+    "kerch.monitor",
+    "kerch.opt",
+    "kerch.plot",
+    "kerch.preimage",
+    "kerch.script",
+    "kerch.train",
+    "kerch.transform",
+    "kerch.utils",
+    "kerch.watch"
 ]
