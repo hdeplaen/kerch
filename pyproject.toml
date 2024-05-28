@@ -61,4 +61,17 @@ ESAT-STADIUS = "https://www.esat.kuleuven.be/stadius/"
 version = {attr = "kerch.__version__"}
 
 [tool.setuptools]
-packages = ["kerch"]
+packages = [
+    "kerch",
+    "kerch.kernel",
+    "kerch.level",
+    "kerch.model",
+    "kerch.data",
+    "kerch.train",
+    "kerch.monitor",
+    "kerch.plot",
+    "kerch.opt",
+    "kerch.script",
+    "kerch.method",
+    "kerch.utils"
+]

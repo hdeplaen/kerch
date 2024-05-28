@@ -1,9 +1,9 @@
 # coding=utf-8
-__version__ = "0.3.1.1post2"
+__version__ = "0.3.1.2"
 __author__ = "HENRI DE PLAEN"
 __credits__ = "KU Leuven"
 __status__ = "beta"
-__date__ = "January 2024"
+__date__ = "May 2024"
 __license__ = "LGPL-3.0"
 
 # GLOBAL MODULE-WIDE VARIABLES
